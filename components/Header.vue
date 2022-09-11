@@ -38,12 +38,12 @@ export default {};
     height: 4rem;
 }
 .section1 {
-    background-color: rgb(29, 20, 15);
     height: 3rem;
+    background-color: rgb(29, 20, 15);
 }
 .section2 {
-    background-color: rgb(68, 49, 38);
     height: 1rem;
+    background-color: rgb(68, 49, 38);
 }
 .navbar-container {
     background-color: rgb(68, 49, 38);
@@ -57,9 +57,10 @@ export default {};
 .navbar-light .navbar-nav .nav-link {
     margin-left: 1rem;
     margin-right: 1rem;
-    background-color: rgb(243, 243, 243);
+    background-color: white;
+    box-shadow: inset 0px 0px 10px 6px rgb(68, 49, 38);
     color: rgb(29, 20, 15);
-    border-radius: 2rem;
+    border-radius: 3rem;
 }
 
 </style>
