@@ -1,57 +1,65 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="success">
-
+    <div class="banner">
+        <div class="section1"></div>
+        <div class="section2"></div>
+    </div>
+    <div class="navbar-container">
+      <b-navbar toggleable="lg">
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav>
-                <b-nav-item href="#">Populares</b-nav-item>
-                <b-nav-item href="#">Mediterránea</b-nav-item>
-                <b-nav-item href="#">Oriental</b-nav-item>
-                <b-nav-item href="#">Italiana</b-nav-item>
-            </b-navbar-nav>
+          <b-navbar-nav>
+            <b-nav-item href="#">Populares</b-nav-item>
+            <b-nav-item href="#">Mediterránea</b-nav-item>
+            <b-nav-item href="#">Oriental</b-nav-item>
+            <b-nav-item href="#">Italiana</b-nav-item>
+          </b-navbar-nav>
 
-            <b-navbar-nav class="ml-auto">
-                <b-nav-form>
-                <b-form-input size="sm" class="mr-sm-2" placeholder="Buscar"></b-form-input>
-                <b-button size="sm" class="my-2 my-sm-0" type="submit">Buscar</b-button>
-                </b-nav-form>
-                <b-nav-item href="#">
-                    <span class="fa fa-user fa-2x" aria-hidden="true"></span>
-                </b-nav-item>
-            </b-navbar-nav>
+          <b-navbar-nav class="ml-auto">
+            <b-nav-item href="#">
+              <span class="fa fa-user fa-2x" aria-hidden="true"></span>
+            </b-nav-item>
+          </b-navbar-nav>
         </b-collapse>
-
-    </b-navbar>
-
-    <div class="banner-image-container">
-        <div class="banner-image"></div>
+      </b-navbar>
     </div>
-    
 
-    <b-img class="" src="~/assets/img/banner.jpg"></b-img>
-
+    <!-- <b-img class="" src="~/assets/img/banner.jpg"></b-img> -->
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style scoped>
-.banner-image-container{
-    background-color: rgba(87, 52, 27, 0.815);
+.banner {
+    height: 4rem;
 }
-.banner-image {
-    background-position-x: center !important;
-    background-repeat: no-repeat !important;
-    height: 7rem;
-    background: url("~/assets/img/banner.jpg");
+.section1 {
+    background-color: rgb(29, 20, 15);
+    height: 3rem;
 }
-.test{
-    background-image: linear-gradient(rgba(87, 52, 27, 0.815), rgba(87, 52, 27, 0.815));
+.section2 {
+    background-color: rgb(68, 49, 38);
+    height: 1rem;
 }
+.navbar-container {
+    background-color: rgb(68, 49, 38);
+}
+.buscar {
+    /* No se aplica el auto? */
+    margin-left: auto;
+    margin-right: auto;
+}
+/* TODO: Revisar si debe ser light o dark cuando acabe los estilos que quiero. Mantener la coherencia */
+.navbar-light .navbar-nav .nav-link {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    background-color: rgb(243, 243, 243);
+    color: rgb(29, 20, 15);
+    border-radius: 2rem;
+}
+
 </style>
