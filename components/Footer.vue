@@ -1,4 +1,5 @@
 <template>
+  <footer class="footer">
   <div class="navbar-container">
     <b-navbar toggleable="lg" type="dark">
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -20,6 +21,7 @@
         </b-collapse>
       </b-navbar>
   </div>
+</footer>
 </template>
 
 <script>
@@ -29,15 +31,21 @@ export default {
 </script>
 
 <style scoped>
+.footer{
+    bottom: 0;
+    width: 100%;
+    position: relative;
+    /* TODO: Cambiar esto? Actualmente no sé qué es.  11/09//2022 */
+    /* width: -webkit-fill-available; */
+}
 .navbar-container{
-  height: 2.5rem;
-  background-color: rgb(29, 20, 15);
+  background-color: #405357;
 }
 .navbar-dark .navbar-nav .nav-link {
   margin-left: 1rem;
   margin-right: 1rem;
-  color: rgb(243, 243, 243);
-  background-color: rgb(29, 20, 15);
+  color: #F5D29E;
+  background-color: #405357;
   border-radius: 2rem;
 }
 .navbar-expand-lg {
@@ -49,4 +57,14 @@ export default {
 .navbar-expand-lg .navbar-collapse {
   place-content: center;
 }
+
+/*
+  PALETA DE COLORES
+
+    #5C2C0C #405357
+    #DDA35D #F5D29E
+    #AA6231 #7F5B3F
+    #E3DECA #334C38
+    #3C3A1E #182312
+*/
 </style>

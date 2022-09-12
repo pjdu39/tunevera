@@ -39,14 +39,14 @@ export default {};
 }
 .section1 {
     height: 3rem;
-    background-color: rgb(29, 20, 15);
+    background-color: #405357;
 }
 .section2 {
     height: 1rem;
-    background-color: rgb(68, 49, 38);
+    background-color: #334C38;
 }
 .navbar-container {
-    background-color: rgb(68, 49, 38);
+    background-color: #334C38;
 }
 .buscar {
     /* No se aplica el auto? */
@@ -57,10 +57,31 @@ export default {};
 .navbar-light .navbar-nav .nav-link {
     margin-left: 1rem;
     margin-right: 1rem;
-    background-color: white;
-    box-shadow: inset 0px 0px 10px 6px rgb(68, 49, 38);
-    color: rgb(29, 20, 15);
-    border-radius: 3rem;
+    background-color: #7F5B3F;
+    box-shadow: 2px 2px 10px 3px #182312;
+    color: #F5D29E;
+    border-radius: 1rem;
+    border-style: none;
 }
+
+/*
+  PALETA DE COLORES
+
+    #5C2C0C #405357
+    #DDA35D #F5D29E
+    #AA6231 #7F5B3F
+    #E3DECA #334C38
+    #3C3A1E #182312
+*/
+/*
+.navbar-light .navbar-nav .nav-link {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    background-color: #E3DECA;
+    box-shadow: inset 0px 0px 10px 6px #AA6231;
+    color: #3C3A1E;
+    border-radius: 3rem;
+    border-style: groove;
+} */
 
 </style>

@@ -4,6 +4,21 @@
     box-sizing: border-box;
 }
 
+main {
+    position: relative;
+    min-height: 100vh; /* Hay que restarle el height del header y el footer. calc(100vh - 140px) */
+    background-color: #f0e2ce;
+}
 
+/*
+  PALETA DE COLORES
+
+    #5C2C0C #405357
+    #DDA35D #F5D29E
+    #AA6231 #7F5B3F
+    #E3DECA #334C38
+    #3C3A1E #182312
+*/
 
 // BORRAR, PRUEBAS
+

@@ -3,73 +3,49 @@
     <div class="header">
       <Header />
     </div>
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-    modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-    <div class="footer">
-      <Footer />
-    </div>
+    <main>
+      <h1>Receta</h1>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+      </p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+      </p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
+        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+      </p>
+    </main>
+    <Footer />
   </div>
 </template>
 
@@ -84,12 +60,8 @@ export default {
 }
 </script>
 <style scoped>
-.header{
-}
-.footer{
-    bottom: 0;
-    width: 100%;
-    /* TODO: Cambiar esto? Actualmente no sé qué es.  11/09//2022 */
-    /* width: -webkit-fill-available; */
+p,
+h1{
+  padding: 1rem 4rem;
 }
 </style>
