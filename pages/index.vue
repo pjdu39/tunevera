@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="header">
-      <Header />
-    </div>
     <main>
       <h1>Receta</h1>
       <p>
@@ -45,7 +42,6 @@
         Lorem ipsum dolor sit, amet consectetur adipisicing elit.
       </p>
     </main>
-    <Footer />
   </div>
 </template>
 
@@ -60,8 +56,5 @@ export default {
 }
 </script>
 <style scoped>
-p,
-h1{
-  padding: 1rem 4rem;
-}
+
 </style>

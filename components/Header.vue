@@ -58,7 +58,7 @@ export default {};
     margin-left: 1rem;
     margin-right: 1rem;
     background-color: #7F5B3F;
-    box-shadow: 2px 2px 10px 3px #182312;
+    box-shadow: 2px 2px 6px 3px #182312;
     color: #F5D29E;
     border-radius: 1rem;
     border-style: none;

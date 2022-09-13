@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
-  <div class="navbar-container">
-    <b-navbar toggleable="lg" type="dark">
+    <div class="navbar-container">
+      <b-navbar toggleable="lg" type="dark">
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
@@ -20,8 +20,8 @@
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
-  </div>
-</footer>
+    </div>
+  </footer>
 </template>
 
 <script>
@@ -34,7 +34,7 @@ export default {
 .footer{
     bottom: 0;
     width: 100%;
-    position: relative;
+    position: absolute;
     /* TODO: Cambiar esto? Actualmente no sé qué es.  11/09//2022 */
     /* width: -webkit-fill-available; */
 }
@@ -46,7 +46,6 @@ export default {
   margin-right: 1rem;
   color: #F5D29E;
   background-color: #405357;
-  border-radius: 2rem;
 }
 .navbar-expand-lg {
   height: 100%;

@@ -4,14 +4,27 @@
     box-sizing: border-box;
 }
 
-main {
+body {
     position: relative;
     min-height: 100vh; /* Hay que restarle el height del header y el footer. calc(100vh - 140px) */
+    min-width: 100vw;
     background-color: #f0e2ce;
+    padding-bottom: 3em;
+}
+
+.box {
+  padding: 1rem 4rem;
+}
+.title-receta {
+  padding: 1.2rem 0;
+}
+.title-seccion {
+  border-top: 1px solid black;
+  padding: 0.8rem 0;
 }
 
 /*
-  PALETA DE COLORES
+  PALETAS DE COLORES
 
     #5C2C0C #405357
     #DDA35D #F5D29E
@@ -22,3 +35,13 @@ main {
 
 // BORRAR, PRUEBAS
 
+/*
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 1rem 4rem;
+}*/
