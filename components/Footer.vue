@@ -39,13 +39,13 @@ export default {
     /* width: -webkit-fill-available; */
 }
 .navbar-container{
-  background-color: #405357;
+  background-color: #5E6668;
 }
 .navbar-dark .navbar-nav .nav-link {
   margin-left: 1rem;
   margin-right: 1rem;
-  color: #F5D29E;
-  background-color: #405357;
+  color: #F6FAFB;
+  background-color: #5E6668;
 }
 .navbar-expand-lg {
   height: 100%;
@@ -60,10 +60,10 @@ export default {
 /*
   PALETA DE COLORES
 
-    #5C2C0C #405357
-    #DDA35D #F5D29E
-    #AA6231 #7F5B3F
-    #E3DECA #334C38
-    #3C3A1E #182312
+    #5C2C0C #405357 #252B31
+    #DDA35D #F5D29E #5E6668
+    #AA6231 #7F5B3F #C1C8C7
+    #E3DECA #334C38 #F6FAFB
+    #3C3A1E #182312 #D49C6B
 */
 </style>

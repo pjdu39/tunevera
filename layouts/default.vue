@@ -18,7 +18,7 @@ export default {
 
 <style scoped>
 .nuxt-container{
-    position: absolute;
+    position: relative;
     min-height: 100vh;
 }
 </style>

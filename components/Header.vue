@@ -1,28 +1,32 @@
 <template>
   <div>
     <div class="banner">
-        <div class="section1"></div>
-        <div class="section2"></div>
-    </div>
-    <div class="navbar-container">
-      <b-navbar toggleable="lg">
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-        <b-collapse id="nav-collapse" is-nav>
-          <b-navbar-nav>
-            <b-nav-item href="#">Populares</b-nav-item>
-            <b-nav-item href="#">Mediterránea</b-nav-item>
-            <b-nav-item href="#">Oriental</b-nav-item>
-            <b-nav-item href="#">Italiana</b-nav-item>
-          </b-navbar-nav>
-
-          <b-navbar-nav class="ml-auto">
-            <b-nav-item href="#">
-              <span class="fa fa-user fa-2x" aria-hidden="true"></span>
-            </b-nav-item>
-          </b-navbar-nav>
-        </b-collapse>
-      </b-navbar>
+      <div class="navbar-user-container">
+        <b-navbar toggleable="lg">
+          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+          <b-collapse id="nav-collapse" is-nav>
+            <b-navbar-nav class="ml-auto">
+              <b-nav-item href="#" class="user">
+                <span class="fa fa-user fa-2x" aria-hidden="true"></span>
+              </b-nav-item>
+            </b-navbar-nav>
+          </b-collapse>
+        </b-navbar>
+      </div>
+      <div class="navbar-main-container">
+        <b-navbar toggleable="lg">
+          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+          <b-collapse id="nav-collapse" is-nav>
+            <b-navbar-nav class="main-navbar">
+              <b-nav-item href="#">Más votados</b-nav-item>
+              <b-nav-item href="#">Mediterránea</b-nav-item>
+              <b-nav-item href="#">Oriental</b-nav-item>
+              <b-nav-item href="#">Americana</b-nav-item>
+              <b-nav-item href="#">Repostería</b-nav-item>
+            </b-navbar-nav>
+          </b-collapse>
+        </b-navbar>
+      </div>
     </div>
 
     <!-- <b-img class="" src="~/assets/img/banner.jpg"></b-img> -->
@@ -35,53 +39,54 @@ export default {};
 
 <style scoped>
 .banner {
-    height: 4rem;
+  height: 8rem;
+  margin-bottom: 6rem;
+  box-shadow: 2px 2px 6px 3px #252b31;;
 }
-.section1 {
-    height: 3rem;
-    background-color: #405357;
+.navbar-user-container {
+  display: flex;
+  height: 4rem;
+  background-color: #252b31;
 }
-.section2 {
-    height: 1rem;
-    background-color: #334C38;
+.navbar-main-container {
+  display: flex;
+  height: 4rem;
+  background-color: #5e6668;
 }
-.navbar-container {
-    background-color: #334C38;
+.main-navbar {
+  margin-left: auto;
+  margin-right: auto;
 }
-.buscar {
-    /* No se aplica el auto? */
-    margin-left: auto;
-    margin-right: auto;
+.navbar-light {
+  display: contents;
 }
 /* TODO: Revisar si debe ser light o dark cuando acabe los estilos que quiero. Mantener la coherencia */
 .navbar-light .navbar-nav .nav-link {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    background-color: #7F5B3F;
-    box-shadow: 2px 2px 6px 3px #182312;
-    color: #F5D29E;
-    border-radius: 1rem;
-    border-style: none;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  background-color: #d49c6b;
+  box-shadow: 2px 2px 6px 3px #252b31;
+  color: #252b31;
+  border-radius: 0.8rem 2rem;
+  border-style: none;
 }
-
+.navbar-user-container .user .nav-link {
+  margin-right: 2rem;
+  border-radius: 3rem;
+}
+/*
+.navbar-nav .user .nav-link{
+  border-radius: 3rem;
+}*/
 /*
   PALETA DE COLORES
 
-    #5C2C0C #405357
-    #DDA35D #F5D29E
-    #AA6231 #7F5B3F
-    #E3DECA #334C38
-    #3C3A1E #182312
+    #5C2C0C #405357 #252B31
+    #DDA35D #F5D29E #5E6668
+    #AA6231 #7F5B3F #C1C8C7
+    #E3DECA #334C38 #F6FAFB
+    #3C3A1E #182312 #D49C6B
 */
-/*
-.navbar-light .navbar-nav .nav-link {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    background-color: #E3DECA;
-    box-shadow: inset 0px 0px 10px 6px #AA6231;
-    color: #3C3A1E;
-    border-radius: 3rem;
-    border-style: groove;
-} */
-
 </style>

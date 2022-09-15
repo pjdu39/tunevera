@@ -8,7 +8,7 @@ body {
     position: relative;
     min-height: 100vh; /* Hay que restarle el height del header y el footer. calc(100vh - 140px) */
     min-width: 100vw;
-    background-color: #f0e2ce;
+    background-color: #C1C8C7;
     padding-bottom: 3em;
 }
 
@@ -19,18 +19,18 @@ body {
   padding: 1.2rem 0;
 }
 .title-seccion {
-  border-top: 1px solid black;
+  border-top: 1px solid #5E6668;
   padding: 0.8rem 0;
 }
 
 /*
   PALETAS DE COLORES
 
-    #5C2C0C #405357
-    #DDA35D #F5D29E
-    #AA6231 #7F5B3F
-    #E3DECA #334C38
-    #3C3A1E #182312
+    #5C2C0C #405357 #252B31
+    #DDA35D #F5D29E #5E6668
+    #AA6231 #7F5B3F #C1C8C7
+    #E3DECA #334C38 #F6FAFB
+    #3C3A1E #182312 #D49C6B
 */
 
 // BORRAR, PRUEBAS
