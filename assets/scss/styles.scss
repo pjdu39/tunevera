@@ -19,8 +19,32 @@ body {
   padding: 1.2rem 0;
 }
 .title-seccion {
-  border-top: 1px solid #5E6668;
+  border-top: 1px solid #C1C8C7;
   padding: 0.8rem 0;
+}
+
+// REGISTRO Y LOGIN
+.email-container {
+  top: 3rem;
+  position: absolute;
+  width: 76%; /* Utilizar variables css para calcular  */
+}
+.pass-container {
+  top: 9rem;
+  position: absolute;
+  width: 76%; /* Utilizar variables css para calcular  */
+}
+.login-button {
+  bottom: 2.5rem;
+  position: absolute;
+  width: 76%; /* Utilizar variables css para calcular  */
+  border-radius: 0.8rem;
+  color: #eaedee;
+  background-color: #d49c6b;
+  box-shadow: 2px 2px 12px 0px #252b31;
+  border-style: none;
+  font-weight: 600;
+  letter-spacing: 0.08rem;
 }
 
 /*
@@ -34,14 +58,3 @@ body {
 */
 
 // BORRAR, PRUEBAS
-
-/*
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  padding: 1rem 4rem;
-}*/

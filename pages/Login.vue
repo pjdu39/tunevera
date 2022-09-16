@@ -3,11 +3,9 @@
     <div class="login-card">
       <b-form-group
         id="fieldset-email"
-        class="input-container"
+        class="input-container email-container"
         label="Email"
         label-for="input-email"
-        valid-feedback="Thank you!"
-        :invalid-feedback="emailInvalidFeedback"
         :state="emailState"
       >
         <b-form-input
@@ -20,11 +18,9 @@
       </b-form-group>
       <b-form-group
         id="fieldset-password"
-        class="input-container"
-        label="Password"
+        class="input-container pass-container"
+        label="Contraseña"
         label-for="input-password"
-        valid-feedback="Thank you!"
-        :invalid-feedback="passwordInvalidFeedback"
         :state="passwordState"
       >
         <b-form-input
@@ -35,9 +31,8 @@
           trim
         ></b-form-input>
       </b-form-group>
-      <b-button class="login-button">
-        Login
-      </b-button>
+      <a href="#" class="contrasena-olvidada">¿Ha olvidado la contraseña?</a>
+      <b-button class="login-button"> Login </b-button>
     </div>
   </div>
 </template>
@@ -47,30 +42,18 @@ export default {
   layout: "empty",
   computed: {
     emailState() {
-      if(this.email.length == 0) return null
+      if (this.email.length == 0) return null;
       return this.email.length >= 4;
     },
-    emailInvalidFeedback() {
-      if (this.email.length > 0) {
-        return "Enter at least 4 characters.";
-      }
-      return "Please enter something.";
-    },
     passwordState() {
-      if(this.password.length == 0) return null
+      if (this.password.length == 0) return null;
       return this.password.length >= 4;
-    },
-    passwordInvalidFeedback() {
-      if (this.password.length > 0) {
-        return "Enter at least 4 characters.";
-      }
-      return "Please enter something.";
-    },
+    }
   },
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
     };
   },
 };
@@ -100,14 +83,8 @@ export default {
 .input {
   border-radius: 0.8rem;
 }
-.login-button {
-    bottom: 2.5rem;
+.contrasena-olvidada {
+  bottom: 8rem;
   position: absolute;
-  width: 76%; /* Utilizar variables css para calcular  */
-  border-radius: 0.8rem;
-  color: #252b31;
-  background-color: #d49c6b;
-  box-shadow: 2px 2px 12px 0px #252b31;
-  border-style: none;
 }
 </style>
