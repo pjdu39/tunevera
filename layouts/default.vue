@@ -20,5 +20,9 @@ export default {
 .nuxt-container{
     position: relative;
     min-height: 100vh;
+    max-width: 100vw;
+    margin-bottom: 6rem;
+    margin-right: auto;
+    margin-left: auto;
 }
 </style>

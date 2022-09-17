@@ -50,10 +50,10 @@
       </b-col>
       <b-col class="col-md-3 box box3">
         <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsum error
-          quod, magnam quos veritatis, ut repellendus nisi voluptatibus ab
-          ducimus in. Ex qui voluptatem, voluptas nulla maxime corrupti
-          praesentium doloremque?
+          Meter el buscador de ingredientes.
+        </p>
+        <p>
+          Utilizar Badge de bootstrap-vue para mostrar los ingredientes seleccionados.
         </p>
       </b-col>
     </b-row>
