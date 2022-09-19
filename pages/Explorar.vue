@@ -47,6 +47,9 @@ export default {
 </script>
 
 <style scoped>
+:root {
+  --image-z-indx: 10
+}
 .images-container {
   max-width: 100%;
   display: grid;
@@ -62,6 +65,7 @@ export default {
   margin-top: 1rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
+  padding: 0;
   border-style: none;
   border-radius: 0.8rem;
   box-shadow: 1.5px 1.5px 23px -10px #252b31;
@@ -74,12 +78,13 @@ export default {
   margin-right: 0rem;
   margin-bottom: 0rem;
   box-shadow: 1.5px 1.5px 8px 6px #252b31;
+  --image-z-indx: 1;
 }
 .card-tittle {
   position: absolute;
   z-index: 5;
   padding: 0 1rem;
-  border-radius: 0.8rem;
+  border-radius: 0.8rem 0 0.8rem 0;
   color: #eaedee;
   background-color: #252b31;
   box-shadow: 2px 2px 12px 0px #252b31;
@@ -98,9 +103,6 @@ export default {
   width: auto;
   height: inherit;
   position: absolute;
-  z-index: 10;
-}
-.card-image:hover {
-  z-index: 1;
+  z-index: var(--image-z-indx, 10);
 }
 </style>

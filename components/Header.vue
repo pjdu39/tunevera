@@ -18,11 +18,11 @@
           <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
           <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav class="main-navbar">
-              <b-nav-item href="#">Más votados</b-nav-item>
-              <b-nav-item href="#">Mediterránea</b-nav-item>
-              <b-nav-item href="#">Oriental</b-nav-item>
-              <b-nav-item href="#">Americana</b-nav-item>
-              <b-nav-item href="#">Repostería</b-nav-item>
+              <b-nav-item href="#" class="option">Más votados</b-nav-item>
+              <b-nav-item href="#" class="option">Mediterránea</b-nav-item>
+              <b-nav-item href="#" class="option">Oriental</b-nav-item>
+              <b-nav-item href="#" class="option">Americana</b-nav-item>
+              <b-nav-item href="#" class="option">Repostería</b-nav-item>
             </b-navbar-nav>
           </b-collapse>
         </b-navbar>
@@ -69,12 +69,18 @@ export default {};
   background-color: #d49c6b;
   box-shadow: 2px 2px 6px 3px #252b31;
   color: #252b31;
-  border-radius: 0.8rem 2rem;
+  border-radius: 0.8rem 1.5rem 0.8rem 1.5rem;
   border-style: none;
+}
+.navbar-main-container .option .nav-link:hover {
+  box-shadow: 1px 1px 11px 4px #F6FAFB;
 }
 .navbar-user-container .user .nav-link {
   margin-right: 2rem;
   border-radius: 3rem;
+}
+.navbar-user-container .user .nav-link:hover {
+  box-shadow: 0px 0px 6px 3px #F6FAFB;
 }
 /*
 .navbar-nav .user .nav-link{
