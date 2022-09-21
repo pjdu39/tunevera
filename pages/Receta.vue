@@ -49,11 +49,22 @@
         </p>
       </b-col>
       <b-col class="col-md-3 box box3">
+        <div>
+          <b-form-input v-model="buscar" class="buscador" placeholder="Buscar..."></b-form-input>
+          <b-list-group-item
+            class="badge-container"
+            v-for="result in busquedaResultado"
+            :key="result"
+          >
+            <a class="badge-custom">
+              {{ result.literal }}
+            </a>
+          </b-list-group-item>
+        </div>
+        <p>Meter el buscador de ingredientes.</p>
         <p>
-          Meter el buscador de ingredientes.
-        </p>
-        <p>
-          Utilizar Badge de bootstrap-vue para mostrar los ingredientes seleccionados.
+          Utilizar Badge de bootstrap-vue para mostrar los ingredientes
+          seleccionados.
         </p>
       </b-col>
     </b-row>
@@ -61,7 +72,30 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      buscar: "",
+      buscar2: "tocino",
+      ingredientes: [
+        { id: 1, literal: "piña" },
+        { id: 2, literal: "tocino" },
+        { id: 3, literal: "cerveza" },
+        { id: 4, literal: "huevo" },
+        { id: 5, literal: "arroz" },
+        { id: 6, literal: "tomate" },
+        { id: 7, literal: "pera" },
+        { id: 8, literal: "puerro" },
+      ],
+    };
+  },
+  computed: {
+    busquedaResultado() {
+      if (!this.buscar) return [];
+      return this.ingredientes.filter((x) => x.literal.includes(this.buscar));
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -69,10 +103,26 @@ export default {};
 }
 .box3 {
 }
+.buscador {
+  margin-bottom: 1.5rem;
+}
+.badge-container {
+  display: inline;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+}
+.badge-custom {
+  color: #252b31;
+  background-color: #D49C6B;
+  border-radius: 1rem;
+  padding-inline: .4rem;
+  margin-right: .4rem;
+}
 .box2 {
   background-color: #eaedee;
   border-radius: 1rem;
-  box-shadow: 1.5px 1.5px 30px -10px #252b31;;
+  box-shadow: 1.5px 1.5px 30px -10px #252b31;
 }
 
 /*
