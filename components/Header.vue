@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="header">
     <div class="banner">
       <div class="navbar-user-container">
         <b-navbar toggleable="lg">
@@ -38,6 +38,9 @@ export default {};
 </script>
 
 <style scoped>
+.header {
+  max-width: 100vw;
+  }
 .banner {
   height: 8rem;
   margin-bottom: 6rem;

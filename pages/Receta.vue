@@ -102,6 +102,7 @@ export default {
 .box1 {
 }
 .box3 {
+  padding-right: 5rem;
 }
 .buscador {
   margin-bottom: 1.5rem;
