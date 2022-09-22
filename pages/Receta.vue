@@ -2,12 +2,14 @@
   <div>
     <b-row>
       <b-col class="col-md-3 box box1">
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsum error
-          quod, magnam quos veritatis, ut repellendus nisi voluptatibus ab
-          ducimus in. Ex qui voluptatem, voluptas nulla maxime corrupti
-          praesentium doloremque?
-        </p>
+        <div class="perfil-container">
+          <div class="wrapper-foto">
+            <img class="perfil-foto" :src="usuarioDummy.img">
+          </div>
+          <div class="perfil-info">{{ usuarioDummy.publicaciones }}</div>
+          <div class="perfil-info">{{ usuarioDummy.seguidores }}</div>
+          <div>{{ usuarioDummy.nombreCompleto }}</div>
+        </div>
       </b-col>
       <b-col class="col-md-6 box box2">
         <h1 class="title-receta">Receta</h1>
@@ -56,16 +58,12 @@
             v-for="result in busquedaResultado"
             :key="result"
           >
+            <!-- Considerar utilizar Badge de bootstrap-vue para mostrar los ingredientes seleccionados. -->
             <a class="badge-custom">
               {{ result.literal }}
             </a>
           </b-list-group-item>
         </div>
-        <p>Meter el buscador de ingredientes.</p>
-        <p>
-          Utilizar Badge de bootstrap-vue para mostrar los ingredientes
-          seleccionados.
-        </p>
       </b-col>
     </b-row>
   </div>
@@ -86,8 +84,26 @@ export default {
         { id: 6, literal: "tomate" },
         { id: 7, literal: "pera" },
         { id: 8, literal: "puerro" },
+        { id: 9, literal: "manzana" },
+        { id: 10, literal: "plátano" },
+        { id: 11, literal: "caldo de pollo" },
+        { id: 12, literal: "edamame" },
+        { id: 13, literal: "arroz integral" },
+        { id: 14, literal: "jamón serrano" },
+        { id: 15, literal: "jamón york" },
+        { id: 16, literal: "queso provolone" },
+        { id: 17, literal: "queso chedar" },
+        { id: 18, literal: "queso de cabra" },
+        { id: 19, literal: "queso parmesano" },
+        { id: 20, literal: "queso mozarella" }
       ],
-    };
+      usuarioDummy: {
+        nombreCompleto: 'Juan Pérez Delgado',
+        publicaciones: 28,
+        seguidores: 143,
+        img: require("~/assets/img/foto_perfil2.jpg")
+      }
+    }
   },
   computed: {
     busquedaResultado() {
@@ -100,6 +116,26 @@ export default {
 
 <style scoped>
 .box1 {
+}
+.perfil-container {
+  margin-left: 6rem;
+}
+.wrapper-foto {
+  display: inline-block;
+  width: 3.5rem;
+  height: 3.5rem;
+  overflow: hidden;
+  position: relative;
+  border-radius: 50%;
+}
+.perfil-info {
+  text-align: right;
+  float: right;
+}
+.perfil-foto {
+  width: auto;
+  height: 100%;
+  margin-left: -.4rem;
 }
 .box3 {
   padding-right: 5rem;
