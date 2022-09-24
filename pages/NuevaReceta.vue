@@ -1,6 +1,6 @@
 <template>
   <div class="borrar-box">
-    <div class="section1">
+    <div class="section">
       <b-row>
         <b-col class="col-md-7">
           <b-form-group
@@ -18,14 +18,14 @@
           </b-form-group>
         </b-col>
         <b-col class="col-md-5">
-          <label class="subir-imagen">
+          <label class="anadir-btn subir-imagen">
             <input type="file" :v-model="foto" />
             Subir imagen
           </label>
         </b-col>
       </b-row>
     </div>
-    <div class="section2">
+    <div class="section">
       <b-row>
         <b-col class="col-md-6">
           <b-form-group
@@ -63,7 +63,14 @@
         </b-col>
       </b-row>
     </div>
-    <div class="section3"></div>
+    <div class="section">
+        <button class="anadir-btn otro-ingrediente" @click="OtroIngrediente()">
+            +
+        </button>
+    </div>
+    <div class="section">
+        
+    </div>
   </div>
 </template>
 
@@ -77,9 +84,15 @@ export default {
       ingredientes: [],
       cantidad: 0,
       unidadesDummy: [
-        { value: 1, text: "g" },
-        { value: 2, text: "ml" },
-        { value: 3, text: "u" },
+        { value: 1, text: "kilogramos" },
+        { value: 2, text: "gramos" },
+        { value: 3, text: "litros" },
+        { value: 4, text: "mililitros" },
+        { value: 5, text: "onzas" },
+        { value: 5, text: "tazas" },
+        { value: 5, text: "cucharadas" },
+        { value: 5, text: "cucharaditas" },
+        { value: 5, text: "unidades" },
     ],
     };
   },
@@ -96,7 +109,7 @@ export default {
 .input-tittle {
   font-size: 120%;
 }
-.subir-imagen {
+.anadir-btn {
   background-color: #d49c6b;
   box-shadow: 2px 2px 6px 0px #252b31;
   color: #252b31;
@@ -105,8 +118,12 @@ export default {
   padding: 0.4rem 0.5rem 0.5rem 0.5rem;
   margin-right: 0.4rem;
 }
-.subir-imagen:hover {
+.anadir-btn:hover {
   box-shadow: 1px 1px 10px 10px #eaedee;
+}
+.subir-imagen {
+}
+.subir-imagen:hover {
 }
 input[type="file"] {
   display: none;
@@ -114,5 +131,10 @@ input[type="file"] {
 .ingrediente-container {
 }
 .input-ingrediente {
+}
+.otro-ingrediente {
+    width: 3rem;
+}
+.otro-ingrediente:hover {
 }
 </style>
