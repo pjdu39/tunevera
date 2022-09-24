@@ -24,7 +24,7 @@
             </div>
           </b-col>
         </b-row>
-        <div>{{ usuarioDummy.nombreCompleto }}</div>
+        <h6>{{ usuarioDummy.nombreCompleto }}</h6>
         <p>
           CHEF de @nakedandsated THE BEST FODDIE 2018 AUTOR DE 3 LIBROS
           CONSEJERO MCHEF VI
