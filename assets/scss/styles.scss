@@ -94,7 +94,11 @@ body {
   padding: 1.2rem 0;
 }
 
-.title-seccion {
+.section {
+  margin-bottom: 2rem;
+}
+
+.title-seccion { /* BORRAR: Obsoleto. Borrar cuando se eliminen todas sus llamadas en Recetas.vue */
   border-top: 1px solid #C1C8C7;
   padding: 0.8rem 0;
 }
@@ -113,7 +117,12 @@ body {
   width: 76%;
   /* Utilizar variables css para calcular  */
 }
-
+.input-container { /* TODO: Renombrar! Esto se utiliza para cosas que no son imputs. Nuevo nombre => group-item-container o group-item-wrapper */
+  display: block; /* Volver a inline-block si aparecen comportamientos extraños */
+  padding: 0;
+  background-color: transparent;
+  border: none;
+}
 .login-button {
   bottom: 2.5rem;
   position: absolute;

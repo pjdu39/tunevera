@@ -2,7 +2,7 @@
   <div>
     <b-row>
       <b-col class="col-md-3 box perfil-container">
-        <b-row class="perfil-seccion1">
+        <b-row class="perfil-section1">
           <b-col class="col-md-4 perfil-foto">
             <div class="wrapper-foto">
               <img class="foto" :src="usuarioDummy.img" />
@@ -31,6 +31,41 @@
           <a href="#">linktr.ee/chefbosquet</a>
         </p>
       </b-col>
+      <b-col class="col-md-6 box box2">
+        <h1 class="title-receta">{{ recetaDummy.titulo }}</h1>
+        <p>{{ recetaDummy.descripcion }}</p>
+        <div class="section">
+          <h4 class="section section--receta">Ingredientes</h4>
+          <ul>
+            <b-list-group-item
+              class="group-item-container"
+              v-for="(ingrediente, index) in recetaDummy.ingredientes"
+              :key="index"
+            >
+              <li>
+                {{
+                  ingrediente.cantidad +
+                  " " +
+                  ingrediente.unidad +
+                  " " +
+                  ingrediente.literal
+                }}
+              </li>
+            </b-list-group-item>
+          </ul>
+        </div>
+        <div class="section">
+          <b-list-group-item
+            class="group-item-container"
+            v-for="(paso, index) in recetaDummy.pasos"
+            :key="index"
+          >
+            <h4 class="section section--paso">Paso {{ index + 1 }}</h4>
+            <p>{{ paso.contenido }}</p>
+          </b-list-group-item>
+        </div>
+      </b-col>
+      <!--
       <b-col class="col-md-6 box box2">
         <h1 class="title-receta">Receta</h1>
         <h3 class="title-seccion">Ingredientes</h3>
@@ -70,6 +105,7 @@
           praesentium doloremque?
         </p>
       </b-col>
+      -->
       <b-col class="col-md-3 box box3">
         <div class="buscador-card">
           <b-form-input
@@ -97,7 +133,8 @@
           >
             <!-- Considerar utilizar Badge de bootstrap-vue para mostrar los ingredientes seleccionados. -->
             <a class="badge-custom badge-custom--filtro">
-              {{ filtro.literal }} <!-- Icono de X en un link para quitar el filtro -->
+              {{ filtro.literal }}
+              <!-- Icono de X en un link para quitar el filtro -->
             </a>
           </b-list-group-item>
         </div>
@@ -140,6 +177,38 @@ export default {
         seguidores: 143,
         img: require("~/assets/img/foto_perfil2.jpg"),
       },
+      recetaDummy: {
+        titulo: "Huevos Fritos",
+        foto: null,
+        descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsum error quod, magnam quos veritatis, ut repellendus nisi voluptatibus ab ducimus in.',
+        ingredientes: [
+          { literal: "huevo", cantidad: 2, unidad: "unidades" },
+          { literal: "cerveza", cantidad: 100, unidad: "ml" },
+          { literal: "aceite", cantidad: 1, unidad: "cucharada" },
+        ],
+        pasos: [
+          {
+            numero: 1,
+            contenido:
+              "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsum error quod, magnam quos veritatis, ut repellendus nisi voluptatibus ab ducimus in. Ex qui voluptatem, voluptas nulla maxime corrupti praesentium doloremque?",
+          },
+          {
+            numero: 2,
+            contenido:
+              "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsum error quod, magnam quos veritatis, ut repellendus nisi voluptatibus ab ducimus in. Ex qui voluptatem, voluptas nulla maxime corrupti praesentium doloremque?",
+          },
+          {
+            numero: 3,
+            contenido:
+              "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsum error quod, magnam quos veritatis, ut repellendus nisi voluptatibus ab ducimus in. Ex qui voluptatem, voluptas nulla maxime corrupti praesentium doloremque?",
+          },
+          {
+            numero: 4,
+            contenido:
+              "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsum error quod, magnam quos veritatis, ut repellendus nisi voluptatibus ab ducimus in. Ex qui voluptatem, voluptas nulla maxime corrupti praesentium doloremque?",
+          },
+        ],
+      },
       filtros: [],
     };
   },
@@ -152,7 +221,7 @@ export default {
   methods: {
     AddFilter(filtro) {
       if (this.filtros.includes(filtro)) {
-        return
+        return;
       }
       this.filtros.push(filtro);
     },
@@ -164,7 +233,7 @@ export default {
 .perfil-container {
   padding: 2.5rem 3rem 0 4rem;
 }
-.perfil-seccion1 {
+.perfil-section1 {
   margin-bottom: 2rem;
 }
 .perfil-foto {
@@ -227,7 +296,7 @@ export default {
   margin-right: 0.4rem;
 }
 .buscador-card--filtro {
-  padding: .6rem;
+  padding: 0.6rem;
   min-height: 10rem;
   max-height: none;
   border-radius: 1rem;
@@ -244,6 +313,21 @@ export default {
   background-color: #eaedee;
   border-radius: 1rem;
   box-shadow: 1.5px 1.5px 30px -10px #252b31;
+}
+.section--receta {
+  border-top: 1px solid #c1c8c7;
+  padding: 0.8rem 0;
+}
+.section--paso {
+  margin-bottom: 0;
+  border-top: 1px solid #c1c8c7;
+  padding: 0.8rem 0;
+}
+.group-item-container {
+  display: block;
+  padding: 0;
+  background-color: transparent;
+  border: none;
 }
 
 /*

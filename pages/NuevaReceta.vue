@@ -182,7 +182,7 @@ export default {
       tittle: null,
       foto: null,
       ingredientes: [{ literal: null, cantidad: 0, unidad: null }],
-      pasos: [{ numero: 1, contenido: "" }],
+      pasos: [{ numero: 1, contenido: '' }],
       descripcion: null,
       unidadesDummy: [
         { value: 1, text: "kilogramos" },
@@ -273,9 +273,6 @@ export default {
   padding-left: 30%;
   padding-right: 30%;
 }
-.section {
-  margin-bottom: 2rem;
-}
 .tittle-container {
   width: 100%;
 }
@@ -325,12 +322,6 @@ export default {
 }
 input[type="file"] {
   display: none;
-}
-.input-container {
-  display: inline-block;
-  padding: 0;
-  background-color: transparent;
-  border: none;
 }
 .input-container--ingrediente {
 }
