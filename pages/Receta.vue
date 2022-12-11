@@ -134,7 +134,7 @@
             <!-- Considerar utilizar Badge de bootstrap-vue para mostrar los ingredientes seleccionados. -->
             <a class="badge-custom badge-custom--filtro">
               {{ filtro.literal }}
-              <!-- Icono de X en un link para quitar el filtro -->
+              <!-- TODO: Icono de X en un link para quitar el filtro -->
             </a>
           </b-list-group-item>
         </div>
