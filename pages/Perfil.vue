@@ -62,11 +62,16 @@
             :key="index"
           >
             <a :class="('receta-globo ' + derechaIzquierda(index, 'globo'))" href="#">
-              <div class="wrapper-dibujo">
+              <div v-if="index % 2 === 0" class="wrapper-dibujo">
                 <img class="dibujo" :src="seleccionaDibujo()" />
               </div>
-              <h4>{{ receta.nombre }}</h4>
-              <div>{{ receta.descripcion }}</div>
+              <div class="info_receta">
+                <h4>{{ receta.nombre }}</h4>
+                <div>{{ receta.descripcion }}</div>
+              </div>
+              <div v-if="index % 2 === 1" class="wrapper-dibujo">
+                <img class="dibujo" :src="seleccionaDibujo()" />
+              </div>
             </a>
           </b-list-group-item>
         </div>
@@ -114,12 +119,9 @@ export default {
         },
       ],
       dibujosComida: [
-        { name: "comida1", img: require("~/assets/img/dibujo-comida1.jpg") },
-        { name: "comida2", img: require("~/assets/img/dibujo-comida2.jpg") },
-        { name: "comida3", img: require("~/assets/img/dibujo-comida3.jpg") },
-        { name: "comida4", img: require("~/assets/img/dibujo-comida4.jpg") },
-        { name: "comida5", img: require("~/assets/img/dibujo-comida5.jpg") },
-        { name: "comida6", img: require("~/assets/img/dibujo-comida6.jpg") }
+        { name: "comida1", img: require("~/assets/img/food_draw_1.png") },
+        { name: "comida2", img: require("~/assets/img/food_draw_2.png") },
+        { name: "comida3", img: require("~/assets/img/food_draw_3.png") }
       ]
     }
   },
@@ -134,7 +136,7 @@ export default {
       return ''
     },
     seleccionaDibujo() {
-      let r = Math.floor(Math.random() * 6)
+      let r = Math.floor(Math.random() * 3)
       return this.dibujosComida[r].img
     }
   }
@@ -267,6 +269,7 @@ export default {
 }
 
 .group-item-container {
+  border: none;
   background-color: transparent;
 }
 
@@ -279,8 +282,8 @@ export default {
 }
 
 .receta-globo {
-  width: 70%;
-  display: inline-block;
+  width: 80%;
+  display: inline-flex;
   padding: 1rem;
   color: black;
   background-color: #d49c6b;
@@ -288,29 +291,33 @@ export default {
 }
 
 .receta-globo--izquierda {
-  margin-right: 30%;
+  margin-right: 20%;
 }
 
 .receta-globo--derecha {
   /* margin-right: 0; */
-  margin-left: 30%;
+  margin-left: 20%;
   text-align: right;
 }
 
+.info_receta {
+  vertical-align: middle;
+  margin: 0 .9rem 0 .9rem;
+}
+
 .wrapper-dibujo {
+  margin: 0 0 .4rem 0;
   display: inline-block;
-  width: 6rem;
-  height: 6rem;
-  overflow: hidden;
+  width: 7rem; /* Valorar poner el mismo valor que en height por motivos de wrapping si hiciera falta. */
+  height: auto;
   position: relative;
   border-radius: 50%;
-  background-color: black;
+  background-color: transparent;
 }
 
 .dibujo {
-  width: auto;
-  height: 100%;
-  background-color: black;
+  width: inherit;
+  height: auto;
 }
 
 /*
