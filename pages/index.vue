@@ -1,60 +1,103 @@
 <template>
   <div>
-    <main>
-      <h1>Receta</h1>
-      <p>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-      </p>
-      <p>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-      </p>
-      <p>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem, animi, quod amet pariatur deleniti, 
-        modi quis corrupti quo quisquam recusandae voluptatem. Rerum id, officia porro repellendus temporibus saepe deleniti expedita?
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-      </p>
-    </main>
+    <!-- <main></main> -->
+    <b-row>
+      <b-col md="4"></b-col>
+      <b-col md="4">
+        <b-list-group-item
+            class="elemento"
+            v-for="(elemento, index) in elementos"
+            :key="index"
+          >
+          <h4>{{ elemento.titulo }}</h4>
+          <div>{{ elemento.descripcion }}</div>
+          <div class="interacciones">
+            <div class="likes">
+              <span class="fa fa-heart" aria-hidden="true"></span>
+            </div>
+            <div class="num">{{ elemento.likes }}</div>
+            <div class="comentarios">
+              <span class="fa fa-comment" aria-hidden="true"></span>
+            </div>
+            <div class="num">{{ elemento.comentarios.length }}</div>
+          </div>
+        </b-list-group-item>
+      </b-col>
+      <b-col md="4"></b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Footer from '~/components/Footer.vue'
 export default {
-  components: {
-    Header,
-    Footer
+  data() {
+    return {
+      elementos: [
+        { 
+          titulo: 'Cocido',
+          descripcion: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
+          likes: 67,
+          comentarios: [
+            { usuario: 'Pepe Hamond', texto: 'Lorem ipsum dolor sit amet' },
+            { usuario: 'Carlos', texto: 'Consectetur adipisicing elit. Dolor sit amet consectetur adipisicing' }
+          ]
+        },
+        { 
+          titulo: 'Galletas',
+          descripcion: 'Lorem ipsum dolor sit amet adipisicing elit',
+          likes: 216,
+          comentarios: [
+            { usuario: 'Pepe Hamond', texto: 'Consectetur adipisicing elit. Dolor sit amet ipsum dolor sit consectetur adipisicing hahah' },
+            { usuario: 'Carlos', texto: 'Lorem ipsum dolor sit amet.' },
+            { usuario: 'Andrea', texto: 'Consectetur elit adipisicing. Dolor sit amet consectetur adipisicing' }
+          ]
+        }
+      ]
+    }
   }
 }
 </script>
 <style scoped>
+
+.mainBox { /* TODO: Borrar si continúa sin usarse */
+  background-color: #eaedee;
+  border-radius: 1rem;
+  box-shadow: 1.5px 1.5px 30px -10px #252b31;
+}
+
+.elemento {
+  margin-bottom: 2rem;
+  background-color: #eaedee;
+  border-radius: 1rem;
+  box-shadow: 1.5px 1.5px 30px -10px #252b31;
+}
+
+.interacciones {
+  margin-top: 1rem;
+  display: inline-flex;
+}
+
+.likes {
+  text-align: center;
+  height: 1.9rem;
+  width: 1.9rem;
+  padding: .25rem;
+  color: #d49c6b;
+}
+
+.comentarios {
+  text-align: center;
+  height: 1.9rem;
+  width: 1.9rem;
+  padding: .25rem;
+  color: #d49c6b;
+}
+
+.num {
+  font-size: 90%;
+  padding-top: .4rem;
+  margin-left: .2rem;
+  margin-right: 1rem;
+}
 
 </style>
