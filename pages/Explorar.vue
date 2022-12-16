@@ -1,19 +1,26 @@
 <template>
   <div>
     <b-row>
-      <b-col class="col-md-2"></b-col>
-      <b-col class="col-md-8 images-container">
-        <b-list-group-item class="card" v-for="receta in recetas" :key="receta">
-          <div class="card-tittle" :hidden="muestraTitulo">
-            {{ receta.name }}
-          </div>
-          <a href="#" class="card-link">
-            <!-- @mouseover="hover(receta.name)  Evento de hover -->
-            <img class="card-image" :src="receta.img" />
-          </a>
-        </b-list-group-item>
+      <b-col class="col-md-4"></b-col>
+      <b-col class="col-md-4">
+        <b-form-input
+          v-model="buscar"
+          class="buscador"
+          placeholder="Buscar..."
+        ></b-form-input>
+        <div class="images-container">
+          <b-list-group-item class="card" v-for="receta in recetas" :key="receta">
+            <div class="card-tittle" :hidden="muestraTitulo">
+              {{ receta.name }}
+            </div>
+            <a href="#" class="card-link">
+              <!-- @mouseover="hover(receta.name)  Evento de hover -->
+              <img class="card-image" :src="receta.img" />
+            </a>
+          </b-list-group-item>
+        </div>
       </b-col>
-      <b-col class="col-md-2"></b-col>
+      <b-col class="col-md-4"></b-col>
     </b-row>
   </div>
 </template>
@@ -29,17 +36,18 @@ export default {
         { name: "Postre", img: require("~/assets/img/postre1.jpg") },
         { name: "Cóctel", img: require("~/assets/img/coctel1.jpg") },
         { name: "Pizza", img: require("~/assets/img/pizza.jpg") },
+        { name: "Postre", img: require("~/assets/img/postre1.jpg") },
         { name: "Cocido", img: require("~/assets/img/cocido.jpg") },
         { name: "Postre", img: require("~/assets/img/postre1.jpg") },
         { name: "Cóctel", img: require("~/assets/img/coctel1.jpg") },
+        { name: "Postre", img: require("~/assets/img/postre1.jpg") },
         { name: "Pizza", img: require("~/assets/img/pizza.jpg") },
         { name: "Cocido", img: require("~/assets/img/cocido.jpg") },
         { name: "Postre", img: require("~/assets/img/postre1.jpg") },
+        { name: "Pizza", img: require("~/assets/img/pizza.jpg") },
         { name: "Cóctel", img: require("~/assets/img/coctel1.jpg") },
         { name: "Pizza", img: require("~/assets/img/pizza.jpg") },
-        { name: "Cocido", img: require("~/assets/img/cocido.jpg") },
         { name: "Postre", img: require("~/assets/img/postre1.jpg") },
-        { name: "Cóctel", img: require("~/assets/img/coctel1.jpg") }
       ],
     };
   },
@@ -53,15 +61,15 @@ export default {
 .images-container {
   max-width: 100%;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   /* grid-template-rows: repeat(auto-fill, 200px); */ /* Averiguar qué es esto y por qué solo se está aplicando a la primera row */
   row-gap: 0;
   column-gap: 0;
   overflow: auto;
 }
 .card {
-  width: 12vw;
-  height: 12vw;
+  width: 7vw;
+  height: 7vw;
   margin-top: 1rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
@@ -72,9 +80,8 @@ export default {
   overflow: hidden;
 }
 .card:hover {
-    
-  width: 12.2vw;
-  height: 12.2vw;
+  width: 7.2vw;
+  height: 7.2vw;
   margin-right: 0rem;
   margin-bottom: 0rem;
   box-shadow: 1.5px 1.5px 8px 6px #252b31;

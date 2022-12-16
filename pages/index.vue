@@ -9,7 +9,10 @@
             v-for="(elemento, index) in elementos"
             :key="index"
           >
-          <h4>{{ elemento.titulo }}</h4>
+          <div class="linea-superior">
+            <h4>{{ elemento.titulo }}</h4>
+            <div class="autor">por <b>{{ elemento.autor }}</b></div>
+          </div>
           <div>{{ elemento.descripcion }}</div>
           <div class="interacciones">
             <div class="likes">
@@ -36,6 +39,7 @@ export default {
         { 
           titulo: 'Cocido',
           descripcion: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
+          autor: 'Carlos',
           likes: 67,
           comentarios: [
             { usuario: 'Pepe Hamond', texto: 'Lorem ipsum dolor sit amet' },
@@ -45,6 +49,7 @@ export default {
         { 
           titulo: 'Galletas',
           descripcion: 'Lorem ipsum dolor sit amet adipisicing elit',
+          autor: 'Andrea',
           likes: 216,
           comentarios: [
             { usuario: 'Pepe Hamond', texto: 'Consectetur adipisicing elit. Dolor sit amet ipsum dolor sit consectetur adipisicing hahah' },
@@ -70,6 +75,17 @@ export default {
   background-color: #eaedee;
   border-radius: 1rem;
   box-shadow: 1.5px 1.5px 30px -10px #252b31;
+}
+
+.linea-superior {
+  display: inline-flex;
+  width: 100%;
+}
+
+.autor {
+  text-align: end;
+  margin-left: auto;
+  font-style: italic;
 }
 
 .interacciones {
