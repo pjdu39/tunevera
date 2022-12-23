@@ -22,9 +22,15 @@
             <div v-for="opcion in elemento.opciones" :key="opcion.id">
               <div class="encuesta-opcion">
                 <div class="encuesta-opcion-texto">{{ opcion.texto }}</div>
-                <!--<div class="encuesta-opcion-barra" :style="'width: 2rem'"></div>-->
                 <div class="encuesta-opcion-barra" :style="'width: ' + calculaBarraEncuesta(elemento.opciones, opcion) + 'rem;'"></div>
-                <div class="encuesta-opcion-barra encuesta-opcion-barra--fondo"></div>
+                <!-- Por algún motivo desconocido, en este div estoy obligado a aplicar el text-align en el style, ya que no se aplica en la clase -->
+                <div 
+                    class="encuesta-opcion-barra encuesta-opcion-barra--fondo"
+                  >
+                </div>
+                <div class="encuesta-opcion-barra porcentaje" style="text-align: end;">
+                  {{ calculaPorcentajeEncuesta(elemento.opciones, opcion) }}%
+                </div>
               </div>
             </div>
           </div>
@@ -92,7 +98,7 @@ export default {
           likes: 693,
           comentarios: [],
           opciones: [
-            { id: 1, texto: 'Con patata', votos: 319 },
+            { id: 1, texto: 'Con patata', votos: 38 },
             { id: 2, texto: 'Sin patata', votos: 856 }
           ]
         }
@@ -101,14 +107,16 @@ export default {
   },
   methods: {
     calculaBarraEncuesta(encuestaOpciones, opcion) {
+      let porcentaje = this.calculaPorcentajeEncuesta(encuestaOpciones, opcion)
+      let result = porcentaje / 5 // Divide entre 5 porque la longitud de la barra es 20rem
+      return result.toFixed(1)
+    },
+    calculaPorcentajeEncuesta(encuestaOpciones, opcion) {
       let votosTotales = encuestaOpciones.reduce(
         (acum, x) => acum + x.votos, 0
       )
-      let porcentaje = opcion.votos / votosTotales * 100
-      
-      console.log(Math.trunc(porcentaje))
-
-      return Math.trunc(porcentaje / 5)
+      let result = opcion.votos / votosTotales * 100
+      return result.toFixed(1)
     }
   }
 }
@@ -180,21 +188,30 @@ export default {
 
 .encuesta-opcion-barra {
   position: absolute;
-  /* width: 12rem; */
   height: 100%;
   top: 0;
   left: 0;
   background-color: #d49c6b;
   border-radius: .5rem 0 0 .5rem;
-  padding: 0 0 0 1rem;
   z-index: 5;
 }
 
 .encuesta-opcion-barra--fondo {
   width: 20rem;
+  padding-top: .1rem;
   background-color: #C1C8C7;
   border-radius: 0.5rem;
+  font-size: 85%;
   z-index: 1;
+}
+
+.porcentaje {
+  width: 20rem;
+  padding-top: .1rem;
+  padding-right: .5rem;
+  background-color: transparent;
+  font-size: 85%;
+  z-index: 15;
 }
 
 .interacciones {
