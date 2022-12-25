@@ -13,7 +13,12 @@
             <div class="tipo-elemento">{{ elemento.tipo }}</div>
             <div class="autor">por <b>{{ elemento.autor }}</b></div>
           </div>
-          <h4 class="titulo">{{ elemento.titulo }}</h4>
+          <div class="linea-superior">
+            <h4 class="titulo">{{ elemento.titulo }}</h4>
+            <div v-if="elemento.tipo === 'Receta'" class="tiempo">
+              {{ elemento.tiempo }}min <span class="fa fa-clock" aria-hidden="true"></span>
+            </div>
+          </div>
           <div>{{ elemento.descripcion }}</div>
           <div 
               v-if="elemento.tipo === 'Encuesta'" 
@@ -59,6 +64,7 @@ export default {
         { 
           tipo: 'Receta',
           titulo: 'Cocido',
+          tiempo: 35,
           descripcion: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
           autor: 'carlos',
           likes: 67,
@@ -68,8 +74,24 @@ export default {
           ]
         },
         { 
+          tipo: 'Encuesta',
+          titulo: 'Qué guiso queréis que os traiga esta semana?',
+          tiempo: null,
+          descripcion: null,
+          autor: 'aka_shiro',
+          likes: 209,
+          comentarios: [],
+          opciones: [
+            { id: 1, texto: 'Lentejas', votos: 109 },
+            { id: 2, texto: 'Caldo gallego', votos: 135 },
+            { id: 2, texto: 'Guiso de pollo', votos: 21 },
+            { id: 2, texto: 'Ramen', votos: 287 }
+          ]
+        },
+        { 
           tipo: 'Receta',
           titulo: 'Galletas',
+          tiempo: 50,
           descripcion: 'Lorem ipsum dolor sit amet adipisicing elit',
           autor: 'andrea',
           likes: 216,
@@ -82,6 +104,7 @@ export default {
         { 
           tipo: 'Discusión',
           titulo: 'Cilantro o no?',
+          tiempo: null,
           descripcion: 'Qué opinais del uso del cilantro en la cocina latino americana?',
           autor: 'sara_rivas_',
           likes: 13,
@@ -93,6 +116,7 @@ export default {
         { 
           tipo: 'Encuesta',
           titulo: 'Cocido con o sin patata?',
+          tiempo: null,
           descripcion: null,
           autor: 'misco_jones',
           likes: 693,
@@ -156,7 +180,14 @@ export default {
 }
 
 .titulo {
-  margin-bottom: 1rem;
+  margin-top: 0.4rem;
+}
+
+.tiempo {
+  color: #C1C8C7;
+  font-size: 160%;
+  text-align: end;
+  margin-left: auto;
 }
 
 .autor {
@@ -166,6 +197,7 @@ export default {
 }
 
 .encuesta-container {
+ margin-top: 0rem;
  margin-bottom: 1rem;
 }
 
@@ -179,7 +211,7 @@ export default {
 
 .encuesta-opcion-texto {
   display: inline-block;
-  position: sticky; /* TODO: Ver qué hace esto y cambiar si es necesario. Ahora está puesto para evitar que el valor por defecto impida que se aploque el z-index */
+  position: sticky; /* TODO: Ver qué hace esto y cambiar si es necesario. Ahora está puesto para evitar que el valor por defecto impida que se aplique el z-index */
   margin-left: .5rem;
   margin-top: .1rem;
   font-size: 85%;
