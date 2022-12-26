@@ -3,11 +3,25 @@
     <b-row>
       <b-col class="col-md-4"></b-col>
       <b-col class="col-md-4">
-        <b-form-input
-          v-model="buscar"
-          class="buscador"
-          placeholder="Buscar..."
-        ></b-form-input>
+        <div class="filtros">
+          <b-form-input
+            v-model="buscar"
+            class="buscador"
+            placeholder="Buscar..."
+          ></b-form-input>
+          <div>Ingredientes</div>
+          <b-dropdown class="por-ingredientes-button" :text="filtroIngredienteText">
+            <b-dropdown-item-button @click="choseFiltroIngredienteText('Que tenga')">Que tenga</b-dropdown-item-button>
+            <b-dropdown-item-button @click="choseFiltroIngredienteText('Que solo tenga')">Que solo tenga</b-dropdown-item-button>
+            <b-dropdown-item-button @click="choseFiltroIngredienteText('Que NO tenga')">Que NO tenga</b-dropdown-item-button>
+          </b-dropdown>
+          <div>Otras opciones de filtrado</div>
+          <b-dropdown class="por-ingredientes-button" text="Por ingredientes">
+            <b-dropdown-item-button>Distinciones</b-dropdown-item-button>
+            <b-dropdown-item-button>Categoría culinaria</b-dropdown-item-button>
+            <b-dropdown-item-button>Origen</b-dropdown-item-button>
+          </b-dropdown>
+        </div>
         <div class="images-container">
           <b-list-group-item class="card" v-for="receta in recetas" :key="receta">
             <div class="card-tittle" :hidden="muestraTitulo">
@@ -31,6 +45,7 @@ export default {
     return {
       muestraTitulo: false,
       tituloRecetaHover: null,
+      filtroIngredienteText: 'Que tenga',
       recetas: [
         { name: "Cocido", img: require("~/assets/img/cocido.jpg") },
         { name: "Postre", img: require("~/assets/img/postre1.jpg") },
@@ -51,6 +66,11 @@ export default {
       ],
     };
   },
+  methods: {
+    choseFiltroIngredienteText(text) {
+      this.filtroIngredienteText = text
+    }
+  }
 };
 </script>
 
@@ -58,6 +78,31 @@ export default {
 :root {
   --image-z-indx: 10
 }
+
+.filtros {
+  margin-bottom: 5rem;
+}
+
+.buscador {
+  margin-bottom: 1.5rem;
+}
+
+.btn-secondary {
+  color: #fff;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.por-ingredientes-button {
+  text-align: center;
+  padding: .5rem;
+  background-color: #d49c6b;
+  box-shadow: 2px 2px 10px 1px #252b31;
+  color: #252b31;
+  border-radius: 1rem;
+  border-style: none;
+}
+
 .images-container {
   max-width: 100%;
   display: grid;
