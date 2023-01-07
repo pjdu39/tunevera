@@ -1,25 +1,30 @@
 <template>
-  <div>
-    <b-row>
-      <b-col class="col-md-4"></b-col>
-      <b-col class="col-md-4">
+  <div class="explorar-container">
         <div class="filtros">
           <b-form-input
             v-model="buscarGeneral"
             class="buscador"
             placeholder="Buscar..."
           ></b-form-input>
+          <b-tabs content-class="mt-3">
+            <b-tab title="Ingredientes" active>
+              asdasdasd
+            </b-tab>
+            <b-tab title="Categorías">
+              asdasdasdasd
+            </b-tab>
+          </b-tabs>
           <div class="filtro-ingredientes-container">
             <b-button 
                 v-if="!filtroDesplegado" 
-                class="desplegable-button desplegable-button--ingredientes" 
+                class="button desplegable-button desplegable-button--ingredientes" 
                 @click="despliegaFiltro('ingredientes')"
               >
               Ingredientes
             </b-button>
             <b-button 
                 v-if="!filtroDesplegado" 
-                class="desplegable-button desplegable-button--categoria"
+                class="button desplegable-button desplegable-button--categoria"
                 @click="despliegaFiltro('categorias')"
               >
               Categorías
@@ -56,31 +61,39 @@
                 <b-button :class="'filtro-button filtro-button--ingredientes ' + focusButton('noTiene')" @click="seleccionaTipoFiltroIngredientes('noTiene')">
                   Que NO tenga
                 </b-button>
-                <b-button :class="'filtro-button filtro-button--ingredientes '  + focusButton('soloTiene')" @click="seleccionaTipoFiltroIngredientes('soloTiene')">
-                  Que solo tenga
-                </b-button>
-                <b-form-checkbox v-model="vegetariano" class="check-vegetariano" name="check-button" switch @change="autoVegetariano('vegetariano')">
-                  Vegetariano
-                </b-form-checkbox>
-                <b-form-checkbox v-model="vegano" class="check-vegano" name="check-button" switch @change="autoVegetariano('vegano')">
-                  Vegano
-                </b-form-checkbox>
               </b-button-group>
-              <b-form-input
-                v-model="buscarIngrediente"
-                class="buscador-ingredientes"
-                placeholder="Buscar ingrediente..."
-              ></b-form-input>
+              <div class="buscador-ingredientes-container">
+                <div class="form-and-button">
+                  <b-form-input
+                    v-model="buscarIngrediente"
+                    class="buscador-ingredientes"
+                    placeholder="Buscar ingrediente..."
+                  ></b-form-input>
+                  <b-button class="button add-button"><span class="fa fa-plus" aria-hidden="true"></span></b-button>
+                </div>
+                <div class="vege-options">
+                  <b-form-checkbox
+                    v-model="vegetariano"
+                    :class="'button check-vege ' + vegeActive('vegetariano')"
+                    name="check-button"
+                    button
+                    @change="autoVegetariano('vegetariano')"
+                  >
+                    Vegetariano
+                  </b-form-checkbox>
+                  <b-form-checkbox 
+                    v-model="vegano"
+                    :class="'button check-vege ' + vegeActive('vegano')"
+                    name="check-button"
+                    button
+                    @change="autoVegetariano('vegano')"
+                  >
+                    Vegano
+                  </b-form-checkbox>
+                </div>
+              </div>
             </div>
           </div>
-          <!--
-          <div class="line">Ingredientes</div>
-          <b-dropdown class="por-ingredientes-button" :text="filtroIngredienteText">
-            <b-dropdown-item-button @click="choseFiltroIngredienteText('Que tenga')">Que tenga</b-dropdown-item-button>
-            <b-dropdown-item-button @click="choseFiltroIngredienteText('Que solo tenga')">Que solo tenga</b-dropdown-item-button>
-            <b-dropdown-item-button @click="choseFiltroIngredienteText('Que NO tenga')">Que NO tenga</b-dropdown-item-button>
-          </b-dropdown>
-          -->
         </div>
         <div class="images-container">
           <b-list-group-item class="card" v-for="receta in recetas" :key="receta.id">
@@ -93,9 +106,6 @@
             </a>
           </b-list-group-item>
         </div>
-      </b-col>
-      <b-col class="col-md-4"></b-col>
-    </b-row>
   </div>
 </template>
 
@@ -159,6 +169,10 @@ export default {
 
       if(checkboxSeleccionado === 'vegano') this.vegetariano = false
       if(checkboxSeleccionado === 'vegetariano') this.vegano = false
+    },
+    vegeActive(str) {
+      if(str === 'vegetariano' && this.vegetariano) return 'check-vege--active'
+      if(str === 'vegano' && this.vegano) return 'check-vege--active'
     }
   }
 };
@@ -167,6 +181,29 @@ export default {
 <style scoped>
 :root {
   --image-z-indx: 10
+}
+
+.button {
+  text-align: center;
+  background-color: #d49c6b;
+  color: white;
+  border-radius: 1rem !important;
+  border-style: none;
+  box-shadow: none;
+}
+
+.button:hover {
+  box-shadow: 1px 1px 11px 4px #F6FAFB;
+}
+
+.button--selected {
+  color: white;
+  box-shadow: 1px 1px 11px 4px #F6FAFB;
+}
+
+.explorar-container {
+  margin: auto;
+  width: 53rem;
 }
 
 .filtros {
@@ -179,14 +216,9 @@ export default {
 
 .desplegable-button {
   position: absolute;
-  text-align: center;
   padding: .5rem;
   min-width: 8rem;
-  background-color: #d49c6b;
   box-shadow: 2px 2px 10px 1px #252b31;
-  color: #252b31;
-  border-radius: 1rem;
-  border-style: none;
 }
 
 .desplegable-button:hover {
@@ -204,7 +236,7 @@ export default {
 .filtro-ingredientes-container {
   position: relative;
   height: 7rem;
-  width: 70%;
+  width: 100%;
 }
 
 .filtro-ingredientes-button-atras {
@@ -268,23 +300,54 @@ export default {
   padding: .5rem;
 }
 
-.buscador-ingredientes {
+.buscador-ingredientes-container {
   position: absolute;
+  width: calc(100% - 12rem);
   top: 3rem;
-  left: 13rem;
+  right: 0;
 }
 
-.check-vegetariano {
-  position: absolute;
-  top: 6rem;
-  left: 14rem;
+.form-and-button {
+  display: flex;
 }
 
-.check-vegano {
-  position: absolute;
-  top: 6rem;
-  left: 27rem;
+.add-button {
+  border-radius: 0 1rem 1rem 0 !important;
 }
+
+.vege-options {
+  margin: 1rem 0 0 calc(40% - 7rem);
+  width: 100%;
+}
+
+.check-vege {
+  background-color: #5E6668;
+  margin: 0 calc(20% - 4rem) 0 1rem;
+  border-radius: 0.7rem !important;
+}
+
+.check-vege--active {
+  background-color: #d49c6b;
+  box-shadow: 1px 1px 11px 4px #F6FAFB;
+}
+
+.check-vege:deep() .btn-secondary {
+  background-color: transparent !important;
+  border-style: none !important;
+  box-shadow: none !important;
+}
+
+/* TODO: 
+    IMPORTANTE:
+    - Si decido quitar el estilo de botón para vegano/vegetariano, esto cambia el color del checkbox normal */
+label:deep() .custom-control-input {
+  background-color: #d49c6b !important;
+}
+
+ /*
+:deep() .check-vege > .btn-secondary:active {
+  background-color: #d49c6b;
+}*/
 
 /*
 .line {
@@ -325,6 +388,7 @@ export default {
 */
 
 .images-container {
+  position: relative;
   max-width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -334,8 +398,8 @@ export default {
   overflow: auto;
 }
 .card {
-  width: 7vw;
-  height: 7vw;
+  width: 90%;
+  aspect-ratio: 1/1;
   margin-top: 1rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
@@ -346,8 +410,8 @@ export default {
   overflow: hidden;
 }
 .card:hover {
-  width: 7.2vw;
-  height: 7.2vw;
+  width: 92%;
+  aspect-ratio: 1/1;
   margin-right: 0rem;
   margin-bottom: 0rem;
   box-shadow: 1.5px 1.5px 8px 6px #252b31;
@@ -374,8 +438,15 @@ export default {
   top: 0;
   left: 0;
   width: auto;
-  height: inherit;
+  height: 100%;
   position: absolute;
   z-index: var(--image-z-indx, 10);
+}
+
+@media (max-width: 1250px) {
+  .explorar-container {
+    margin: auto;
+    width: 68%;
+  }
 }
 </style>

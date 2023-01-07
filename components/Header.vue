@@ -2,6 +2,7 @@
   <div class="header">
     <div class="banner">
       <div class="navbar-user-container">
+        <!--
         <b-navbar toggleable="lg">
           <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
           <b-collapse id="nav-collapse" is-nav>
@@ -12,6 +13,7 @@
             </b-navbar-nav>
           </b-collapse>
         </b-navbar>
+        -->
       </div>
       <div class="navbar-main-container">
         <b-navbar toggleable="lg">
