@@ -6,8 +6,8 @@
             class="buscador"
             placeholder="Buscar..."
           ></b-form-input>
-          <b-tabs content-class="mt-3">
-            <b-tab title="Ingredientes" active>
+          <b-tabs v-model="tab" content-class="mt-3" class="tab-option">
+            <b-tab title="Ingredientes">
               asdasdasd
             </b-tab>
             <b-tab title="Categorías">
@@ -115,9 +115,9 @@ export default {
     return {
       muestraTitulo: false,
       tituloRecetaHover: null,
-      /* filtroIngredienteText: 'Que tenga', */
       filtroDesplegado: null,
       tipoFiltroIngredientesSeleccionado: 'tiene',
+      tab: 'Categorías',
       ingredientesFiltrados: {
         tiene: [],
         noTiene: [],
@@ -153,6 +153,7 @@ export default {
       this.filtroIngredienteText = text
     }, */
     despliegaFiltro(value) {
+      this.tab = 1
       this.filtroDesplegado = value
     },
     seleccionaTipoFiltroIngredientes(str) {
@@ -212,6 +213,14 @@ export default {
 
 .buscador {
   margin-bottom: 1.5rem;
+}
+
+.tab-option:deep() a {
+  border-radius: 1rem;
+}
+
+.tab-option:deep() a:active {
+  background-color: #d49c6b;
 }
 
 .desplegable-button {

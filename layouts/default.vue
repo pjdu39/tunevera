@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header />
+    <Header class="header"/>
     <div class="nuxt-container">
       <Nuxt />
     </div>
@@ -18,11 +18,17 @@ export default {
 
 <style scoped>
 .nuxt-container{
-    position: relative;
-    min-height: 100vh;
-    max-width: 100vw;
-    margin-bottom: 6rem;
-    margin-right: auto;
-    margin-left: auto;
+  position: relative;
+  min-height: 100vh;
+  max-width: 100vw;
+  margin-top: 13rem;
+  margin-bottom: 6rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.header {
+  position: fixed;
+  top: 0;
 }
 </style>

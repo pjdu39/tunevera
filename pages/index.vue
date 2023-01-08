@@ -1,58 +1,52 @@
 <template>
-  <div>
+  <div class="tablon-container">
     <!-- <main></main> -->
-    <b-row>
-      <b-col md="4"></b-col>
-      <b-col md="4">
-        <b-list-group-item
-            class="elemento"
-            v-for="(elemento, index) in elementos"
-            :key="index"
-          >
-          <div class="linea-superior">
-            <div class="tipo-elemento">{{ elemento.tipo }}</div>
-            <div class="autor">por <b>{{ elemento.autor }}</b></div>
-          </div>
-          <div class="linea-superior">
-            <h4 class="titulo">{{ elemento.titulo }}</h4>
-            <div v-if="elemento.tipo === 'Receta'" class="tiempo">
-              {{ elemento.tiempo }}min <span class="fa fa-clock" aria-hidden="true"></span>
+    <b-list-group-item
+        class="elemento"
+        v-for="(elemento, index) in elementos"
+        :key="index"
+      >
+      <div class="linea-superior">
+        <div class="tipo-elemento">{{ elemento.tipo }}</div>
+        <div class="autor">por <b>{{ elemento.autor }}</b></div>
+      </div>
+      <div class="linea-superior">
+        <h4 class="titulo">{{ elemento.titulo }}</h4>
+        <div v-if="elemento.tipo === 'Receta'" class="tiempo">
+          {{ elemento.tiempo }}min <span class="fa fa-clock" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div>{{ elemento.descripcion }}</div>
+      <div 
+          v-if="elemento.tipo === 'Encuesta'" 
+          class="encuesta-container"
+        >
+        <div v-for="opcion in elemento.opciones" :key="opcion.id">
+          <div class="encuesta-opcion">
+            <div class="encuesta-opcion-texto">{{ opcion.texto }}</div>
+            <div class="encuesta-opcion-barra" :style="'width: ' + calculaBarraEncuesta(elemento.opciones, opcion) + 'rem;'"></div>
+            <!-- Por algún motivo desconocido, en este div estoy obligado a aplicar el text-align en el style, ya que no se aplica en la clase -->
+            <div 
+                class="encuesta-opcion-barra encuesta-opcion-barra--fondo"
+              >
+            </div>
+            <div class="encuesta-opcion-barra porcentaje" style="text-align: end;">
+              {{ calculaPorcentajeEncuesta(elemento.opciones, opcion) }}%
             </div>
           </div>
-          <div>{{ elemento.descripcion }}</div>
-          <div 
-              v-if="elemento.tipo === 'Encuesta'" 
-              class="encuesta-container"
-            >
-            <div v-for="opcion in elemento.opciones" :key="opcion.id">
-              <div class="encuesta-opcion">
-                <div class="encuesta-opcion-texto">{{ opcion.texto }}</div>
-                <div class="encuesta-opcion-barra" :style="'width: ' + calculaBarraEncuesta(elemento.opciones, opcion) + 'rem;'"></div>
-                <!-- Por algún motivo desconocido, en este div estoy obligado a aplicar el text-align en el style, ya que no se aplica en la clase -->
-                <div 
-                    class="encuesta-opcion-barra encuesta-opcion-barra--fondo"
-                  >
-                </div>
-                <div class="encuesta-opcion-barra porcentaje" style="text-align: end;">
-                  {{ calculaPorcentajeEncuesta(elemento.opciones, opcion) }}%
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="interacciones">
-            <div class="likes">
-              <span class="fa fa-heart" aria-hidden="true"></span>
-            </div>
-            <div class="num">{{ elemento.likes }}</div>
-            <div class="comentarios">
-              <span class="fa fa-comment" aria-hidden="true"></span>
-            </div>
-            <div class="num">{{ elemento.comentarios.length }}</div>
-          </div>
-        </b-list-group-item>
-      </b-col>
-      <b-col md="4"></b-col>
-    </b-row>
+        </div>
+      </div>
+      <div class="interacciones">
+        <div class="likes">
+          <span class="fa fa-heart" aria-hidden="true"></span>
+        </div>
+        <div class="num">{{ elemento.likes }}</div>
+        <div class="comentarios">
+          <span class="fa fa-comment" aria-hidden="true"></span>
+        </div>
+        <div class="num">{{ elemento.comentarios.length }}</div>
+      </div>
+    </b-list-group-item>
   </div>
 </template>
 
@@ -84,8 +78,8 @@ export default {
           opciones: [
             { id: 1, texto: 'Lentejas', votos: 109 },
             { id: 2, texto: 'Caldo gallego', votos: 135 },
-            { id: 2, texto: 'Guiso de pollo', votos: 21 },
-            { id: 2, texto: 'Ramen', votos: 287 }
+            { id: 3, texto: 'Guiso de pollo', votos: 21 },
+            { id: 4, texto: 'Ramen', votos: 287 }
           ]
         },
         { 
@@ -147,10 +141,9 @@ export default {
 </script>
 <style scoped>
 
-.mainBox { /* TODO: Borrar si continúa sin usarse */
-  background-color: #eaedee;
-  border-radius: 1rem;
-  box-shadow: 1.5px 1.5px 30px -10px #252b31;
+.tablon-container {
+  margin: auto;
+  width: 40rem;
 }
 
 .elemento {
@@ -272,6 +265,13 @@ export default {
   padding-top: .4rem;
   margin-left: .2rem;
   margin-right: 1rem;
+}
+
+@media (max-width: 800px) {
+  .tablon-container {
+    margin: auto;
+    width: 80%;
+  }
 }
 
 </style>

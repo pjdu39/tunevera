@@ -1,41 +1,41 @@
 <template>
   <div class="header">
-    <div class="banner">
-      <div class="navbar-user-container">
-        <!--
-        <b-navbar toggleable="lg">
-          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-          <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav class="ml-auto">
-              <b-nav-item href="#" class="user">
-                <span class="fa fa-user fa-2x" aria-hidden="true"></span>
-              </b-nav-item>
-            </b-navbar-nav>
-          </b-collapse>
-        </b-navbar>
-        -->
+    <div class="secondary-options-banner">
+      <b-button v-click-outside="onClickOutside" class="secondary-options-button" @click="opcionesGear = !opcionesGear">
+        <span class="fa fa-cog" aria-hidden="true"></span>
+      </b-button>
+      <div v-if="opcionesGear" class="gear-options-container">
+        <nuxt-link to="/Explorar" class="gear-option">
+          General
+        </nuxt-link>
+        <nuxt-link to="/Explorar" class="gear-option">
+          Perfil
+        </nuxt-link>
+        <nuxt-link to="/Explorar" class="gear-option">
+          Contáctanos
+        </nuxt-link>
       </div>
-      <div class="navbar-main-container">
-        <b-navbar toggleable="lg">
-          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-          <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav class="main-navbar">
-              <nuxt-link to="/" class="option">
-                <span class="fa fa-home" aria-hidden="true"></span>
-              </nuxt-link> <!-- Casita -->
-              <nuxt-link to="/Explorar" class="option">
-                <span class="fa fa-search" aria-hidden="true"></span>
-              </nuxt-link> <!-- Lupa -->
-              <nuxt-link to="/NuevaReceta" class="option">
-                <span class="fa fa-upload" aria-hidden="true"></span>
-              </nuxt-link> <!-- Algo parecido a un "+" -->
-              <nuxt-link to="/Perfil" class="option">
-                <span class="fa fa-user" aria-hidden="true"></span>
-              </nuxt-link> <!-- Icono Usuario -->
-            </b-navbar-nav>
-          </b-collapse>
-        </b-navbar>
-      </div>
+    </div>
+    <div class="navbar-main-container">
+      <b-navbar toggleable="lg">
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav class="main-navbar">
+            <nuxt-link to="/" class="option">
+              <span class="fa fa-home" aria-hidden="true"></span>
+            </nuxt-link> <!-- Casita -->
+            <nuxt-link to="/Explorar" class="option">
+              <span class="fa fa-search" aria-hidden="true"></span>
+            </nuxt-link> <!-- Lupa -->
+            <nuxt-link to="/NuevaReceta" class="option">
+              <span class="fa fa-upload" aria-hidden="true"></span>
+            </nuxt-link> <!-- Algo parecido a un "+" -->
+            <nuxt-link to="/Perfil" class="option">
+              <span class="fa fa-user" aria-hidden="true"></span>
+            </nuxt-link> <!-- Icono Usuario -->
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
     </div>
 
     <!-- <b-img class="" src="~/assets/img/banner.jpg"></b-img> -->
@@ -43,18 +43,72 @@
 </template>
 
 <script>
-export default {};
+import vClickOutside from 'v-click-outside'
+
+export default {
+  directives: {
+    clickOutside: vClickOutside.directive
+  },
+  data() {
+    return {
+      opcionesGear: false
+    }
+  },
+  methods: {
+    onClickOutside (event) {
+      this.opcionesGear = false
+    }
+  }
+};
 </script>
 
 <style scoped>
 .header {
-  max-width: 100vw;
-  }
-.banner {
-  height: 8rem;
-  margin-bottom: 6rem;
-  box-shadow: 2px 2px 6px 3px #252b31;;
+  position: absolute;
+  width: 100vw;
+  z-index: 30;
 }
+
+.secondary-options-banner {
+  display: flex;
+  height: 4rem;
+  background-color: #252b31;
+  border-style: none !important;
+}
+
+.secondary-options-button {
+  position: absolute;
+  right: 1.4rem;
+  height: 50%;
+  aspect-ratio: 1/1;
+  font-size: 165%;
+  background-color: transparent;
+  border-style: none;
+  box-shadow: none !important;
+}
+
+.gear-options-container {
+  position: absolute;
+  width: 9rem;
+  top: 3.2rem;
+  right: 2.4rem;
+  padding: .4rem .3rem .4rem .3rem;
+  background-color: #eaedee;
+  border-radius: 1rem;
+}
+
+.gear-option {
+  display: block;
+  padding: 0 .8rem 0 .8rem;
+  color: #252b31;
+  text-decoration: none;
+  border-radius: 1rem;
+}
+
+.gear-option:hover {
+  background-color: #C1C8C7;
+}
+
 .navbar-user-container {
   display: flex;
   height: 4rem;
