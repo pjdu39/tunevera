@@ -7,93 +7,84 @@
             placeholder="Buscar..."
           ></b-form-input>
           <b-tabs v-model="tab" content-class="mt-3" class="tab-option">
-            <b-tab title="Ingredientes">
-              asdasdasd
-            </b-tab>
-            <b-tab title="Categorías">
-              asdasdasdasd
-            </b-tab>
+            <div class="filtros-adicionales-container">
+              <b-tab title="Ingredientes">
+                <b-row>
+                  <b-col md="7">
+                    <div class="buscador-ingredientes-container">
+                      <div class="form-and-button">
+                        <b-form-input
+                          v-model="buscarIngrediente"
+                          class="buscador-ingredientes"
+                          placeholder="Buscar ingrediente..."
+                        ></b-form-input>
+                        <b-button class="button add-button"><span class="fa fa-plus" aria-hidden="true"></span></b-button>
+                      </div>
+                      <div class="vege-options">
+                        <b-form-checkbox
+                          v-model="vegetariano"
+                          :class="'button check-vege ' + vegeActive('vegetariano')"
+                          name="check-button"
+                          button
+                          @change="autoVegetariano('vegetariano')"
+                        >
+                          Vegetariano
+                        </b-form-checkbox>
+                        <b-form-checkbox 
+                          v-model="vegano"
+                          :class="'button check-vege ' + vegeActive('vegano')"
+                          name="check-button"
+                          button
+                          @change="autoVegetariano('vegano')"
+                        >
+                          Vegano
+                        </b-form-checkbox>
+                      </div>
+                    </div>
+                  </b-col>
+                  <b-col md="5">
+                    Card here
+                  </b-col>
+                </b-row>
+              </b-tab>
+              <b-tab title="Tags #">
+                <b-row>
+                  <b-col md="7">
+                    <div class="filtro-tags-container">
+                      <div class="form-and-button">
+                        <b-form-input
+                          v-model="buscarTag"
+                          class="buscador-ingredientes"
+                          placeholder="Buscar tag..."
+                        ></b-form-input>
+                        <b-button class="button add-button"><span class="fa fa-search" aria-hidden="true"></span></b-button>
+                      </div>
+                    </div>
+                  </b-col>
+                  <b-col md="5">
+                    <!-- TODO: Todo lo que está dentro de este col, está copiado de Recetas.vue, hay que adaptarlo. Considerar hacer las clases globales. -->
+                    <div class="buscador-card buscador-card--filtro">
+                      <h6>Filtros:</h6>
+                      <b-list-group-item
+                        class="badge-container badge-container--filtro"
+                        v-for="filtro in filtros"
+                        :key="filtro"
+                      >
+                        <!-- Considerar utilizar Badge de bootstrap-vue para mostrar los ingredientes seleccionados. -->
+                        <a class="badge-custom badge-custom--filtro">
+                          {{ filtro.literal }}
+                          <!-- TODO: Icono de X en un link para quitar el filtro -->
+                        </a>
+                      </b-list-group-item>
+                    </div>
+                  </b-col>
+                </b-row>
+              </b-tab>
+            </div>
           </b-tabs>
-          <div class="filtro-ingredientes-container">
-            <b-button 
-                v-if="!filtroDesplegado" 
-                class="button desplegable-button desplegable-button--ingredientes" 
-                @click="despliegaFiltro('ingredientes')"
-              >
-              Ingredientes
-            </b-button>
-            <b-button 
-                v-if="!filtroDesplegado" 
-                class="button desplegable-button desplegable-button--categoria"
-                @click="despliegaFiltro('categorias')"
-              >
-              Categorías
-            </b-button>
-            <div v-else-if="filtroDesplegado === 'categorias'">
-              <b-button class="filtro-ingredientes-button-atras" @click="despliegaFiltro(null)"><span class="fa fa-angle-left" aria-hidden="true"></span></b-button>
-              <div class="filtro-categoria-container">
-                <b-button class="filtro-button filtro-button--categoria">
-                  Combinados
-                </b-button>
-                <b-button class="filtro-button filtro-button--categoria">
-                  Guisos
-                </b-button>
-                <b-button class="filtro-button filtro-button--categoria">
-                  Ensaladas
-                </b-button>
-                <b-button class="filtro-button filtro-button--categoria">
-                  Bebidas
-                </b-button>
-                <b-button class="filtro-button filtro-button--categoria">
-                  Postres
-                </b-button>
-                <b-button class="filtro-button filtro-button--categoria">
-                  Pizzas
-                </b-button>
-              </div>
-            </div>
-            <div v-else-if="filtroDesplegado === 'ingredientes'">
-              <b-button class="filtro-ingredientes-button-atras" @click="despliegaFiltro(null)"><span class="fa fa-angle-left" aria-hidden="true"></span></b-button>
-              <b-button-group class="filtro-ingredientes-button-group" vertical>
-                <b-button :class="'filtro-button filtro-button--ingredientes ' + focusButton('tiene')" @click="seleccionaTipoFiltroIngredientes('tiene')">
-                  Que tenga
-                </b-button>
-                <b-button :class="'filtro-button filtro-button--ingredientes ' + focusButton('noTiene')" @click="seleccionaTipoFiltroIngredientes('noTiene')">
-                  Que NO tenga
-                </b-button>
-              </b-button-group>
-              <div class="buscador-ingredientes-container">
-                <div class="form-and-button">
-                  <b-form-input
-                    v-model="buscarIngrediente"
-                    class="buscador-ingredientes"
-                    placeholder="Buscar ingrediente..."
-                  ></b-form-input>
-                  <b-button class="button add-button"><span class="fa fa-plus" aria-hidden="true"></span></b-button>
-                </div>
-                <div class="vege-options">
-                  <b-form-checkbox
-                    v-model="vegetariano"
-                    :class="'button check-vege ' + vegeActive('vegetariano')"
-                    name="check-button"
-                    button
-                    @change="autoVegetariano('vegetariano')"
-                  >
-                    Vegetariano
-                  </b-form-checkbox>
-                  <b-form-checkbox 
-                    v-model="vegano"
-                    :class="'button check-vege ' + vegeActive('vegano')"
-                    name="check-button"
-                    button
-                    @change="autoVegetariano('vegano')"
-                  >
-                    Vegano
-                  </b-form-checkbox>
-                </div>
-              </div>
-            </div>
-          </div>
+
+          <!-- TODO: Refactor de nombres de clases. -->
+
         </div>
         <div class="images-container">
           <b-list-group-item class="card" v-for="receta in recetas" :key="receta.id">
@@ -117,14 +108,15 @@ export default {
       tituloRecetaHover: null,
       filtroDesplegado: null,
       tipoFiltroIngredientesSeleccionado: 'tiene',
-      tab: 'Categorías',
       ingredientesFiltrados: {
         tiene: [],
         noTiene: [],
-        soloTiene: []
+        soloTiene: false
       },
+      tagsFiltrados: [],
       buscarGeneral: null,
       buscarIngrediente: null, // se volcará en el objeto de arrays de arriba "ingredientesFiltrados"
+      buscarTag: null,
       vegetariano: false,
       vegano: false,
       recetas: [
@@ -148,14 +140,6 @@ export default {
     };
   },
   methods: {
-    /*
-    choseFiltroIngredienteText(text) {
-      this.filtroIngredienteText = text
-    }, */
-    despliegaFiltro(value) {
-      this.tab = 1
-      this.filtroDesplegado = value
-    },
     seleccionaTipoFiltroIngredientes(str) {
       this.tipoFiltroIngredientesSeleccionado = str
     },
@@ -167,6 +151,8 @@ export default {
       /*
       if(this.vegano && checkboxSeleccionado === 'vegano') this.vegetariano = true
       if(!this.vegetariano && checkboxSeleccionado === 'vegetariano') this.vegano = false */
+
+      /* TODO: Eliminar este método y hacer la asignación de vegano o vegetariano a false en el propio @change. */
 
       if(checkboxSeleccionado === 'vegano') this.vegetariano = false
       if(checkboxSeleccionado === 'vegetariano') this.vegano = false
@@ -208,7 +194,9 @@ export default {
 }
 
 .filtros {
-  margin-bottom: 5rem;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .buscador {
@@ -242,13 +230,13 @@ export default {
   top: 5.3rem;
 }
 
-.filtro-ingredientes-container {
+.filtros-adicionales-container {
   position: relative;
-  height: 7rem;
+  height: auto;
   width: 100%;
 }
 
-.filtro-ingredientes-button-atras {
+.button-atras {
   position: absolute;
   top: 4rem;
   background-color: transparent;
@@ -256,8 +244,6 @@ export default {
 }
 
 .filtro-categoria-container {
-  position: absolute;
-  left: 2rem;
   top: 1.2rem;
   max-width: 100%;
   display: grid;
@@ -269,8 +255,6 @@ export default {
 }
 
 .filtro-ingredientes-button-group {
-  position: absolute;
-  left: 3rem;
   top: 1rem;
 }
 
@@ -310,9 +294,7 @@ export default {
 }
 
 .buscador-ingredientes-container {
-  position: absolute;
-  width: calc(100% - 12rem);
-  top: 3rem;
+  width: calc(100% - 0rem);
   right: 0;
 }
 
