@@ -1,0 +1,38 @@
+// Include Bootstrap and BootstrapVue SCSS files
+@import '~bootstrap/scss/bootstrap.scss';
+@import '~bootstrap-vue/src/index.scss';
+
+// General style overrides and custom classes
+body {
+  margin: 0;
+  background-color: #C1C8C7;
+}
+
+
+
+// Esto es para forzar los estilos de bootstrap que uso en Explorar.vue para los filtros de búsqueda
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    font-weight: 600;
+    color: white;
+    background-color: #d49c6b;
+    border: solid 1px white;
+    box-shadow: 1px 1px 6px 1px #F6FAFB;
+}
+
+.nav-tabs {
+    /*width: fit-content;
+    overflow: hidden;
+    border-radius: 1rem 1rem 0 0; */
+}
+
+.tab-content {
+    border-top: solid 1px white;
+    margin-top: 0;
+    padding-top: 1rem;
+}
+
+.mt-3 {
+    margin-top: 0 !important;
+}
+
+// 
