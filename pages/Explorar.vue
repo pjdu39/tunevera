@@ -1,104 +1,101 @@
 <template>
   <div class="explorar-container">
-        <div class="filtros">
-          <b-form-input
-            v-model="buscarGeneral"
-            class="buscador"
-            placeholder="Buscar..."
-          ></b-form-input>
-          <div class="rounded-wrapper">
-            <b-tabs v-model="tab" content-class="mt-3" class="tab-option">
-              <div class="filtros-adicionales-container">
-                <b-tab title="Ingredientes">
-                  <b-row>
-                    <b-col md="7" class="row-barra-busqueda-ingredientes">
-                      <div class="buscador-ingredientes-container">
-                        <div class="form-and-button">
-                          <b-form-input
-                            v-model="buscarIngrediente"
-                            class="buscador-ingredientes"
-                            placeholder="Buscar ingrediente..."
-                          ></b-form-input>
-                          <b-button class="button add-button"><span class="fa fa-plus" aria-hidden="true"></span></b-button>
-                        </div>
-                        <div class="vege-options">
-                          <b-form-checkbox
-                            v-model="vegetariano"
-                            :class="'button check-vege ' + vegeActive('vegetariano')"
-                            name="check-button"
-                            button
-                            @change="autoVegetariano('vegetariano')"
-                          >
-                            Vegetariano
-                          </b-form-checkbox>
-                          <b-form-checkbox 
-                            v-model="vegano"
-                            :class="'button check-vege ' + vegeActive('vegano')"
-                            name="check-button"
-                            button
-                            @change="autoVegetariano('vegano')"
-                          >
-                            Vegano
-                          </b-form-checkbox>
-                        </div>
-                      </div>
-                    </b-col>
-                    <b-col md="5" class="filtros-elegidos">
-                      Patata
-                    </b-col>
-                  </b-row>
-                </b-tab>
-                <b-tab title="Tags #">
-                  <b-row>
-                    <b-col md="7">
-                      <div class="filtro-tags-container">
-                        <div class="form-and-button">
-                          <b-form-input
-                            v-model="buscarTag"
-                            class="buscador-ingredientes"
-                            placeholder="Buscar tag..."
-                          ></b-form-input>
-                          <b-button class="button add-button"><span class="fa fa-search" aria-hidden="true"></span></b-button>
-                        </div>
-                      </div>
-                    </b-col>
-                    <b-col md="5">
-                      <!-- TODO: Todo lo que está dentro de este col, está copiado de Recetas.vue, hay que adaptarlo. Considerar hacer las clases globales. -->
-                      <div class="buscador-card buscador-card--filtro">
-                        <h6>Filtros:</h6>
-                        <b-list-group-item
-                          class="badge-container badge-container--filtro"
-                          v-for="filtro in filtros"
-                          :key="filtro"
-                        >
-                          <!-- Considerar utilizar Badge de bootstrap-vue para mostrar los ingredientes seleccionados. -->
-                          <a class="badge-custom badge-custom--filtro">
-                            {{ filtro.literal }}
-                            <!-- TODO: Icono de X en un link para quitar el filtro -->
-                          </a>
-                        </b-list-group-item>
-                      </div>
-                    </b-col>
-                  </b-row>
-                </b-tab>
-              </div>
-            </b-tabs>
+    <div class="filtros">
+      <b-form-input
+        v-model="buscarGeneral"
+        class="buscador"
+        placeholder="Buscar..."
+      ></b-form-input>
+      <div class="rounded-wrapper">
+        <b-tabs v-model="tab" content-class="mt-3" class="tab-option">
+          <div class="filtros-adicionales-container">
+            <b-tab title="Ingredientes">
+              <b-row>
+                <b-col md="6" class="row-barra-busqueda-ingredientes">
+                  <div class="buscador-ingredientes-container">
+                    <div class="form-and-button">
+                      <b-form-input
+                        v-model="buscarIngrediente"
+                        class="buscador-ingredientes"
+                        placeholder="Buscar ingrediente..."
+                      ></b-form-input>
+                      <b-button class="button add-button"><span class="fa fa-plus" aria-hidden="true"></span></b-button>
+                    </div>
+                    <div class="vege-options">
+                      <b-form-checkbox
+                        v-model="vegetariano"
+                        :class="'button check-vege ' + vegeActive('vegetariano')"
+                        name="check-button"
+                        button
+                        @change="autoVegetariano('vegetariano')"
+                      >
+                        Vegetariano
+                      </b-form-checkbox>
+                      <b-form-checkbox 
+                        v-model="vegano"
+                        :class="'button check-vege ' + vegeActive('vegano')"
+                        name="check-button"
+                        button
+                        @change="autoVegetariano('vegano')"
+                      >
+                        Vegano
+                      </b-form-checkbox>
+                    </div>
+                  </div>
+                </b-col>
+                <b-col md="6" class="filtros-elegidos">
+                  Patata
+                </b-col>
+              </b-row>
+            </b-tab>
+            <b-tab title="Tags #">
+              <b-row>
+                <b-col md="6">
+                  <div class="filtro-tags-container">
+                    <div class="form-and-button">
+                      <b-form-input
+                        v-model="buscarTag"
+                        class="buscador-ingredientes"
+                        placeholder="Buscar tag..."
+                      ></b-form-input>
+                      <b-button class="button add-button"><span class="fa fa-search" aria-hidden="true"></span></b-button>
+                    </div>
+                  </div>
+                </b-col>
+                <b-col md="6">
+                  <!-- TODO: Todo lo que está dentro de este col, está copiado de Recetas.vue, hay que adaptarlo. Considerar hacer las clases globales. -->
+                  <div class="buscador-card buscador-card--filtro">
+                    <h6>Filtros:</h6>
+                    <b-list-group-item
+                      class="badge-container badge-container--filtro"
+                      v-for="filtro in filtros"
+                      :key="filtro"
+                    >
+                      <!-- Considerar utilizar Badge de bootstrap-vue para mostrar los ingredientes seleccionados. -->
+                      <a class="badge-custom badge-custom--filtro">
+                        {{ filtro.literal }}
+                        <!-- TODO: Icono de X en un link para quitar el filtro -->
+                      </a>
+                    </b-list-group-item>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-tab>
           </div>
-
-          <!-- TODO: Refactor de nombres de clases. -->
-
+        </b-tabs>
+      </div>
+    </div>
+    <div class="images-container">
+      <b-list-group-item class="card" v-for="receta in recetas" :key="receta.id">
+        <div class="card-tittle" :hidden="muestraTitulo">
+          {{ receta.name }}
         </div>
-        <div class="images-container">
-          <b-list-group-item class="card" v-for="receta in recetas" :key="receta.id">
-            <div class="card-tittle" :hidden="muestraTitulo">
-              {{ receta.name }}
-            </div>
-            <a href="#" class="card-link">
-              <!-- @mouseover="hover(receta.name)  Evento de hover -->
-              <img class="card-image" :src="receta.img" />
-            </a>
-          </b-list-group-item>
-        </div>
+        <a href="#" class="card-link">
+          <!-- @mouseover="hover(receta.name)  Evento de hover -->
+          <img class="card-image" :src="receta.img" />
+        </a>
+      </b-list-group-item>
+    </div>
   </div>
 </template>
 
@@ -322,6 +319,7 @@ export default {
 }
 
 .filtros-elegidos {
+  /* height: min-content; Esto es por si quiero ajustar automáticamente la altura de la tarjeta al número de elementos que contenga */ 
   padding: .5rem 1rem .5rem 1rem;
   margin-bottom: 0rem;
   background-color: white; /* #eaedee; */
