@@ -43,8 +43,8 @@
                         </div>
                       </div>
                     </b-col>
-                    <b-col md="5">
-                      Card here
+                    <b-col md="5" class="filtros-elegidos">
+                      Patata
                     </b-col>
                   </b-row>
                 </b-tab>
@@ -144,10 +144,11 @@ export default {
   methods: {
     seleccionaTipoFiltroIngredientes(str) {
       this.tipoFiltroIngredientesSeleccionado = str
-    },
+    }, 
+    /* TODO: Borrar. Legacy.
     focusButton(str) {
       return str === this.tipoFiltroIngredientesSeleccionado ? 'filtro-button--selected' : 'filtro-button--not-selected'
-    },
+    }, */
     autoVegetariano(checkboxSeleccionado) {
       /* Esto marca vegetariano automáticamente al seleccionar comida vegana, pues lo engloba. Aún así queda raro, pendiente de revisión */
       /*
@@ -185,10 +186,11 @@ export default {
   box-shadow: 1px 1px 11px 4px #F6FAFB;
 }
 
+/* TODO: Borrar. Legacy.
 .button--selected {
   color: white;
   box-shadow: 1px 1px 11px 4px #F6FAFB;
-}
+} */
 
 .explorar-container {
   margin: auto;
@@ -216,8 +218,10 @@ export default {
   background-color: #d49c6b;
 }
 .tab-option:deep() a:hover {
-  border-color: transparent;
+  box-shadow: 1px 1px 6px 2px #F6FAFB;
 }
+
+/* TODO: Borrar, no veo que se use en ninguna parte, probablemente es legacy
 
 .desplegable-button {
   position: absolute;
@@ -236,12 +240,18 @@ export default {
 
 .desplegable-button--categoria {
   top: 5.3rem;
-}
+} */
 
 .filtros-adicionales-container {
   position: relative;
   height: auto;
   width: 100%;
+
+  padding: 3rem;
+  
+  background-color: #eaedee;
+  border-radius: 1rem;
+  box-shadow: 1.5px 1.5px 30px -10px #252b31;
 }
 
 .button-atras {
@@ -279,10 +289,11 @@ export default {
   box-shadow: 1px 1px 11px 4px #F6FAFB;
 }
 
+/* TODO: Borrar. Legacy.
 .filtro-button--selected {
   color: white;
   box-shadow: 1px 1px 11px 4px #F6FAFB;
-  /* border: 1px solid white; */
+  /* border: 1px solid white;
 }
 
 .filtro-button--not-selected {
@@ -299,11 +310,19 @@ export default {
   width: 7rem;
   margin: .3rem .3rem 0 0;
   padding: .5rem;
-}
+} */
 
 .buscador-ingredientes-container {
   width: calc(100% - 0rem);
   right: 0;
+}
+
+.filtros-elegidos {
+  padding: .5rem 1rem .5rem 1rem;
+  margin-bottom: 1rem;
+  background-color: white; /* #eaedee; */
+  border-radius: 1rem;
+  box-shadow: 1.5px 1.5px 30px -10px #252b31;
 }
 
 .form-and-button {
