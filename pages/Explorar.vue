@@ -11,7 +11,7 @@
               <div class="filtros-adicionales-container">
                 <b-tab title="Ingredientes">
                   <b-row>
-                    <b-col md="7">
+                    <b-col md="7" class="row-barra-busqueda-ingredientes">
                       <div class="buscador-ingredientes-container">
                         <div class="form-and-button">
                           <b-form-input
@@ -314,12 +314,16 @@ export default {
 
 .buscador-ingredientes-container {
   width: calc(100% - 0rem);
-  right: 0;
+  /* right: 0; */
+}
+
+.row-barra-busqueda-ingredientes {
+  padding-left: 0;
 }
 
 .filtros-elegidos {
   padding: .5rem 1rem .5rem 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
   background-color: white; /* #eaedee; */
   border-radius: 1rem;
   box-shadow: 1.5px 1.5px 30px -10px #252b31;
