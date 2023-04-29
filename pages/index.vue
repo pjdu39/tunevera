@@ -143,7 +143,7 @@ export default {
 
 .tablon-container {
   margin: auto;
-  width: 40rem;
+  width: 44rem;
 }
 
 .elemento {

@@ -1,83 +1,77 @@
 <template>
-  <div>
-    <b-row>
-      <b-col class="" md="4"></b-col>
-      <b-col class="mainBox fixed-col" md="4">
-        <b-row class="head">
-          <b-col md="5" class="fixed-col">
-            <div class="perfil-vw">
-              <div class="wrapper-marco">
-                <div class="marco">
-                  <div class="wrapper-foto">
-                    <img class="foto" :src="usuarioDummy.img" />
-                  </div>
-                </div>
+  <div class="mainBox fixed-col">
+    <b-row class="head">
+      <b-col md="5" class="fixed-col">
+        <div class="perfil-vw">
+          <div class="wrapper-marco">
+            <div class="marco">
+              <div class="wrapper-foto">
+                <img class="foto" :src="usuarioDummy.img" />
               </div>
             </div>
-            <div class="rank-img">
-            </div>
-          </b-col>
-          <b-col  md="7" class="main-info">
-            <b-row>
-              <b-col md="6">
-                <div class="perfil-info-box">
-                  <div class="perfil-info-num">{{ usuarioDummy.seguidores }}</div>
-                  <div class="perfil-info-lit">SEGUIDORES</div>
-                </div>
-              </b-col>
-              <b-col md="6">
-                <div class="perfil-info-box">
-                  <div class="perfil-info-num">
-                    {{ usuarioDummy.publicaciones }}
-                  </div>
-                  <div class="perfil-info-lit">RECETAS</div>
-                  <!-- TODO: Sustituir este título por pestañas para ve distintas secciones relacionadas con el perfil. -->
-                </div>
-              </b-col>
-            </b-row>
-            <div class="descripcion">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            </div>
-          </b-col>
-        </b-row>
-        <b-row class="separacion">
-          <b-col class="fixed-col" md="5">
-            <div class="separacion-linea"></div>
-          </b-col>
-          <b-col class="fixed-col separacion-titulo" md="2">RECETAS</b-col>
-          <b-col class="fixed-col" md="5">
-            <div class="separacion-linea"></div>
-          </b-col>
-        </b-row>
-        <!--
-        <div class="wrapper-separacion">
-          <div class="separacion"></div>
-          <div class="separacion-titulo">RECETAS</div>
-        </div> -->
-        <div class="recetas">
-          <b-list-group-item
-            :class="'group-item-container ' + derechaIzquierda(index, 'group-item')"
-            v-for="(receta, index) in recetasDummy"
-            :key="index"
-          >
-            <a :class="('receta-globo ' + derechaIzquierda(index, 'globo'))" href="#">
-              <div v-if="index % 2 === 0" class="wrapper-dibujo">
-                <img class="dibujo" :src="seleccionaDibujo()" />
-              </div>
-              <div class="info_receta">
-                <h4>{{ receta.nombre }}</h4>
-                <div>{{ receta.descripcion }}</div>
-              </div>
-              <div v-if="index % 2 === 1" class="wrapper-dibujo">
-                <img class="dibujo" :src="seleccionaDibujo()" />
-              </div>
-            </a>
-          </b-list-group-item>
+          </div>
+        </div>
+        <div class="rank-img">
         </div>
       </b-col>
-      <b-col class="" md="4"></b-col>
+      <b-col  md="7" class="main-info">
+        <b-row>
+          <b-col md="6">
+            <div class="perfil-info-box">
+              <div class="perfil-info-num">{{ usuarioDummy.seguidores }}</div>
+              <div class="perfil-info-lit">SEGUIDORES</div>
+            </div>
+          </b-col>
+          <b-col md="6">
+            <div class="perfil-info-box">
+              <div class="perfil-info-num">
+                {{ usuarioDummy.publicaciones }}
+              </div>
+              <div class="perfil-info-lit">RECETAS</div>
+              <!-- TODO: Sustituir este título por pestañas para ve distintas secciones relacionadas con el perfil. -->
+            </div>
+          </b-col>
+        </b-row>
+        <div class="descripcion">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+        </div>
+      </b-col>
     </b-row>
+    <b-row class="separacion">
+      <b-col class="fixed-col" md="5">
+        <div class="separacion-linea"></div>
+      </b-col>
+      <b-col class="fixed-col separacion-titulo" md="2">RECETAS</b-col>
+      <b-col class="fixed-col" md="5">
+        <div class="separacion-linea"></div>
+      </b-col>
+    </b-row>
+    <!--
+    <div class="wrapper-separacion">
+      <div class="separacion"></div>
+      <div class="separacion-titulo">RECETAS</div>
+    </div> -->
+    <div class="recetas">
+      <b-list-group-item
+        :class="'group-item-container ' + derechaIzquierda(index, 'group-item')"
+        v-for="(receta, index) in recetasDummy"
+        :key="index"
+      >
+        <a :class="('receta-globo ' + derechaIzquierda(index, 'globo'))" href="#">
+          <div v-if="index % 2 === 0" class="wrapper-dibujo">
+            <img class="dibujo" :src="seleccionaDibujo()" />
+          </div>
+          <div class="info_receta">
+            <h4>{{ receta.nombre }}</h4>
+            <div>{{ receta.descripcion }}</div>
+          </div>
+          <div v-if="index % 2 === 1" class="wrapper-dibujo">
+            <img class="dibujo" :src="seleccionaDibujo()" />
+          </div>
+        </a>
+      </b-list-group-item>
+    </div>
   </div>
 </template>
 
@@ -167,6 +161,9 @@ export default {
 } */
 
 .mainBox {
+  margin: auto;
+  width: 44rem;
+
   background-color: #eaedee;
   border-radius: 1rem;
   box-shadow: 1.5px 1.5px 30px -10px #252b31;

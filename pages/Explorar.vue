@@ -1,6 +1,7 @@
 <template>
   <div class="explorar-container">
     <div class="filtros">
+      <h5>¿Qué receta buscas?</h5>
       <b-form-input
         v-model="buscarGeneral"
         class="buscador"
@@ -195,7 +196,7 @@ export default {
 }
 
 .filtros {
-  border-bottom: 1px solid #dee2e6;
+  /* border-bottom: 1px solid #dee2e6; */
   padding-bottom: 1.5rem;
   /* margin-bottom: 0.5rem; */
 }
@@ -416,11 +417,16 @@ label:deep() .custom-control-input {
   row-gap: 0;
   column-gap: 0;
   overflow: auto;
+
+  background-color: #eaedee;
+  border-radius: 1rem;
+  box-shadow: 1.5px 1.5px 30px -10px #252b31;
 }
 .card {
-  width: 90%;
+  width: 88%;
   aspect-ratio: 1/1;
   margin-top: 1rem;
+  margin-left: .8rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
   padding: 0;
@@ -434,7 +440,7 @@ label:deep() .custom-control-input {
   aspect-ratio: 1/1;
   margin-right: 0rem;
   margin-bottom: 0rem;
-  box-shadow: 1.5px 1.5px 8px 6px #252b31;
+  box-shadow: 1.5px 1.5px 8px 6px white;
   --image-z-indx: 1;
 }
 .card-tittle {

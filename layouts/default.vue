@@ -22,7 +22,7 @@ export default {
   position: relative;
   min-height: 100vh;
   max-width: 100vw;
-  margin-top: 13rem;
+  margin-top: 10rem;
   margin-bottom: 6rem;
   margin-right: auto;
   margin-left: auto;

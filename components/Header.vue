@@ -71,15 +71,15 @@ export default {
 
 .secondary-options-banner {
   display: flex;
-  height: 4rem;
+  height: 3rem;
   background-color: #252b31;
-  border-style: none !important;
+  border-style: none;
 }
 
 .secondary-options-button {
   position: absolute;
   right: 1.4rem;
-  height: 50%;
+  height: 20%;
   aspect-ratio: 1/1;
   font-size: 165%;
   background-color: transparent;
@@ -108,15 +108,15 @@ export default {
 .gear-option:hover {
   background-color: #C1C8C7;
 }
-
+/* TODO: Borrar. Legacy.
 .navbar-user-container {
   display: flex;
   height: 4rem;
   background-color: #252b31;
-}
+} */
 .navbar-main-container {
   display: flex;
-  height: 4rem;
+  height: 5.2rem;
   background-color: #5e6668;
 }
 .main-navbar {
@@ -146,14 +146,14 @@ export default {
 } */
 
 .option {
-  font-size: 150%;
+  font-size: 240%;
   padding: 0.35rem 1rem 0.35rem 1rem;
   margin-left: 4rem;
   margin-right: 4rem;
   background-color: #d49c6b;
-  box-shadow: 2px 2px 6px 3px #252b31;
+  /* box-shadow: 2px 2px 6px 3px #252b31;*/  /* Probar sin sombra un tiempo a ver qué tal */
   color: #252b31;
-  border-radius: 0.8rem 1.5rem 0.8rem 1.5rem;
+  border-radius: 2rem 2rem 0.8rem 0.8rem;
   border-style: none;
 }
 
@@ -171,14 +171,16 @@ export default {
   color: #F6FAFB;
   box-shadow: 1px 1px 11px 4px #F6FAFB;
 }
-
+/* TODO: Borrar. Legacy.
 .navbar-user-container .user .nav-link {
   margin-right: 2rem;
   border-radius: 3rem;
 }
 .navbar-user-container .user .nav-link:hover {
   box-shadow: 0px 0px 6px 3px #F6FAFB;
-}
+} */
+
+
 /*
 .navbar-nav .user .nav-link{
   border-radius: 3rem;
