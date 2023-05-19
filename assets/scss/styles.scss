@@ -118,22 +118,23 @@ body {
   /* Utilizar variables css para calcular  */
 }
 .input-container { /* TODO: Renombrar! Esto se utiliza para cosas que no son imputs. Nuevo nombre => group-item-container o group-item-wrapper */
-  display: block; /* Volver a inline-block si aparecen comportamientos extraños */
-  padding: 0;
-  background-color: transparent;
-  border: none;
+  display: block !important; /* Volver a inline-block si aparecen comportamientos extraños */
+  padding: 0 !important;
+  background-color: transparent !important;
+  border: none !important;
 }
-.login-button { /* Algo he tocado que no se están aplicando los estilos porque otros estilos se aplican por encima */
+.login-button { /* Algo he tocado que no se están aplicando los estilos porque otros estilos se aplican por encima a pesar de tener especificidad (0, 1, 0). 
+                He tenido que ponerlo con !important */
   bottom: 2.5rem;
   position: absolute;
   width: 76%;
   /* Utilizar variables css para calcular  */
-  border-radius: 0.8rem;
-  color: #eaedee;
-  background-color: #d49c6b;
+  border-radius: 0.8rem !important;
+  color: #eaedee !important;
+  background-color: #d49c6b !important;
   box-shadow: 2px 2px 12px 0px #252b31;
-  border-style: none;
-  font-weight: 600;
+  border-style: none !important;
+  font-weight: 600 !important;
   letter-spacing: 0.08rem;
 }
 

@@ -9,8 +9,9 @@ body {
 }
 
 
-
 // Esto es para forzar los estilos de bootstrap que uso en Explorar.vue para los filtros de búsqueda
+// IMPORTANTE: Considerar hacerlo por separado, tenelos en gerarquía hace que aumente mucho la especificidad, lo que me está
+// forzando a utilizar !important en todo el proyecto.
 .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
     font-weight: 600;
     color: white;

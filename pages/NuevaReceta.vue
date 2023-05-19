@@ -1,177 +1,277 @@
 <template>
   <div class="mainBox">
-    <div class="section">
-      <h6>Título</h6>
-      <b-row>
-        <b-col class="col-md-8">
-          <b-form-group
-            id="fieldset-tittle"
-            class="input-container tittle-container"
-            label-for="input-tittle"
-          >
-            <b-form-input
-              id="input-tittle"
-              class="input-tittle"
-              placeholder="Título..."
-              v-model="tittle"
-              trim
-            ></b-form-input>
-          </b-form-group>
-        </b-col>
-        <b-col class="col-md-4 subir-imagen">
-          <label class="anadir-btn anadir-btn--img">
-            <input type="file" :v-model="foto" />
-            <span class="fa fa-cloud-upload fa-lg" aria-hidden="true"></span>
-          </label>
-        </b-col>
-      </b-row>
-    </div>
-    <div class="section">
-        <h6>Descripción</h6>
-      <b-row>
-        <b-col class="col-md-11">
-          <b-form-group
-            id="fieldset-descripcion"
-            class="form-group-descripcion"
-            label-for="input-descripcion"
-          >
-            <b-form-textarea
-              id="input-descripcion"
-              class="textarea-descripcion"
-              placeholder="(opcional)"
-              v-model="descripcion"
-              trim
-            ></b-form-textarea>
-          </b-form-group>
-        </b-col>
-      </b-row>
-    </div>
-    <div class="section">
-        <h6>Ingredientes</h6>
-      <div>
-        <b-list-group-item
-          class="input-container"
-          v-for="(ingrediente, index) in ingredientes"
-          :key="index"
-        >
-          <b-row>
-            <b-col class="col-md-6">
-              <b-form-group
-                id="fieldset-literal"
-                class=""
-                label-for="input-literal"
+    <b-tabs v-model="tab" content-class="mt-3" class="tab-option">
+      <div class="page">
+        <b-tab title="Receta">
+          <div class="section">
+            <h5>Título</h5>
+            <b-row>
+              <b-col class="col-md-8">
+                <b-form-group
+                  id="fieldset-tittle"
+                  class="input-container tittle-container"
+                  label-for="input-tittle"
+                >
+                  <b-form-input
+                    id="input-tittle"
+                    class="input-tittle"
+                    placeholder="Escribir título..."
+                    v-model="tittle"
+                    trim
+                  ></b-form-input>
+                </b-form-group>
+              </b-col>
+              <b-col class="col-md-4 subir-imagen">
+                <label class="anadir-btn anadir-btn--img">
+                  <input type="file" :v-model="foto" />
+                  <span class="fa fa-cloud-upload fa-lg" aria-hidden="true"></span>
+                </label>
+              </b-col>
+            </b-row>
+          </div>
+          <div class="section">
+            <h6>Tiempo</h6>
+            <b-form-select 
+              v-model="tiempo" 
+              :options="timeOptions" 
+              class="tiempo-container"
+            ></b-form-select>
+            mins <span class="fa fa-clock" aria-hidden="true"></span>
+          </div>
+          <div class="section">
+            <h6>Descripción</h6>
+            <b-row>
+              <b-col class="col-md-11">
+                <b-form-group
+                  id="fieldset-descripcion"
+                  class="form-group-descripcion"
+                  label-for="input-descripcion"
+                >
+                  <b-form-textarea
+                    id="input-descripcion"
+                    class="textarea-descripcion"
+                    placeholder="(opcional)"
+                    v-model="descripcion"
+                    trim
+                  ></b-form-textarea>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </div>
+          <div class="section">
+              <h6>Ingredientes</h6>
+            <div>
+              <b-list-group-item
+                class="input-container"
+                v-for="(ingrediente, index) in ingredientes"
+                :key="index"
               >
-                <b-form-input
-                  id="input-literal"
-                  class="input-literal"
-                  placeholder="Ingrediente..."
-                  v-model="ingrediente.literal"
-                  trim
-                ></b-form-input>
-              </b-form-group>
-            </b-col>
-            <b-col class="col-md-2">
-              <b-form-group
-                id="fieldset-cantidad"
-                class=""
-                label-for="input-cantidad"
-              >
-                <b-form-input
-                  id="input-cantidad"
-                  class="input-cantidad"
-                  placeholder="Cantidad..."
-                  type="number"
-                  v-model="ingrediente.cantidad"
-                  trim
-                ></b-form-input>
-              </b-form-group>
-            </b-col>
-            <b-col class="col-md-3">
-              <b-form-select
-                v-model="ingrediente.unidad"
-                :options="unidadesDummy"
-              ></b-form-select>
-            </b-col>
-            <b-col class="col-md-1">
+                <b-row>
+                  <b-col class="col-md-6">
+                    <b-form-group
+                      id="fieldset-literal"
+                      class=""
+                      label-for="input-literal"
+                    >
+                      <b-form-input
+                        id="input-literal"
+                        class="input-literal"
+                        placeholder="Ingrediente..."
+                        v-model="ingrediente.literal"
+                        trim
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+                  <b-col class="col-md-2">
+                    <b-form-group
+                      id="fieldset-cantidad"
+                      class=""
+                      label-for="input-cantidad"
+                    >
+                      <b-form-input
+                        id="input-cantidad"
+                        class="input-cantidad"
+                        placeholder="Cantidad..."
+                        type="number"
+                        v-model="ingrediente.cantidad"
+                        trim
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+                  <b-col class="col-md-3">
+                    <b-form-select
+                      v-model="ingrediente.unidad"
+                      :options="unidadesDummy"
+                    ></b-form-select>
+                  </b-col>
+                  <b-col class="col-md-1">
+                    <button
+                      class="anadir-btn anadir-btn--quitar"
+                      @click="EliminaIngrediente(ingrediente)"
+                    >
+                      <span class="fa fa-times" aria-hidden="true"></span>
+                    </button>
+                  </b-col>
+                </b-row>
+              </b-list-group-item>
+            </div>
+            <div>
               <button
-                class="anadir-btn anadir-btn--quitar"
-                @click="EliminaIngrediente(ingrediente)"
+                class="anadir-btn anadir-btn--ingrediente"
+                @click="OtroIngrediente()"
+                :disabled="!PuedeAnadirIngrediente"
               >
-                <span class="fa fa-times" aria-hidden="true"></span>
+                <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
               </button>
-            </b-col>
-          </b-row>
-        </b-list-group-item>
-      </div>
-      <div>
-        <button
-          class="anadir-btn anadir-btn--ingrediente"
-          @click="OtroIngrediente()"
-          :disabled="!PuedeAnadirIngrediente"
-        >
-          <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
-        </button>
-      </div>
-    </div>
-    <div class="section">
-        <h6>Pasos</h6>
-      <div>
-        <b-list-group-item
-          class="input-container input-container--paso"
-          v-for="(paso, index) in pasos"
-          :key="index"
-        >
-          <b-row>
-            <b-col class="col-md-11">
-              <b-form-group
-                id="fieldset-paso"
-                class="form-group-paso"
-                label-for="input-paso"
+            </div>
+          </div>
+          <div class="section">
+              <h6>Pasos</h6>
+            <div>
+              <b-list-group-item
+                class="input-container input-container--paso"
+                v-for="(paso, index) in pasos"
+                :key="index"
               >
-                <b-form-textarea
-                  id="input-paso"
-                  class="textarea-paso"
-                  placeholder="Escribir paso..."
-                  v-model="paso.contenido"
-                  trim
-                ></b-form-textarea>
-              </b-form-group>
-            </b-col>
-            <b-col class="col-md-1">
+                <b-row>
+                  <b-col class="col-md-11">
+                    <b-form-group
+                      id="fieldset-paso"
+                      class="form-group-paso"
+                      label-for="input-paso"
+                    >
+                      <b-form-textarea
+                        id="input-paso"
+                        class="textarea-paso"
+                        placeholder="Escribir paso..."
+                        v-model="paso.contenido"
+                        trim
+                      ></b-form-textarea>
+                    </b-form-group>
+                  </b-col>
+                  <b-col class="col-md-1">
+                    <button
+                      class="anadir-btn anadir-btn--quitar"
+                      @click="EliminaPaso(paso)"
+                    >
+                      <span class="fa fa-times" aria-hidden="true"></span>
+                    </button>
+                  </b-col>
+                </b-row>
+              </b-list-group-item>
+            </div>
+            <div>
               <button
-                class="anadir-btn anadir-btn--quitar"
-                @click="EliminaPaso(paso)"
+                class="anadir-btn anadir-btn--paso"
+                @click="OtroPaso()"
+                :disabled="!PuedeAnadirPaso"
               >
-                <span class="fa fa-times" aria-hidden="true"></span>
+                <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
               </button>
-            </b-col>
-          </b-row>
-        </b-list-group-item>
+            </div>
+          </div>
+          <div class="section-end">
+            <b-row>
+              <b-col class="col-md-6">
+                <button class="anadir-btn anadir-btn--aceptar" @click="Atras()">
+                  Atrás
+                </button>
+              </b-col>
+              <b-col class="col-md-6">
+                <button class="anadir-btn anadir-btn--aceptar" @click="Aceptar()">
+                  Aceptar
+                </button>
+              </b-col>
+            </b-row>
+          </div>
+        </b-tab>
+        <b-tab title="Encuesta">
+          <div class="section">
+            <h5>Tema</h5>
+            <b-row>
+              <b-col class="col-md-11">
+                <b-form-group
+                  id="fieldset-tittle"
+                  class="input-container tittle-container"
+                  label-for="input-tittle"
+                >
+                  <b-form-input
+                    id="input-tittle"
+                    class="input-tittle"
+                    placeholder="¿Qué quieres preguntar?"
+                    v-model="tittle"
+                    trim
+                  ></b-form-input>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </div>
+          <div class="section">
+              <h6>Respuestas</h6>
+            <div>
+              <b-list-group-item
+                class="input-container"
+                v-for="(respuesta, index) in respuestas"
+                :key="index"
+              >
+                <b-row>
+                  <b-col class="col-md-11">
+                    <b-form-group
+                      id="fieldset-literal"
+                      class=""
+                      label-for="input-literal"
+                    >
+                      <b-form-input
+                        id="input-literal"
+                        class="input-literal"
+                        placeholder="Escribir opción..."
+                        v-model="respuesta.literal"
+                        trim
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+                  <b-col class="col-md-1">
+                    <button
+                      class="anadir-btn anadir-btn--quitar"
+                      @click="EliminaRespuesta(respuesta)"
+                    >
+                      <span class="fa fa-times" aria-hidden="true"></span>
+                    </button>
+                  </b-col>
+                </b-row>
+              </b-list-group-item>
+            </div>
+            <div>
+              <button
+                class="anadir-btn anadir-btn--ingrediente"
+                @click="OtraRespuesta()"
+                :disabled="!PuedeAnadirRespuesta"
+              >
+                <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+          <div class="section-end">
+            <b-row>
+              <b-col class="col-md-6">
+                <button class="anadir-btn anadir-btn--aceptar" @click="Atras()">
+                  Atrás
+                </button>
+              </b-col>
+              <b-col class="col-md-6">
+                <button class="anadir-btn anadir-btn--aceptar" @click="Aceptar()">
+                  Aceptar
+                </button>
+              </b-col>
+            </b-row>
+          </div>
+        </b-tab>
+        <b-tab title="Artículo">
+          Nuev artículo
+        </b-tab>
       </div>
-      <div>
-        <button
-          class="anadir-btn anadir-btn--paso"
-          @click="OtroPaso()"
-          :disabled="!PuedeAnadirPaso"
-        >
-          <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
-        </button>
-      </div>
-    </div>
-    <div class="section-end">
-      <b-row>
-        <b-col class="col-md-6">
-          <button class="anadir-btn anadir-btn--aceptar" @click="Atras()">
-            Atrás
-          </button>
-        </b-col>
-        <b-col class="col-md-6">
-          <button class="anadir-btn anadir-btn--aceptar" @click="Aceptar()">
-            Aceptar
-          </button>
-        </b-col>
-      </b-row>
-    </div>
+    </b-tabs>
+    
   </div>
 </template>
 
@@ -181,7 +281,33 @@ export default {
     return {
       tittle: null,
       foto: null,
+      tiempo: null,
+      timeOptions: [
+        { value: 5, text: '5' },
+        { value: 10, text: '10' },
+        { value: 15, text: '15' },
+        { value: 20, text: '20' },
+        { value: 25, text: '25' },
+        { value: 30, text: '30' },
+        { value: 35, text: '35' },
+        { value: 40, text: '40' },
+        { value: 45, text: '45' },
+        { value: 50, text: '50' },
+        { value: 55, text: '55' },
+        { value: 60, text: '60' },
+        { value: 65, text: '65' },
+        { value: 70, text: '70' },
+        { value: 75, text: '75' },
+        { value: 80, text: '80' },
+        { value: 85, text: '85' },
+        { value: 90, text: '90' },
+        { value: 105, text: '105' },
+        { value: 110, text: '110' },
+        { value: 115, text: '115' },
+        { value: 120, text: '120' }
+      ],
       ingredientes: [{ literal: null, cantidad: 0, unidad: null }],
+      respuestas: [{ literal: null }],
       pasos: [{ numero: 1, contenido: '' }],
       descripcion: null,
       unidadesDummy: [
@@ -216,11 +342,30 @@ export default {
 
       return result;
     },
+    PuedeAnadirRespuesta() {
+      let result = true;
+      this.respuestas.forEach((x) => {
+        if (!x.literal) result = false;
+      });
+
+      return result;
+    },
   },
   methods: {
     OtroIngrediente() {
       if (this.PuedeAnadirIngrediente) {
         this.ingredientes.push({ literal: null, cantidad: 0, unidad: null });
+      }
+    },
+    OtraRespuesta() {
+      if (this.PuedeAnadirRespuesta) {
+        this.respuestas.push({ literal: null });
+      }
+    },
+    OtroPaso() {
+      if (this.PuedeAnadirPaso) {
+        let numero = this.pasos.length;
+        this.pasos.push({ numero: numero, contenido: "" });
       }
     },
     EliminaIngrediente(ingrediente) {
@@ -230,10 +375,11 @@ export default {
         this.ingredientes.splice(index, 1);
       }
     },
-    OtroPaso() {
-      if (this.PuedeAnadirPaso) {
-        let numero = this.pasos.length;
-        this.pasos.push({ numero: numero, contenido: "" });
+    EliminaRespuesta(respuesta) {
+      if (this.respuestas.length <= 1) return;
+      const index = this.respuestas.indexOf(respuesta);
+      if (index > -1) {
+        this.respuestas.splice(index, 1);
       }
     },
     EliminaPaso(paso) {
@@ -278,11 +424,17 @@ export default {
   border-radius: 1rem;
   box-shadow: 1.5px 1.5px 30px -10px #252b31;
 }
+.page {
+  margin-top: 1rem;
+}
 .tittle-container {
   width: 100%;
 }
+.tiempo-container {
+  width: 12%;
+}
 .input-tittle {
-  font-size: 120%;
+  font-size: 110%;
 }
 .anadir-btn {
   background-color: #d49c6b;
@@ -296,6 +448,10 @@ export default {
 }
 .anadir-btn:hover {
   box-shadow: 1px 1px 10px 10px #eaedee;
+}
+.anadir-btn:active {
+  background-color: #5E6668;
+  box-shadow: 1px 1px 5px 2px #F6FAFB;
 }
 .anadir-btn--img {
   text-align: center;
