@@ -1,8 +1,8 @@
 <template>
   <div class="mainBox">
-    <b-tabs v-model="tab" content-class="mt-3" class="tab-option">
+    <b-tabs content-class="mt-3" class="tab-option">
       <div class="page">
-        <b-tab title="Receta">
+        <b-tab title="Receta" @click="cleanData">
           <div class="section">
             <h5>Título</h5>
             <b-row>
@@ -24,16 +24,19 @@
               <b-col class="col-md-4 subir-imagen">
                 <label class="anadir-btn anadir-btn--img">
                   <input type="file" :v-model="foto" />
-                  <span class="fa fa-cloud-upload fa-lg" aria-hidden="true"></span>
+                  <span
+                    class="fa fa-cloud-upload fa-lg"
+                    aria-hidden="true"
+                  ></span>
                 </label>
               </b-col>
             </b-row>
           </div>
           <div class="section">
             <h6>Tiempo</h6>
-            <b-form-select 
-              v-model="tiempo" 
-              :options="timeOptions" 
+            <b-form-select
+              v-model="tiempo"
+              :options="timeOptions"
               class="tiempo-container"
             ></b-form-select>
             mins <span class="fa fa-clock" aria-hidden="true"></span>
@@ -49,7 +52,7 @@
                 >
                   <b-form-textarea
                     id="input-descripcion"
-                    class="textarea-descripcion"
+                    class="textarea-descripcion--articulo"
                     placeholder="(opcional)"
                     v-model="descripcion"
                     trim
@@ -59,7 +62,7 @@
             </b-row>
           </div>
           <div class="section">
-              <h6>Ingredientes</h6>
+            <h6>Ingredientes</h6>
             <div>
               <b-list-group-item
                 class="input-container"
@@ -126,7 +129,7 @@
             </div>
           </div>
           <div class="section">
-              <h6>Pasos</h6>
+            <h6>Pasos</h6>
             <div>
               <b-list-group-item
                 class="input-container input-container--paso"
@@ -178,16 +181,19 @@
                 </button>
               </b-col>
               <b-col class="col-md-6">
-                <button class="anadir-btn anadir-btn--aceptar" @click="Aceptar()">
+                <button
+                  class="anadir-btn anadir-btn--aceptar"
+                  @click="Aceptar()"
+                >
                   Aceptar
                 </button>
               </b-col>
             </b-row>
           </div>
         </b-tab>
-        <b-tab title="Encuesta">
+        <b-tab title="Encuesta" @click="cleanData">
           <div class="section">
-            <h5>Tema</h5>
+            <h5>Pregunta</h5>
             <b-row>
               <b-col class="col-md-11">
                 <b-form-group
@@ -207,7 +213,7 @@
             </b-row>
           </div>
           <div class="section">
-              <h6>Respuestas</h6>
+            <h6>Opciones</h6>
             <div>
               <b-list-group-item
                 class="input-container"
@@ -259,19 +265,77 @@
                 </button>
               </b-col>
               <b-col class="col-md-6">
-                <button class="anadir-btn anadir-btn--aceptar" @click="Aceptar()">
+                <button
+                  class="anadir-btn anadir-btn--aceptar"
+                  @click="Aceptar()"
+                >
                   Aceptar
                 </button>
               </b-col>
             </b-row>
           </div>
         </b-tab>
-        <b-tab title="Artículo">
-          Nuev artículo
+        <b-tab title="Artículo" @click="cleanData">
+          <div class="section">
+            <h5>Tema</h5>
+            <b-row>
+              <b-col class="col-md-11">
+                <b-form-group
+                  id="fieldset-tittle"
+                  class="input-container tittle-container"
+                  label-for="input-tittle"
+                >
+                  <b-form-input
+                    id="input-tittle"
+                    class="input-tittle"
+                    placeholder="¿Sobre qué quieres hablar?"
+                    v-model="tittle"
+                    trim
+                  ></b-form-input>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </div>
+          <div class="section">
+            <h6>Cuerpo</h6>
+            <b-row>
+              <b-col class="col-md-11">
+                <b-form-group
+                  id="fieldset-cuerpo"
+                  class="form-group-cuerpo"
+                  label-for="input-cuerpo"
+                >
+                  <b-form-textarea
+                    id="input-cuerpo"
+                    class="textarea-cuerpo"
+                    placeholder="Cuerpo de texto (opcional)"
+                    v-model="descripcion"
+                    trim
+                  ></b-form-textarea>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </div>
+          <div class="section-end">
+            <b-row>
+              <b-col class="col-md-6">
+                <button class="anadir-btn anadir-btn--aceptar" @click="Atras()">
+                  Atrás
+                </button>
+              </b-col>
+              <b-col class="col-md-6">
+                <button
+                  class="anadir-btn anadir-btn--aceptar"
+                  @click="Aceptar()"
+                >
+                  Aceptar
+                </button>
+              </b-col>
+            </b-row>
+          </div>
         </b-tab>
       </div>
     </b-tabs>
-    
   </div>
 </template>
 
@@ -281,34 +345,35 @@ export default {
     return {
       tittle: null,
       foto: null,
-      tiempo: null,
+      tiempo: 0,
       timeOptions: [
-        { value: 5, text: '5' },
-        { value: 10, text: '10' },
-        { value: 15, text: '15' },
-        { value: 20, text: '20' },
-        { value: 25, text: '25' },
-        { value: 30, text: '30' },
-        { value: 35, text: '35' },
-        { value: 40, text: '40' },
-        { value: 45, text: '45' },
-        { value: 50, text: '50' },
-        { value: 55, text: '55' },
-        { value: 60, text: '60' },
-        { value: 65, text: '65' },
-        { value: 70, text: '70' },
-        { value: 75, text: '75' },
-        { value: 80, text: '80' },
-        { value: 85, text: '85' },
-        { value: 90, text: '90' },
-        { value: 105, text: '105' },
-        { value: 110, text: '110' },
-        { value: 115, text: '115' },
-        { value: 120, text: '120' }
+        { value: 0, text: "0" },
+        { value: 5, text: "5" },
+        { value: 10, text: "10" },
+        { value: 15, text: "15" },
+        { value: 20, text: "20" },
+        { value: 25, text: "25" },
+        { value: 30, text: "30" },
+        { value: 35, text: "35" },
+        { value: 40, text: "40" },
+        { value: 45, text: "45" },
+        { value: 50, text: "50" },
+        { value: 55, text: "55" },
+        { value: 60, text: "60" },
+        { value: 65, text: "65" },
+        { value: 70, text: "70" },
+        { value: 75, text: "75" },
+        { value: 80, text: "80" },
+        { value: 85, text: "85" },
+        { value: 90, text: "90" },
+        { value: 105, text: "105" },
+        { value: 110, text: "110" },
+        { value: 115, text: "115" },
+        { value: 120, text: "120" },
       ],
       ingredientes: [{ literal: null, cantidad: 0, unidad: null }],
       respuestas: [{ literal: null }],
-      pasos: [{ numero: 1, contenido: '' }],
+      pasos: [{ numero: 1, contenido: "" }],
       descripcion: null,
       unidadesDummy: [
         { value: 1, text: "kilogramos" },
@@ -397,12 +462,16 @@ export default {
     },
     Resolve() {
       if (!this.PuedeAnadirIngrediente) {
-        if (this.ingredientes.length <= 1) return;
-        this.ingredientes.splice(this.ingredientes.length - 1, 1);
+        if (this.ingredientes.length > 1)
+          this.ingredientes.splice(this.ingredientes.length - 1, 1);
       }
       if (!this.PuedeAnadirPaso) {
-        if (this.pasos.length <= 1) return;
-        this.pasos.splice(this.pasos.length - 1, 1);
+        if (this.pasos.length > 1) this.pasos.splice(this.pasos.length - 1, 1);
+      }
+      if (!this.PuedeAnadirRespuesta) {
+        console.log("borra respuestas vacías");
+        if (this.respuestas.length > 1)
+          this.respuestas.splice(this.respuestas.length - 1, 1);
       }
     },
     Aceptar() {
@@ -410,6 +479,10 @@ export default {
       // Luego hace el POST a la api
     },
     Atras() {},
+    cleanData() {
+      this.tittle = null;
+      this.descripcion = null;
+    },
   },
 };
 </script>
@@ -450,8 +523,8 @@ export default {
   box-shadow: 1px 1px 10px 10px #eaedee;
 }
 .anadir-btn:active {
-  background-color: #5E6668;
-  box-shadow: 1px 1px 5px 2px #F6FAFB;
+  background-color: #5e6668;
+  box-shadow: 1px 1px 5px 2px #f6fafb;
 }
 .anadir-btn--img {
   text-align: center;
@@ -491,5 +564,8 @@ input[type="file"] {
 }
 .textarea-paso {
   height: 6rem;
+}
+.textarea-cuerpo {
+  height: 7rem;
 }
 </style>

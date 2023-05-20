@@ -8,7 +8,7 @@
         placeholder="Buscar..."
       ></b-form-input>
       <div class="rounded-wrapper">
-        <b-tabs v-model="tab" content-class="mt-3" class="tab-option">
+        <b-tabs content-class="mt-3" class="tab-option">
           <div class="filtros-adicionales-container">
             <b-tab title="Ingredientes">
               <b-row>
