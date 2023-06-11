@@ -51,6 +51,13 @@
   <script>
 export default {
   layout: "empty",
+  data() {
+    return {
+      email: "",
+      password: "",
+      terminosAceptados: false,
+    };
+  },
   computed: {
     emailState() {
       if (this.email.length == 0) return null;
@@ -72,13 +79,6 @@ export default {
       }
       return "Please enter something.";
     },
-  },
-  data() {
-    return {
-      email: "",
-      password: "",
-      terminosAceptados: false
-    };
   },
 };
 </script>

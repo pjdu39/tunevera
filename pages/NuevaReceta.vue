@@ -454,10 +454,7 @@ export default {
         this.pasos.splice(index, 1);
       }
     },
-    ValidaTitulo() {
-      // Valida cantidad de caracteres
-    },
-    ValidaPaso() {
+    ValidaLongitud(maxLength) {
       // Valida cantidad de caracteres
     },
     Resolve() {
@@ -469,13 +466,19 @@ export default {
         if (this.pasos.length > 1) this.pasos.splice(this.pasos.length - 1, 1);
       }
       if (!this.PuedeAnadirRespuesta) {
-        console.log("borra respuestas vacías");
         if (this.respuestas.length > 1)
           this.respuestas.splice(this.respuestas.length - 1, 1);
       }
     },
     Aceptar() {
       this.Resolve();
+      let dataTest = this.$axios
+        .$get("https://localhost:7069/GetBoardElements?NumElements=10", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:3000/",
+          },
+        })
+        .then((x) => console.log(x));
       // Luego hace el POST a la api
     },
     Atras() {},
