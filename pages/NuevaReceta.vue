@@ -472,13 +472,6 @@ export default {
     },
     Aceptar() {
       this.Resolve();
-      let dataTest = this.$axios
-        .$get("https://localhost:7069/GetBoardElements?NumElements=10", {
-          headers: {
-            "Access-Control-Allow-Origin": "http://localhost:3000/",
-          },
-        })
-        .then((x) => console.log(x));
       // Luego hace el POST a la api
     },
     Atras() {},

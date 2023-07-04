@@ -2,36 +2,45 @@
   <div class="tablon-container">
     <!-- <main></main> -->
     <b-list-group-item
-        class="elemento"
-        v-for="(elemento, index) in elementos"
-        :key="index"
-      >
+      class="elemento"
+      v-for="(element, index) in elements"
+      :key="index"
+    >
       <div class="linea-superior">
-        <div class="tipo-elemento">{{ elemento.tipo }}</div>
-        <div class="autor">por <b>{{ elemento.autor }}</b></div>
-      </div>
-      <div class="linea-superior">
-        <h4 class="titulo">{{ elemento.titulo }}</h4>
-        <div v-if="elemento.tipo === 'Receta'" class="tiempo">
-          {{ elemento.tiempo }}min <span class="fa fa-clock" aria-hidden="true"></span>
+        <div class="tipo-elemento">{{ element.type }}</div>
+        <div class="autor">
+          por <b>{{ element.author }}</b>
         </div>
       </div>
-      <div>{{ elemento.descripcion }}</div>
-      <div 
-          v-if="elemento.tipo === 'Encuesta'" 
-          class="encuesta-container"
-        >
-        <div v-for="opcion in elemento.opciones" :key="opcion.id">
+      <div class="linea-superior">
+        <h4 class="titulo">{{ element.tittle }}</h4>
+        <div v-if="element.type === 'Receta'" class="tiempo">
+          {{ element.time }}min
+          <span class="fa fa-clock" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div>{{ element.description }}</div>
+      <div v-if="element.type === 'Encuesta'" class="encuesta-container">
+        <div v-for="option in element.options" :key="option.id">
           <div class="encuesta-opcion">
-            <div class="encuesta-opcion-texto">{{ opcion.texto }}</div>
-            <div class="encuesta-opcion-barra" :style="'width: ' + calculaBarraEncuesta(elemento.opciones, opcion) + 'rem;'"></div>
+            <div class="encuesta-opcion-texto">{{ option.answer }}</div>
+            <div
+              class="encuesta-opcion-barra"
+              :style="
+                'width: ' +
+                calculaBarraEncuesta(element.options, option) +
+                'rem;'
+              "
+            ></div>
             <!-- Por algún motivo desconocido, en este div estoy obligado a aplicar el text-align en el style, ya que no se aplica en la clase -->
-            <div 
-                class="encuesta-opcion-barra encuesta-opcion-barra--fondo"
-              >
-            </div>
-            <div class="encuesta-opcion-barra porcentaje" style="text-align: end;">
-              {{ calculaPorcentajeEncuesta(elemento.opciones, opcion) }}%
+            <div
+              class="encuesta-opcion-barra encuesta-opcion-barra--fondo"
+            ></div>
+            <div
+              class="encuesta-opcion-barra porcentaje"
+              style="text-align: end"
+            >
+              {{ calculaPorcentajeEncuesta(element.options, option) }} %
             </div>
           </div>
         </div>
@@ -40,11 +49,11 @@
         <div class="likes">
           <span class="fa fa-heart" aria-hidden="true"></span>
         </div>
-        <div class="num">{{ elemento.likes }}</div>
+        <div class="num">{{ element.likes }}</div>
         <div class="comentarios">
           <span class="fa fa-comment" aria-hidden="true"></span>
         </div>
-        <div class="num">{{ elemento.comentarios.length }}</div>
+        <!-- <div class="num">{{ element.comentarios.length }}</div> -->
       </div>
     </b-list-group-item>
   </div>
@@ -54,93 +63,129 @@
 export default {
   data() {
     return {
-      elementos: [
-        { 
-          tipo: 'Receta',
-          titulo: 'Cocido',
-          tiempo: 35,
-          descripcion: 'Lorem ipsum dolor sit amet consectetur adipisicing elit',
-          autor: 'carlos',
+      elements: [
+        {
+          type: "Receta",
+          tittle: "Cocido",
+          time: 35,
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit",
+          author: "carlos",
           likes: 67,
-          comentarios: [
-            { usuario: 'Pepe Hamond', texto: 'Lorem ipsum dolor sit amet' },
-            { usuario: 'Carlos', texto: 'Consectetur adipisicing elit. Dolor sit amet consectetur adipisicing' }
-          ]
+          comments: [
+            { usuario: "Pepe Hamond", texto: "Lorem ipsum dolor sit amet" },
+            {
+              usuario: "Carlos",
+              texto:
+                "Consectetur adipisicing elit. Dolor sit amet consectetur adipisicing",
+            },
+          ],
         },
-        { 
-          tipo: 'Encuesta',
-          titulo: 'Qué guiso queréis que os traiga esta semana?',
-          tiempo: null,
-          descripcion: null,
-          autor: 'aka_shiro',
+        {
+          type: "Encuesta",
+          tittle: "Qué guiso queréis que os traiga esta semana?",
+          time: null,
+          description: null,
+          author: "aka_shiro",
           likes: 209,
-          comentarios: [],
-          opciones: [
-            { id: 1, texto: 'Lentejas', votos: 109 },
-            { id: 2, texto: 'Caldo gallego', votos: 135 },
-            { id: 3, texto: 'Guiso de pollo', votos: 21 },
-            { id: 4, texto: 'Ramen', votos: 287 }
-          ]
+          comments: [],
+          options: [
+            { id: 1, answer: "Lentejas", votes: 109 },
+            { id: 2, answer: "Caldo gallego", votes: 135 },
+            { id: 3, answer: "Guiso de pollo", votes: 21 },
+            { id: 4, answer: "Ramen", votes: 287 },
+          ],
         },
-        { 
-          tipo: 'Receta',
-          titulo: 'Galletas',
-          tiempo: 50,
-          descripcion: 'Lorem ipsum dolor sit amet adipisicing elit',
-          autor: 'andrea',
+        {
+          type: "Receta",
+          tittle: "Galletas",
+          time: 50,
+          description: "Lorem ipsum dolor sit amet adipisicing elit",
+          author: "andrea",
           likes: 216,
-          comentarios: [
-            { usuario: 'Pepe Hamond', texto: 'Consectetur adipisicing elit. Dolor sit amet ipsum dolor sit consectetur adipisicing hahah' },
-            { usuario: 'Carlos', texto: 'Lorem ipsum dolor sit amet.' },
-            { usuario: 'Andrea', texto: 'Consectetur elit adipisicing. Dolor sit amet consectetur adipisicing' }
-          ]
+          comments: [
+            {
+              usuario: "Pepe Hamond",
+              texto:
+                "Consectetur adipisicing elit. Dolor sit amet ipsum dolor sit consectetur adipisicing hahah",
+            },
+            { usuario: "Carlos", texto: "Lorem ipsum dolor sit amet." },
+            {
+              usuario: "Andrea",
+              texto:
+                "Consectetur elit adipisicing. Dolor sit amet consectetur adipisicing",
+            },
+          ],
         },
-        { 
-          tipo: 'Discusión',
-          titulo: 'Cilantro o no?',
-          tiempo: null,
-          descripcion: 'Qué opinais del uso del cilantro en la cocina latino americana?',
-          autor: 'sara_rivas_',
+        {
+          type: "Discusión",
+          tittle: "Cilantro o no?",
+          time: null,
+          description:
+            "Qué opinais del uso del cilantro en la cocina latino americana?",
+          author: "sara_rivas_",
           likes: 13,
-          comentarios: [
-            { usuario: 'Pepe Hamond', texto: 'Lorem ipsum dolor sit consectetur adipisicing hahah. sit amet.' },
-            { usuario: 'Andrea', texto: 'Consectetur elit adipisicing. Dolor sit amet consectetur adipisicing' }
-          ]
+          comments: [
+            {
+              usuario: "Pepe Hamond",
+              texto:
+                "Lorem ipsum dolor sit consectetur adipisicing hahah. sit amet.",
+            },
+            {
+              usuario: "Andrea",
+              texto:
+                "Consectetur elit adipisicing. Dolor sit amet consectetur adipisicing",
+            },
+          ],
         },
-        { 
-          tipo: 'Encuesta',
-          titulo: 'Cocido con o sin patata?',
-          tiempo: null,
-          descripcion: null,
-          autor: 'misco_jones',
+        {
+          type: "Encuesta",
+          tittle: "Cocido con o sin patata?",
+          time: null,
+          description: null,
+          author: "misco_jones",
           likes: 693,
-          comentarios: [],
-          opciones: [
-            { id: 1, texto: 'Con patata', votos: 38 },
-            { id: 2, texto: 'Sin patata', votos: 856 }
-          ]
-        }
-      ]
-    }
+          comments: [],
+          options: [
+            { id: 1, answer: "Con patata", votes: 38 },
+            { id: 2, answer: "Sin patata", votes: 856 },
+          ],
+        },
+      ],
+    };
+  },
+  created() {
+    this.test();
   },
   methods: {
-    calculaBarraEncuesta(encuestaOpciones, opcion) {
-      let porcentaje = this.calculaPorcentajeEncuesta(encuestaOpciones, opcion)
-      let result = porcentaje / 5 // Divide entre 5 porque la longitud de la barra es 20rem
-      return result.toFixed(1)
+    calculaBarraEncuesta(pollOptions, option) {
+      let porcentaje = this.calculaPorcentajeEncuesta(pollOptions, option);
+      let result = porcentaje / 5; // Divide entre 5 porque la longitud de la barra es 20rem
+      return result.toFixed(1);
     },
-    calculaPorcentajeEncuesta(encuestaOpciones, opcion) {
-      let votosTotales = encuestaOpciones.reduce(
-        (acum, x) => acum + x.votos, 0
-      )
-      let result = opcion.votos / votosTotales * 100
-      return result.toFixed(1)
-    }
-  }
-}
+    calculaPorcentajeEncuesta(pollOptions, option) {
+      let totalVotes = pollOptions.reduce((acum, x) => acum + x.votes, 0);
+      let result = (option.votes / totalVotes) * 100;
+
+      return result % 1 != 0 ? result.toFixed(1) : result.toFixed(0);
+    },
+    test() {
+      let dataTest = this.$axios
+        .$get("https://localhost:7069/GetBoardElements?NumElements=10")
+        .then((x) => {
+          console.log(x);
+          x.forEach((y) => {
+            console.log(y);
+            this.elements.push(y);
+          });
+        });
+
+      // "Access-Control-Allow-Origin": "http://localhost:3000/"
+    },
+  },
+};
 </script>
 <style scoped>
-
 .tablon-container {
   margin: auto;
   width: 44rem;
@@ -149,19 +194,28 @@ export default {
 .elemento {
   margin-bottom: 2rem;
   background-color: #eaedee;
+  border: 2px solid white;
+  border-radius: 1.7rem;
+  box-shadow: 5px 5px 20px -15px #252b31, -3px -3px 10px 2px rgb(248, 248, 248),
+    10px 10px 100px -20px rgb(248, 248, 248) inset,
+    -10px -10px 30px -40px #252b31 inset;
+
+  /*
+  background-color: #eaedee;
   border-radius: 1rem;
   box-shadow: 1.5px 1.5px 30px -10px #252b31;
+  */
 }
 
 .tipo-elemento {
   display: inline-block;
   color: white;
-  background-color: #C1C8C7;
+  background-color: #c1c8c7;
   font-size: 110%;
   font-weight: 400;
-  letter-spacing: .3rem;
-  margin-left: -.3rem;
-  padding: 0 .6rem 0.1rem .6rem;
+  letter-spacing: 0.3rem;
+  margin-left: -0.3rem;
+  padding: 0 0.6rem 0.1rem 0.6rem;
   border-radius: 2rem;
   /* text-align: center; */
 }
@@ -177,7 +231,7 @@ export default {
 }
 
 .tiempo {
-  color: #C1C8C7;
+  color: #c1c8c7;
   font-size: 160%;
   text-align: end;
   margin-left: auto;
@@ -190,8 +244,8 @@ export default {
 }
 
 .encuesta-container {
- margin-top: 0rem;
- margin-bottom: 1rem;
+  margin-top: 0rem;
+  margin-bottom: 1rem;
 }
 
 .encuesta-opcion {
@@ -199,14 +253,14 @@ export default {
   /* width: 20rem; */
   height: 1.6rem;
   /* display: inline-flex; */
-  margin: 0 0 .8rem 0;
+  margin: 0 0 0.8rem 0;
 }
 
 .encuesta-opcion-texto {
   display: inline-block;
   position: sticky; /* TODO: Ver qué hace esto y cambiar si es necesario. Ahora está puesto para evitar que el valor por defecto impida que se aplique el z-index */
-  margin-left: .5rem;
-  margin-top: .1rem;
+  margin-left: 0.5rem;
+  margin-top: 0.1rem;
   font-size: 85%;
   z-index: 10;
 }
@@ -217,14 +271,14 @@ export default {
   top: 0;
   left: 0;
   background-color: #d49c6b;
-  border-radius: .5rem 0 0 .5rem;
+  border-radius: 0.5rem 0 0 0.5rem;
   z-index: 5;
 }
 
 .encuesta-opcion-barra--fondo {
   width: 20rem;
-  padding-top: .1rem;
-  background-color: #C1C8C7;
+  padding-top: 0.1rem;
+  background-color: #c1c8c7;
   border-radius: 0.5rem;
   font-size: 85%;
   z-index: 1;
@@ -232,8 +286,8 @@ export default {
 
 .porcentaje {
   width: 20rem;
-  padding-top: .1rem;
-  padding-right: .5rem;
+  padding-top: 0.1rem;
+  padding-right: 0.5rem;
   background-color: transparent;
   font-size: 85%;
   z-index: 15;
@@ -248,7 +302,7 @@ export default {
   text-align: center;
   height: 1.9rem;
   width: 1.9rem;
-  padding: .25rem;
+  padding: 0.25rem;
   color: #d49c6b;
 }
 
@@ -256,14 +310,14 @@ export default {
   text-align: center;
   height: 1.9rem;
   width: 1.9rem;
-  padding: .25rem;
+  padding: 0.25rem;
   color: #d49c6b;
 }
 
 .num {
   font-size: 90%;
-  padding-top: .4rem;
-  margin-left: .2rem;
+  padding-top: 0.4rem;
+  margin-left: 0.2rem;
   margin-right: 1rem;
 }
 
@@ -273,5 +327,4 @@ export default {
     width: 80%;
   }
 }
-
 </style>
