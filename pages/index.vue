@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -154,10 +155,26 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState("board", ["data"], ["loading"], ["error"]),
+  },
   created() {
-    this.test();
+    this.fetchData(10);
+  },
+  watch: {
+    data(newVal, oldVal) {
+      console.log(this.loading);
+
+      this.elements.push(...newVal);
+
+      // TODO: Ver por qué dice que "loading" es undefined
+      if (this.loading == "loaded") {
+        this.elements.push(...newVal);
+      }
+    },
   },
   methods: {
+    ...mapActions("board", ["fetchData"]),
     calculaBarraEncuesta(pollOptions, option) {
       let porcentaje = this.calculaPorcentajeEncuesta(pollOptions, option);
       let result = porcentaje / 5; // Divide entre 5 porque la longitud de la barra es 20rem
@@ -168,19 +185,6 @@ export default {
       let result = (option.votes / totalVotes) * 100;
 
       return result % 1 != 0 ? result.toFixed(1) : result.toFixed(0);
-    },
-    test() {
-      let dataTest = this.$axios
-        .$get("https://localhost:7069/GetBoardElements?NumElements=10")
-        .then((x) => {
-          console.log(x);
-          x.forEach((y) => {
-            console.log(y);
-            this.elements.push(y);
-          });
-        });
-
-      // "Access-Control-Allow-Origin": "http://localhost:3000/"
     },
   },
 };
