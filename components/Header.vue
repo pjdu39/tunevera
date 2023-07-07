@@ -20,21 +20,21 @@
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav class="main-navbar">
             <nuxt-link to="/" class="option">
+              <!-- Casita -->
               <span class="fa fa-home" aria-hidden="true"></span>
             </nuxt-link>
-            <!-- Casita -->
             <nuxt-link to="/Explorar" class="option">
+              <!-- Lupa -->
               <span class="fa fa-search" aria-hidden="true"></span>
             </nuxt-link>
-            <!-- Lupa -->
             <nuxt-link to="/NuevaReceta" class="option">
+              <!-- Algo parecido a un "+" -->
               <span class="fa fa-upload" aria-hidden="true"></span>
             </nuxt-link>
-            <!-- Algo parecido a un "+" -->
             <nuxt-link to="/Perfil" class="option">
+              <!-- Icono Usuario -->
               <span class="fa fa-user" aria-hidden="true"></span>
             </nuxt-link>
-            <!-- Icono Usuario -->
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -110,12 +110,6 @@ export default {
 .gear-option:hover {
   background-color: #c1c8c7;
 }
-/* TODO: Borrar. Legacy.
-.navbar-user-container {
-  display: flex;
-  height: 4rem;
-  background-color: #252b31;
-} */
 .navbar-main-container {
   display: flex;
   height: 5.2rem;
@@ -142,33 +136,23 @@ export default {
 }
 
 .option:hover {
-  box-shadow: 1px 1px 11px 4px #f6fafb;
+  color: #f6fafb;
+  /* box-shadow: 1px 1px 11px 4px #f6fafb; */
 }
 
 .option:active {
   color: #f6fafb;
-  background-color: #5e6668;
-  box-shadow: 1px 1px 5px 2px #f6fafb;
+  background-color: #b88558;
+  box-shadow: 3px 3px 10px -2px rgb(0, 0, 0) inset,
+    -1.5px -1.5px 6px 4px rgb(248, 248, 248, 0.3) inset;
 }
 
-.option:focus {
-  /* Hacer que se mantenga el focus si se hace click en otro elemento que no sea de la barra de navegación principal */
+.nuxt-link-exact-active {
   color: #f6fafb;
-  box-shadow: 1px 1px 11px 4px #f6fafb;
+  box-shadow: 3px 3px 5px -4px rgb(0, 0, 0) inset,
+    -1.5px -1.5px 3px 2px rgb(248, 248, 248, 0.3) inset;
 }
-/* TODO: Borrar. Legacy.
-.navbar-user-container .user .nav-link {
-  margin-right: 2rem;
-  border-radius: 3rem;
-}
-.navbar-user-container .user .nav-link:hover {
-  box-shadow: 0px 0px 6px 3px #F6FAFB;
-} */
 
-/*
-.navbar-nav .user .nav-link{
-  border-radius: 3rem;
-}*/
 /*
   PALETA DE COLORES
 

@@ -21,8 +21,8 @@ export const actions = {
         commit('setLoading', 'loading');
         try {
             const response = await this.$axios.get(`https://localhost:7069/GetBoardElements?NumElements=${ numElements }`);
-            commit('setData', response.data);
             commit('setLoading', 'loaded');
+            commit('setData', response.data);
             commit('setError', null);
         }
         catch(error) {

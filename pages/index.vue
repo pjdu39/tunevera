@@ -156,21 +156,15 @@ export default {
     };
   },
   computed: {
-    ...mapState("board", ["data"], ["loading"], ["error"]),
+    ...mapState("board", ["data", "loading", "error"]),
   },
   created() {
     this.fetchData(10);
   },
   watch: {
     data(newVal, oldVal) {
-      console.log(this.loading);
-
-      this.elements.push(...newVal);
-
-      // TODO: Ver por qué dice que "loading" es undefined
-      if (this.loading == "loaded") {
+      if (this.loading === "loaded" && this.error === null)
         this.elements.push(...newVal);
-      }
     },
   },
   methods: {
@@ -184,7 +178,7 @@ export default {
       let totalVotes = pollOptions.reduce((acum, x) => acum + x.votes, 0);
       let result = (option.votes / totalVotes) * 100;
 
-      return result % 1 != 0 ? result.toFixed(1) : result.toFixed(0);
+      return result % 1 !== 0 ? result.toFixed(1) : result.toFixed(0);
     },
   },
 };
