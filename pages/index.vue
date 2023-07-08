@@ -25,7 +25,7 @@
           <div class="encuesta-opcion">
             <div class="encuesta-opcion-texto">{{ option.answer }}</div>
             <div
-              class="encuesta-opcion-barra"
+              class="encuesta-opcion-barra encuesta-opcion-barra--rellena"
               :style="
                 'width: ' +
                 calculaBarraEncuesta(element.options, option) +
@@ -242,6 +242,8 @@ export default {
 }
 
 .encuesta-container {
+  /* color: white; */
+  letter-spacing: 0.05rem;
   margin-top: 0rem;
   margin-bottom: 1rem;
 }
@@ -273,10 +275,20 @@ export default {
   z-index: 5;
 }
 
+.encuesta-opcion-barra--rellena {
+  box-shadow: 1.5px 1.5px 5px -4px rgb(0, 0, 0),
+    -2px -2px 5px 0px rgb(248, 248, 248, 0.8),
+    -0.2px -1.5px 3px -4px rgb(0, 0, 0) inset,
+    2px 2px 2px -1.2px rgb(248, 248, 248, 0.8) inset;
+}
+
 .encuesta-opcion-barra--fondo {
   width: 20rem;
   padding-top: 0.1rem;
-  background-color: #c1c8c7;
+  background-color: #d7d9da;
+  box-shadow: 3px 3px 5px -4px rgb(0, 0, 0) inset,
+    -0.1px -0.1px 2px 1.5px rgb(248, 248, 248, 0.6) inset;
+  border: 1px solid #d7d9da;
   border-radius: 0.5rem;
   font-size: 85%;
   z-index: 1;
@@ -287,6 +299,7 @@ export default {
   padding-top: 0.1rem;
   padding-right: 0.5rem;
   background-color: transparent;
+  border-radius: 0.5rem;
   font-size: 85%;
   z-index: 15;
 }

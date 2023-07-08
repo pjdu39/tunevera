@@ -20,19 +20,23 @@
                         class="buscador-ingredientes"
                         placeholder="Buscar ingrediente..."
                       ></b-form-input>
-                      <b-button class="button add-button"><span class="fa fa-plus" aria-hidden="true"></span></b-button>
+                      <b-button class="button add-button"
+                        ><span class="fa fa-plus" aria-hidden="true"></span
+                      ></b-button>
                     </div>
                     <div class="vege-options">
                       <b-form-checkbox
                         v-model="vegetariano"
-                        :class="'button check-vege ' + vegeActive('vegetariano')"
+                        :class="
+                          'button check-vege ' + vegeActive('vegetariano')
+                        "
                         name="check-button"
                         button
                         @change="autoVegetariano('vegetariano')"
                       >
                         Vegetariano
                       </b-form-checkbox>
-                      <b-form-checkbox 
+                      <b-form-checkbox
                         v-model="vegano"
                         :class="'button check-vege ' + vegeActive('vegano')"
                         name="check-button"
@@ -44,9 +48,7 @@
                     </div>
                   </div>
                 </b-col>
-                <b-col md="6" class="filtros-elegidos">
-                  Patata
-                </b-col>
+                <b-col md="6" class="filtros-elegidos"> Patata </b-col>
               </b-row>
             </b-tab>
             <b-tab title="Tags #">
@@ -59,7 +61,9 @@
                         class="buscador-ingredientes"
                         placeholder="Buscar tag..."
                       ></b-form-input>
-                      <b-button class="button add-button"><span class="fa fa-search" aria-hidden="true"></span></b-button>
+                      <b-button class="button add-button"
+                        ><span class="fa fa-search" aria-hidden="true"></span
+                      ></b-button>
                     </div>
                   </div>
                 </b-col>
@@ -87,7 +91,11 @@
       </div>
     </div>
     <div class="images-container">
-      <b-list-group-item class="card" v-for="receta in recetas" :key="receta.id">
+      <b-list-group-item
+        class="card"
+        v-for="receta in recetas"
+        :key="receta.id"
+      >
         <div class="card-tittle" :hidden="muestraTitulo">
           {{ receta.name }}
         </div>
@@ -107,11 +115,11 @@ export default {
       muestraTitulo: false,
       tituloRecetaHover: null,
       filtroDesplegado: null,
-      tipoFiltroIngredientesSeleccionado: 'tiene',
+      tipoFiltroIngredientesSeleccionado: "tiene",
       ingredientesFiltrados: {
         tiene: [],
         noTiene: [],
-        soloTiene: false
+        soloTiene: false,
       },
       tagsFiltrados: [],
       buscarGeneral: null,
@@ -141,8 +149,8 @@ export default {
   },
   methods: {
     seleccionaTipoFiltroIngredientes(str) {
-      this.tipoFiltroIngredientesSeleccionado = str
-    }, 
+      this.tipoFiltroIngredientesSeleccionado = str;
+    },
     /* TODO: Borrar. Legacy.
     focusButton(str) {
       return str === this.tipoFiltroIngredientesSeleccionado ? 'filtro-button--selected' : 'filtro-button--not-selected'
@@ -155,20 +163,21 @@ export default {
 
       /* TODO: Eliminar este método y hacer la asignación de vegano o vegetariano a false en el propio @change. */
 
-      if(checkboxSeleccionado === 'vegano') this.vegetariano = false
-      if(checkboxSeleccionado === 'vegetariano') this.vegano = false
+      if (checkboxSeleccionado === "vegano") this.vegetariano = false;
+      if (checkboxSeleccionado === "vegetariano") this.vegano = false;
     },
     vegeActive(str) {
-      if(str === 'vegetariano' && this.vegetariano) return 'check-vege--active'
-      if(str === 'vegano' && this.vegano) return 'check-vege--active'
-    }
-  }
+      if (str === "vegetariano" && this.vegetariano)
+        return "check-vege--active";
+      if (str === "vegano" && this.vegano) return "check-vege--active";
+    },
+  },
 };
 </script>
 
 <style scoped>
 :root {
-  --image-z-indx: 10
+  --image-z-indx: 10;
 }
 
 .button {
@@ -181,14 +190,8 @@ export default {
 }
 
 .button:hover {
-  box-shadow: 1px 1px 11px 4px #F6FAFB;
+  box-shadow: 1px 1px 11px 4px #f6fafb;
 }
-
-/* TODO: Borrar. Legacy.
-.button--selected {
-  color: white;
-  box-shadow: 1px 1px 11px 4px #F6FAFB;
-} */
 
 .explorar-container {
   margin: auto;
@@ -196,9 +199,7 @@ export default {
 }
 
 .filtros {
-  /* border-bottom: 1px solid #dee2e6; */
   padding-bottom: 1.5rem;
-  /* margin-bottom: 0.5rem; */
 }
 
 .buscador {
@@ -208,7 +209,7 @@ export default {
 .tab-option:deep() a {
   border-radius: 0rem;
   color: white;
-  background-color: #5E6668;
+  background-color: #5e6668;
   border-radius: 1rem 1rem 0 0;
 }
 
@@ -216,29 +217,8 @@ export default {
   background-color: #d49c6b;
 }
 .tab-option:deep() a:hover {
-  box-shadow: 1px 1px 6px 2px #F6FAFB;
+  box-shadow: 1px 1px 6px 2px #f6fafb;
 }
-
-/* TODO: Borrar, no veo que se use en ninguna parte, probablemente es legacy
-
-.desplegable-button {
-  position: absolute;
-  padding: .5rem;
-  min-width: 8rem;
-  box-shadow: 2px 2px 10px 1px #252b31;
-}
-
-.desplegable-button:hover {
-  box-shadow: 1px 1px 11px 4px #F6FAFB;
-}
-
-.desplegable-button--ingredientes {
-  top: 2.3rem;
-}
-
-.desplegable-button--categoria {
-  top: 5.3rem;
-} */
 
 .filtros-adicionales-container {
   position: relative;
@@ -246,32 +226,13 @@ export default {
   width: 100%;
 
   padding: 3rem;
-  
+
   background-color: #eaedee;
+  border: 2px solid white;
   border-radius: 1rem;
-  box-shadow: 1.5px 1.5px 30px -10px #252b31;
-}
-
-.button-atras {
-  position: absolute;
-  top: 4rem;
-  background-color: transparent;
-  border: none;
-}
-
-.filtro-categoria-container {
-  top: 1.2rem;
-  max-width: 100%;
-  display: grid;
-  padding: 1rem;
-  grid-template-columns: repeat(3, 1fr);
-  row-gap: 0;
-  column-gap: 0;
-  overflow: visible;
-}
-
-.filtro-ingredientes-button-group {
-  top: 1rem;
+  box-shadow: 5px 5px 20px -15px #252b31, -3px -3px 10px 2px rgb(248, 248, 248),
+    10px 10px 100px -20px rgb(248, 248, 248) inset,
+    -10px -10px 30px -40px #252b31 inset;
 }
 
 .filtro-button {
@@ -284,35 +245,11 @@ export default {
 }
 
 .filtro-button:hover {
-  box-shadow: 1px 1px 11px 4px #F6FAFB;
+  box-shadow: 1px 1px 11px 4px #f6fafb;
 }
-
-/* TODO: Borrar. Legacy.
-.filtro-button--selected {
-  color: white;
-  box-shadow: 1px 1px 11px 4px #F6FAFB;
-  /* border: 1px solid white;
-}
-
-.filtro-button--not-selected {
-  background-color: #5E6668;
-}
-
-.filtro-button--ingredientes {
-  margin-bottom: .4rem;
-  padding: .5rem;
-}
-
-.filtro-button--categoria {
-  height: 2.5rem;
-  width: 7rem;
-  margin: .3rem .3rem 0 0;
-  padding: .5rem;
-} */
 
 .buscador-ingredientes-container {
   width: calc(100% - 0rem);
-  /* right: 0; */
 }
 
 .row-barra-busqueda-ingredientes {
@@ -320,12 +257,15 @@ export default {
 }
 
 .filtros-elegidos {
-  /* height: min-content; Esto es por si quiero ajustar automáticamente la altura de la tarjeta al número de elementos que contenga */ 
-  padding: .5rem 1rem .5rem 1rem;
+  /* height: min-content; Esto es por si quiero ajustar automáticamente la altura de la tarjeta al número de elementos que contenga */
+  padding: 0.5rem 1rem 0.5rem 1rem;
   margin-bottom: 0rem;
   background-color: white; /* #eaedee; */
   border-radius: 1rem;
-  box-shadow: 1.5px 1.5px 30px -10px #252b31;
+  border: 2px solid white;
+  box-shadow: 5px 5px 20px -15px #252b31, -3px -3px 10px 2px rgb(248, 248, 248),
+    10px 10px 100px -20px rgb(248, 248, 248) inset,
+    -10px -10px 30px -40px #252b31 inset;
 }
 
 .form-and-button {
@@ -342,14 +282,14 @@ export default {
 }
 
 .check-vege {
-  background-color: #5E6668;
+  background-color: #5e6668;
   margin: 0 calc(20% - 4rem) 0 1rem;
   border-radius: 0.7rem !important;
 }
 
 .check-vege--active {
   background-color: #d49c6b;
-  box-shadow: 1px 1px 11px 4px #F6FAFB;
+  box-shadow: 1px 1px 11px 4px #f6fafb;
 }
 
 .check-vege:deep() .btn-secondary {
@@ -365,49 +305,6 @@ label:deep() .custom-control-input {
   background-color: #d49c6b !important;
 }
 
- /*
-:deep() .check-vege > .btn-secondary:active {
-  background-color: #d49c6b;
-}*/
-
-/*
-.line {
-  margin-bottom: .5rem;
-}
-
-.por-ingredientes-button:deep() .btn-secondary {
-  text-align: center;
-  padding: .5rem;
-  background-color: #d49c6b;
-  box-shadow: 2px 2px 10px 1px #252b31;
-  color: #252b31;
-  border-radius: 1rem;
-  border-style: none;
-}
-
-.por-ingredientes-button:deep() .dropdown-menu {
-  background-color: transparent;
-  border: none;
-}
-
-.por-ingredientes-button:deep() .dropdown-item {
-  position: relative;
-  text-align: center;
-  margin-bottom: .3rem;
-  padding: .5rem;
-  background-color: #d49c6b;
-  box-shadow: 2px 2px 10px 1px #252b31;
-  color: #252b31;
-  border-radius: 1rem;
-  border-style: none;
-}
-
-.por-ingredientes-button:deep() .dropdown-item:hover {
-  box-shadow: 2px 2px 10px 1px white;
-  z-index: 1001;
-}
-*/
-
 .images-container {
   position: relative;
   max-width: 100%;
@@ -420,13 +317,16 @@ label:deep() .custom-control-input {
 
   background-color: #eaedee;
   border-radius: 1rem;
-  box-shadow: 1.5px 1.5px 30px -10px #252b31;
+  border: 2px solid white;
+  box-shadow: 5px 5px 20px -15px #252b31, -3px -3px 10px 2px rgb(248, 248, 248),
+    10px 10px 100px -20px rgb(248, 248, 248) inset,
+    -10px -10px 30px -40px #252b31 inset;
 }
 .card {
   width: 88%;
   aspect-ratio: 1/1;
   margin-top: 1rem;
-  margin-left: .8rem;
+  margin-left: 0.8rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
   padding: 0;
