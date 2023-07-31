@@ -3,10 +3,12 @@
     <div class="main-container">
       <div class="page">
         <div v-if="loading === 'waiting'">Waiting {{ data }}</div>
-        <div v-if="loading === 'loading'">Loading...</div>
+        <div v-if="loading === 'loading'" class="spinner">
+          <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
+        </div>
         <div v-else-if="loading === 'loaded'">
           <h1 class="title-receta">{{ data.tittle }}</h1>
-          <p>{{ data.description }}</p>
+          <div class="descripcion">{{ data.description }}</div>
           <div class="section">
             <h4 class="section section--receta">Ingredientes</h4>
             <ul>
@@ -35,9 +37,9 @@
               :key="index"
             >
               <div class="section section--paso">
-                <div class="paso">{{ index + 1 }}</div>
+                <div class="num-paso-wrapper">{{ index + 1 }}</div>
+                <div class="paso">{{ step.text }}</div>
               </div>
-              <p>{{ step.text }}</p>
             </b-list-group-item>
           </div>
         </div>
@@ -51,7 +53,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      idRecipe: 0,
+      idRecipe: 10,
     };
   },
   computed: {
@@ -61,7 +63,7 @@ export default {
     ...mapActions("recipe", ["fetchData"]),
   },
   mounted() {
-    this.fetchData(6); // TODO: Recibir este valor por url.
+    this.fetchData(11); // TODO: Recibir este valor por url.
   },
 };
 </script>
@@ -69,7 +71,7 @@ export default {
   <style scoped>
 .main-container {
   margin: auto;
-  width: 44rem;
+  width: 54rem;
 }
 .page {
   margin-top: 1rem;
@@ -82,6 +84,10 @@ export default {
     10px 10px 100px -20px rgba(248, 248, 248) inset,
     -10px -10px 30px -40px #252b31 inset;
 }
+.descripcion {
+  width: 35rem;
+  margin-bottom: 2rem;
+}
 .section--receta {
   border-top: 1px solid #c1c8c7;
   padding: 0.8rem 0;
@@ -90,11 +96,13 @@ export default {
   padding: 1.2rem 0 4rem 0;
 }
 .section--paso {
+  display: flex;
   margin-bottom: 0;
-  border-top: 1px solid #c1c8c7;
-  padding: 0.8rem 0;
+  /* border-top: 1px solid #c1c8c7; */
+  padding: 2rem 0;
 }
-.paso {
+.num-paso-wrapper {
+  margin-right: 1rem;
   height: 2.6rem;
   aspect-ratio: 1 / 1;
   padding: 0 0 0 0.8rem;
@@ -103,10 +111,19 @@ export default {
   border: 2px solid gray;
   border-radius: 10rem;
 }
+.paso {
+  display: inline-block;
+  margin-top: auto;
+  margin-bottom: auto;
+}
 .group-item-container {
   display: block;
   padding: 0;
   background-color: transparent;
   border: none;
+}
+.spinner {
+  text-align: center;
+  font-size: 180%;
 }
 </style>
