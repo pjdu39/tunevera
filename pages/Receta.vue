@@ -7,10 +7,15 @@
           <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
         </div>
         <div v-else-if="loading === 'loaded'">
-          <h1 class="title-receta">{{ data.tittle }}</h1>
-          <div class="descripcion">{{ data.description }}</div>
+          <div class="section flex">
+            <div class="tittle-section">
+              <h2 class="title">{{ data.tittle }}</h2>
+              <div class="descripcion">{{ data.description }}</div>
+            </div>
+            <div class="author-section"></div>
+          </div>
           <div class="section">
-            <h4 class="section section--receta">Ingredientes</h4>
+            <h5 class="section--receta">Ingredientes</h5>
             <ul>
               <b-list-group-item
                 class="group-item-container"
@@ -30,7 +35,7 @@
             </ul>
           </div>
           <div class="section">
-            <h4 class="section section--receta">Pasos</h4>
+            <h5 class="section--receta"></h5>
             <b-list-group-item
               class="group-item-container"
               v-for="(step, index) in data.steps"
@@ -71,28 +76,34 @@ export default {
   <style scoped>
 .main-container {
   margin: auto;
-  width: 54rem;
+  width: 53rem;
 }
 .page {
   margin-top: 1rem;
   padding: 2rem;
-  background-color: #eaedee;
-  border: 1px solid rgba(255, 255, 255, 0.836);
+  background-color: #f2f4f5;
+  border: 1px solid rgba(249, 249, 249);
   border-radius: 1.7rem;
-  box-shadow: 5px 5px 20px -15px #252b31ec,
-    -3px -3px 10px 2px rgb(251, 251, 251),
-    10px 10px 100px -20px rgba(248, 248, 248) inset,
-    -10px -10px 30px -40px #252b31 inset;
+  box-shadow: 5px 5px 3px -1px #252b310a, -4px -4px 4px -2px rgb(251, 251, 251),
+    -10px -10px 30px -80px #252b31 inset;
 }
+.tittle-section {
+  width: 65%;
+}
+.author-section {
+  background-color: #252b31;
+  width: 35%;
+}
+/*
 .descripcion {
   width: 35rem;
   margin-bottom: 2rem;
-}
+} */
 .section--receta {
-  border-top: 1px solid #c1c8c7;
+  border-top: 1px solid #c1c8c74b;
   padding: 0.8rem 0;
 }
-.title-receta {
+.title {
   padding: 1.2rem 0 4rem 0;
 }
 .section--paso {
