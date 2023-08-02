@@ -12,7 +12,18 @@
               <h2 class="title">{{ data.tittle }}</h2>
               <div class="descripcion">{{ data.description }}</div>
             </div>
-            <div class="author-section"></div>
+            <div class="author-section">
+              <b-row>
+                <b-col class="col-md-7"> </b-col>
+                <b-col class="col-md-5">
+                  <div class="wrapper-foto">
+                    <img class="foto" :src="usuarioDummy.img" />
+                    <!-- TODO: Ponerle un link al perfil -->
+                  </div>
+                </b-col>
+              </b-row>
+              <div class="author-name">{{ usuarioDummy.nombreCompleto }}</div>
+            </div>
           </div>
           <div class="section">
             <h5 class="section--receta">Ingredientes</h5>
@@ -59,6 +70,13 @@ export default {
   data() {
     return {
       idRecipe: 10,
+      usuarioDummy: {
+        id: 1,
+        nombreCompleto: "Juan Pérez Delgado",
+        publicaciones: 28,
+        seguidores: 143,
+        img: require("~/assets/img/foto_perfil2.jpg"),
+      },
     };
   },
   computed: {
@@ -91,7 +109,7 @@ export default {
   width: 65%;
 }
 .author-section {
-  background-color: #252b31;
+  margin-top: 0.5rem;
   width: 35%;
 }
 /*
@@ -105,6 +123,17 @@ export default {
 }
 .title {
   padding: 1.2rem 0 4rem 0;
+}
+.wrapper-foto {
+  display: inline-block;
+  width: 5rem;
+  height: 5rem;
+  overflow: hidden;
+  position: relative;
+  border-radius: 50%;
+}
+.author-name {
+  text-align: right;
 }
 .section--paso {
   display: flex;
