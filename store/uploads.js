@@ -17,7 +17,7 @@ export const mutations = {
 }
 
 export const actions = {
-    async fetchData({ commit }, recipe) {
+    async postRecipe({ commit }, recipe) {
         commit('setLoading', 'loading');
         try {
             const response = await this.$axios.post('https://localhost:7069/NewRecipe', recipe);

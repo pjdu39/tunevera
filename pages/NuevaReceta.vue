@@ -16,7 +16,7 @@
                     id="input-tittle"
                     class="input-tittle"
                     placeholder="Escribir título..."
-                    v-model="tittle"
+                    v-model="postRecipeData.tittle"
                     trim
                   ></b-form-input>
                 </b-form-group>
@@ -35,7 +35,7 @@
           <div class="section">
             <h6>Tiempo</h6>
             <b-form-select
-              v-model="tiempo"
+              v-model="postRecipeData[time]"
               :options="timeOptions"
               class="tiempo-container"
             ></b-form-select>
@@ -54,7 +54,7 @@
                     id="input-descripcion"
                     class="textarea-descripcion--articulo"
                     placeholder="(opcional)"
-                    v-model="descripcion"
+                    v-model="postRecipeData.description"
                     trim
                   ></b-form-textarea>
                 </b-form-group>
@@ -66,7 +66,9 @@
             <div>
               <b-list-group-item
                 class="input-container"
-                v-for="(ingrediente, index) in ingredientes"
+                v-for="(
+                  recipeIngredient, index
+                ) in postRecipeData.recipeIngredients"
                 :key="index"
               >
                 <b-row>
@@ -80,7 +82,7 @@
                         id="input-literal"
                         class="input-literal"
                         placeholder="Ingrediente..."
-                        v-model="ingrediente.literal"
+                        v-model="recipeIngredient.idIngredient"
                         trim
                       ></b-form-input>
                     </b-form-group>
@@ -96,14 +98,14 @@
                         class="input-cantidad"
                         placeholder="Cantidad..."
                         type="number"
-                        v-model="ingrediente.cantidad"
+                        v-model="recipeIngredient.amount"
                         trim
                       ></b-form-input>
                     </b-form-group>
                   </b-col>
                   <b-col class="col-md-3">
                     <b-form-select
-                      v-model="ingrediente.unidad"
+                      v-model="recipeIngredient.idUnit"
                       :options="unidadesDummy"
                     ></b-form-select>
                   </b-col>
@@ -340,10 +342,18 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      tittle: null,
+      postRecipeData: {
+        tittle: "",
+        description: "",
+        time: null,
+        recipeIngredients: [{ idIngredient: null, amount: null, idUnit: null }],
+        steps: [{ text: null, stepNumber: null }],
+        tags: [],
+      },
       foto: null,
       tiempo: 0,
       timeOptions: [
@@ -389,12 +399,13 @@ export default {
     };
   },
   computed: {
+    ...mapState("uploads", ["data", "loading", "error"]),
     PuedeAnadirIngrediente() {
       let result = true;
-      this.ingredientes.forEach((x) => {
-        if (!x.literal) result = false;
-        if (!x.cantidad) result = false;
-        if (!x.unidad) result = false;
+      this.postRecipeData.recipeIngredients.forEach((x) => {
+        if (!x.idIngredient) result = false;
+        if (!x.amount) result = false;
+        if (!x.idUnit) result = false;
       });
 
       return result;
@@ -417,9 +428,14 @@ export default {
     },
   },
   methods: {
+    ...mapActions("uploads", ["postRecipe"]),
     OtroIngrediente() {
       if (this.PuedeAnadirIngrediente) {
-        this.ingredientes.push({ literal: null, cantidad: 0, unidad: null });
+        this.postRecipeData.recipeIngredients.push({
+          idIngredient: null,
+          amount: null,
+          idUnit: null,
+        });
       }
     },
     OtraRespuesta() {
@@ -474,7 +490,9 @@ export default {
       this.Resolve();
       // Luego hace el POST a la api
     },
-    Atras() {},
+    Atras() {
+      this.postRecipe(this.postRecipeData);
+    },
     cleanData() {
       this.tittle = null;
       this.descripcion = null;
