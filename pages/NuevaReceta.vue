@@ -35,7 +35,7 @@
           <div class="section">
             <h6>Tiempo</h6>
             <b-form-select
-              v-model="postRecipeData[time]"
+              v-model="postRecipeData.time"
               :options="timeOptions"
               class="tiempo-container"
             ></b-form-select>
@@ -112,7 +112,7 @@
                   <b-col class="col-md-1">
                     <button
                       class="anadir-btn anadir-btn--quitar"
-                      @click="EliminaIngrediente(ingrediente)"
+                      @click="EliminaIngrediente(recipeIngredient)"
                     >
                       <span class="fa fa-times" aria-hidden="true"></span>
                     </button>
@@ -135,7 +135,7 @@
             <div>
               <b-list-group-item
                 class="input-container input-container--paso"
-                v-for="(paso, index) in pasos"
+                v-for="(step, index) in postRecipeData.steps"
                 :key="index"
               >
                 <b-row>
@@ -149,7 +149,7 @@
                         id="input-paso"
                         class="textarea-paso"
                         placeholder="Escribir paso..."
-                        v-model="paso.contenido"
+                        v-model="step.text"
                         trim
                       ></b-form-textarea>
                     </b-form-group>
@@ -157,7 +157,7 @@
                   <b-col class="col-md-1">
                     <button
                       class="anadir-btn anadir-btn--quitar"
-                      @click="EliminaPaso(paso)"
+                      @click="EliminaPaso(step)"
                     >
                       <span class="fa fa-times" aria-hidden="true"></span>
                     </button>
@@ -207,7 +207,7 @@
                     id="input-tittle"
                     class="input-tittle"
                     placeholder="¿Qué quieres preguntar?"
-                    v-model="tittle"
+                    v-model="postRecipeData.tittle"
                     trim
                   ></b-form-input>
                 </b-form-group>
@@ -291,7 +291,7 @@
                     id="input-tittle"
                     class="input-tittle"
                     placeholder="¿Sobre qué quieres hablar?"
-                    v-model="tittle"
+                    v-model="postRecipeData.tittle"
                     trim
                   ></b-form-input>
                 </b-form-group>
@@ -412,8 +412,8 @@ export default {
     },
     PuedeAnadirPaso() {
       let result = true;
-      this.pasos.forEach((x) => {
-        if (!x.contenido) result = false;
+      this.postRecipeData.steps.forEach((x) => {
+        if (!x.text) result = false;
       });
 
       return result;
@@ -444,16 +444,17 @@ export default {
       }
     },
     OtroPaso() {
+      console.log(this.postRecipeData.steps);
       if (this.PuedeAnadirPaso) {
-        let numero = this.pasos.length;
-        this.pasos.push({ numero: numero, contenido: "" });
+        let numPaso = this.postRecipeData.steps.length;
+        this.postRecipeData.steps.push({ text: "", stepNumber: numPaso });
       }
     },
-    EliminaIngrediente(ingrediente) {
-      if (this.ingredientes.length <= 1) return;
-      const index = this.ingredientes.indexOf(ingrediente);
+    EliminaIngrediente(ingredient) {
+      if (this.postRecipeData.recipeIngredients.length <= 1) return;
+      const index = this.postRecipeData.recipeIngredients.indexOf(ingredient);
       if (index > -1) {
-        this.ingredientes.splice(index, 1);
+        this.postRecipeData.recipeIngredients.splice(index, 1);
       }
     },
     EliminaRespuesta(respuesta) {
@@ -463,11 +464,12 @@ export default {
         this.respuestas.splice(index, 1);
       }
     },
-    EliminaPaso(paso) {
-      if (this.pasos.length <= 1) return;
-      const index = this.pasos.indexOf(paso);
+    EliminaPaso(step) {
+      if (this.postRecipeData.steps.length <= 1) return;
+
+      const index = this.postRecipeData.steps.indexOf(step);
       if (index > -1) {
-        this.pasos.splice(index, 1);
+        this.postRecipeData.steps.splice(index, 1);
       }
     },
     ValidaLongitud(maxLength) {
@@ -475,11 +477,18 @@ export default {
     },
     Resolve() {
       if (!this.PuedeAnadirIngrediente) {
-        if (this.ingredientes.length > 1)
-          this.ingredientes.splice(this.ingredientes.length - 1, 1);
+        if (this.postRecipeData.recipeIngredients.length > 1)
+          this.postRecipeData.recipeIngredients.splice(
+            this.postRecipeData.recipeIngredients.length - 1,
+            1
+          );
       }
       if (!this.PuedeAnadirPaso) {
-        if (this.pasos.length > 1) this.pasos.splice(this.pasos.length - 1, 1);
+        if (this.postRecipeData.steps.length > 1)
+          this.postRecipeData.steps.splice(
+            this.postRecipeData.steps.length - 1,
+            1
+          );
       }
       if (!this.PuedeAnadirRespuesta) {
         if (this.respuestas.length > 1)
