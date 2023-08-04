@@ -149,7 +149,7 @@
                         id="input-paso"
                         class="textarea-paso"
                         placeholder="Escribir paso..."
-                        v-model="step.text"
+                        v-model="postRecipeData.steps[index]"
                         trim
                       ></b-form-textarea>
                     </b-form-group>
@@ -351,7 +351,7 @@ export default {
         description: "",
         time: null,
         recipeIngredients: [{ idIngredient: null, amount: null, idUnit: null }],
-        steps: [{ text: null, stepNumber: null }],
+        steps: [""],
         tags: [],
       },
       foto: null,
@@ -413,7 +413,7 @@ export default {
     PuedeAnadirPaso() {
       let result = true;
       this.postRecipeData.steps.forEach((x) => {
-        if (!x.text) result = false;
+        if (!x) result = false;
       });
 
       return result;
@@ -446,8 +446,10 @@ export default {
     OtroPaso() {
       console.log(this.postRecipeData.steps);
       if (this.PuedeAnadirPaso) {
-        let numPaso = this.postRecipeData.steps.length;
-        this.postRecipeData.steps.push({ text: "", stepNumber: numPaso });
+        // TODO: Borrar
+        /* let stepNumber = this.postRecipeData.steps.length + 1;
+        this.postRecipeData.steps.push({ text: "", stepNumber: stepNumber }); */
+        this.postRecipeData.steps.push("");
       }
     },
     EliminaIngrediente(ingredient) {
@@ -475,6 +477,7 @@ export default {
     ValidaLongitud(maxLength) {
       // Valida cantidad de caracteres
     },
+    // TODO: Actualmente borra la última posición si hay alguno vacío, en lugar de el que está vacío específicamente. Arreglar.
     Resolve() {
       if (!this.PuedeAnadirIngrediente) {
         if (this.postRecipeData.recipeIngredients.length > 1)
