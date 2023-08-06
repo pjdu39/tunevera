@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="linea-superior">
-        <h4 class="titulo">{{ element.tittle }}</h4>
+        <h4 class="titulo">{{ element.title }}</h4>
         <div v-if="element.type === 'Receta'" class="tiempo">
           {{ element.time }}min
           <span class="fa fa-clock" aria-hidden="true"></span>
@@ -67,7 +67,7 @@ export default {
       elements: [
         {
           type: "Receta",
-          tittle: "Cocido",
+          title: "Cocido",
           time: 35,
           description:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit",
@@ -84,7 +84,7 @@ export default {
         },
         {
           type: "Encuesta",
-          tittle: "Qué guiso queréis que os traiga esta semana?",
+          title: "Qué guiso queréis que os traiga esta semana?",
           time: null,
           description: null,
           author: "aka_shiro",
@@ -99,7 +99,7 @@ export default {
         },
         {
           type: "Receta",
-          tittle: "Galletas",
+          title: "Galletas",
           time: 50,
           description: "Lorem ipsum dolor sit amet adipisicing elit",
           author: "andrea",
@@ -120,7 +120,7 @@ export default {
         },
         {
           type: "Discusión",
-          tittle: "Cilantro o no?",
+          title: "Cilantro o no?",
           time: null,
           description:
             "Qué opinais del uso del cilantro en la cocina latino americana?",
@@ -141,7 +141,7 @@ export default {
         },
         {
           type: "Encuesta",
-          tittle: "Cocido con o sin patata?",
+          title: "Cocido con o sin patata?",
           time: null,
           description: null,
           author: "misco_jones",

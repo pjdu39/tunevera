@@ -96,7 +96,7 @@
         v-for="receta in recetas"
         :key="receta.id"
       >
-        <div class="card-tittle" :hidden="muestraTitulo">
+        <div class="card-title" :hidden="muestraTitulo">
           {{ receta.name }}
         </div>
         <a href="#" class="card-link">
@@ -343,7 +343,7 @@ label:deep() .custom-control-input {
   box-shadow: 1.5px 1.5px 8px 6px white;
   --image-z-indx: 1;
 }
-.card-tittle {
+.card-title {
   position: absolute;
   z-index: 5;
   padding: 0 1rem;

@@ -8,15 +8,15 @@
             <b-row>
               <b-col class="col-md-8">
                 <b-form-group
-                  id="fieldset-tittle"
-                  class="input-container tittle-container"
-                  label-for="input-tittle"
+                  id="fieldset-title"
+                  class="input-container title-container"
+                  label-for="input-title"
                 >
                   <b-form-input
-                    id="input-tittle"
-                    class="input-tittle"
+                    id="input-title"
+                    class="input-title"
                     placeholder="Escribir título..."
-                    v-model="postRecipeData.tittle"
+                    v-model="postRecipeData.title"
                     trim
                   ></b-form-input>
                 </b-form-group>
@@ -82,7 +82,7 @@
                         id="input-literal"
                         class="input-literal"
                         placeholder="Ingrediente..."
-                        v-model="recipeIngredient.idIngredient"
+                        v-model="recipeIngredient.text"
                         trim
                       ></b-form-input>
                     </b-form-group>
@@ -199,15 +199,15 @@
             <b-row>
               <b-col class="col-md-11">
                 <b-form-group
-                  id="fieldset-tittle"
-                  class="input-container tittle-container"
-                  label-for="input-tittle"
+                  id="fieldset-title"
+                  class="input-container title-container"
+                  label-for="input-title"
                 >
                   <b-form-input
-                    id="input-tittle"
-                    class="input-tittle"
+                    id="input-title"
+                    class="input-title"
                     placeholder="¿Qué quieres preguntar?"
-                    v-model="postRecipeData.tittle"
+                    v-model="postRecipeData.title"
                     trim
                   ></b-form-input>
                 </b-form-group>
@@ -283,15 +283,15 @@
             <b-row>
               <b-col class="col-md-11">
                 <b-form-group
-                  id="fieldset-tittle"
-                  class="input-container tittle-container"
-                  label-for="input-tittle"
+                  id="fieldset-title"
+                  class="input-container title-container"
+                  label-for="input-title"
                 >
                   <b-form-input
-                    id="input-tittle"
-                    class="input-tittle"
+                    id="input-title"
+                    class="input-title"
                     placeholder="¿Sobre qué quieres hablar?"
-                    v-model="postRecipeData.tittle"
+                    v-model="postRecipeData.title"
                     trim
                   ></b-form-input>
                 </b-form-group>
@@ -347,10 +347,10 @@ export default {
   data() {
     return {
       postRecipeData: {
-        tittle: "",
+        title: "",
         description: "",
         time: null,
-        recipeIngredients: [{ idIngredient: null, amount: null, idUnit: null }],
+        recipeIngredients: [{ text: null, amount: null, idUnit: null }],
         steps: [""],
         tags: [],
       },
@@ -386,15 +386,17 @@ export default {
       pasos: [{ numero: 1, contenido: "" }],
       descripcion: null,
       unidadesDummy: [
-        { value: 1, text: "kilogramos" },
-        { value: 2, text: "gramos" },
-        { value: 3, text: "litros" },
-        { value: 4, text: "mililitros" },
-        { value: 5, text: "onzas" },
-        { value: 6, text: "tazas" },
-        { value: 7, text: "cucharadas" },
-        { value: 8, text: "cucharaditas" },
-        { value: 9, text: "unidades" },
+        { value: 1, text: "unidades" },
+        { value: 2, text: "kg" },
+        { value: 3, text: "gr" },
+        { value: 4, text: "L" },
+        { value: 5, text: "ml" },
+        { value: 6, text: "cucharadas" },
+        { value: 7, text: "cucharaditas" },
+        { value: 8, text: "tazas" },
+        { value: 9, text: "tacitas" },
+        { value: 10, text: "libras" },
+        { value: 11, text: "onzas" },
       ],
     };
   },
@@ -403,7 +405,7 @@ export default {
     PuedeAnadirIngrediente() {
       let result = true;
       this.postRecipeData.recipeIngredients.forEach((x) => {
-        if (!x.idIngredient) result = false;
+        if (!x.text) result = false;
         if (!x.amount) result = false;
         if (!x.idUnit) result = false;
       });
@@ -432,7 +434,7 @@ export default {
     OtroIngrediente() {
       if (this.PuedeAnadirIngrediente) {
         this.postRecipeData.recipeIngredients.push({
-          idIngredient: null,
+          text: null,
           amount: null,
           idUnit: null,
         });
@@ -500,13 +502,15 @@ export default {
     },
     Aceptar() {
       this.Resolve();
-      // Luego hace el POST a la api
+
+      // TODO: Validaciones de contenido sobre postRecipeData
+      this.postRecipe(this.postRecipeData);
     },
     Atras() {
       this.postRecipe(this.postRecipeData);
     },
     cleanData() {
-      this.tittle = null;
+      this.title = null;
       this.descripcion = null;
     },
   },
@@ -526,13 +530,13 @@ export default {
 .page {
   margin-top: 1rem;
 }
-.tittle-container {
+.title-container {
   width: 100%;
 }
 .tiempo-container {
   width: 12%;
 }
-.input-tittle {
+.input-title {
   font-size: 110%;
 }
 .anadir-btn {

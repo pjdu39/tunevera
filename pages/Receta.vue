@@ -8,8 +8,8 @@
         </div>
         <div v-else-if="loading === 'loaded'">
           <div class="section flex">
-            <div class="tittle-section">
-              <h2 class="title">{{ data.tittle }}</h2>
+            <div class="title-section">
+              <h2 class="title">{{ data.title }}</h2>
               <div class="descripcion">{{ data.description }}</div>
             </div>
             <div class="author-section">
@@ -86,7 +86,7 @@ export default {
     ...mapActions("recipe", ["fetchData"]),
   },
   mounted() {
-    this.fetchData(11); // TODO: Recibir este valor por url.
+    this.fetchData(12); // TODO: Recibir este valor por url.
   },
 };
 </script>
@@ -105,7 +105,7 @@ export default {
   box-shadow: 5px 5px 3px -1px #252b310a, -4px -4px 4px -2px rgb(251, 251, 251),
     -10px -10px 30px -80px #252b31 inset;
 }
-.tittle-section {
+.title-section {
   width: 65%;
 }
 .author-section {
