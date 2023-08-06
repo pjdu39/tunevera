@@ -25,9 +25,9 @@ export const actions = {
             commit('setLoading', 'loaded');
             commit('setError', null);
         }
-        catch {
+        catch(error) {
             commit('setData', null);
-            commit('setLoading', 'waiting');
+            commit('setLoading', 'error');
             commit('setError', error.message);
         }
     }

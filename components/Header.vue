@@ -29,7 +29,7 @@
             </nuxt-link>
             <nuxt-link to="/NuevaReceta" class="option">
               <!-- Algo parecido a un "+" -->
-              <span class="fa fa-upload" aria-hidden="true"></span>
+              <span class="fa fa-cloud-upload" aria-hidden="true"></span>
             </nuxt-link>
             <nuxt-link to="/Perfil" class="option">
               <!-- Icono Usuario -->
