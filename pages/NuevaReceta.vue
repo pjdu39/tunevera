@@ -38,7 +38,7 @@
               <b-form-select
                 v-model="postRecipeData.time"
                 :options="timeOptions"
-                class="tiempo-container"
+                class="input tiempo-container"
               ></b-form-select>
               mins <span class="fa fa-clock" aria-hidden="true"></span>
             </div>
@@ -529,8 +529,9 @@ export default {
       // TODO: Validaciones de contenido sobre postRecipeData
       this.postRecipe(this.postRecipeData);
     },
+    // TODO: Borrar la función y el botón. Ya no tienen sentido
     Atras() {
-      this.postRecipe(this.postRecipeData);
+      // this.postRecipe(this.postRecipeData);
     },
     cleanData() {
       this.title = null;
@@ -591,19 +592,22 @@ export default {
   border-style: none; */
 
   background-color: #d49c6b;
+  /* TODO: Invertir los inset tratando de conseguir el mismo resultado. Con los inset simulando los bordes queda fatal al pulsar los botones */
   box-shadow: 1px 1px 6px -3px #575757, -1px -1px 1px 0.5px #70340071 inset,
     -1px -1px 6px 1.5px rgb(255, 255, 255),
-    0.4px 0.4px 1px 0.5px rgb(255, 255, 255) inset;
+    0.4px 0.4px 1px 0.5px rgb(255, 216, 165) inset;
   color: #eaedee;
   border-radius: 0.9rem;
   border-style: none;
 }
 .anadir-btn:hover {
-  box-shadow: 1px 1px 10px 10px #eaedee;
+  color: #ffffff;
 }
 .anadir-btn:active {
-  background-color: #5e6668;
-  box-shadow: 1px 1px 5px 2px #f6fafb;
+  color: #ffffff;
+  box-shadow: -1px -1px 6px -3px #575757, 1px 1px 1px 0.5px #70340041 inset,
+    1px 1px 6px 1.5px rgb(255, 255, 255),
+    -0.4px -0.4px 1px 0.5px rgb(255, 216, 165) inset;
 }
 .anadir-btn--img {
   text-align: center;
