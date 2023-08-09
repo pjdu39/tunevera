@@ -574,6 +574,7 @@ export default {
       this.convertTimeToInt();
 
       if (this.postRecipeData.time < 0) this.postRecipeData.time = 0;
+      if (this.postRecipeData.time > 999) this.postRecipeData.time = 995;
 
       this.postRecipeData.time =
         this.postRecipeData.time - (this.postRecipeData.time % 5);
@@ -583,12 +584,12 @@ export default {
 
       if (this.postRecipeData.time < 0) this.postRecipeData.time = 0;
 
-      const diff = this.postRecipeData.time % 5;
+      const diff = this.postRecipeData.time % n;
 
       if (n >= 0) {
-        this.postRecipeData.time += 5 - diff;
+        this.postRecipeData.time += n - diff;
       } else if (diff === 0) {
-        this.postRecipeData.time -= 5;
+        this.postRecipeData.time += n;
       } else {
         this.postRecipeData.time -= diff;
       }
@@ -665,6 +666,15 @@ export default {
   border: 1px solid rgba(249, 249, 249);
   box-shadow: 5px 5px 3px -1px #252b310a, -4px -4px 4px -2px rgb(255, 255, 255),
     -10px -10px 30px -80px #252b31 inset;
+}
+/* Sobreescribo la clase btn de bootstrapvue, pero solo cuando anida a mi clase.
+   Tomar de referencia para evitar sobreescribir masivamente como hice en custom.scss */
+.btn.time-btn:active {
+  color: #252b31;
+  background-color: #f2f4f5;
+  border: 1px solid rgba(249, 249, 249);
+  box-shadow: 5px 5px 2px -1px #252b310a inset,
+    -4px -4px 4px -2px rgb(255, 255, 255) inset !important;
 }
 .time-btn-content {
   margin: -0.3rem 0 0 0;
