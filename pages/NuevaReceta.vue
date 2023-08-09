@@ -34,13 +34,41 @@
               </b-row>
             </div>
             <div class="section">
-              <h6>Tiempo</h6>
+              <h6>
+                Tiempo (mins
+                <span class="fa fa-clock" aria-hidden="true"></span>)
+              </h6>
+              <b-form-group
+                id="fieldset-time"
+                class="input-container time-container"
+                label-for="input-time"
+                ><b-button class="time-btn"
+                  ><div class="time-btn-content">-</div></b-button
+                >
+                <b-form-input
+                  id="input-time"
+                  class="input time-input"
+                  placeholder=""
+                  v-model="postRecipeData.time"
+                  trim
+                ></b-form-input
+                ><b-button class="time-btn"
+                  ><div class="time-btn-content">+</div></b-button
+                >
+              </b-form-group>
+              <!--
+              <b-button class="time-btn"
+                ><div class="time-btn-content">-</div></b-button
+              >
               <b-form-select
                 v-model="postRecipeData.time"
                 :options="timeOptions"
-                class="input tiempo-container"
+                class="input time-input"
               ></b-form-select>
-              mins <span class="fa fa-clock" aria-hidden="true"></span>
+
+              <b-button class="time-btn"
+                ><div class="time-btn-content">+</div></b-button
+              > -->
             </div>
             <div class="section">
               <h6>Descripción</h6>
@@ -547,7 +575,7 @@ export default {
 <style scoped>
 .mainBox {
   margin: auto;
-  width: 44rem;
+  width: 53rem;
 
   padding: 1.5rem 2rem 1rem 1.5rem;
   /* background-color: #eaedee;
@@ -574,8 +602,28 @@ export default {
 .title-container {
   width: 100%;
 }
-.tiempo-container {
-  width: 12%;
+.time-container {
+  margin-top: 1rem;
+}
+.time-input {
+  display: inline-block;
+  text-align: center;
+  width: 3.2rem;
+  padding: 0 0.8rem 0 0.8rem;
+  margin-right: 0.2rem;
+}
+.time-btn {
+  font-size: 120%;
+  padding: 0rem;
+  margin: 0 0.3rem 0.2rem 0.3rem;
+  height: 2.1rem;
+  width: 2.1rem;
+  border-radius: 1rem;
+  color: #252b31;
+  background-color: #f2f4f5;
+  border: 1px solid rgba(249, 249, 249);
+  box-shadow: 5px 5px 3px -1px #252b310a, -4px -4px 4px -2px rgb(255, 255, 255),
+    -10px -10px 30px -80px #252b31 inset;
 }
 .input-title {
   font-size: 110%;
@@ -612,6 +660,10 @@ export default {
 .anadir-btn--img {
   text-align: center;
   width: 4rem;
+}
+.time-btn-content {
+  margin: -0.3rem 0 0 0;
+  font-weight: bold;
 }
 .anadir-btn--ingrediente {
   width: 2.5rem;
