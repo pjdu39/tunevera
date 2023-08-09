@@ -43,7 +43,9 @@
                 class="input-container time-container"
                 label-for="input-time"
                 ><b-button class="time-btn"
-                  ><div class="time-btn-content">-</div></b-button
+                  ><div class="time-btn-content" @click="sumTime(-5)">
+                    -
+                  </div></b-button
                 >
                 <b-form-input
                   id="input-time"
@@ -51,8 +53,12 @@
                   placeholder=""
                   v-model="postRecipeData.time"
                   trim
+                  type="number"
+                  min="0"
+                  v-click-outside="roundTime"
+                  onkeydown="return event.keyCode !== 69"
                 ></b-form-input
-                ><b-button class="time-btn"
+                ><b-button class="time-btn" @click="sumTime(5)"
                   ><div class="time-btn-content">+</div></b-button
                 >
               </b-form-group>
@@ -394,13 +400,17 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import vClickOutside from "v-click-outside";
 export default {
+  directives: {
+    clickOutside: vClickOutside.directive,
+  },
   data() {
     return {
       postRecipeData: {
         title: "",
         description: "",
-        time: null,
+        time: 0,
         recipeIngredients: [{ text: null, amount: null, idUnit: null }],
         steps: [""],
         tags: [],
@@ -479,7 +489,13 @@ export default {
 
       return result;
     },
-  },
+  } /*
+  watch: {
+    "postRecipeData.time"(newVal, oldVal) {
+      console.log(newVal >= 0 ? newVal : 0);
+      return newVal >= 0 ? newVal : 0;
+    },
+  }, */,
   methods: {
     ...mapActions("uploads", ["postRecipe"]),
     OtroIngrediente() {
@@ -551,6 +567,32 @@ export default {
           this.respuestas.splice(this.respuestas.length - 1, 1);
       }
     },
+    convertTimeToInt(event) {
+      this.postRecipeData.time = parseInt(this.postRecipeData.time);
+    },
+    roundTime() {
+      this.convertTimeToInt();
+
+      if (this.postRecipeData.time < 0) this.postRecipeData.time = 0;
+
+      this.postRecipeData.time =
+        this.postRecipeData.time - (this.postRecipeData.time % 5);
+    },
+    sumTime(n) {
+      this.convertTimeToInt();
+
+      if (this.postRecipeData.time < 0) this.postRecipeData.time = 0;
+
+      const diff = this.postRecipeData.time % 5;
+
+      if (n >= 0) {
+        this.postRecipeData.time += 5 - diff;
+      } else if (diff === 0) {
+        this.postRecipeData.time -= 5;
+      } else {
+        this.postRecipeData.time -= diff;
+      }
+    },
     Aceptar() {
       this.Resolve();
 
@@ -598,7 +640,6 @@ export default {
   box-shadow: 2px 2px 3px 1px #55555525 inset,
     -1.3px -1.3px 9px 2px rgb(255, 255, 255) inset;
 }
-
 .title-container {
   width: 100%;
 }
@@ -610,12 +651,12 @@ export default {
   text-align: center;
   width: 3.2rem;
   padding: 0 0.8rem 0 0.8rem;
-  margin-right: 0.2rem;
+  margin-right: 0.25rem;
 }
 .time-btn {
-  font-size: 120%;
+  font-size: 130%;
   padding: 0rem;
-  margin: 0 0.3rem 0.2rem 0.3rem;
+  margin: 0 0.3rem 0.25rem 0.3rem;
   height: 2.1rem;
   width: 2.1rem;
   border-radius: 1rem;
@@ -624,6 +665,10 @@ export default {
   border: 1px solid rgba(249, 249, 249);
   box-shadow: 5px 5px 3px -1px #252b310a, -4px -4px 4px -2px rgb(255, 255, 255),
     -10px -10px 30px -80px #252b31 inset;
+}
+.time-btn-content {
+  margin: -0.3rem 0 0 0;
+  font-weight: bold;
 }
 .input-title {
   font-size: 110%;
@@ -660,10 +705,6 @@ export default {
 .anadir-btn--img {
   text-align: center;
   width: 4rem;
-}
-.time-btn-content {
-  margin: -0.3rem 0 0 0;
-  font-weight: bold;
 }
 .anadir-btn--ingrediente {
   width: 2.5rem;
