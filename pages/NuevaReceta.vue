@@ -62,19 +62,6 @@
                   ><div class="time-btn-content">+</div></b-button
                 >
               </b-form-group>
-              <!--
-              <b-button class="time-btn"
-                ><div class="time-btn-content">-</div></b-button
-              >
-              <b-form-select
-                v-model="postRecipeData.time"
-                :options="timeOptions"
-                class="input time-input"
-              ></b-form-select>
-
-              <b-button class="time-btn"
-                ><div class="time-btn-content">+</div></b-button
-              > -->
             </div>
             <div class="section">
               <h6>Descripción</h6>
@@ -489,13 +476,7 @@ export default {
 
       return result;
     },
-  } /*
-  watch: {
-    "postRecipeData.time"(newVal, oldVal) {
-      console.log(newVal >= 0 ? newVal : 0);
-      return newVal >= 0 ? newVal : 0;
-    },
-  }, */,
+  },
   methods: {
     ...mapActions("uploads", ["postRecipe"]),
     OtroIngrediente() {
@@ -515,9 +496,6 @@ export default {
     OtroPaso() {
       console.log(this.postRecipeData.steps);
       if (this.PuedeAnadirPaso) {
-        // TODO: Borrar
-        /* let stepNumber = this.postRecipeData.steps.length + 1;
-        this.postRecipeData.steps.push({ text: "", stepNumber: stepNumber }); */
         this.postRecipeData.steps.push("");
       }
     },
@@ -544,6 +522,7 @@ export default {
       }
     },
     ValidaLongitud(maxLength) {
+      // TODO: Probablemente habrá que borrarlo. No es necesario.
       // Valida cantidad de caracteres
     },
     // TODO: Actualmente borra la última posición si hay alguno vacío, en lugar de el que está vacío específicamente. Arreglar.
