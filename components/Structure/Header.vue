@@ -27,7 +27,7 @@
               <!-- Lupa -->
               <span class="fa fa-search" aria-hidden="true"></span>
             </nuxt-link>
-            <nuxt-link to="/NuevaReceta" class="option">
+            <nuxt-link to="/Uploads" class="option">
               <!-- Algo parecido a un "+" -->
               <span class="fa fa-cloud-upload" aria-hidden="true"></span>
             </nuxt-link>

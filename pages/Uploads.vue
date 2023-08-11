@@ -3,239 +3,7 @@
     <b-tabs content-class="mt-3" class="tab-option">
       <div class="page">
         <b-tab title="Receta" @click="cleanData">
-          <div v-if="loading === 'waiting'">
-            <div class="section">
-              <h5>Título</h5>
-              <b-row>
-                <b-col class="col-md-8">
-                  <b-form-group
-                    id="fieldset-title"
-                    class="input-container title-container"
-                    label-for="input-title"
-                  >
-                    <b-form-input
-                      id="input-title"
-                      class="input input-title"
-                      placeholder="Escribir título..."
-                      v-model="postRecipeData.title"
-                      trim
-                    ></b-form-input>
-                  </b-form-group>
-                </b-col>
-                <b-col class="col-md-4 subir-imagen">
-                  <label class="anadir-btn anadir-btn--img">
-                    <input type="file" :v-model="foto" />
-                    <span
-                      class="fa fa-camera-retro fa-lg"
-                      aria-hidden="true"
-                    ></span>
-                  </label>
-                </b-col>
-              </b-row>
-            </div>
-            <div class="section">
-              <h6>
-                Tiempo (mins
-                <span class="fa fa-clock" aria-hidden="true"></span>)
-              </h6>
-              <b-form-group
-                id="fieldset-time"
-                class="input-container time-container"
-                label-for="input-time"
-                ><b-button class="time-btn"
-                  ><div class="time-btn-content" @click="sumTime(-5)">
-                    -
-                  </div></b-button
-                >
-                <b-form-input
-                  id="input-time"
-                  class="input time-input"
-                  placeholder=""
-                  v-model="postRecipeData.time"
-                  trim
-                  type="number"
-                  min="0"
-                  v-click-outside="roundTime"
-                  onkeydown="return event.keyCode !== 69"
-                ></b-form-input
-                ><b-button class="time-btn" @click="sumTime(5)"
-                  ><div class="time-btn-content">+</div></b-button
-                >
-              </b-form-group>
-            </div>
-            <div class="section">
-              <h6>Descripción</h6>
-              <b-row>
-                <b-col class="col-md-11">
-                  <b-form-group
-                    id="fieldset-descripcion"
-                    class="form-group-descripcion"
-                    label-for="input-descripcion"
-                  >
-                    <b-form-textarea
-                      id="input-descripcion"
-                      class="input textarea textarea-descripcion--articulo"
-                      placeholder=""
-                      v-model="postRecipeData.description"
-                      maxlength="530"
-                      max-rows="8"
-                      trim
-                    ></b-form-textarea>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-            </div>
-            <div class="section">
-              <h6>Ingredientes</h6>
-              <div>
-                <b-list-group-item
-                  class="input-container"
-                  v-for="(
-                    recipeIngredient, index
-                  ) in postRecipeData.recipeIngredients"
-                  :key="index"
-                >
-                  <b-row>
-                    <b-col class="col-md-6">
-                      <b-form-group
-                        id="fieldset-literal"
-                        class=""
-                        label-for="input-literal"
-                      >
-                        <b-form-input
-                          id="input-literal"
-                          class="input input-literal"
-                          placeholder="Ingrediente..."
-                          v-model="recipeIngredient.text"
-                          trim
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                    <b-col class="col-md-2">
-                      <b-form-group
-                        id="fieldset-cantidad"
-                        class=""
-                        label-for="input-cantidad"
-                      >
-                        <b-form-input
-                          id="input-cantidad"
-                          class="input input-cantidad"
-                          placeholder="Cantidad..."
-                          type="number"
-                          v-model="recipeIngredient.amount"
-                          trim
-                        ></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                    <b-col class="col-md-3">
-                      <b-form-select
-                        class="input"
-                        v-model="recipeIngredient.idUnit"
-                        :options="unidadesDummy"
-                      ></b-form-select>
-                    </b-col>
-                    <b-col class="col-md-1">
-                      <button
-                        class="anadir-btn anadir-btn--quitar"
-                        @click="EliminaIngrediente(recipeIngredient)"
-                      >
-                        <span class="fa fa-times" aria-hidden="true"></span>
-                      </button>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-              </div>
-              <div>
-                <button
-                  class="anadir-btn anadir-btn--ingrediente"
-                  @click="OtroIngrediente()"
-                  :disabled="!PuedeAnadirIngrediente"
-                >
-                  <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
-                </button>
-              </div>
-            </div>
-            <div class="section">
-              <h6>Pasos</h6>
-              <div>
-                <b-list-group-item
-                  class="input-container input-container--paso"
-                  v-for="(step, index) in postRecipeData.steps"
-                  :key="index"
-                >
-                  <b-row>
-                    <b-col class="col-md-11">
-                      <b-form-group
-                        id="fieldset-paso"
-                        class="form-group-paso"
-                        label-for="input-paso"
-                      >
-                        <b-form-textarea
-                          id="input-paso"
-                          class="input textarea"
-                          placeholder="Escribir paso..."
-                          maxlength="430"
-                          max-rows="8"
-                          v-model="postRecipeData.steps[index]"
-                          trim
-                        ></b-form-textarea>
-                      </b-form-group>
-                    </b-col>
-                    <b-col class="col-md-1">
-                      <button
-                        class="anadir-btn anadir-btn--quitar"
-                        @click="EliminaPaso(step)"
-                      >
-                        <span class="fa fa-times" aria-hidden="true"></span>
-                      </button>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-              </div>
-              <div>
-                <button
-                  class="anadir-btn anadir-btn--paso"
-                  @click="OtroPaso()"
-                  :disabled="!PuedeAnadirPaso"
-                >
-                  <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
-                </button>
-              </div>
-            </div>
-            <div class="section-end">
-              <b-row>
-                <b-col class="col-md-6">
-                  <button
-                    class="anadir-btn anadir-btn--aceptar"
-                    @click="Atras()"
-                  >
-                    Atrás
-                  </button>
-                </b-col>
-                <b-col class="col-md-6">
-                  <button
-                    class="anadir-btn anadir-btn--aceptar"
-                    @click="Aceptar()"
-                  >
-                    Aceptar
-                  </button>
-                </b-col>
-              </b-row>
-            </div>
-          </div>
-          <div v-else-if="loading === 'loading'" class="spinner">
-            <span
-              class="fa fa-spinner fa-pulse fa-lg"
-              aria-hidden="true"
-            ></span>
-          </div>
-          <div v-else-if="loading === 'loaded'">
-            Wow! Eso tiene buena pinta! Se ha añadido a tus recetas
-          </div>
-          <div v-else-if="loading === 'error'">
-            Ups, parece que algo falló. {{ error }}
-            <b-button @click="setLoadingToWaiting()">Reintentar</b-button>
-          </div>
+          <RecipeUpload />
         </b-tab>
         <b-tab title="Encuesta" @click="cleanData">
           <div class="section">
@@ -388,9 +156,17 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import vClickOutside from "v-click-outside";
+import DiscussionUpload from "~/components/Uploads/DiscussionUpload.vue";
+import PollUpload from "~/components/Uploads/PollUpload.vue";
+import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
 export default {
   directives: {
     clickOutside: vClickOutside.directive,
+  },
+  components: {
+    DiscussionUpload,
+    PollUpload,
+    RecipeUpload,
   },
   data() {
     return {
@@ -403,35 +179,7 @@ export default {
         tags: [],
       },
       foto: null,
-      tiempo: 0,
-      timeOptions: [
-        { value: 0, text: "0" },
-        { value: 5, text: "5" },
-        { value: 10, text: "10" },
-        { value: 15, text: "15" },
-        { value: 20, text: "20" },
-        { value: 25, text: "25" },
-        { value: 30, text: "30" },
-        { value: 35, text: "35" },
-        { value: 40, text: "40" },
-        { value: 45, text: "45" },
-        { value: 50, text: "50" },
-        { value: 55, text: "55" },
-        { value: 60, text: "60" },
-        { value: 65, text: "65" },
-        { value: 70, text: "70" },
-        { value: 75, text: "75" },
-        { value: 80, text: "80" },
-        { value: 85, text: "85" },
-        { value: 90, text: "90" },
-        { value: 105, text: "105" },
-        { value: 110, text: "110" },
-        { value: 115, text: "115" },
-        { value: 120, text: "120" },
-      ],
-      ingredientes: [{ literal: null, cantidad: 0, unidad: null }],
       respuestas: [{ literal: null }],
-      pasos: [{ numero: 1, contenido: "" }],
       descripcion: null,
       unidadesDummy: [
         { value: 1, text: "unidades" },
@@ -583,6 +331,7 @@ export default {
     Atras() {
       // this.postRecipe(this.postRecipeData);
     },
+    // TODO: Borrar. Esto sólo tenía sentido antes de separar cada formulario en componentes.
     cleanData() {
       this.title = null;
       this.descripcion = null;

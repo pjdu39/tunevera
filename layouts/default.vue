@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header class="header"/>
+    <Header class="header" />
     <div class="nuxt-container">
       <Nuxt />
     </div>
@@ -9,16 +9,16 @@
 </template>
 
 <script>
-import '../assets/scss/custom.scss'
-import Header from "../components/Header.vue";
-import Footer from "../components/Footer.vue";
+import "../assets/scss/custom.scss";
+import Header from "../components/Structure/Header.vue";
+import Footer from "../components/Structure/Footer.vue";
 export default {
   components: { Header, Footer },
 };
 </script>
 
 <style scoped>
-.nuxt-container{
+.nuxt-container {
   position: relative;
   min-height: 100vh;
   max-width: 100vw;
