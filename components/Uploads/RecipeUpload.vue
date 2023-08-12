@@ -351,7 +351,8 @@ export default {
       }
     },
     setLoadingToWaiting() {
-      this.loading = "waiting";
+      // TODO: Esto no funciona, crear una función en la store para manejar el loading si se requiere hacerlo.
+      /* this.loading = "waiting"; */
     },
     Aceptar() {
       this.Resolve();

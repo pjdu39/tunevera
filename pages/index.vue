@@ -159,7 +159,7 @@ export default {
     ...mapState("board", ["data", "loading", "error"]),
   },
   created() {
-    this.fetchData(10);
+    this.fetchData(50);
   },
   watch: {
     data(newVal, oldVal) {

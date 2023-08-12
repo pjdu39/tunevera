@@ -9,10 +9,11 @@ export const state = () => ({
         loading: 'waiting',
         error: null
     },
-    /*
-    data: null,
-    loading: 'waiting',
-    error: null */
+    newDiscussionState: {
+        data: null,
+        loading: 'waiting',
+        error: null
+    },
 });
 
 export const mutations = {
@@ -36,6 +37,17 @@ export const mutations = {
     },
     setPollError(state, payload) {
         state.newPollState.error = payload
+    },
+
+    // Discussion
+    setDiscussionData(state, payload) {
+        state.newDiscussionState.data = payload
+    },
+    setDiscussionLoading(state, payload) {
+        state.newDiscussionState.loading = payload
+    },
+    setDiscussionError(state, payload) {
+        state.newDiscussionState.error = payload
     }
 }
 
@@ -62,11 +74,28 @@ export const actions = {
             commit('setPollData', response.data);
             commit('setPollLoading', 'loaded');
             commit('setPollError', null);
+            console.log('loaded')
         }
         catch(error) {
             commit('setPollData', null);
             commit('setPollLoading', 'error');
             commit('setPollError', error.message);
+        }
+    },
+
+    async postDiscussion({ commit }, discussion) {
+        commit('setDiscussionLoading', 'loading');
+        try {
+            const response = await this.$axios.post('https://localhost:7069/NewDiscussion', discussion);
+            commit('setDiscussionData', response.data);
+            commit('setDiscussionLoading', 'loaded');
+            commit('setDiscussionError', null);
+            console.log('loaded')
+        }
+        catch(error) {
+            commit('setDiscussionData', null);
+            commit('setDiscussionLoading', 'error');
+            commit('setDiscussionError', error.message);
         }
     },
 }

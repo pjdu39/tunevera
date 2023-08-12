@@ -9,63 +9,7 @@
           <PollUpload />
         </b-tab>
         <b-tab title="Artículo" @click="cleanData">
-          <div class="section">
-            <h5>Tema</h5>
-            <b-row>
-              <b-col class="col-md-11">
-                <b-form-group
-                  id="fieldset-title"
-                  class="input-container title-container"
-                  label-for="input-title"
-                >
-                  <b-form-input
-                    id="input-title"
-                    class="input-title"
-                    placeholder="¿Sobre qué quieres hablar?"
-                    v-model="postRecipeData.title"
-                    trim
-                  ></b-form-input>
-                </b-form-group>
-              </b-col>
-            </b-row>
-          </div>
-          <div class="section">
-            <h6>Cuerpo</h6>
-            <b-row>
-              <b-col class="col-md-11">
-                <b-form-group
-                  id="fieldset-cuerpo"
-                  class="form-group-cuerpo"
-                  label-for="input-cuerpo"
-                >
-                  <b-form-textarea
-                    id="input-cuerpo"
-                    class="textarea-cuerpo"
-                    placeholder="Cuerpo de texto (opcional)"
-                    v-model="descripcion"
-                    trim
-                  ></b-form-textarea>
-                </b-form-group>
-              </b-col>
-            </b-row>
-          </div>
-          <div class="section-end">
-            <b-row>
-              <b-col class="col-md-6">
-                <button class="anadir-btn anadir-btn--aceptar" @click="Atras()">
-                  Atrás
-                </button>
-              </b-col>
-              <b-col class="col-md-6">
-                <button
-                  class="anadir-btn anadir-btn--aceptar"
-                  @click="Aceptar()"
-                >
-                  Aceptar
-                </button>
-              </b-col>
-            </b-row>
-          </div>
+          <DiscussionUpload />
         </b-tab>
       </div>
     </b-tabs>

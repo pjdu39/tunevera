@@ -80,13 +80,11 @@
       </b-row>
     </div>
   </div>
-  <div v-else-if="newPollState.loading === 'loading'">
+  <div v-else-if="newPollState.loading === 'loading'" class="spinner">
     <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
   </div>
-  <div v-else-if="newPollState.loading === 'loaded'">
-    Wow! Eso tiene buena pinta! Se ha añadido a tus recetas
-  </div>
-  <div v-else-if="newPollState.loading === 'error'"></div>
+  <div v-else-if="newPollState.loading === 'loaded'">Encuesta publicada.</div>
+  <div v-else-if="newPollState.loading === 'error'">Error</div>
 </template>
 
 <script>
@@ -130,7 +128,8 @@ export default {
       }
     },
     setLoadingToWaiting() {
-      this.loading = "waiting";
+      // TODO: Esto no funciona, crear una función en la store para manejar el loading si se requiere hacerlo.
+      /* this.loading = "waiting"; */
     },
     Aceptar() {
       this.Resolve();
@@ -156,42 +155,6 @@ export default {
 }
 .title-container {
   width: 100%;
-}
-.time-container {
-  margin-top: 1rem;
-}
-.time-input {
-  display: inline-block;
-  text-align: center;
-  width: 3.2rem;
-  padding: 0 0.8rem 0 0.8rem;
-  margin-right: 0.25rem;
-}
-.time-btn {
-  font-size: 130%;
-  padding: 0rem;
-  margin: 0 0.3rem 0.25rem 0.3rem;
-  height: 2.1rem;
-  width: 2.1rem;
-  border-radius: 1rem;
-  color: #252b31;
-  background-color: #f2f4f5;
-  border: 1px solid rgba(249, 249, 249);
-  box-shadow: 5px 5px 3px -1px #252b310a, -4px -4px 4px -2px rgb(255, 255, 255),
-    -10px -10px 30px -80px #252b31 inset;
-}
-/* Sobreescribo la clase btn de bootstrapvue, pero solo cuando anida a mi clase.
-   Tomar de referencia para evitar sobreescribir masivamente como hice en custom.scss */
-.btn.time-btn:active {
-  color: #252b31;
-  background-color: #f2f4f5;
-  border: 1px solid rgba(249, 249, 249);
-  box-shadow: 5px 5px 2px -1px #252b310a inset,
-    -4px -4px 4px -2px rgb(255, 255, 255) inset !important;
-}
-.time-btn-content {
-  margin: -0.3rem 0 0 0;
-  font-weight: bold;
 }
 .input-title {
   font-size: 110%;
@@ -252,11 +215,6 @@ export default {
 }
 input[type="file"] {
   display: none;
-}
-.input-container--ingrediente {
-}
-.input-container--paso {
-  width: 100%;
 }
 .textarea::-webkit-scrollbar {
   display: none;
