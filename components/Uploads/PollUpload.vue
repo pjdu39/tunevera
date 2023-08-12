@@ -1,7 +1,5 @@
 <template>
-  <div v-if="loading === 'waiting'"></div>
-  <div v-else-if="loading === 'loading'"></div>
-  <div v-else-if="loading === 'loaded'">
+  <div v-if="newPollState.loading === 'waiting'">
     <div class="section">
       <h5>Pregunta</h5>
       <b-row>
@@ -13,9 +11,9 @@
           >
             <b-form-input
               id="input-title"
-              class="input-title"
+              class="input input-title"
               placeholder="¿Qué quieres preguntar?"
-              v-model="postRecipeData.title"
+              v-model="postPollData.title"
               trim
             ></b-form-input>
           </b-form-group>
@@ -27,7 +25,7 @@
       <div>
         <b-list-group-item
           class="input-container"
-          v-for="(respuesta, index) in respuestas"
+          v-for="(option, index) in postPollData.options"
           :key="index"
         >
           <b-row>
@@ -39,17 +37,17 @@
               >
                 <b-form-input
                   id="input-literal"
-                  class="input-literal"
+                  class="input input-literal"
                   placeholder="Escribir opción..."
-                  v-model="respuesta.literal"
+                  v-model="postPollData.options[index]"
                   trim
                 ></b-form-input>
               </b-form-group>
             </b-col>
             <b-col class="col-md-1">
               <button
-                class="anadir-btn anadir-btn--quitar"
-                @click="EliminaRespuesta(respuesta)"
+                class="base-btn base-btn--quitar"
+                @click="EliminaRespuesta(option)"
               >
                 <span class="fa fa-times" aria-hidden="true"></span>
               </button>
@@ -59,7 +57,7 @@
       </div>
       <div>
         <button
-          class="anadir-btn anadir-btn--ingrediente"
+          class="base-btn base-btn--anadir"
           @click="OtraRespuesta()"
           :disabled="!PuedeAnadirRespuesta"
         >
@@ -70,22 +68,29 @@
     <div class="section-end">
       <b-row>
         <b-col class="col-md-6">
-          <button class="anadir-btn anadir-btn--aceptar" @click="Atras()">
+          <button class="base-btn base-btn--aceptar" @click="Atras()">
             Atrás
           </button>
         </b-col>
         <b-col class="col-md-6">
-          <button class="anadir-btn anadir-btn--aceptar" @click="Aceptar()">
+          <button class="base-btn base-btn--aceptar" @click="Aceptar()">
             Aceptar
           </button>
         </b-col>
       </b-row>
     </div>
   </div>
-  <div v-else-if="loading === 'error'"></div>
+  <div v-else-if="newPollState.loading === 'loading'">
+    <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
+  </div>
+  <div v-else-if="newPollState.loading === 'loaded'">
+    Wow! Eso tiene buena pinta! Se ha añadido a tus recetas
+  </div>
+  <div v-else-if="newPollState.loading === 'error'"></div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   name: "PollUpload",
   data() {
@@ -96,6 +101,47 @@ export default {
         options: [""],
       },
     };
+  },
+  computed: {
+    ...mapState("uploads", ["newPollState"]),
+    PuedeAnadirRespuesta() {
+      let result = true;
+      this.postPollData.options.forEach((x) => {
+        if (!x) result = false;
+      });
+
+      return result;
+    },
+  },
+  methods: {
+    ...mapActions("uploads", ["postPoll"]),
+    OtraRespuesta() {
+      if (this.PuedeAnadirRespuesta) {
+        this.postPollData.options.push("");
+      }
+    },
+    Resolve() {
+      if (!this.PuedeAnadirRespuesta) {
+        if (this.postPollData.options.length > 1)
+          this.postPollData.options.splice(
+            this.postPollData.options.length - 1,
+            1
+          );
+      }
+    },
+    setLoadingToWaiting() {
+      this.loading = "waiting";
+    },
+    Aceptar() {
+      this.Resolve();
+
+      // TODO: Validaciones de contenido sobre postPollData
+      this.postPoll(this.postPollData);
+    },
+    // TODO: Borrar la función y el botón. Ya no tienen sentido
+    Atras() {
+      // this.postPoll(this.postPollData);
+    },
   },
 };
 </script>
@@ -150,7 +196,7 @@ export default {
 .input-title {
   font-size: 110%;
 }
-.anadir-btn {
+.base-btn {
   padding: 0.4rem 0.5rem 0.4rem 0.4rem;
   margin-right: 0rem;
   margin-bottom: 1rem;
@@ -170,26 +216,23 @@ export default {
   border-radius: 0.9rem;
   border-style: none;
 }
-.anadir-btn:hover {
+.base-btn:hover {
   color: #ffffff;
 }
-.anadir-btn:active {
+.base-btn:active {
   color: #ffffff;
   box-shadow: -1px -1px 6px -3px #575757, 1px 1px 1px 0.5px #70340041 inset,
     1px 1px 6px 1.5px rgb(255, 255, 255),
     -0.4px -0.4px 1px 0.5px rgb(255, 216, 165) inset;
 }
-.anadir-btn--img {
+.base-btn--img {
   text-align: center;
   width: 4rem;
 }
-.anadir-btn--ingrediente {
+.base-btn--anadir {
   width: 2.5rem;
 }
-.anadir-btn--paso {
-  width: 2.5rem;
-}
-.anadir-btn--quitar {
+.base-btn--quitar {
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 2rem;
@@ -198,7 +241,7 @@ export default {
   color: #eaedee;
   background-color: #d34545;
 }
-.anadir-btn--aceptar {
+.base-btn--aceptar {
   margin-top: 4rem;
   width: 100%;
 }

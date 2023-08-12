@@ -1,34 +1,72 @@
 export const state = () => ({
+    newRecipeState: {
+        data: null,
+        loading: 'waiting',
+        error: null
+    },
+    newPollState: {
+        data: null,
+        loading: 'waiting',
+        error: null
+    },
+    /*
     data: null,
     loading: 'waiting',
-    error: null
+    error: null */
 });
 
 export const mutations = {
-    setData(state, payload) {
-        state.data = payload
+    // Recipe
+    setRecipeData(state, payload) {
+        state.newRecipeState.data = payload
     },
-    setLoading(state, payload) {
-        state.loading = payload
+    setRecipeLoading(state, payload) {
+        state.newRecipeState.loading = payload
     },
-    setError(state, payload) {
-        state.error = payload
+    setRecipeError(state, payload) {
+        state.newRecipeState.error = payload
+    },
+
+    // Poll
+    setPollData(state, payload) {
+        state.newPollState.data = payload
+    },
+    setPollLoading(state, payload) {
+        state.newPollState.loading = payload
+    },
+    setPollError(state, payload) {
+        state.newPollState.error = payload
     }
 }
 
 export const actions = {
     async postRecipe({ commit }, recipe) {
-        commit('setLoading', 'loading');
+        commit('setRecipeLoading', 'loading');
         try {
             const response = await this.$axios.post('https://localhost:7069/NewRecipe', recipe);
-            commit('setData', response.data);
-            commit('setLoading', 'loaded');
-            commit('setError', null);
+            commit('setRecipeData', response.data);
+            commit('setRecipeLoading', 'loaded');
+            commit('setRecipeError', null);
         }
         catch(error) {
-            commit('setData', null);
-            commit('setLoading', 'error');
-            commit('setError', error.message);
+            commit('setRecipeData', null);
+            commit('setRecipeLoading', 'error');
+            commit('setRecipeError', error.message);
         }
-    }
+    },
+
+    async postPoll({ commit }, poll) {
+        commit('setPollLoading', 'loading');
+        try {
+            const response = await this.$axios.post('https://localhost:7069/NewPoll', poll);
+            commit('setPollData', response.data);
+            commit('setPollLoading', 'loaded');
+            commit('setPollError', null);
+        }
+        catch(error) {
+            commit('setPollData', null);
+            commit('setPollLoading', 'error');
+            commit('setPollError', error.message);
+        }
+    },
 }

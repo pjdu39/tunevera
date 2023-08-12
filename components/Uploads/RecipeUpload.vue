@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading === 'waiting'">
+  <div v-if="newRecipeState.loading === 'waiting'">
     <div class="section">
       <h5>Título</h5>
       <b-row>
@@ -206,14 +206,14 @@
       </b-row>
     </div>
   </div>
-  <div v-else-if="loading === 'loading'" class="spinner">
+  <div v-else-if="newRecipeState.loading === 'loading'" class="spinner">
     <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
   </div>
-  <div v-else-if="loading === 'loaded'">
+  <div v-else-if="newRecipeState.loading === 'loaded'">
     Wow! Eso tiene buena pinta! Se ha añadido a tus recetas
   </div>
-  <div v-else-if="loading === 'error'">
-    Ups, parece que algo falló. {{ error }}
+  <div v-else-if="newRecipeState.loading === 'error'">
+    Ups, parece que algo falló. {{ newRecipeState.error }}
     <b-button @click="setLoadingToWaiting()">Reintentar</b-button>
   </div>
 </template>
@@ -254,7 +254,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("uploads", ["data", "loading", "error"]),
+    ...mapState("uploads", ["newRecipeState"]),
     PuedeAnadirIngrediente() {
       let result = true;
       this.postRecipeData.recipeIngredients.forEach((x) => {

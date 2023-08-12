@@ -86,7 +86,7 @@ export default {
     ...mapActions("recipe", ["fetchData"]),
   },
   mounted() {
-    this.fetchData(12); // TODO: Recibir este valor por url.
+    this.fetchData(17); // TODO: Recibir este valor por url.
   },
 };
 </script>

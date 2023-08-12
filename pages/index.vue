@@ -178,6 +178,8 @@ export default {
       let totalVotes = pollOptions.reduce((acum, x) => acum + x.votes, 0);
       let result = (option.votes / totalVotes) * 100;
 
+      if (isNaN(result)) return 0;
+
       return result % 1 !== 0 ? result.toFixed(1) : result.toFixed(0);
     },
   },
