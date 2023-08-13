@@ -21,8 +21,8 @@ export const actions = {
         commit('setLoading', 'loading');
         try {
             const response = await this.$axios.get(`https://localhost:7069/GetRecipe?IdRecipe=${ id }`);
-            commit('setLoading', 'loaded');
             commit('setData', response.data);
+            commit('setLoading', 'loaded');
             commit('setError', null);
         }
         catch(error) {

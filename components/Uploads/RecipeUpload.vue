@@ -120,7 +120,7 @@
               <b-form-select
                 class="input"
                 v-model="recipeIngredient.idUnit"
-                :options="unidadesDummy"
+                :options="getUnitsState.data"
               ></b-form-select>
             </b-col>
             <b-col class="col-md-1">
@@ -254,7 +254,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("uploads", ["newRecipeState"]),
+    ...mapState("uploads", ["newRecipeState", "getUnitsState"]),
     PuedeAnadirIngrediente() {
       let result = true;
       this.postRecipeData.recipeIngredients.forEach((x) => {
@@ -274,8 +274,11 @@ export default {
       return result;
     },
   },
+  mounted() {
+    this.fetchUnits();
+  },
   methods: {
-    ...mapActions("uploads", ["postRecipe"]),
+    ...mapActions("uploads", ["postRecipe", "fetchUnits"]),
     OtroIngrediente() {
       if (this.PuedeAnadirIngrediente) {
         this.postRecipeData.recipeIngredients.push({

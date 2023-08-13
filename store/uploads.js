@@ -14,6 +14,11 @@ export const state = () => ({
         loading: 'waiting',
         error: null
     },
+    getUnitsState: {
+        data: null,
+        loading: 'waiting',
+        error: null
+    },
 });
 
 export const mutations = {
@@ -48,7 +53,18 @@ export const mutations = {
     },
     setDiscussionError(state, payload) {
         state.newDiscussionState.error = payload
-    }
+    },
+
+    // Units
+    setUnitsData(state, payload) {
+        state.getUnitsState.data = payload
+    },
+    setUnitsLoading(state, payload) {
+        state.getUnitsState.loading = payload
+    },
+    setUnitsError(state, payload) {
+        state.getUnitsState.error = payload
+    },
 }
 
 export const actions = {
@@ -98,4 +114,19 @@ export const actions = {
             commit('setDiscussionError', error.message);
         }
     },
+    
+    async fetchUnits({ commit }) {
+        commit('setUnitsLoading', 'loading');
+        try {
+            const response = await this.$axios.get(`https://localhost:7069/GetUnits`);
+            commit('setUnitsData', response.data);
+            commit('setUnitsLoading', 'loaded');
+            commit('setUnitsError', null);
+        }
+        catch(error) {
+            commit('setUnitsData', null);
+            commit('setUnitsLoading', 'error');
+            commit('setUnitsError', error.message);
+        }
+    }
 }
