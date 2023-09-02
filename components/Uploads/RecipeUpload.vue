@@ -96,8 +96,29 @@
                   class="input input-literal"
                   placeholder="Ingrediente..."
                   v-model="recipeIngredient.text"
+                  @input="onInput(), pointTo(index)"
                   trim
                 ></b-form-input>
+                <div>
+                  <ul v-if="showDropdown">
+                    <li
+                      v-for="s in sugestions"
+                      :key="s"
+                      @click="selectSugestion(s, index)"
+                    >
+                      {{ s }}
+                    </li>
+                  </ul>
+                </div>
+                <!--
+                <div>
+                  <input v-model="inputValue" @input="onInput" />
+                  <ul v-if="showDropdown">
+                    <li v-for="item in filteredItems" :key="item" @click="selectItem(item)">
+                      {{ item }}
+                    </li>
+                  </ul>
+                </div>-->
               </b-form-group>
             </b-col>
             <b-col class="col-md-2">
@@ -251,6 +272,18 @@ export default {
         { value: 10, text: "libras" },
         { value: 11, text: "onzas" },
       ],
+
+      currentIngSearch: null,
+      ingredientSugestionsDummy: [
+        { value: 1, text: "patata" },
+        { value: 2, text: "pera" },
+        { value: 3, text: "sal" },
+      ],
+      /* sugestionSelected: null, */
+
+      inputValue: "",
+      items: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"],
+      showDropdown: false,
     };
   },
   computed: {
@@ -272,6 +305,16 @@ export default {
       });
 
       return result;
+    },
+
+    sugestions() {
+      return this.ingredientSugestionsDummy
+        .map((s) => s.text)
+        .filter((s) => s.includes(this.currentIngSearch));
+    },
+
+    filteredItems() {
+      return this.items.filter((item) => item.includes(this.inputValue));
     },
   },
   mounted() {
@@ -366,6 +409,25 @@ export default {
     // TODO: Borrar la función y el botón. Ya no tienen sentido
     Atras() {
       // this.postRecipe(this.postRecipeData);
+    },
+
+    pointTo(index) {
+      this.currentIngSearch = this.postRecipeData.recipeIngredients[index].text;
+
+      // TODO: LLamada a la api
+    },
+    selectSugestion(s, index) {
+      /* this.sugestionSelected = s.text; */
+      this.postRecipeData.recipeIngredients[index].text = s.text;
+      this.showDropdown = false;
+    },
+
+    onInput() {
+      this.showDropdown = true;
+    },
+    selectItem(item) {
+      this.inputValue = item;
+      this.showDropdown = false;
     },
   },
 };
