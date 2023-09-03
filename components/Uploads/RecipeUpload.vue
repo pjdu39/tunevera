@@ -102,12 +102,15 @@
                   trim
                 ></b-form-input>
                 <div class="dropdown-container">
-                  <div v-if="showDropdown" class="dropdown-ingredients">
+                  <div
+                    v-if="showDropdown && index === currentInput"
+                    class="dropdown-ingredients"
+                  >
                     <div
-                      v-for="(s, i) in sugestions"
+                      v-for="(s, i) in suggestions"
                       :key="s"
                       :class="{ highlighted: i === highlightedIndex }"
-                      @click="selectSugestion(s)"
+                      @click="selectSuggestion(s)"
                     >
                       {{ s }}
                     </div>
@@ -268,7 +271,7 @@ export default {
       ],
 
       currentIngSearch: null,
-      ingredientSugestionsDummy: [
+      ingredientSuggestionsDummy: [
         { value: 1, text: "patata" },
         { value: 2, text: "pera" },
         { value: 3, text: "sal" },
@@ -298,8 +301,8 @@ export default {
       return result;
     },
 
-    sugestions() {
-      return this.ingredientSugestionsDummy
+    suggestions() {
+      return this.ingredientSuggestionsDummy
         .map((s) => s.text)
         .filter((s) => s.includes(this.currentIngSearch));
     },
@@ -399,21 +402,31 @@ export default {
     },
 
     pointTo(index) {
+      // Resetea la sugerencia marcada por el highlight
+      this.highlightedIndex = -1;
+
       this.showDropdown = true;
+
+      /* Indica cuál es el input de ingtrediente actualmente seleccionado para usarlo en las
+        posiciones de arrays sin tener que pasárlo como parámetro a cada método que lo usa */
       this.currentInput = index;
+
+      /* Guarda el valor escrito en el input (que se asigna a postRecipeData.recipeIngredients[x] a través
+        del v-model) en la variable currentIngSearch que se usa para filtrar las sugerencias en una propiedad computada */
       this.currentIngSearch = this.postRecipeData.recipeIngredients[index].text;
 
       // TODO: LLamada a la api
     },
-    selectSugestion(s) {
-      /* this.sugestionSelected = s.text; */
-      this.postRecipeData.recipeIngredients[this.currentInput].text = s;
+    selectSuggestion(suggestion) {
+      /* this.suggestionSelected = s.text; */
+      this.postRecipeData.recipeIngredients[this.currentInput].text =
+        suggestion;
       this.showDropdown = false;
     },
     handleKeydown(event) {
       switch (event.key) {
         case "ArrowDown":
-          if (this.highlightedIndex < this.sugestions.length - 1) {
+          if (this.highlightedIndex < this.suggestions.length - 1) {
             this.highlightedIndex++;
           }
           break;
@@ -424,7 +437,7 @@ export default {
           break;
         case "Enter":
           if (this.highlightedIndex >= 0) {
-            this.selectSugestion(this.sugestions[this.highlightedIndex]);
+            this.selectSuggestion(this.suggestions[this.highlightedIndex]);
           }
           break;
       }
