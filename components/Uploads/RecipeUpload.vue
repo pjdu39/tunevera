@@ -96,29 +96,23 @@
                   class="input input-literal"
                   placeholder="Ingrediente..."
                   v-model="recipeIngredient.text"
-                  @input="onInput(), pointTo(index)"
+                  @input="pointTo(index)"
+                  @keydown="handleKeydown"
+                  autocomplete="off"
                   trim
                 ></b-form-input>
-                <div>
-                  <ul v-if="showDropdown">
-                    <li
-                      v-for="s in sugestions"
+                <div class="dropdown-container">
+                  <div v-if="showDropdown" class="dropdown-ingredients">
+                    <div
+                      v-for="(s, i) in sugestions"
                       :key="s"
-                      @click="selectSugestion(s, index)"
+                      :class="{ highlighted: i === highlightedIndex }"
+                      @click="selectSugestion(s)"
                     >
                       {{ s }}
-                    </li>
-                  </ul>
+                    </div>
+                  </div>
                 </div>
-                <!--
-                <div>
-                  <input v-model="inputValue" @input="onInput" />
-                  <ul v-if="showDropdown">
-                    <li v-for="item in filteredItems" :key="item" @click="selectItem(item)">
-                      {{ item }}
-                    </li>
-                  </ul>
-                </div>-->
               </b-form-group>
             </b-col>
             <b-col class="col-md-2">
@@ -279,11 +273,8 @@ export default {
         { value: 2, text: "pera" },
         { value: 3, text: "sal" },
       ],
-      /* sugestionSelected: null, */
-
-      inputValue: "",
-      items: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"],
-      showDropdown: false,
+      currentInput: 0,
+      highlightedIndex: -1,
     };
   },
   computed: {
@@ -311,10 +302,6 @@ export default {
       return this.ingredientSugestionsDummy
         .map((s) => s.text)
         .filter((s) => s.includes(this.currentIngSearch));
-    },
-
-    filteredItems() {
-      return this.items.filter((item) => item.includes(this.inputValue));
     },
   },
   mounted() {
@@ -412,22 +399,35 @@ export default {
     },
 
     pointTo(index) {
+      this.showDropdown = true;
+      this.currentInput = index;
       this.currentIngSearch = this.postRecipeData.recipeIngredients[index].text;
 
       // TODO: LLamada a la api
     },
-    selectSugestion(s, index) {
+    selectSugestion(s) {
       /* this.sugestionSelected = s.text; */
-      this.postRecipeData.recipeIngredients[index].text = s.text;
+      this.postRecipeData.recipeIngredients[this.currentInput].text = s;
       this.showDropdown = false;
     },
-
-    onInput() {
-      this.showDropdown = true;
-    },
-    selectItem(item) {
-      this.inputValue = item;
-      this.showDropdown = false;
+    handleKeydown(event) {
+      switch (event.key) {
+        case "ArrowDown":
+          if (this.highlightedIndex < this.sugestions.length - 1) {
+            this.highlightedIndex++;
+          }
+          break;
+        case "ArrowUp":
+          if (this.highlightedIndex > 0) {
+            this.highlightedIndex--;
+          }
+          break;
+        case "Enter":
+          if (this.highlightedIndex >= 0) {
+            this.selectSugestion(this.sugestions[this.highlightedIndex]);
+          }
+          break;
+      }
     },
   },
 };
@@ -482,6 +482,20 @@ export default {
 }
 .input-title {
   font-size: 110%;
+}
+.dropdown-container {
+  position: relative;
+}
+.dropdown-ingredients {
+  position: absolute;
+  background-color: white;
+  padding: 1rem 0 1rem 1rem;
+  width: 100%;
+  z-index: 10;
+}
+.highlighted {
+  background-color: #007bff;
+  color: white;
 }
 .base-btn {
   padding: 0.4rem 0.5rem 0.4rem 0.4rem;
