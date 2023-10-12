@@ -1,16 +1,26 @@
 import { GlobalSettings } from "./store/envSettings";
+const appEnv = process.env.NODE_ENV
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
   
   // Manejo de entornos en tiempo de ejecución. Se hace así desde la nuxt 2.13
+  env: {
+    API_URL: GlobalSettings[appEnv].apiUrl,
+    PORT: GlobalSettings[appEnv].port
+  },
   publicRuntimeConfig: {
-    apiUrl: process.env.API_URL,
-    port: process.env.PORT
+    env: appEnv,
+    apiUrl: GlobalSettings[appEnv].apiUrl,
+    port: GlobalSettings[appEnv].port
   },
   privateRuntimeConfig: {
     // KEYs...
+  },
+
+  server: {
+    port: GlobalSettings[appEnv].port || 3000
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -53,10 +63,6 @@ export default {
     "bootstrap-vue/nuxt",
     "@nuxtjs/axios",
   ],
-  
-  server: {
-    port: process.env.port || 3000
-  },
 
   axios: {
     baseURL: "https://localhost:44322/",

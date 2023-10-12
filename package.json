@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "stg": "set NODE_ENV=staging && nuxt",
-    "dev": "set NODE_ENV=development && nuxt",
+    "stg": "set NODE_ENV=staging&&nuxt",
+    "dev": "set NODE_ENV=development&&nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"
