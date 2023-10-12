@@ -19,8 +19,9 @@ export const mutations = {
 export const actions = {
     async fetchData({ commit }, numElements) {
         commit('setLoading', 'loading');
+        console.log(this.$config)
         try {
-            const response = await this.$axios.get(`https://localhost:7069/GetBoardElements?NumElements=${ numElements }`);
+            const response = await this.$axios.get(`${this.$config.apiUrl}GetBoardElements?NumElements=${ numElements }`);
             commit('setLoading', 'loaded');
             commit('setData', response.data);
             commit('setError', null);
