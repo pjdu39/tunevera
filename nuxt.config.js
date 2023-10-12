@@ -8,7 +8,8 @@ export default {
   // Manejo de entornos en tiempo de ejecución. Se hace así desde la nuxt 2.13
   env: {
     API_URL: GlobalSettings[appEnv].apiUrl,
-    PORT: GlobalSettings[appEnv].port
+    PORT: GlobalSettings[appEnv].port,
+    HOST: GlobalSettings[appEnv].host || 'localhost'
   },
   publicRuntimeConfig: {
     env: appEnv,
@@ -18,9 +19,9 @@ export default {
   privateRuntimeConfig: {
     // KEYs...
   },
-
   server: {
-    port: GlobalSettings[appEnv].port || 3000
+    port: GlobalSettings[appEnv].port || 3000,
+    host: GlobalSettings[appEnv].host || 'localhost',
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

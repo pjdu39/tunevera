@@ -20,7 +20,6 @@ export const actions = {
     async fetchData({ commit }, numElements) {
         commit('setLoading', 'loading');
         console.log(JSON.parse(JSON.stringify(this.$config)))
-        console.log(this.$config)
         try {
             const response = await this.$axios.get(`${this.$config.apiUrl}GetBoardElements?NumElements=${ numElements }`);
             commit('setLoading', 'loaded');
