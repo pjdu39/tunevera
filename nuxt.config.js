@@ -41,7 +41,24 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     "bootstrap-vue/nuxt",
     "@nuxtjs/axios",
+    [
+    "@nuxtjs/dotenv",
+      {
+        path: "./",
+        file: (function() {
+          switch(process.env.NODE_ENV) {
+            case 'staging': return '.env.staging';
+            case 'development': return '.env.development';
+            default: return '.env';
+          }
+        })()
+      }
+    ]
   ],
+  
+  server: {
+    port: process.env.PORT || 3000
+  },
 
   axios: {
     baseURL: "https://localhost:7069/",
