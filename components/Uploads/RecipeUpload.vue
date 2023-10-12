@@ -14,6 +14,7 @@
               class="input input-title"
               placeholder="Escribir título..."
               v-model="postRecipeData.title"
+              autocomplete="off"
               trim
             ></b-form-input>
           </b-form-group>
@@ -46,6 +47,7 @@
           trim
           type="number"
           min="0"
+          autocomplete="off"
           v-click-outside="roundTime"
           onkeydown="return event.keyCode !== 69"
         ></b-form-input
@@ -105,6 +107,7 @@
                   <div
                     v-if="showDropdown && index === currentInput"
                     class="dropdown-ingredients"
+                    v-click-outside="onClickOutside"
                   >
                     <div
                       v-for="(s, i) in suggestions"
@@ -278,6 +281,7 @@ export default {
       ],
       currentInput: 0,
       highlightedIndex: -1,
+      showDropdown: false,
     };
   },
   computed: {
@@ -360,6 +364,7 @@ export default {
       }
     },
     convertTimeToInt(event) {
+      if (!this.postRecipeData.time) this.postRecipeData.time = 0;
       this.postRecipeData.time = parseInt(this.postRecipeData.time);
     },
     roundTime() {
@@ -441,6 +446,10 @@ export default {
           }
           break;
       }
+    },
+    onClickOutside(event) {
+      console.log("im clicking outside!");
+      this.showDropdown = false;
     },
   },
 };
