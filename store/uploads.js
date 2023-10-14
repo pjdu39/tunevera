@@ -1,132 +1,135 @@
-export const state = () => ({
-    newRecipeState: {
-        data: null,
-        loading: 'waiting',
-        error: null
-    },
-    newPollState: {
-        data: null,
-        loading: 'waiting',
-        error: null
-    },
-    newDiscussionState: {
-        data: null,
-        loading: 'waiting',
-        error: null
-    },
-    getUnitsState: {
-        data: null,
-        loading: 'waiting',
-        error: null
-    },
-});
+import { defineStore } from 'pinia';
 
-export const mutations = {
-    // Recipe
-    setRecipeData(state, payload) {
-        state.newRecipeState.data = payload
-    },
-    setRecipeLoading(state, payload) {
-        state.newRecipeState.loading = payload
-    },
-    setRecipeError(state, payload) {
-        state.newRecipeState.error = payload
-    },
+export const useUploadsStore = defineStore({
+    id: 'mainStore',
+    state: () => ({
+        newRecipeState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
+        newPollState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
+        newDiscussionState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
+        getUnitsState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
+    }),
+    actions: {
+        // Mutations for Recipe
+        setRecipeData(payload) {
+            this.newRecipeState.data = payload;
+        },
+        setRecipeLoading(payload) {
+            this.newRecipeState.loading = payload;
+        },
+        setRecipeError(payload) {
+            this.newRecipeState.error = payload;
+        },
 
-    // Poll
-    setPollData(state, payload) {
-        state.newPollState.data = payload
-    },
-    setPollLoading(state, payload) {
-        state.newPollState.loading = payload
-    },
-    setPollError(state, payload) {
-        state.newPollState.error = payload
-    },
+        // Mutations for Poll
+        setPollData(payload) {
+            this.newPollState.data = payload;
+        },
+        setPollLoading(payload) {
+            this.newPollState.loading = payload;
+        },
+        setPollError(payload) {
+            this.newPollState.error = payload;
+        },
 
-    // Discussion
-    setDiscussionData(state, payload) {
-        state.newDiscussionState.data = payload
-    },
-    setDiscussionLoading(state, payload) {
-        state.newDiscussionState.loading = payload
-    },
-    setDiscussionError(state, payload) {
-        state.newDiscussionState.error = payload
-    },
+        // Mutations for Discussion
+        setDiscussionData(payload) {
+            this.newDiscussionState.data = payload;
+        },
+        setDiscussionLoading(payload) {
+            this.newDiscussionState.loading = payload;
+        },
+        setDiscussionError(payload) {
+            this.newDiscussionState.error = payload;
+        },
 
-    // Units
-    setUnitsData(state, payload) {
-        state.getUnitsState.data = payload
-    },
-    setUnitsLoading(state, payload) {
-        state.getUnitsState.loading = payload
-    },
-    setUnitsError(state, payload) {
-        state.getUnitsState.error = payload
-    },
-}
+        // Mutations for Units
+        setUnitsData(payload) {
+            this.getUnitsState.data = payload;
+        },
+        setUnitsLoading(payload) {
+            this.getUnitsState.loading = payload;
+        },
+        setUnitsError(payload) {
+            this.getUnitsState.error = payload;
+        },
 
-export const actions = {
-    async postRecipe({ commit }, recipe) {
-        commit('setRecipeLoading', 'loading');
-        try {
-            const response = await this.$axios.post('https://localhost:7069/NewRecipe', recipe);
-            commit('setRecipeData', response.data);
-            commit('setRecipeLoading', 'loaded');
-            commit('setRecipeError', null);
-        }
-        catch(error) {
-            commit('setRecipeData', null);
-            commit('setRecipeLoading', 'error');
-            commit('setRecipeError', error.message);
-        }
-    },
+        // Actions
+        async postRecipe(recipe) {
+            this.setRecipeLoading('loading');
+            try {
+                const response = await this.$axios.post('https://localhost:7069/NewRecipe', recipe);
+                this.setRecipeData(response.data);
+                this.setRecipeLoading('loaded');
+                this.setRecipeError(null);
+            }
+            catch(error) {
+                this.setRecipeData(null);
+                this.setRecipeLoading('error');
+                this.setRecipeError(error.message);
+            }
+        },
 
-    async postPoll({ commit }, poll) {
-        commit('setPollLoading', 'loading');
-        try {
-            const response = await this.$axios.post('https://localhost:7069/NewPoll', poll);
-            commit('setPollData', response.data);
-            commit('setPollLoading', 'loaded');
-            commit('setPollError', null);
-            console.log('loaded')
-        }
-        catch(error) {
-            commit('setPollData', null);
-            commit('setPollLoading', 'error');
-            commit('setPollError', error.message);
-        }
-    },
+        async postPoll(poll) {
+            this.setPollLoading('loading');
+            try {
+                const response = await this.$axios.post('https://localhost:7069/NewPoll', poll);
+                this.setPollData(response.data);
+                this.setPollLoading('loaded');
+                this.setPollError(null);
+                console.log('loaded');
+            }
+            catch(error) {
+                this.setPollData(null);
+                this.setPollLoading('error');
+                this.setPollError(error.message);
+            }
+        },
 
-    async postDiscussion({ commit }, discussion) {
-        commit('setDiscussionLoading', 'loading');
-        try {
-            const response = await this.$axios.post('https://localhost:7069/NewDiscussion', discussion);
-            commit('setDiscussionData', response.data);
-            commit('setDiscussionLoading', 'loaded');
-            commit('setDiscussionError', null);
-            console.log('loaded')
-        }
-        catch(error) {
-            commit('setDiscussionData', null);
-            commit('setDiscussionLoading', 'error');
-            commit('setDiscussionError', error.message);
-        }
-    },
-    
-    async fetchUnits({ commit }) {
-        commit('setUnitsLoading', 'loading');
-        try {
-            const response = await this.$axios.get(`https://localhost:7069/GetUnits`);
-            commit('setUnitsData', response.data);
-            commit('setUnitsLoading', 'loaded');
-            commit('setUnitsError', null);
-        }
-        catch(error) {
-            commit('setUnitsData', null);
-            commit('setUnitsLoading', 'error');
-            commit('setUnitsError', error.message);
+        async postDiscussion(discussion) {
+            this.setDiscussionLoading('loading');
+            try {
+                const response = await this.$axios.post('https://localhost:7069/NewDiscussion', discussion);
+                this.setDiscussionData(response.data);
+                this.setDiscussionLoading('loaded');
+                this.setDiscussionError(null);
+                console.log('loaded');
+            }
+            catch(error) {
+                this.setDiscussionData(null);
+                this.setDiscussionLoading('error');
+                this.setDiscussionError(error.message);
+            }
+        },
+
+        async fetchUnits() {
+            this.setUnitsLoading('loading');
+            try {
+                const response = await this.$axios.get(`https://localhost:7069/GetUnits`);
+                this.setUnitsData(response.data);
+                this.setUnitsLoading('loaded');
+                this.setUnitsError(null);
+            }
+            catch(error) {
+                this.setUnitsData(null);
+                this.setUnitsLoading('error');
+                this.setUnitsError(error.message);
+            }
         }
     }
-}
+});

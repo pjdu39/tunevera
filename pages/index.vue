@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { useBoardStore } from "~/store/board.js";
 export default {
   data() {
     return {
@@ -156,7 +156,20 @@ export default {
     };
   },
   computed: {
-    ...mapState("board", ["data", "loading", "error"]),
+    // TODO: Considerar meter estos elementos de la store en un solo elemento que contenga {data, loading, error} como en uploads.
+    // También habría que cambiarlo en la store.
+    data() {
+      const store = useBoardStore();
+      return store.data;
+    },
+    loading() {
+      const store = useBoardStore();
+      return store.data;
+    },
+    error() {
+      const store = useBoardStore();
+      return store.data;
+    },
   },
   created() {
     this.fetchData(50);
@@ -168,7 +181,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions("board", ["fetchData"]),
+    fetchData() {
+      const store = useBoardStore();
+      return store.fetchData;
+    },
     calculaBarraEncuesta(pollOptions, option) {
       let porcentaje = this.calculaPorcentajeEncuesta(pollOptions, option);
       let result = porcentaje / 5; // Divide entre 5 porque la longitud de la barra es 20rem

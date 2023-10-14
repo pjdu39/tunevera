@@ -240,10 +240,11 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { useUploadsStore } from "~/store/uploads.js";
 import vClickOutside from "v-click-outside";
 export default {
   name: "RecipeUpload",
+  // TODO: Probar a borrar esto, el click-outside ya lo tiene el padre -> pages/Uploads.vue
   directives: {
     clickOutside: vClickOutside.directive,
   },
@@ -285,7 +286,14 @@ export default {
     };
   },
   computed: {
-    ...mapState("uploads", ["newRecipeState", "getUnitsState"]),
+    newRecipeState() {
+      const store = useUploadsStore();
+      return store.newRecipeState;
+    },
+    getUnitsState() {
+      const store = useUploadsStore();
+      return store.getUnitsState;
+    },
     PuedeAnadirIngrediente() {
       let result = true;
       this.postRecipeData.recipeIngredients.forEach((x) => {
@@ -315,7 +323,14 @@ export default {
     this.fetchUnits();
   },
   methods: {
-    ...mapActions("uploads", ["postRecipe", "fetchUnits"]),
+    postRecipe() {
+      const store = useUploadsStore();
+      return store.postRecipe;
+    },
+    fetchUnits() {
+      const store = useUploadsStore();
+      return store.fetchUnits;
+    },
     OtroIngrediente() {
       if (this.PuedeAnadirIngrediente) {
         this.postRecipeData.recipeIngredients.push({

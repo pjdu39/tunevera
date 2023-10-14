@@ -65,7 +65,7 @@
 </template>
   
 <script>
-import { mapState, mapActions } from "vuex";
+import { useRecipeStore } from "~/store/recipe.js";
 export default {
   data() {
     return {
@@ -80,10 +80,26 @@ export default {
     };
   },
   computed: {
-    ...mapState("recipe", ["data", "loading", "error"]),
+    // TODO: Considerar meter estos elementos de la store en un solo elemento que contenga {data, loading, error} como en uploads.
+    // También habría que cambiarlo en la store.
+    data() {
+      const store = useRecipeStore();
+      return store.data;
+    },
+    loading() {
+      const store = useRecipeStore();
+      return store.data;
+    },
+    error() {
+      const store = useRecipeStore();
+      return store.data;
+    },
   },
   methods: {
-    ...mapActions("recipe", ["fetchData"]),
+    fetchData() {
+      const store = useRecipeStore();
+      return store.fetchData;
+    },
   },
   mounted() {
     this.fetchData(17); // TODO: Recibir este valor por url.

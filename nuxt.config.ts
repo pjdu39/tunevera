@@ -1,23 +1,33 @@
-import { GlobalSettings } from "./store/envSettings";
-const appEnv = process.env.NODE_ENV
+import type { NuxtConfig } from '@nuxt/types'
+/*
+import { defineNuxtConfig } from 'nuxt/config'
+import { BootstrapVueNext } from 'bootstrap-vue-next';
+*/
 
-export default {
+import { Environment, GlobalSettings } from "./store/envSettings";
+
+const appEnv: Environment  = process.env.NODE_ENV as Environment
+
+const config: NuxtConfig = {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
   
   // Manejo de entornos en tiempo de ejecución. Se hace así desde la nuxt 2.13
+  /*
   env: {
     API_URL: GlobalSettings[appEnv].apiUrl,
     PORT: GlobalSettings[appEnv].port,
     HOST: GlobalSettings[appEnv].host || 'localhost'
   },
-  publicRuntimeConfig: {
-    env: appEnv,
-    apiUrl: GlobalSettings[appEnv].apiUrl,
-    port: GlobalSettings[appEnv].port
-  },
-  privateRuntimeConfig: {
+  */
+  runtimeConfig: {
     // KEYs...
+    public: {
+      env: appEnv,
+      apiUrl: GlobalSettings[appEnv].apiUrl,
+      port: GlobalSettings[appEnv].port
+    }
+    
   },
   server: {
     port: GlobalSettings[appEnv].port || 3000,
@@ -43,38 +53,41 @@ export default {
   css: [
     // SCSS file in the project
     "~/assets/scss/styles.scss",
+    "@fortawesome/fontawesome-svg-core/styles.css"
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ["~/plugins/fontawesome.js"],
+  plugins: [
+    "~/plugins/fontawesome.js"
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: ["@nuxtjs/style-resources"],
+  buildModules: [
+    "@nuxtjs/style-resources",
+    "bootstrap-vue-next/nuxt",
+    "@nuxt/typescript-build",
+    "@pinia/nuxt"
+  ],
 
   styleResources: {
     scss: ["~/assets/scss/styles.scss"],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-    // https://go.nuxtjs.dev/bootstrap
-    "bootstrap-vue/nuxt",
-    "@nuxtjs/axios",
-  ],
-
-  axios: {
-    baseURL: "https://localhost:44322/",
-    browserBaseURL: "http://localhost:3000/",
-    common: {
-      Accept: "application/json, text/plain",
-    },
-    proxyHeaders: false,
-    credentials: false,
+  modules: [],
+  pinia: {
+    autoImports: [
+      // automatically imports `defineStore`
+      'defineStore', // import { defineStore } from 'pinia'
+      ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+    ],
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 };
+
+export default config;

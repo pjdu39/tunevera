@@ -1,34 +1,35 @@
-export const state = () => ({
-    data: null,
-    loading: 'waiting',
-    error: null
+import { defineStore } from 'pinia';
+
+export const useRecipeStore = defineStore({
+    id: 'recipeStore',
+    state: () => ({
+        data: null,
+        loading: 'waiting',
+        error: null
+    }),
+    actions: {
+        setData(payload) {
+            this.data = payload;
+        },
+        setLoading(payload) {
+            this.loading = payload;
+        },
+        setError(payload) {
+            this.error = payload;
+        },
+        async fetchData(id) {
+            this.setLoading('loading');
+            try {
+                const response = await this.$axios.get(`https://localhost:7069/GetRecipe?IdRecipe=${ id }`);
+                this.setData(response.data);
+                this.setLoading('loaded');
+                this.setError(null);
+            }
+            catch(error) {
+                this.setData(null);
+                this.setLoading('waiting');
+                this.setError(error.message);
+            }
+        }
+    }
 });
-
-export const mutations = {
-    setData(state, payload) {
-        state.data = payload
-    },
-    setLoading(state, payload) {
-        state.loading = payload
-    },
-    setError(state, payload) {
-        state.error = payload
-    }
-}
-
-export const actions = {
-    async fetchData({ commit }, id) {
-        commit('setLoading', 'loading');
-        try {
-            const response = await this.$axios.get(`https://localhost:7069/GetRecipe?IdRecipe=${ id }`);
-            commit('setData', response.data);
-            commit('setLoading', 'loaded');
-            commit('setError', null);
-        }
-        catch(error) {
-            commit('setData', null);
-            commit('setLoading', 'waiting');
-            commit('setError', error.message);
-        }
-    }
-}

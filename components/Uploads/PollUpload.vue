@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { useUploadsStore } from "~/store/uploads.js";
 export default {
   name: "PollUpload",
   data() {
@@ -101,7 +101,10 @@ export default {
     };
   },
   computed: {
-    ...mapState("uploads", ["newPollState"]),
+    newPollState() {
+      const store = useUploadsStore();
+      return store.newPollState;
+    },
     PuedeAnadirRespuesta() {
       let result = true;
       this.postPollData.options.forEach((x) => {
@@ -112,7 +115,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions("uploads", ["postPoll"]),
+    postPoll() {
+      const store = useUploadsStore();
+      return store.postPoll;
+    },
     OtraRespuesta() {
       if (this.PuedeAnadirRespuesta) {
         this.postPollData.options.push("");

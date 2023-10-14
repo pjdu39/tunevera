@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { useUploadsStore } from "~/store/uploads";
 export default {
   name: "DiscussionUpload",
   data() {
@@ -77,10 +77,16 @@ export default {
     };
   },
   computed: {
-    ...mapState("uploads", ["newDiscussionState"]),
+    newDiscussionState({ $pinia }) {
+      const store = useUploadsStore($pinia);
+      return store.newDiscussionState;
+    },
   },
   methods: {
-    ...mapActions("uploads", ["postDiscussion"]),
+    postDiscussion({ $pinia }) {
+      const store = useUploadsStore($pinia);
+      return store.postDiscussion;
+    },
     setLoadingToWaiting() {
       // TODO: Esto no funciona, crear una función en la store para manejar el loading si se requiere hacerlo.
       /* this.loading = "waiting"; */

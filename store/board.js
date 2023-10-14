@@ -1,35 +1,35 @@
-export const state = () => ({
-    data: null,
-    loading: 'waiting',
-    error: null
-});
+import { defineStore } from 'pinia';
 
-export const mutations = {
-    setData(state, payload) {
-        state.data = payload
-    },
-    setLoading(state, payload) {
-        state.loading = payload
-    },
-    setError(state, payload) {
-        state.error = payload
-    }
-}
-
-export const actions = {
-    async fetchData({ commit }, numElements) {
-        commit('setLoading', 'loading');
-        console.log(JSON.parse(JSON.stringify(this.$config)))
-        try {
-            const response = await this.$axios.get(`${this.$config.apiUrl}GetBoardElements?NumElements=${ numElements }`);
-            commit('setLoading', 'loaded');
-            commit('setData', response.data);
-            commit('setError', null);
+export const useBoardStore = defineStore({
+    id: 'board',
+    state: () => ({
+        data: null,
+        loading: 'waiting',
+        error: null
+    }),
+    actions: {
+        setData(payload) {
+            this.data = payload
+        },
+        setLoading(payload) {
+            this.loading = payload
+        },
+        setError(payload) {
+            this.error = payload
+        },
+        async fetchData(numElements) {
+            this.setLoading('loading');
+            try {
+                const response = await this.$axios.get(`${this.$config.apiUrl}GetBoardElements?NumElements=${ numElements }`);
+                this.setLoading('loaded');
+                this.setData(response.data);
+                this.setError(null);
+            }
+            catch(error) {
+                this.setData(null);
+                this.setLoading('waiting');
+                this.setError(error.message);
+            }
         }
-        catch(error) {
-            commit('setData', null);
-            commit('setLoading', 'waiting');
-            commit('setError', error.message);
-        }
     }
-}
+})

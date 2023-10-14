@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
 import vClickOutside from "v-click-outside";
 import DiscussionUpload from "~/components/Uploads/DiscussionUpload.vue";
 import PollUpload from "~/components/Uploads/PollUpload.vue";
@@ -33,174 +32,14 @@ export default {
   },
   data() {
     return {
-      postRecipeData: {
-        title: "",
-        description: "",
-        time: 0,
-        recipeIngredients: [{ text: null, amount: null, idUnit: null }],
-        steps: [""],
-        tags: [],
-      },
-      foto: null,
-      respuestas: [{ literal: null }],
       descripcion: null,
-      unidadesDummy: [
-        { value: 1, text: "unidades" },
-        { value: 2, text: "kg" },
-        { value: 3, text: "gr" },
-        { value: 4, text: "L" },
-        { value: 5, text: "ml" },
-        { value: 6, text: "cucharadas" },
-        { value: 7, text: "cucharaditas" },
-        { value: 8, text: "tazas" },
-        { value: 9, text: "tacitas" },
-        { value: 10, text: "libras" },
-        { value: 11, text: "onzas" },
-      ],
     };
   },
-  computed: {
-    ...mapState("uploads", ["data", "loading", "error"]),
-    PuedeAnadirIngrediente() {
-      let result = true;
-      this.postRecipeData.recipeIngredients.forEach((x) => {
-        if (!x.text) result = false;
-        /* if (!x.amount) result = false;
-        if (!x.idUnit) result = false; */
-      });
-
-      return result;
-    },
-    PuedeAnadirPaso() {
-      let result = true;
-      this.postRecipeData.steps.forEach((x) => {
-        if (!x) result = false;
-      });
-
-      return result;
-    },
-    PuedeAnadirRespuesta() {
-      let result = true;
-      this.respuestas.forEach((x) => {
-        if (!x.literal) result = false;
-      });
-
-      return result;
-    },
-  },
   methods: {
-    ...mapActions("uploads", ["postRecipe"]),
-    OtroIngrediente() {
-      if (this.PuedeAnadirIngrediente) {
-        this.postRecipeData.recipeIngredients.push({
-          text: null,
-          amount: null,
-          idUnit: null,
-        });
-      }
-    },
-    OtraRespuesta() {
-      if (this.PuedeAnadirRespuesta) {
-        this.respuestas.push({ literal: null });
-      }
-    },
-    OtroPaso() {
-      console.log(this.postRecipeData.steps);
-      if (this.PuedeAnadirPaso) {
-        this.postRecipeData.steps.push("");
-      }
-    },
-    EliminaIngrediente(ingredient) {
-      if (this.postRecipeData.recipeIngredients.length <= 1) return;
-      const index = this.postRecipeData.recipeIngredients.indexOf(ingredient);
-      if (index > -1) {
-        this.postRecipeData.recipeIngredients.splice(index, 1);
-      }
-    },
-    EliminaRespuesta(respuesta) {
-      if (this.respuestas.length <= 1) return;
-      const index = this.respuestas.indexOf(respuesta);
-      if (index > -1) {
-        this.respuestas.splice(index, 1);
-      }
-    },
-    EliminaPaso(step) {
-      if (this.postRecipeData.steps.length <= 1) return;
-
-      const index = this.postRecipeData.steps.indexOf(step);
-      if (index > -1) {
-        this.postRecipeData.steps.splice(index, 1);
-      }
-    },
-    ValidaLongitud(maxLength) {
-      // TODO: Probablemente habrá que borrarlo. No es necesario.
-      // Valida cantidad de caracteres
-    },
-    // TODO: Actualmente borra la última posición si hay alguno vacío, en lugar de el que está vacío específicamente. Arreglar.
-    Resolve() {
-      if (!this.PuedeAnadirIngrediente) {
-        if (this.postRecipeData.recipeIngredients.length > 1)
-          this.postRecipeData.recipeIngredients.splice(
-            this.postRecipeData.recipeIngredients.length - 1,
-            1
-          );
-      }
-      if (!this.PuedeAnadirPaso) {
-        if (this.postRecipeData.steps.length > 1)
-          this.postRecipeData.steps.splice(
-            this.postRecipeData.steps.length - 1,
-            1
-          );
-      }
-      if (!this.PuedeAnadirRespuesta) {
-        if (this.respuestas.length > 1)
-          this.respuestas.splice(this.respuestas.length - 1, 1);
-      }
-    },
-    convertTimeToInt(event) {
-      this.postRecipeData.time = parseInt(this.postRecipeData.time);
-    },
-    roundTime() {
-      this.convertTimeToInt();
-
-      if (this.postRecipeData.time < 0) this.postRecipeData.time = 0;
-      if (this.postRecipeData.time > 999) this.postRecipeData.time = 995;
-
-      this.postRecipeData.time =
-        this.postRecipeData.time - (this.postRecipeData.time % 5);
-    },
-    sumTime(n) {
-      this.convertTimeToInt();
-
-      if (this.postRecipeData.time < 0) this.postRecipeData.time = 0;
-
-      const diff = this.postRecipeData.time % n;
-
-      if (n >= 0) {
-        this.postRecipeData.time += n - diff;
-      } else if (diff === 0) {
-        this.postRecipeData.time += n;
-      } else {
-        this.postRecipeData.time -= diff;
-      }
-    },
-    Aceptar() {
-      this.Resolve();
-
-      // TODO: Validaciones de contenido sobre postRecipeData
-      this.postRecipe(this.postRecipeData);
-    },
-    // TODO: Borrar la función y el botón. Ya no tienen sentido
-    Atras() {
-      // this.postRecipe(this.postRecipeData);
-    },
     // TODO: Borrar. Esto sólo tenía sentido antes de separar cada formulario en componentes.
     cleanData() {
       this.title = null;
       this.descripcion = null;
-    },
-    setLoadingToWaiting() {
-      this.loading = "waiting";
     },
   },
 };
