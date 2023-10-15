@@ -53,7 +53,8 @@ const config: NuxtConfig = {
   css: [
     // SCSS file in the project
     "~/assets/scss/styles.scss",
-    "@fortawesome/fontawesome-svg-core/styles.css"
+    "@fortawesome/fontawesome-svg-core/styles.css",
+    "bootstrap/dist/css/bootstrap.min.css"
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -67,9 +68,7 @@ const config: NuxtConfig = {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     "@nuxtjs/style-resources",
-    "bootstrap-vue-next/nuxt",
-    "@nuxt/typescript-build",
-    "@pinia/nuxt"
+    "@nuxt/typescript-build"
   ],
 
   styleResources: {
@@ -77,7 +76,10 @@ const config: NuxtConfig = {
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: [
+    "@bootstrap-vue-next/nuxt",
+    "@pinia/nuxt"
+  ],
   pinia: {
     autoImports: [
       // automatically imports `defineStore`

@@ -1,7 +1,7 @@
 <template>
   <div class="tablon-container">
     <!-- <main></main> -->
-    <b-list-group-item
+    <BListGroupItem
       class="elemento"
       v-for="(element, index) in elements"
       :key="index"
@@ -55,7 +55,7 @@
         </div>
         <!-- <div class="num">{{ element.comentarios.length }}</div> -->
       </div>
-    </b-list-group-item>
+    </BListGroupItem>
   </div>
 </template>
 

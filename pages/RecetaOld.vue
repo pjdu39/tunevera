@@ -37,7 +37,7 @@
         <div class="section">
           <h4 class="section section--receta">Ingredientes</h4>
           <ul>
-            <b-list-group-item
+            <BListGroupItem
               class="group-item-container"
               v-for="(ingrediente, index) in recetaDummy.ingredientes"
               :key="index"
@@ -51,18 +51,18 @@
                   ingrediente.literal
                 }}
               </li>
-            </b-list-group-item>
+            </BListGroupItem>
           </ul>
         </div>
         <div class="section">
-          <b-list-group-item
+          <BListGroupItem
             class="group-item-container"
             v-for="(paso, index) in recetaDummy.pasos"
             :key="index"
           >
             <h4 class="section section--paso">Paso {{ index + 1 }}</h4>
             <p>{{ paso.contenido }}</p>
-          </b-list-group-item>
+          </BListGroupItem>
         </div>
       </b-col>
       <!--
@@ -108,12 +108,12 @@
       -->
       <b-col class="col-md-3 box box3">
         <div class="buscador-card">
-          <b-form-input
+          <BFormInput
             v-model="buscar"
             class="buscador"
             placeholder="Buscar..."
-          ></b-form-input>
-          <b-list-group-item
+          ></BFormInput>
+          <BListGroupItem
             class="badge-container"
             v-for="result in busquedaResultado"
             :key="result"
@@ -122,11 +122,11 @@
             <a class="badge-custom" @click="AddFilter(result)">
               {{ result.literal }}
             </a>
-          </b-list-group-item>
+          </BListGroupItem>
         </div>
         <div class="buscador-card buscador-card--filtro">
           <h6>Filtros:</h6>
-          <b-list-group-item
+          <BListGroupItem
             class="badge-container badge-container--filtro"
             v-for="filtro in filtros"
             :key="filtro"
@@ -136,7 +136,7 @@
               {{ filtro.literal }}
               <!-- TODO: Icono de X en un link para quitar el filtro -->
             </a>
-          </b-list-group-item>
+          </BListGroupItem>
         </div>
       </b-col>
     </b-row>
@@ -175,12 +175,13 @@ export default {
         nombreCompleto: "Juan Pérez Delgado",
         publicaciones: 28,
         seguidores: 143,
-        img: require("~/assets/img/foto_perfil2.jpg"),
+        img: import("~/assets/img/foto_perfil2.jpg"),
       },
       recetaDummy: {
         titulo: "Huevos Fritos",
         foto: null,
-        descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsum error quod, magnam quos veritatis, ut repellendus nisi voluptatibus ab ducimus in.',
+        descripcion:
+          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsum error quod, magnam quos veritatis, ut repellendus nisi voluptatibus ab ducimus in.",
         ingredientes: [
           { literal: "huevo", cantidad: 2, unidad: "unidades" },
           { literal: "cerveza", cantidad: 100, unidad: "ml" },

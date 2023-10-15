@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="login-card">
-      <b-form-group
+      <BFormGroup
         id="fieldset-email"
         class="input-container email-container"
         label="Email"
@@ -10,15 +10,15 @@
         :invalid-feedback="emailInvalidFeedback"
         :state="emailState"
       >
-        <b-form-input
+        <BFormInput
           id="input-email"
           class="input"
           v-model="email"
           :state="emailState"
           trim
-        ></b-form-input>
-      </b-form-group>
-      <b-form-group
+        ></BFormInput>
+      </BFormGroup>
+      <BFormGroup
         id="fieldset-password"
         class="input-container pass-container"
         label="Contraseña"
@@ -27,23 +27,23 @@
         :invalid-feedback="passwordInvalidFeedback"
         :state="passwordState"
       >
-        <b-form-input
+        <BFormInput
           id="input-password"
           class="input"
           v-model="password"
           :state="passwordState"
           trim
-        ></b-form-input>
-      </b-form-group>
-      <b-form-checkbox
+        ></BFormInput>
+      </BFormGroup>
+      <BFormCheckbox
         id="checkbox-1"
         class="condiciones"
         v-model="terminosAceptados"
         name="checkbox-1"
       >
         Acepto los <a href="#">términos y condiciones</a>
-      </b-form-checkbox>
-      <b-button class="login-button"> Registrarse </b-button>
+      </BFormCheckbox>
+      <BButton class="login-button"> Registrarse </BButton>
     </div>
   </div>
 </template>

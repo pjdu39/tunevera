@@ -2,7 +2,7 @@
   <div>
     <Header class="header" />
     <div class="nuxt-container">
-      <Nuxt />
+      <slot />
     </div>
     <Footer />
   </div>

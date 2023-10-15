@@ -4,45 +4,45 @@
       <h5>Pregunta</h5>
       <b-row>
         <b-col class="col-md-11">
-          <b-form-group
+          <BFormGroup
             id="fieldset-title"
             class="input-container title-container"
             label-for="input-title"
           >
-            <b-form-input
+            <BFormInput
               id="input-title"
               class="input input-title"
               placeholder="¿Qué quieres preguntar?"
               v-model="postPollData.title"
               trim
-            ></b-form-input>
-          </b-form-group>
+            ></BFormInput>
+          </BFormGroup>
         </b-col>
       </b-row>
     </div>
     <div class="section">
       <h6>Opciones</h6>
       <div>
-        <b-list-group-item
+        <BListGroupItem
           class="input-container"
           v-for="(option, index) in postPollData.options"
           :key="index"
         >
           <b-row>
             <b-col class="col-md-11">
-              <b-form-group
+              <BFormGroup
                 id="fieldset-literal"
                 class=""
                 label-for="input-literal"
               >
-                <b-form-input
+                <BFormInput
                   id="input-literal"
                   class="input input-literal"
                   placeholder="Escribir opción..."
                   v-model="postPollData.options[index]"
                   trim
-                ></b-form-input>
-              </b-form-group>
+                ></BFormInput>
+              </BFormGroup>
             </b-col>
             <b-col class="col-md-1">
               <button
@@ -53,7 +53,7 @@
               </button>
             </b-col>
           </b-row>
-        </b-list-group-item>
+        </BListGroupItem>
       </div>
       <div>
         <button

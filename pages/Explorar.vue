@@ -2,30 +2,31 @@
   <div class="explorar-container">
     <div class="filtros">
       <h5>¿Qué receta buscas?</h5>
-      <b-form-input
+      <BFormInput
         v-model="buscarGeneral"
         class="buscador"
         placeholder="Buscar..."
-      ></b-form-input>
+      ></BFormInput>
       <div class="rounded-wrapper">
-        <b-tabs content-class="mt-3" class="tab-option">
+        <!-- TODO: Los tabs no tienen soporte aún en Bootstrap Vue Next. Comentarlos y crearlos manualmente hasta que existan. -->
+        <BTabs content-class="mt-3" class="tab-option">
           <div class="filtros-adicionales-container">
-            <b-tab title="Ingredientes">
+            <BTab title="Ingredientes">
               <b-row>
                 <b-col md="6" class="row-barra-busqueda-ingredientes">
                   <div class="buscador-ingredientes-container">
                     <div class="form-and-button">
-                      <b-form-input
+                      <BFormInput
                         v-model="buscarIngrediente"
                         class="buscador-ingredientes"
                         placeholder="Buscar ingrediente..."
-                      ></b-form-input>
-                      <b-button class="button add-button"
+                      ></BFormInput>
+                      <BButton class="button add-button"
                         ><span class="fa fa-plus" aria-hidden="true"></span
-                      ></b-button>
+                      ></BButton>
                     </div>
                     <div class="vege-options">
-                      <b-form-checkbox
+                      <BFormCheckbox
                         v-model="vegetariano"
                         :class="
                           'button check-vege ' + vegeActive('vegetariano')
@@ -35,8 +36,8 @@
                         @change="autoVegetariano('vegetariano')"
                       >
                         Vegetariano
-                      </b-form-checkbox>
-                      <b-form-checkbox
+                      </BFormCheckbox>
+                      <BFormCheckbox
                         v-model="vegano"
                         :class="'button check-vege ' + vegeActive('vegano')"
                         name="check-button"
@@ -44,26 +45,26 @@
                         @change="autoVegetariano('vegano')"
                       >
                         Vegano
-                      </b-form-checkbox>
+                      </BFormCheckbox>
                     </div>
                   </div>
                 </b-col>
                 <b-col md="6" class="filtros-elegidos"> Patata </b-col>
               </b-row>
-            </b-tab>
-            <b-tab title="Tags #">
+            </BTab>
+            <BTab title="Tags #">
               <b-row>
                 <b-col md="6">
                   <div class="filtro-tags-container">
                     <div class="form-and-button">
-                      <b-form-input
+                      <BFormInput
                         v-model="buscarTag"
                         class="buscador-ingredientes"
                         placeholder="Buscar tag..."
-                      ></b-form-input>
-                      <b-button class="button add-button"
+                      ></BFormInput>
+                      <BButton class="button add-button"
                         ><span class="fa fa-search" aria-hidden="true"></span
-                      ></b-button>
+                      ></BButton>
                     </div>
                   </div>
                 </b-col>
@@ -71,7 +72,7 @@
                   <!-- TODO: Todo lo que está dentro de este col, está copiado de Recetas.vue, hay que adaptarlo. Considerar hacer las clases globales. -->
                   <div class="buscador-card buscador-card--filtro">
                     <h6>Filtros:</h6>
-                    <b-list-group-item
+                    <BListGroupItem
                       class="badge-container badge-container--filtro"
                       v-for="filtro in filtros"
                       :key="filtro"
@@ -81,21 +82,17 @@
                         {{ filtro.literal }}
                         <!-- TODO: Icono de X en un link para quitar el filtro -->
                       </a>
-                    </b-list-group-item>
+                    </BListGroupItem>
                   </div>
                 </b-col>
               </b-row>
-            </b-tab>
+            </BTab>
           </div>
-        </b-tabs>
+        </BTabs>
       </div>
     </div>
     <div class="images-container">
-      <b-list-group-item
-        class="card"
-        v-for="receta in recetas"
-        :key="receta.id"
-      >
+      <BListGroupItem class="card" v-for="receta in recetas" :key="receta.id">
         <div class="card-title" :hidden="muestraTitulo">
           {{ receta.name }}
         </div>
@@ -103,7 +100,7 @@
           <!-- @mouseover="hover(receta.name)  Evento de hover -->
           <img class="card-image" :src="receta.img" />
         </a>
-      </b-list-group-item>
+      </BListGroupItem>
     </div>
   </div>
 </template>
@@ -128,22 +125,22 @@ export default {
       vegetariano: false,
       vegano: false,
       recetas: [
-        { id: 1, name: "Cocido", img: require("~/assets/img/cocido.jpg") },
-        { id: 2, name: "Postre", img: require("~/assets/img/postre1.jpg") },
-        { id: 3, name: "Cóctel", img: require("~/assets/img/coctel1.jpg") },
-        { id: 4, name: "Pizza", img: require("~/assets/img/pizza.jpg") },
-        { id: 5, name: "Postre", img: require("~/assets/img/postre1.jpg") },
-        { id: 6, name: "Cocido", img: require("~/assets/img/cocido.jpg") },
-        { id: 7, name: "Postre", img: require("~/assets/img/postre1.jpg") },
-        { id: 8, name: "Cóctel", img: require("~/assets/img/coctel1.jpg") },
-        { id: 9, name: "Postre", img: require("~/assets/img/postre1.jpg") },
-        { id: 10, name: "Pizza", img: require("~/assets/img/pizza.jpg") },
-        { id: 11, name: "Cocido", img: require("~/assets/img/cocido.jpg") },
-        { id: 12, name: "Postre", img: require("~/assets/img/postre1.jpg") },
-        { id: 13, name: "Pizza", img: require("~/assets/img/pizza.jpg") },
-        { id: 14, name: "Cóctel", img: require("~/assets/img/coctel1.jpg") },
-        { id: 15, name: "Pizza", img: require("~/assets/img/pizza.jpg") },
-        { id: 16, name: "Postre", img: require("~/assets/img/postre1.jpg") },
+        { id: 1, name: "Cocido", img: "/img/cocido.jpg" },
+        { id: 2, name: "Postre", img: "/img/postre1.jpg" },
+        { id: 3, name: "Cóctel", img: "/img/coctel1.jpg" },
+        { id: 4, name: "Pizza", img: "/img/pizza.jpg" },
+        { id: 5, name: "Postre", img: "/img/postre1.jpg" },
+        { id: 6, name: "Cocido", img: "/img/cocido.jpg" },
+        { id: 7, name: "Postre", img: "/img/postre1.jpg" },
+        { id: 8, name: "Cóctel", img: "/img/coctel1.jpg" },
+        { id: 9, name: "Postre", img: "/img/postre1.jpg" },
+        { id: 10, name: "Pizza", img: "/img/pizza.jpg" },
+        { id: 11, name: "Cocido", img: "/img/cocido.jpg" },
+        { id: 12, name: "Postre", img: "/img/postre1.jpg" },
+        { id: 13, name: "Pizza", img: "/img/pizza.jpg" },
+        { id: 14, name: "Cóctel", img: "/img/coctel1.jpg" },
+        { id: 15, name: "Pizza", img: "/img/pizza.jpg" },
+        { id: 16, name: "Postre", img: "/img/postre1.jpg" },
       ],
     };
   },

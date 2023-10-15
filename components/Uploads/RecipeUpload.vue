@@ -4,20 +4,20 @@
       <h5>Título</h5>
       <b-row>
         <b-col class="col-md-8">
-          <b-form-group
+          <BFormGroup
             id="fieldset-title"
             class="input-container title-container"
             label-for="input-title"
           >
-            <b-form-input
+            <BFormInput
               id="input-title"
               class="input input-title"
               placeholder="Escribir título..."
               v-model="postRecipeData.title"
               autocomplete="off"
               trim
-            ></b-form-input>
-          </b-form-group>
+            ></BFormInput>
+          </BFormGroup>
         </b-col>
         <b-col class="col-md-4 subir-imagen">
           <label class="base-btn base-btn--img">
@@ -32,14 +32,14 @@
         Tiempo (mins
         <span class="fa fa-clock" aria-hidden="true"></span>)
       </h6>
-      <b-form-group
+      <BFormGroup
         id="fieldset-time"
         class="input-container time-container"
         label-for="input-time"
-        ><b-button class="time-btn"
-          ><div class="time-btn-content" @click="sumTime(-5)">-</div></b-button
+        ><BButton class="time-btn"
+          ><div class="time-btn-content" @click="sumTime(-5)">-</div></BButton
         >
-        <b-form-input
+        <BFormInput
           id="input-time"
           class="input time-input"
           placeholder=""
@@ -50,22 +50,22 @@
           autocomplete="off"
           v-click-outside="roundTime"
           onkeydown="return event.keyCode !== 69"
-        ></b-form-input
-        ><b-button class="time-btn" @click="sumTime(5)"
-          ><div class="time-btn-content">+</div></b-button
+        ></BFormInput
+        ><BButton class="time-btn" @click="sumTime(5)"
+          ><div class="time-btn-content">+</div></BButton
         >
-      </b-form-group>
+      </BFormGroup>
     </div>
     <div class="section">
       <h6>Descripción</h6>
       <b-row>
         <b-col class="col-md-11">
-          <b-form-group
+          <BFormGroup
             id="fieldset-descripcion"
             class="form-group-descripcion"
             label-for="input-descripcion"
           >
-            <b-form-textarea
+            <BFormTextarea
               id="input-descripcion"
               class="input textarea textarea-descripcion--articulo"
               placeholder=""
@@ -73,27 +73,27 @@
               maxlength="530"
               max-rows="8"
               trim
-            ></b-form-textarea>
-          </b-form-group>
+            ></BFormTextarea>
+          </BFormGroup>
         </b-col>
       </b-row>
     </div>
     <div class="section">
       <h6>Ingredientes</h6>
       <div>
-        <b-list-group-item
+        <BListGroupItem
           class="input-container"
           v-for="(recipeIngredient, index) in postRecipeData.recipeIngredients"
           :key="index"
         >
           <b-row>
             <b-col class="col-md-6">
-              <b-form-group
+              <BFormGroup
                 id="fieldset-literal"
                 class=""
                 label-for="input-literal"
               >
-                <b-form-input
+                <BFormInput
                   id="input-literal"
                   class="input input-literal"
                   placeholder="Ingrediente..."
@@ -102,7 +102,7 @@
                   @keydown="handleKeydown"
                   autocomplete="off"
                   trim
-                ></b-form-input>
+                ></BFormInput>
                 <div class="dropdown-container">
                   <div
                     v-if="showDropdown && index === currentInput"
@@ -119,30 +119,30 @@
                     </div>
                   </div>
                 </div>
-              </b-form-group>
+              </BFormGroup>
             </b-col>
             <b-col class="col-md-2">
-              <b-form-group
+              <BFormGroup
                 id="fieldset-cantidad"
                 class=""
                 label-for="input-cantidad"
               >
-                <b-form-input
+                <BFormInput
                   id="input-cantidad"
                   class="input input-cantidad"
                   placeholder="Cantidad..."
                   type="number"
                   v-model="recipeIngredient.amount"
                   trim
-                ></b-form-input>
-              </b-form-group>
+                ></BFormInput>
+              </BFormGroup>
             </b-col>
             <b-col class="col-md-3">
-              <b-form-select
+              <BFormSelect
                 class="input"
                 v-model="recipeIngredient.idUnit"
                 :options="getUnitsState.data"
-              ></b-form-select>
+              ></BFormSelect>
             </b-col>
             <b-col class="col-md-1">
               <button
@@ -153,7 +153,7 @@
               </button>
             </b-col>
           </b-row>
-        </b-list-group-item>
+        </BListGroupItem>
       </div>
       <div>
         <button
@@ -168,19 +168,19 @@
     <div class="section">
       <h6>Pasos</h6>
       <div>
-        <b-list-group-item
+        <BListGroupItem
           class="input-container input-container--paso"
           v-for="(step, index) in postRecipeData.steps"
           :key="index"
         >
           <b-row>
             <b-col class="col-md-11">
-              <b-form-group
+              <BFormGroup
                 id="fieldset-paso"
                 class="form-group-paso"
                 label-for="input-paso"
               >
-                <b-form-textarea
+                <BFormTextarea
                   id="input-paso"
                   class="input textarea"
                   placeholder="Escribir paso..."
@@ -188,8 +188,8 @@
                   max-rows="8"
                   v-model="postRecipeData.steps[index]"
                   trim
-                ></b-form-textarea>
-              </b-form-group>
+                ></BFormTextarea>
+              </BFormGroup>
             </b-col>
             <b-col class="col-md-1">
               <button
@@ -200,7 +200,7 @@
               </button>
             </b-col>
           </b-row>
-        </b-list-group-item>
+        </BListGroupItem>
       </div>
       <div>
         <button
@@ -235,7 +235,7 @@
   </div>
   <div v-else-if="newRecipeState.loading === 'error'">
     Ups, parece que algo falló. {{ newRecipeState.error }}
-    <b-button @click="setLoadingToWaiting()">Reintentar</b-button>
+    <BButton @click="setLoadingToWaiting()">Reintentar</BButton>
   </div>
 </template>
 

@@ -1,38 +1,38 @@
 <template>
   <div class="container">
     <div class="login-card">
-      <b-form-group
+      <BFormGroup
         id="fieldset-email"
         class="input-container email-container"
         label="Email"
         label-for="input-email"
         :state="emailState"
       >
-        <b-form-input
+        <BFormInput
           id="input-email"
           class="input"
           v-model="email"
           :state="emailState"
           trim
-        ></b-form-input>
-      </b-form-group>
-      <b-form-group
+        ></BFormInput>
+      </BFormGroup>
+      <BFormGroup
         id="fieldset-password"
         class="input-container pass-container"
         label="Contraseña"
         label-for="input-password"
         :state="passwordState"
       >
-        <b-form-input
+        <BFormInput
           id="input-password"
           class="input"
           v-model="password"
           :state="passwordState"
           trim
-        ></b-form-input>
-      </b-form-group>
+        ></BFormInput>
+      </BFormGroup>
       <a href="#" class="contrasena-olvidada">¿Ha olvidado la contraseña?</a>
-      <b-button class="login-button"> Login </b-button>
+      <BButton class="login-button"> Login </BButton>
     </div>
   </div>
 </template>
@@ -48,7 +48,7 @@ export default {
     passwordState() {
       if (this.password.length == 0) return null;
       return this.password.length >= 4;
-    }
+    },
   },
   data() {
     return {

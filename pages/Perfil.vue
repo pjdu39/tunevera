@@ -11,10 +11,9 @@
             </div>
           </div>
         </div>
-        <div class="rank-img">
-        </div>
+        <div class="rank-img"></div>
       </b-col>
-      <b-col  md="7" class="main-info">
+      <b-col md="7" class="main-info">
         <b-row>
           <b-col md="6">
             <div class="perfil-info-box">
@@ -33,8 +32,8 @@
           </b-col>
         </b-row>
         <div class="descripcion">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Lorem ipsum,
+          dolor sit amet consectetur adipisicing elit.
         </div>
       </b-col>
     </b-row>
@@ -53,12 +52,12 @@
       <div class="separacion-titulo">RECETAS</div>
     </div> -->
     <div class="recetas">
-      <b-list-group-item
+      <BListGroupItem
         :class="'group-item-container ' + derechaIzquierda(index, 'group-item')"
         v-for="(receta, index) in recetasDummy"
         :key="index"
       >
-        <a :class="('receta-globo ' + derechaIzquierda(index, 'globo'))" href="#">
+        <a :class="'receta-globo ' + derechaIzquierda(index, 'globo')" href="#">
           <div v-if="index % 2 === 0" class="wrapper-dibujo">
             <img class="dibujo" :src="seleccionaDibujo()" />
           </div>
@@ -70,7 +69,7 @@
             <img class="dibujo" :src="seleccionaDibujo()" />
           </div>
         </a>
-      </b-list-group-item>
+      </BListGroupItem>
     </div>
   </div>
 </template>
@@ -84,61 +83,64 @@ export default {
         nombreCompleto: "Juan Pérez Delgado",
         publicaciones: 28,
         seguidores: 143,
-        img: require("~/assets/img/foto_perfil2.jpg")
+        img: import("/img/foto_perfil2.jpg"),
       },
       recetasDummy: [
         {
           id: 1,
-          nombre: 'Huevos Rellenos',
+          nombre: "Huevos Rellenos",
           descripcion:
             "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
         },
         {
           id: 2,
-          nombre: 'Café Irlandés',
+          nombre: "Café Irlandés",
           descripcion:
             "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
         },
         {
           id: 3,
-          nombre: 'Cocido Madrileño',
+          nombre: "Cocido Madrileño",
           descripcion:
             "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
         },
         {
           id: 4,
-          nombre: 'Pavo Relleno',
+          nombre: "Pavo Relleno",
           descripcion:
             "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
         },
       ],
       dibujosComida: [
-        { name: "comida1", img: require("~/assets/img/food_draw_1.png") },
-        { name: "comida2", img: require("~/assets/img/food_draw_2.png") },
-        { name: "comida3", img: require("~/assets/img/food_draw_3.png") }
-      ]
-    }
+        { name: "comida1", img: import("/img/food_draw_1.png") },
+        { name: "comida2", img: import("/img/food_draw_2.png") },
+        { name: "comida3", img: import("/img/food_draw_3.png") },
+      ],
+    };
   },
   methods: {
     derechaIzquierda(index, element) {
-      if (element === 'group-item') {
-        return index % 2 === 0 ? 'group-item-container--izquierda' : 'group-item-container--derecha'
-      } else if (element === 'globo') {
-        return index % 2 === 0 ? 'receta-globo--izquierda' : 'receta-globo--derecha'
+      if (element === "group-item") {
+        return index % 2 === 0
+          ? "group-item-container--izquierda"
+          : "group-item-container--derecha";
+      } else if (element === "globo") {
+        return index % 2 === 0
+          ? "receta-globo--izquierda"
+          : "receta-globo--derecha";
       }
 
-      return ''
+      return "";
     },
     seleccionaDibujo() {
-      let r = Math.floor(Math.random() * 3)
-      return this.dibujosComida[r].img
-    }
-  }
-}
+      let r = Math.floor(Math.random() * 3);
+      return this.dibujosComida[r].img;
+    },
+  },
+};
 </script>
 
 <style>
-
 .fixed-col {
   padding-left: 0;
 }
@@ -221,7 +223,7 @@ export default {
 }
 
 .main-info {
-  padding: .5rem .5rem .5rem 0;
+  padding: 0.5rem 0.5rem 0.5rem 0;
 }
 
 .perfil-info-box {
@@ -232,7 +234,7 @@ export default {
 .perfil-info-num {
   font-size: 160%;
   font-weight: 600;
-  margin-bottom: .4rem;
+  margin-bottom: 0.4rem;
 }
 .perfil-info-lit {
   font-weight: 350;
@@ -241,7 +243,6 @@ export default {
 }
 
 .descripcion {
-
 }
 
 .wrapper-separacion {
@@ -259,7 +260,7 @@ export default {
 
 .separacion-titulo {
   text-align: center;
-  margin-top: -.7rem;
+  margin-top: -0.7rem;
 }
 
 .recetas {
@@ -299,11 +300,11 @@ export default {
 
 .info_receta {
   vertical-align: middle;
-  margin: 0 .9rem 0 .9rem;
+  margin: 0 0.9rem 0 0.9rem;
 }
 
 .wrapper-dibujo {
-  margin: 0 0 .4rem 0;
+  margin: 0 0 0.4rem 0;
   display: inline-block;
   width: 7rem; /* Valorar poner el mismo valor que en height por motivos de wrapping si hiciera falta. */
   height: auto;
@@ -329,5 +330,4 @@ export default {
   margin-top: -1rem;
   margin-left: 41%;
 } */
-
 </style>

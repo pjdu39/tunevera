@@ -1,18 +1,19 @@
 <template>
   <div class="mainBox">
-    <b-tabs content-class="mt-3" class="tab-option">
+    <!-- TODO: Los tabs no tienen soporte aún en Bootstrap Vue Next. Comentarlos y crearlos manualmente hasta que existan. -->
+    <BTabs content-class="mt-3" class="tab-option">
       <div class="page">
-        <b-tab title="Receta" @click="cleanData">
+        <BTab title="Receta" @click="cleanData">
           <RecipeUpload />
-        </b-tab>
-        <b-tab title="Encuesta" @click="cleanData">
+        </BTab>
+        <BTab title="Encuesta" @click="cleanData">
           <PollUpload />
-        </b-tab>
-        <b-tab title="Artículo" @click="cleanData">
+        </BTab>
+        <BTab title="Artículo" @click="cleanData">
           <DiscussionUpload />
-        </b-tab>
+        </BTab>
       </div>
-    </b-tabs>
+    </BTabs>
   </div>
 </template>
 

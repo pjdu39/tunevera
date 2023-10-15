@@ -4,19 +4,19 @@
       <h5>Tema</h5>
       <b-row>
         <b-col class="col-md-11">
-          <b-form-group
+          <BFormGroup
             id="fieldset-title"
             class="input-container title-container"
             label-for="input-title"
           >
-            <b-form-input
+            <BFormInput
               id="input-title"
               class="input input-title"
               placeholder="¿Sobre qué quieres hablar?"
               v-model="postDiscussionData.title"
               trim
-            ></b-form-input>
-          </b-form-group>
+            ></BFormInput>
+          </BFormGroup>
         </b-col>
       </b-row>
     </div>
@@ -24,19 +24,19 @@
       <h6>Cuerpo</h6>
       <b-row>
         <b-col class="col-md-11">
-          <b-form-group
+          <BFormGroup
             id="fieldset-cuerpo"
             class="form-group-cuerpo"
             label-for="input-cuerpo"
           >
-            <b-form-textarea
+            <BFormTextarea
               id="input-cuerpo"
               class="input textarea-cuerpo"
               placeholder="Cuerpo de texto (opcional)"
               v-model="postDiscussionData.description"
               trim
-            ></b-form-textarea>
-          </b-form-group>
+            ></BFormTextarea>
+          </BFormGroup>
         </b-col>
       </b-row>
     </div>

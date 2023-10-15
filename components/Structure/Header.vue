@@ -1,13 +1,13 @@
 <template>
   <div class="header">
     <div class="secondary-options-banner">
-      <b-button
+      <BButton
         v-click-outside="onClickOutside"
         class="secondary-options-button"
         @click="opcionesGear = !opcionesGear"
       >
         <span class="fa fa-cog" aria-hidden="true"></span>
-      </b-button>
+      </BButton>
       <div v-if="opcionesGear" class="gear-options-container">
         <nuxt-link to="/Explorar" class="gear-option"> General </nuxt-link>
         <nuxt-link to="/Explorar" class="gear-option"> Perfil </nuxt-link>
@@ -15,10 +15,10 @@
       </div>
     </div>
     <div class="navbar-main-container">
-      <b-navbar toggleable="lg">
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-        <b-collapse id="nav-collapse" is-nav>
-          <b-navbar-nav class="main-navbar">
+      <BNavbar toggleable="lg" class="main-navbar">
+        <BNavbarToggle target="nav-collapse"></BNavbarToggle>
+        <BCollapse id="nav-collapse" is-nav>
+          <BNavbarNav>
             <nuxt-link to="/" class="option">
               <!-- Casita -->
               <span class="fa fa-home" aria-hidden="true"></span>
@@ -35,12 +35,12 @@
               <!-- Icono Usuario -->
               <span class="fa fa-user" aria-hidden="true"></span>
             </nuxt-link>
-          </b-navbar-nav>
-        </b-collapse>
-      </b-navbar>
+          </BNavbarNav>
+        </BCollapse>
+      </BNavbar>
     </div>
 
-    <!-- <b-img class="" src="~/assets/img/banner.jpg"></b-img> -->
+    <!-- <BImg class="" src="~/assets/img/banner.jpg"></BImg> -->
   </div>
 </template>
 
@@ -119,6 +119,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
+/* TODO: Borrar. Parece que esta clase ya no está en Bootstrap Vue Next. Además, display: contents no tiene nada que ver con el significado de la clase. */
 .navbar-light {
   display: contents;
 }

@@ -28,7 +28,7 @@
           <div class="section">
             <h5 class="section--receta">Ingredientes</h5>
             <ul>
-              <b-list-group-item
+              <BListGroupItem
                 class="group-item-container"
                 v-for="(ingredient, index) in data.ingredients"
                 :key="index"
@@ -42,12 +42,12 @@
                     ingredient.text
                   }}
                 </li>
-              </b-list-group-item>
+              </BListGroupItem>
             </ul>
           </div>
           <div class="section">
             <h5 class="section--receta"></h5>
-            <b-list-group-item
+            <BListGroupItem
               class="group-item-container"
               v-for="(step, index) in data.steps"
               :key="index"
@@ -56,7 +56,7 @@
                 <div class="num-paso-wrapper">{{ index + 1 }}</div>
                 <div class="paso">{{ step.text }}</div>
               </div>
-            </b-list-group-item>
+            </BListGroupItem>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@ export default {
         nombreCompleto: "Juan Pérez Delgado",
         publicaciones: 28,
         seguidores: 143,
-        img: require("~/assets/img/foto_perfil2.jpg"),
+        img: import("~/assets/img/foto_perfil2.jpg"),
       },
     };
   },

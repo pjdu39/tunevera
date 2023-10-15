@@ -17,22 +17,27 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@pinia/nuxt": "^0.5.0",
-    "bootstrap": "^5.3.2",
-    "bootstrap-vue-next": "^0.14.8",
     "core-js": "^3.15.1",
     "nuxt": "^3.7.4",
     "nuxt3": "^3.8.0-28284309.b3d3d7f4",
+    "pinia": "^2.1.7",
     "sass": "^1.69.3",
     "tsc": "^2.0.4",
     "typescript": "^5.2.2",
     "v-click-outside": "^3.2.0"
   },
   "devDependencies": {
+    "@bootstrap-vue-next/nuxt": "^0.14.9",
     "@nuxt/types": "^2.17.1",
     "@nuxt/typescript-build": "^3.0.1",
     "@nuxt/typescript-runtime": "^3.0.1",
     "@nuxtjs/style-resources": "^1.2.1",
     "@types/node": "^20.8.6",
+    "bootstrap": "^5.3.2",
+    "bootstrap-vue-next": "^0.14.9",
     "unplugin-vue-components": "^0.25.2"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }
