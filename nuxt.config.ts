@@ -10,7 +10,7 @@ const appEnv: Environment  = process.env.NODE_ENV as Environment
 
 const config: NuxtConfig = {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
+  ssr: true,
   
   // Manejo de entornos en tiempo de ejecución. Se hace así desde la nuxt 2.13
   /*
@@ -90,6 +90,8 @@ const config: NuxtConfig = {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  devtools: { enabled: true },
 };
 
 export default config;

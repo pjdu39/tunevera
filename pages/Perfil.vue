@@ -83,7 +83,7 @@ export default {
         nombreCompleto: "Juan Pérez Delgado",
         publicaciones: 28,
         seguidores: 143,
-        img: import("/img/foto_perfil2.jpg"),
+        img: "/img/foto_perfil2.jpg",
       },
       recetasDummy: [
         {
@@ -112,9 +112,9 @@ export default {
         },
       ],
       dibujosComida: [
-        { name: "comida1", img: import("/img/food_draw_1.png") },
-        { name: "comida2", img: import("/img/food_draw_2.png") },
-        { name: "comida3", img: import("/img/food_draw_3.png") },
+        { name: "comida1", img: "/img/food_draw_1.png" },
+        { name: "comida2", img: "/img/food_draw_2.png" },
+        { name: "comida3", img: "/img/food_draw_3.png" },
       ],
     };
   },
