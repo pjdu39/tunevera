@@ -92,7 +92,6 @@ export const useUploadsStore = defineStore({
                 this.setPollData(response.data);
                 this.setPollLoading('loaded');
                 this.setPollError(null);
-                console.log('loaded');
             }
             catch(error) {
                 this.setPollData(null);
@@ -108,7 +107,6 @@ export const useUploadsStore = defineStore({
                 this.setDiscussionData(response.data);
                 this.setDiscussionLoading('loaded');
                 this.setDiscussionError(null);
-                console.log('loaded');
             }
             catch(error) {
                 this.setDiscussionData(null);

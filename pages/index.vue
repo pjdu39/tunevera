@@ -164,15 +164,15 @@ export default {
     },
     loading() {
       const store = useBoardStore();
-      return store.data;
+      return store.loading;
     },
     error() {
       const store = useBoardStore();
-      return store.data;
+      return store.error;
     },
   },
   created() {
-    this.fetchData(50);
+    this.fetchData()(50);
   },
   watch: {
     data(newVal, oldVal) {

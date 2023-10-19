@@ -1,12 +1,16 @@
 import type { NuxtConfig } from '@nuxt/types'
+import dotenv from 'dotenv';
 /*
 import { defineNuxtConfig } from 'nuxt/config'
 import { BootstrapVueNext } from 'bootstrap-vue-next';
 */
 
-import { Environment, GlobalSettings } from "./store/envSettings";
+//import { Environment, GlobalSettings } from "./store/envSettings";
 
-const appEnv: Environment  = process.env.NODE_ENV as Environment
+// const appEnv: Environment  = process.env.NODE_ENV as Environment
+
+const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
+dotenv.config({ path: envFile });
 
 const config: NuxtConfig = {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -23,6 +27,20 @@ const config: NuxtConfig = {
   runtimeConfig: {
     // KEYs...
     public: {
+      env: envFile,
+      apiUrl: process.env.API_URL,
+      port: process.env.PORT
+    }
+    
+  },
+  server: {
+    port: process.env.PORT || 3000,
+    host: process.env.HOST || 'localhost',
+  },
+ /*
+  runtimeConfig: {
+    // KEYs...
+    public: {
       env: appEnv,
       apiUrl: GlobalSettings[appEnv].apiUrl,
       port: GlobalSettings[appEnv].port
@@ -33,6 +51,7 @@ const config: NuxtConfig = {
     port: GlobalSettings[appEnv].port || 3000,
     host: GlobalSettings[appEnv].host || 'localhost',
   },
+  */
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {

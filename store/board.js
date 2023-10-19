@@ -18,11 +18,18 @@ export const useBoardStore = defineStore({
             this.error = payload
         },
         async fetchData(numElements) {
+            const apiUrl = useRuntimeConfig().public.apiUrl;
+            
             this.setLoading('loading');
             try {
-                const response = await this.$axios.get(`${this.$config.apiUrl}GetBoardElements?NumElements=${ numElements }`);
+                const httpResponse = await fetch(`${apiUrl}GetBoardElements?NumElements=${ numElements }`);
+
+                if (!httpResponse.ok) throw new Error('Error en el fetch');
+                
+                const response = await httpResponse.json();
+                
                 this.setLoading('loaded');
-                this.setData(response.data);
+                this.setData(response);
                 this.setError(null);
             }
             catch(error) {

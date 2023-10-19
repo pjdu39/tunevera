@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "stg": "node start-stg.js",
-    "dev": "nuxi dev",
+    "stg": "nuxi dev --dotenv .env.staging",
+    "dev": "nuxi dev --dotenv .env.development",
     "build": "nuxi build",
     "build:dev": "set NODE_ENV=development&&nuxi build --devtools",
     "start": "nuxi start",
@@ -18,6 +18,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@pinia/nuxt": "^0.5.0",
     "core-js": "^3.15.1",
+    "dotenv": "^16.3.1",
     "nuxt": "^3.7.4",
     "nuxt3": "^3.8.0-28284309.b3d3d7f4",
     "pinia": "^2.1.7",
