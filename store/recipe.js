@@ -3,41 +3,41 @@ import { defineStore } from 'pinia';
 export const useRecipeStore = defineStore({
     id: 'recipeStore',
     state: () => ({
-        data: null,
-        loading: 'waiting',
-        error: null
+        getRecipeState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        }
     }),
     actions: {
-        setData(payload) {
-            this.data = payload;
+        setRecipeData(payload) {
+            this.getRecipeState.data = payload;
         },
-        setLoading(payload) {
-            this.loading = payload;
+        setRecipeLoading(payload) {
+            this.getRecipeState.loading = payload;
         },
-        setError(payload) {
-            this.error = payload;
+        setRecipeError(payload) {
+            this.getRecipeState.error = payload;
         },
-        async fetchData(id) {
+        async fetchRecipeData(id) {
             const apiUrl = useRuntimeConfig().public.apiUrl;
 
-            this.setLoading('loading');
+            this.setRecipeLoading('loading');
             try {
                 const httpResponse = await fetch(`${ apiUrl }GetRecipe?IdRecipe=${ id }`);
 
                 if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
                 
                 const response = await httpResponse.json();
-                console.log(response)
 
-                this.setData(response);
-                this.setLoading('loaded');
-                this.setError(null);
+                this.setRecipeData(response);
+                this.setRecipeLoading('loaded');
+                this.setRecipeError(null);
             }
             catch(error) {
-                this.setData(null);
-                this.setLoading('waiting');
-                this.setError(error.message);
-                console.log(error)
+                this.setRecipeData(null);
+                this.setRecipeLoading('waiting');
+                this.setRecipeError(error.message);
             }
         }
     }

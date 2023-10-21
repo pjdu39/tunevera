@@ -2,15 +2,19 @@
   <div>
     <div class="main-container">
       <div class="page">
-        <div v-if="loading === 'waiting'">Waiting {{ data }}</div>
-        <div v-if="loading === 'loading'" class="spinner">
+        <div v-if="getRecipeState.loading === 'waiting'">
+          Waiting {{ getRecipeState.data }}
+        </div>
+        <div v-if="getRecipeState.loading === 'loading'" class="spinner">
           <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
         </div>
-        <div v-else-if="loading === 'loaded'">
+        <div v-else-if="getRecipeState.loading === 'loaded'">
           <div class="section flex">
             <div class="title-section">
-              <h2 class="title">{{ data.title }}</h2>
-              <div class="descripcion">{{ data.description }}</div>
+              <h2 class="title">{{ getRecipeState.data.title }}</h2>
+              <div class="descripcion">
+                {{ getRecipeState.data.description }}
+              </div>
             </div>
             <div class="author-section">
               <b-row>
@@ -30,7 +34,7 @@
             <ul>
               <BListGroupItem
                 class="group-item-container"
-                v-for="(ingredient, index) in data.ingredients"
+                v-for="(ingredient, index) in getRecipeState.data.ingredients"
                 :key="index"
               >
                 <li>
@@ -49,7 +53,7 @@
             <h5 class="section--receta"></h5>
             <BListGroupItem
               class="group-item-container"
-              v-for="(step, index) in data.steps"
+              v-for="(step, index) in getRecipeState.data.steps"
               :key="index"
             >
               <div class="section section--paso">
@@ -80,29 +84,19 @@ export default {
     };
   },
   computed: {
-    // TODO: Considerar meter estos elementos de la store en un solo elemento que contenga {data, loading, error} como en uploads.
-    // También habría que cambiarlo en la store.
-    data() {
+    getRecipeState() {
       const store = useRecipeStore();
-      return store.data;
-    },
-    loading() {
-      const store = useRecipeStore();
-      return store.loading;
-    },
-    error() {
-      const store = useRecipeStore();
-      return store.error;
+      return store.getRecipeState;
     },
   },
   methods: {
-    fetchData() {
+    fetchRecipeData() {
       const store = useRecipeStore();
-      return store.fetchData;
+      return store.fetchRecipeData;
     },
   },
   mounted() {
-    this.fetchData()(12); // TODO: Recibir este valor por url.
+    this.fetchRecipeData()(12); // TODO: Recibir este valor por url.
   },
 };
 </script>
