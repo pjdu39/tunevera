@@ -88,11 +88,11 @@ export default {
     },
     loading() {
       const store = useRecipeStore();
-      return store.data;
+      return store.loading;
     },
     error() {
       const store = useRecipeStore();
-      return store.data;
+      return store.error;
     },
   },
   methods: {
@@ -102,7 +102,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchData(17); // TODO: Recibir este valor por url.
+    this.fetchData()(12); // TODO: Recibir este valor por url.
   },
 };
 </script>

@@ -18,10 +18,18 @@ export const useRecipeStore = defineStore({
             this.error = payload;
         },
         async fetchData(id) {
+            const apiUrl = useRuntimeConfig().public.apiUrl;
+
             this.setLoading('loading');
             try {
-                const response = await this.$axios.get(`https://localhost:7069/GetRecipe?IdRecipe=${ id }`);
-                this.setData(response.data);
+                const httpResponse = await fetch(`${ apiUrl }GetRecipe?IdRecipe=${ id }`);
+
+                if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
+                
+                const response = await httpResponse.json();
+                console.log(response)
+
+                this.setData(response);
                 this.setLoading('loaded');
                 this.setError(null);
             }
@@ -29,6 +37,7 @@ export const useRecipeStore = defineStore({
                 this.setData(null);
                 this.setLoading('waiting');
                 this.setError(error.message);
+                console.log(error)
             }
         }
     }

@@ -22,14 +22,14 @@ export const useBoardStore = defineStore({
             
             this.setLoading('loading');
             try {
-                const httpResponse = await fetch(`${apiUrl}GetBoardElements?NumElements=${ numElements }`);
+                const httpResponse = await fetch(`${ apiUrl }GetBoardElements?NumElements=${ numElements }`);
 
-                if (!httpResponse.ok) throw new Error('Error en el fetch');
+                if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
                 
                 const response = await httpResponse.json();
                 
-                this.setLoading('loaded');
                 this.setData(response);
+                this.setLoading('loaded');
                 this.setError(null);
             }
             catch(error) {
