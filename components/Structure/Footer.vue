@@ -6,16 +6,16 @@
         <BCollapse id="nav-collapse" is-nav>
           <BNavbarNav>
             <BNavItem href="#">
-              <span class="fa fa-cog" aria-hidden="true"></span>
+              <font-awesome-icon icon="fa fa-cog" aria-hidden="true" />
             </BNavItem>
             <BNavItem href="#">
-              <span class="fa fa-legal" aria-hidden="true"></span>
+              <font-awesome-icon icon="fa fa-legal" aria-hidden="true" />
             </BNavItem>
             <BNavItem href="#">
-              <span class="fa fa-star" aria-hidden="true"></span>
+              <font-awesome-icon icon="fa fa-star" aria-hidden="true" />
             </BNavItem>
             <BNavItem href="#">
-              <span class="fa fa-envelope" aria-hidden="true"></span>
+              <font-awesome-icon icon="fa fa-envelope" aria-hidden="true" />
             </BNavItem>
           </BNavbarNav>
         </BCollapse>

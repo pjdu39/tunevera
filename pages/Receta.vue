@@ -6,7 +6,11 @@
           Waiting {{ getRecipeState.data }}
         </div>
         <div v-if="getRecipeState.loading === 'loading'" class="spinner">
-          <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
+          <font-awesome-icon
+            icon="fa-solid fa-spinner"
+            class="fa-spin-pulse fa-lg"
+            aria-hidden="true"
+          />
         </div>
         <div v-else-if="getRecipeState.loading === 'loaded'">
           <div class="section flex">

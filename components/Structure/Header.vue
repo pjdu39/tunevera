@@ -6,7 +6,7 @@
         class="secondary-options-button"
         @click="opcionesGear = !opcionesGear"
       >
-        <span class="fa fa-cog" aria-hidden="true"></span>
+        <font-awesome-icon icon="fa fa-cog" aria-hidden="true" />
       </BButton>
       <div v-if="opcionesGear" class="gear-options-container">
         <nuxt-link to="/Explorar" class="gear-option"> General </nuxt-link>
@@ -20,20 +20,16 @@
         <BCollapse id="nav-collapse" is-nav>
           <BNavbarNav>
             <nuxt-link to="/" class="option">
-              <!-- Casita -->
-              <span class="fa fa-home" aria-hidden="true"></span>
+              <font-awesome-icon icon="fa fa-home" aria-hidden="true" />
             </nuxt-link>
             <nuxt-link to="/Explorar" class="option">
-              <!-- Lupa -->
-              <span class="fa fa-search" aria-hidden="true"></span>
+              <font-awesome-icon icon="fa fa-search" aria-hidden="true" />
             </nuxt-link>
             <nuxt-link to="/Uploads" class="option">
-              <!-- Algo parecido a un "+" -->
-              <span class="fa fa-cloud-upload" aria-hidden="true"></span>
+              <font-awesome-icon icon="fa fa-cloud-upload" aria-hidden="true" />
             </nuxt-link>
             <nuxt-link to="/Perfil" class="option">
-              <!-- Icono Usuario -->
-              <span class="fa fa-user" aria-hidden="true"></span>
+              <font-awesome-icon icon="fa fa-user" aria-hidden="true" />
             </nuxt-link>
           </BNavbarNav>
         </BCollapse>

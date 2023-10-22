@@ -14,6 +14,20 @@
         </BTab>
       </div>
     </BTabs>
+
+    <TabView content-class="mt-3" class="tab-option">
+      <div class="page">
+        <TabPanel header="Receta" @click="cleanData">
+          <RecipeUpload />
+        </TabPanel>
+        <TabPanel header="Encuesta" @click="cleanData">
+          <PollUpload />
+        </TabPanel>
+        <TabPanel header="Artículo" @click="cleanData">
+          <DiscussionUpload />
+        </TabPanel>
+      </div>
+    </TabView>
   </div>
 </template>
 
@@ -22,6 +36,8 @@ import vClickOutside from "v-click-outside";
 import DiscussionUpload from "~/components/Uploads/DiscussionUpload.vue";
 import PollUpload from "~/components/Uploads/PollUpload.vue";
 import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
 export default {
   directives: {
     clickOutside: vClickOutside.directive,
@@ -30,6 +46,8 @@ export default {
     DiscussionUpload,
     PollUpload,
     RecipeUpload,
+    TabView,
+    TabPanel,
   },
   data() {
     return {

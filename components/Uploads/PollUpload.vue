@@ -49,7 +49,7 @@
                 class="base-btn base-btn--quitar"
                 @click="EliminaRespuesta(option)"
               >
-                <span class="fa fa-times" aria-hidden="true"></span>
+                <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
               </button>
             </b-col>
           </b-row>
@@ -61,7 +61,11 @@
           @click="OtraRespuesta()"
           :disabled="!PuedeAnadirRespuesta"
         >
-          <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
+          <font-awesome-icon
+            icon="fa fa-plus"
+            class="fa-lg"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>
@@ -81,7 +85,11 @@
     </div>
   </div>
   <div v-else-if="newPollState.loading === 'loading'" class="spinner">
-    <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
+    <font-awesome-icon
+      icon="fa fa-spinner"
+      class="fa-pulse fa-lg"
+      aria-hidden="true"
+    />
   </div>
   <div v-else-if="newPollState.loading === 'loaded'">Encuesta publicada.</div>
   <div v-else-if="newPollState.loading === 'error'">Error</div>

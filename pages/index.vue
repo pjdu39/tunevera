@@ -16,7 +16,7 @@
         <h4 class="titulo">{{ element.title }}</h4>
         <div v-if="element.type === 'Receta'" class="tiempo">
           {{ element.time }}min
-          <span class="fa fa-clock" aria-hidden="true"></span>
+          <font-awesome-icon icon="fa fa-clock" aria-hidden="true" />
         </div>
       </div>
       <div>{{ element.description }}</div>
@@ -47,11 +47,11 @@
       </div>
       <div class="interacciones">
         <div class="likes">
-          <span class="fa fa-heart" aria-hidden="true"></span>
+          <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
         </div>
         <div class="num">{{ element.likes }}</div>
         <div class="comentarios">
-          <span class="fa fa-comment" aria-hidden="true"></span>
+          <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
         </div>
         <!-- <div class="num">{{ element.comentarios.length }}</div> -->
       </div>

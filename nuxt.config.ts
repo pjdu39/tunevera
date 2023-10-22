@@ -73,7 +73,8 @@ const config: NuxtConfig = {
     // SCSS file in the project
     "~/assets/scss/styles.scss",
     "@fortawesome/fontawesome-svg-core/styles.css",
-    "bootstrap/dist/css/bootstrap.min.css"
+    "bootstrap/dist/css/bootstrap.min.css",
+    "primevue/resources/themes/bootstrap4-light-blue/theme.css"
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -97,7 +98,8 @@ const config: NuxtConfig = {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     "@bootstrap-vue-next/nuxt",
-    "@pinia/nuxt"
+    "@pinia/nuxt",
+    "nuxt-primevue"
   ],
   pinia: {
     autoImports: [
@@ -106,9 +108,22 @@ const config: NuxtConfig = {
       ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
     ],
   },
+  primevue: {
+    options: {
+      ripple: true
+    },
+    theme: "aria-light-teal"
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: [
+    '@fortawesome/vue-fontawesome',
+    '@fortawesome/fontawesome-svg-core',
+    '@fortawesome/free-solid-svg-icons',
+    '@fortawesome/free-regular-svg-icons',
+    '@fortawesome/free-brands-svg-icons'
+]},
 
   devtools: { enabled: true },
 };

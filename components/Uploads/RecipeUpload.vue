@@ -22,7 +22,11 @@
         <b-col class="col-md-4 subir-imagen">
           <label class="base-btn base-btn--img">
             <input type="file" :v-model="foto" />
-            <span class="fa fa-camera-retro fa-lg" aria-hidden="true"></span>
+            <font-awesome-icon
+              icon="fa fa-camera-retro"
+              class="fa-lg"
+              aria-hidden="true"
+            />
           </label>
         </b-col>
       </b-row>
@@ -30,7 +34,7 @@
     <div class="section">
       <h6>
         Tiempo (mins
-        <span class="fa fa-clock" aria-hidden="true"></span>)
+        <font-awesome-icon icon="fa fa-clock" aria-hidden="true" />)
       </h6>
       <BFormGroup
         id="fieldset-time"
@@ -149,7 +153,7 @@
                 class="base-btn base-btn--quitar"
                 @click="EliminaIngrediente(recipeIngredient)"
               >
-                <span class="fa fa-times" aria-hidden="true"></span>
+                <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
               </button>
             </b-col>
           </b-row>
@@ -161,7 +165,11 @@
           @click="OtroIngrediente()"
           :disabled="!PuedeAnadirIngrediente"
         >
-          <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
+          <font-awesome-icon
+            icon="fa fa-plus"
+            class="fa-lg"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>
@@ -196,7 +204,7 @@
                 class="base-btn base-btn--quitar"
                 @click="EliminaPaso(step)"
               >
-                <span class="fa fa-times" aria-hidden="true"></span>
+                <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
               </button>
             </b-col>
           </b-row>
@@ -208,7 +216,11 @@
           @click="OtroPaso()"
           :disabled="!PuedeAnadirPaso"
         >
-          <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
+          <font-awesome-icon
+            icon="fa fa-plus"
+            class="fa-lg"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>
@@ -228,7 +240,11 @@
     </div>
   </div>
   <div v-else-if="newRecipeState.loading === 'loading'" class="spinner">
-    <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
+    <font-awesome-icon
+      icon="fa fa-spinner"
+      class="fa-pulse fa-lg"
+      aria-hidden="true"
+    />
   </div>
   <div v-else-if="newRecipeState.loading === 'loaded'">
     Wow! Eso tiene buena pinta! Se ha añadido a tus recetas

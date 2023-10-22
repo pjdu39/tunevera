@@ -56,7 +56,11 @@
     </div>
   </div>
   <div v-else-if="newDiscussionState.loading === 'loading'" class="spinner">
-    <span class="fa fa-spinner fa-pulse fa-lg" aria-hidden="true"></span>
+    <font-awesome-icon
+      icon="fa fa-spinner"
+      class="fa-pulse fa-lg"
+      aria-hidden="true"
+    />
   </div>
   <div v-else-if="newDiscussionState.loading === 'loaded'">
     Artículo publicado con éxito.

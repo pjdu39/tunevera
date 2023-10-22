@@ -21,9 +21,9 @@
                         class="buscador-ingredientes"
                         placeholder="Buscar ingrediente..."
                       ></BFormInput>
-                      <BButton class="button add-button"
-                        ><span class="fa fa-plus" aria-hidden="true"></span
-                      ></BButton>
+                      <BButton class="button add-button">
+                        <font-awesome-icon icon="fa fa-plus" aria-hidden="true"
+                      /></BButton>
                     </div>
                     <div class="vege-options">
                       <BFormCheckbox
@@ -62,9 +62,11 @@
                         class="buscador-ingredientes"
                         placeholder="Buscar tag..."
                       ></BFormInput>
-                      <BButton class="button add-button"
-                        ><span class="fa fa-search" aria-hidden="true"></span
-                      ></BButton>
+                      <BButton class="button add-button">
+                        <font-awesome-icon
+                          icon="fa fa-search"
+                          aria-hidden="true"
+                      /></BButton>
                     </div>
                   </div>
                 </b-col>
