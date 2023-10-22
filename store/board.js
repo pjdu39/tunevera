@@ -17,7 +17,7 @@ export const useBoardStore = defineStore({
         setError(payload) {
             this.error = payload
         },
-        async fetchData(numElements) {
+        async fetchBoardElements(numElements) {
             const apiUrl = useRuntimeConfig().public.apiUrl;
             
             this.setLoading('loading');
@@ -26,9 +26,9 @@ export const useBoardStore = defineStore({
 
                 if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
                 
-                const response = await httpResponse.json();
+                const data = await httpResponse.json();
                 
-                this.setData(response);
+                this.setData(data);
                 this.setLoading('loaded');
                 this.setError(null);
             }

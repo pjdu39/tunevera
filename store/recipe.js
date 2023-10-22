@@ -19,7 +19,7 @@ export const useRecipeStore = defineStore({
         setRecipeError(payload) {
             this.getRecipeState.error = payload;
         },
-        async fetchRecipeData(id) {
+        async fetchRecipe(id) {
             const apiUrl = useRuntimeConfig().public.apiUrl;
 
             this.setRecipeLoading('loading');
@@ -28,9 +28,9 @@ export const useRecipeStore = defineStore({
 
                 if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
                 
-                const response = await httpResponse.json();
+                const data = await httpResponse.json();
 
-                this.setRecipeData(response);
+                this.setRecipeData(data);
                 this.setRecipeLoading('loaded');
                 this.setRecipeError(null);
             }

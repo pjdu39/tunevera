@@ -172,7 +172,7 @@ export default {
     },
   },
   created() {
-    this.fetchData()(50);
+    this.fetchBoardElements()(50);
   },
   watch: {
     data(newVal, oldVal) {
@@ -181,9 +181,9 @@ export default {
     },
   },
   methods: {
-    fetchData() {
+    fetchBoardElements() {
       const store = useBoardStore();
-      return store.fetchData;
+      return store.fetchBoardElements;
     },
     calculaBarraEncuesta(pollOptions, option) {
       let porcentaje = this.calculaPorcentajeEncuesta(pollOptions, option);

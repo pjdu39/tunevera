@@ -25,14 +25,14 @@ const config: NuxtConfig = {
   },
   */
   runtimeConfig: {
-    // KEYs...
+    // Private area
     public: {
-      env: envFile,
       apiUrl: process.env.API_URL,
+      env: envFile,
       port: process.env.PORT
     }
-    
   },
+  // Revisar si el contenido de "Server" está haciendo algo actualmente
   server: {
     port: process.env.PORT || 3000,
     host: process.env.HOST || 'localhost',

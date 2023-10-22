@@ -336,7 +336,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchUnits();
+    this.fetchUnits()();
   },
   methods: {
     postRecipe() {
@@ -430,7 +430,7 @@ export default {
       this.Resolve();
 
       // TODO: Validaciones de contenido sobre postRecipeData
-      this.postRecipe(this.postRecipeData);
+      this.postRecipe()(this.postRecipeData);
     },
     // TODO: Borrar la función y el botón. Ya no tienen sentido
     Atras() {

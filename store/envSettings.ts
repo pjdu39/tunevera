@@ -26,3 +26,6 @@ const GlobalSettings: GlobalSettingsType = {
 
 export { GlobalSettings };
 export type { Environment };
+
+
+// TODO: Borrar todo el fichero

@@ -94,13 +94,13 @@ export default {
     },
   },
   methods: {
-    fetchRecipeData() {
+    fetchRecipe() {
       const store = useRecipeStore();
-      return store.fetchRecipeData;
+      return store.fetchRecipe;
     },
   },
   mounted() {
-    this.fetchRecipeData()(12); // TODO: Recibir este valor por url.
+    this.fetchRecipe()(12); // TODO: Recibir este valor por url.
   },
 };
 </script>
