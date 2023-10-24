@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 
+// TODO: Agrupar data, loading y error del state en un objeto como en el resto de stores.
 export const useBoardStore = defineStore({
     id: 'board',
     state: () => ({
