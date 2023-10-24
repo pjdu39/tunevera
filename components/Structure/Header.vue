@@ -35,8 +35,6 @@
         </BCollapse>
       </BNavbar>
     </div>
-
-    <!-- <BImg class="" src="~/assets/img/banner.jpg"></BImg> -->
   </div>
 </template>
 
