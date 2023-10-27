@@ -19,16 +19,11 @@ export const useBoardStore = defineStore({
             this.error = payload
         },
         async fetchBoardElements(numElements) {
-            const apiUrl = useRuntimeConfig().public.apiUrl;
-            
+            const { $fetchApi } = useNuxtApp();
             this.setLoading('loading');
             try {
-                const httpResponse = await fetch(`${ apiUrl }GetBoardElements?NumElements=${ numElements }`);
+                const data = await $fetchApi(`GetBoardElements?NumElements=${ numElements }`);
 
-                if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
-                
-                const data = await httpResponse.json();
-                
                 this.setData(data);
                 this.setLoading('loaded');
                 this.setError(null);

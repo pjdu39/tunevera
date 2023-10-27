@@ -20,15 +20,10 @@ export const useRecipeStore = defineStore({
             this.getRecipeState.error = payload;
         },
         async fetchRecipe(id) {
-            const apiUrl = useRuntimeConfig().public.apiUrl;
-
+            const { $fetchApi } = useNuxtApp();
             this.setRecipeLoading('loading');
             try {
-                const httpResponse = await fetch(`${ apiUrl }GetRecipe?IdRecipe=${ id }`);
-
-                if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
-                
-                const data = await httpResponse.json();
+                const data = await $fetchApi(`GetRecipe?IdRecipe=${ id }`);
 
                 this.setRecipeData(data);
                 this.setRecipeLoading('loaded');
