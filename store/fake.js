@@ -27,8 +27,10 @@ export const useFakeStore = defineStore({
                 const httpResponse = await fetch(`${ apiUrl }FakeLogin?IdUser=${ idUser }`);
 
                 if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
-                console.log(httpResponse)
+                
                 const data = await httpResponse.json();
+                
+                localStorage.setItem('tokenBearer', data.token);
 
                 this.setLoginTokenData(data);
                 this.setLoginTokenLoading('loaded');

@@ -25,7 +25,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 import { useFakeStore } from "~/store/fake.js";
 export default {
   layout: "empty",
@@ -50,7 +50,7 @@ export default {
 };
 </script>
   
-  <style scoped>
+<style scoped>
 .container {
   min-height: 100vh;
   display: flex;

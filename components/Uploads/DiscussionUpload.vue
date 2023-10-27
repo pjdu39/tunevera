@@ -81,14 +81,14 @@ export default {
     };
   },
   computed: {
-    newDiscussionState({ $pinia }) {
-      const store = useUploadsStore($pinia);
+    newDiscussionState() {
+      const store = useUploadsStore();
       return store.newDiscussionState;
     },
   },
   methods: {
-    postDiscussion({ $pinia }) {
-      const store = useUploadsStore($pinia);
+    postDiscussion() {
+      const store = useUploadsStore();
       return store.postDiscussion;
     },
     setLoadingToWaiting() {
@@ -97,7 +97,7 @@ export default {
     },
     Aceptar() {
       // TODO: Validaciones de contenido sobre postPollData
-      this.postDiscussion(this.postDiscussionData);
+      this.postDiscussion()(this.postDiscussionData);
     },
     // TODO: Borrar la función y el botón. Ya no tienen sentido
     Atras() {

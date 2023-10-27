@@ -125,10 +125,10 @@ export const useUploadsStore = defineStore({
         },
 
         async postDiscussion(discussion) {
-            const apiUrl = useRuntimeConfig().public.apiUrl;
+            const { $fetchApi } = useNuxtApp();
             this.setDiscussionLoading('loading');
             try {
-                const httpResponse = await fetch(`${ apiUrl }NewDiscussion`, {
+                /* const httpResponse = await fetch(`${ apiUrl }NewDiscussion`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -138,7 +138,17 @@ export const useUploadsStore = defineStore({
 
                 if (!httpResponse.ok) throw new Error(`HTTP error! status: ${httpResponse.status}`);
 
-                const data = await httpResponse.json();
+                const data = await httpResponse.json();*/
+                
+                const data = await $fetchApi("NewDiscussion", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(discussion)
+                });
+
+                console.log(data);
 
                 this.setDiscussionData(data);
                 this.setDiscussionLoading('loaded');
@@ -152,14 +162,16 @@ export const useUploadsStore = defineStore({
         },
 
         async fetchUnits() {
-            const apiUrl = useRuntimeConfig().public.apiUrl;
+            const { $fetchApi } = useNuxtApp();
             this.setUnitsLoading('loading');
             try {
-                const httpResponse = await fetch(`${ apiUrl }GetUnits`);
+                /* const httpResponse = await fetch(`${ apiUrl }GetUnits`);
 
                 if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
                 
-                const data = await httpResponse.json();
+                const data = await httpResponse.json(); */
+                
+                const data = await $fetchApi("GetUnits");
                 
                 this.setUnitsData(data);
                 this.setUnitsLoading('loaded');
