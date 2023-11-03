@@ -16,14 +16,6 @@ const config: NuxtConfig = {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: true,
   
-  // Manejo de entornos en tiempo de ejecución. Se hace así desde la nuxt 2.13
-  /*
-  env: {
-    API_URL: GlobalSettings[appEnv].apiUrl,
-    PORT: GlobalSettings[appEnv].port,
-    HOST: GlobalSettings[appEnv].host || 'localhost'
-  },
-  */
   runtimeConfig: {
     // Private area
     public: {
@@ -37,21 +29,6 @@ const config: NuxtConfig = {
     port: process.env.PORT || 3000,
     host: process.env.HOST || 'localhost',
   },
- /*
-  runtimeConfig: {
-    // KEYs...
-    public: {
-      env: appEnv,
-      apiUrl: GlobalSettings[appEnv].apiUrl,
-      port: GlobalSettings[appEnv].port
-    }
-    
-  },
-  server: {
-    port: GlobalSettings[appEnv].port || 3000,
-    host: GlobalSettings[appEnv].host || 'localhost',
-  },
-  */
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -70,12 +47,23 @@ const config: NuxtConfig = {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    // SCSS file in the project
+    // TODO: Revisar por qué no se están exportando los SCSS
     "~/assets/scss/styles.scss",
+    "~/assets/scss/global.scss",
     "@fortawesome/fontawesome-svg-core/styles.css",
     "bootstrap/dist/css/bootstrap.min.css",
     "primevue/resources/themes/bootstrap4-light-blue/theme.css"
   ],
+
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "@/assets/scss/variables.scss" as *; @use "@/assets/scss/buttons.scss" as *;',
+        },
+      },
+    },
+  },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -93,14 +81,18 @@ const config: NuxtConfig = {
   ],
 
   styleResources: {
-    scss: ["~/assets/scss/styles.scss"],
+    scss: [
+      "~/assets/scss/styles.scss",
+      "~/assets/scss/global.scss"
+    ],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     "@bootstrap-vue-next/nuxt",
     "@pinia/nuxt",
-    "nuxt-primevue"
+    "nuxt-primevue",
+    "@nuxt/image"
   ],
   pinia: {
     autoImports: [

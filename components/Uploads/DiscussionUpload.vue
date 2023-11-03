@@ -107,7 +107,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .input {
   border: none;
   background-color: #f2f4f5;
@@ -125,14 +125,9 @@ export default {
   padding: 0.4rem 0.5rem 0.4rem 0.4rem;
   margin-right: 0rem;
   margin-bottom: 1rem;
+  
 
-  /* background-color: #d49c6b;
-  box-shadow: 2px 2px 6px 0px #252b31;
-  color: #eaedee;
-  border-radius: 1rem;
-  border-style: none; */
-
-  background-color: #d49c6b;
+  background-color: $color-primary;
   /* TODO: Invertir los inset tratando de conseguir el mismo resultado. Con los inset simulando los bordes queda fatal al pulsar los botones */
   box-shadow: 1px 1px 6px -3px #575757, -1px -1px 1px 0.5px #70340071 inset,
     -1px -1px 6px 1.5px rgb(255, 255, 255),

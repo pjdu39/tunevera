@@ -1,9 +1,7 @@
-// Include Bootstrap and BootstrapVue SCSS files
-
 // General style overrides and custom classes
 body {
   margin: 0;
-  background-color: #f2f4f5; /* #eaedee */;
+  background-color: $color-background;;
 }
 
 
@@ -13,15 +11,11 @@ body {
 .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
     font-weight: 600;
     color: white;
-    background-color: #d49c6b;
+    background-color: $color-primary;
     border-color: transparent;
-    /* box-shadow: 1px 1px 6px 1px #F6FAFB; */
 }
 
 .nav-tabs {
-    /*width: fit-content;
-    overflow: hidden;
-    border-radius: 1rem 1rem 0 0; */
 }
 
 .list-group-item {
@@ -37,6 +31,7 @@ body {
 .mt-3 {
     margin-top: 0 !important;
 }
+
 
 /* Ocultar las flechas en todos los navegadores */
 input[type="number"]::-webkit-inner-spin-button,
@@ -54,7 +49,7 @@ input[type="number"] {
 // Sobreescribir estilo de primevue
 
 .p-tabview-nav-link {
-  background-color: #d49c6b;
+  background-color: $color-primary;
   color: white;
 }
 .p-tabview {

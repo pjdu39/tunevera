@@ -24,6 +24,8 @@
   </footer>
 </template>
 
+<!-- TODO: Borrar todo el Footer. Ya no se usa -->
+
 <script>
 export default {};
 </script>
@@ -53,14 +55,4 @@ export default {};
 .navbar-expand-lg .navbar-collapse {
   place-content: center;
 }
-
-/*
-  PALETA DE COLORES
-
-    #5C2C0C #405357 #252B31
-    #DDA35D #F5D29E #5E6668
-    #AA6231 #7F5B3F #C1C8C7
-    #E3DECA #334C38 #F6FAFB
-    #3C3A1E #182312 #D49C6B
-*/
 </style>

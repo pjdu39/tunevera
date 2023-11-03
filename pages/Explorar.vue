@@ -174,14 +174,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 :root {
   --image-z-indx: 10;
 }
 
 .button {
   text-align: center;
-  background-color: #d49c6b;
+  background-color: $color-primary;
   color: white;
   border-radius: 1rem !important;
   border-style: none;
@@ -213,7 +213,7 @@ export default {
 }
 
 .tab-option:deep() a:active {
-  background-color: #d49c6b;
+  background-color: $color-primary;
 }
 .tab-option:deep() a:hover {
   box-shadow: 1px 1px 6px 2px #f6fafb;
@@ -236,7 +236,7 @@ export default {
 
 .filtro-button {
   text-align: center;
-  background-color: #d49c6b;
+  background-color: $color-primary;
   /* box-shadow: 2px 2px 10px 1px #252b31; */
   color: white;
   border-radius: 1rem !important;
@@ -287,7 +287,7 @@ export default {
 }
 
 .check-vege--active {
-  background-color: #d49c6b;
+  background-color: $color-primary;
   box-shadow: 1px 1px 11px 4px #f6fafb;
 }
 
@@ -301,7 +301,7 @@ export default {
     IMPORTANTE:
     - Si decido quitar el estilo de botón para vegano/vegetariano, esto cambia el color del checkbox normal */
 label:deep() .custom-control-input {
-  background-color: #d49c6b !important;
+  background-color: $color-primary !important;
 }
 
 .images-container {

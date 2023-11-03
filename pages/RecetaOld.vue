@@ -230,7 +230,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .perfil-container {
   padding: 2.5rem 3rem 0 4rem;
 }
@@ -291,7 +291,7 @@ export default {
 }
 .badge-custom {
   color: #252b31;
-  background-color: #d49c6b;
+  background-color: $color-primary;
   border-radius: 1rem;
   padding: 0 0.5rem 0.2rem 0.5rem;
   margin-right: 0.4rem;
@@ -307,7 +307,7 @@ export default {
 .badge-container--filtro {
 }
 .badge-custom--filtro {
-  color: #d49c6b;
+  color: $color-primary;
   background-color: #252b31;
 }
 .box2 {
@@ -330,14 +330,4 @@ export default {
   background-color: transparent;
   border: none;
 }
-
-/*
-  PALETAS DE COLORES
-
-    #5C2C0C #405357 #252B31
-    #DDA35D #F5D29E #5E6668
-    #AA6231 #7F5B3F #C1C8C7
-    #E3DECA #334C38 #F6FAFB
-    #3C3A1E #182312 #D49C6B
-*/
 </style>

@@ -1,15 +1,16 @@
 <template>
-  <div>
+  <div class="global-container">
     <Header class="header" />
-    <div class="nuxt-container">
+    <div class="header-space"></div>
+    <div class="content">
       <slot />
     </div>
-    <Footer />
   </div>
 </template>
 
 <script>
 import "../assets/scss/custom.scss";
+import "../assets/scss/global.scss";
 import Header from "../components/Structure/Header.vue";
 import Footer from "../components/Structure/Footer.vue";
 export default {
@@ -17,19 +18,19 @@ export default {
 };
 </script>
 
-<style scoped>
-.nuxt-container {
+<style scoped lang="scss">
+.header-space {
+  height: $header-height;
+  margin-bottom: 3rem;
+}
+.content {
   position: relative;
   min-height: 100vh;
   max-width: 100vw;
-  margin-top: 10rem;
   margin-bottom: 6rem;
-  margin-right: auto;
-  margin-left: auto;
 }
-
-.header {
-  position: fixed;
-  top: 0;
+.global-container {
+  display: flex;
+  flex-direction: column;
 }
 </style>

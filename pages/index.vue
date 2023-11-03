@@ -201,7 +201,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .tablon-container {
   margin: auto;
   width: 44rem;
@@ -288,7 +288,7 @@ export default {
   height: 100%;
   top: 0;
   left: 0;
-  background-color: #d49c6b;
+  background-color: $color-primary;
   border-radius: 0.5rem 0 0 0.5rem;
   z-index: 5;
 }
@@ -332,7 +332,7 @@ export default {
   height: 1.9rem;
   width: 1.9rem;
   padding: 0.25rem;
-  color: #d49c6b;
+  color: $color-primary;
 }
 
 .comentarios {
@@ -340,7 +340,7 @@ export default {
   height: 1.9rem;
   width: 1.9rem;
   padding: 0.25rem;
-  color: #d49c6b;
+  color: $color-primary;
 }
 
 .num {

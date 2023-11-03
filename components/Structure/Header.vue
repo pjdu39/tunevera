@@ -14,26 +14,32 @@
         <nuxt-link to="/Explorar" class="gear-option"> Contáctanos </nuxt-link>
       </div>
     </div>
+    <NuxtImg src="/img/cookbook-logo-recorte.png" class="logo" />
     <div class="navbar-main-container">
-      <BNavbar toggleable="lg" class="main-navbar">
-        <BNavbarToggle target="nav-collapse"></BNavbarToggle>
-        <BCollapse id="nav-collapse" is-nav>
-          <BNavbarNav>
-            <nuxt-link to="/" class="option">
-              <font-awesome-icon icon="fa fa-home" aria-hidden="true" />
-            </nuxt-link>
-            <nuxt-link to="/Explorar" class="option">
-              <font-awesome-icon icon="fa fa-search" aria-hidden="true" />
-            </nuxt-link>
-            <nuxt-link to="/Uploads" class="option">
-              <font-awesome-icon icon="fa fa-cloud-upload" aria-hidden="true" />
-            </nuxt-link>
-            <nuxt-link to="/Perfil" class="option">
-              <font-awesome-icon icon="fa fa-user" aria-hidden="true" />
-            </nuxt-link>
-          </BNavbarNav>
-        </BCollapse>
-      </BNavbar>
+      <div toggleable="lg" class="main-navbar">
+        <nuxt-link to="/" class="option">
+          <div>
+            <font-awesome-icon icon="fa fa-home" aria-hidden="true" /> INICIO
+          </div>
+        </nuxt-link>
+        <nuxt-link to="/Explorar" class="option">
+          <div>
+            <font-awesome-icon icon="fa fa-search" aria-hidden="true" />
+            BUSCAR
+          </div>
+        </nuxt-link>
+        <nuxt-link to="/Uploads" class="option">
+          <div>
+            <font-awesome-icon icon="fa fa-cloud-upload" aria-hidden="true" />
+            CREAR
+          </div>
+        </nuxt-link>
+        <nuxt-link to="/Perfil" class="option">
+          <div>
+            <font-awesome-icon icon="fa fa-user" aria-hidden="true" /> PERFIL
+          </div>
+        </nuxt-link>
+      </div>
     </div>
   </div>
 </template>
@@ -58,20 +64,21 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .header {
-  position: absolute;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  background-color: $color-background;
   width: 100vw;
   z-index: 30;
 }
-
 .secondary-options-banner {
   display: flex;
-  height: 3rem;
+  height: $header-top-bar-height;
   background-color: #252b31;
   border-style: none;
 }
-
 .secondary-options-button {
   position: absolute;
   right: 1.4rem;
@@ -82,7 +89,6 @@ export default {
   border-style: none;
   box-shadow: none !important;
 }
-
 .gear-options-container {
   position: absolute;
   width: 9rem;
@@ -92,7 +98,6 @@ export default {
   background-color: #eaedee;
   border-radius: 1rem;
 }
-
 .gear-option {
   display: block;
   padding: 0 0.8rem 0 0.8rem;
@@ -100,41 +105,49 @@ export default {
   text-decoration: none;
   border-radius: 1rem;
 }
-
 .gear-option:hover {
   background-color: #c1c8c7;
 }
+
+.logo {
+  margin: auto;
+  height: $header-logo-height;
+}
+
 .navbar-main-container {
-  display: flex;
-  height: 5.2rem;
-  background-color: #d49c6b; /* 5e6668 */
+  height: $header-main-bar-height;
+  background-color: $color-primary;
+  width: 90%;
+  align-self: center;
+  border-radius: 3rem;
 }
 .main-navbar {
-  margin-left: auto;
-  margin-right: auto;
-}
-/* TODO: Borrar. Parece que esta clase ya no está en Bootstrap Vue Next. Además, display: contents no tiene nada que ver con el significado de la clase. */
-.navbar-light {
-  display: contents;
+  height: $header-main-bar-height;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  // gap: 100;
+  align-items: center;
+  top: 0;
 }
 .option {
-  font-size: 240%;
-  padding: 0.35rem 1rem 0.35rem 1rem;
-  margin-left: 4rem;
-  margin-right: 4rem;
-  background-color: #d49c6b;
-  box-shadow: 3px 3px 8px -4px #703400e8,
-    -1.5px -1.5px 4px 1px rgb(248, 248, 248, 0.3);
-  /*
-  box-shadow: 3px 3px 10px -2px rgb(0, 0, 0),
-    -1.5px -1.5px 6px 4px rgb(248, 248, 248, 0.3); */
-  color: #252b31;
-  border-radius: 2rem 2rem 0.8rem 0.8rem;
-  border-style: none;
+  display: contents; // No tengo muy claro que hace esto
+  height: $header-main-bar-height;
+  width: 10rem;
+  flex: 0;
+  font-size: 100%;
+  background-color: $color-primary;
+  color: $color-background;
+  font-weight: bold;
+  text-align: center;
+  line-height: $header-main-bar-height;
+
+  // Para maquetar solamente
+  border-radius: 3rem;
 }
 
 .option:hover {
-  color: #f6fafb;
+  color: $color-dark;
   /* box-shadow: 1px 1px 11px 4px #f6fafb; */
 }
 
@@ -147,20 +160,15 @@ export default {
   box-shadow: 3px 3px 10px -2px rgb(0, 0, 0) inset,
     -1.5px -1.5px 6px 4px rgb(248, 248, 248, 0.3) inset; */
 }
-
 .nuxt-link-exact-active {
-  color: #f6fafb;
+  color: $color-dark;
   box-shadow: 3px 3px 5px -3px #703400e8 inset,
     -1.5px -1.5px 3px 1px rgb(248, 248, 248, 0.3) inset;
 }
 
-/*
-  PALETA DE COLORES
-
-    #5C2C0C #405357 #252B31
-    #DDA35D #F5D29E #5E6668
-    #AA6231 #7F5B3F #C1C8C7
-    #E3DECA #334C38 #F6FAFB
-    #3C3A1E #182312 #D49C6B
-*/
+@media (min-width: 900px) {
+  .navbar-main-container {
+    width: 50rem;
+  }
+}
 </style>

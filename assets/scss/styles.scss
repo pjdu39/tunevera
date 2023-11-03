@@ -127,7 +127,7 @@ body {
   /* Utilizar variables css para calcular  */
   border-radius: 0.8rem !important;
   color: #eaedee !important;
-  background-color: #d49c6b !important;
+  background-color: $color-primary !important;
   box-shadow: 2px 2px 12px 0px #252b31;
   border-style: none !important;
   font-weight: 600 !important;
@@ -136,15 +136,3 @@ body {
 .flex {
   display: flex;
 }
-
-/*
-  PALETAS DE COLORES
-
-    #5C2C0C #405357 #252B31
-    #DDA35D #F5D29E #5E6668
-    #AA6231 #7F5B3F #C1C8C7
-    #E3DECA #334C38 #F6FAFB
-    #3C3A1E #182312 #D49C6B
-*/
-
-// BORRAR, PRUEBAS

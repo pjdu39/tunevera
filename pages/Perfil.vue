@@ -140,7 +140,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang="scss">
 .fixed-col {
   padding-left: 0;
 }
@@ -284,7 +284,7 @@ export default {
   display: inline-flex;
   padding: 1rem;
   color: black;
-  background-color: #d49c6b;
+  background-color: $color-primary;
   border-radius: 2rem;
 }
 
