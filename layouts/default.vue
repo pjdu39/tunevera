@@ -1,8 +1,8 @@
 <template>
   <div class="global-container">
-    <Header class="header" />
-    <div class="header-space"></div>
+    <Header />
     <div class="content">
+      <MainMenu />
       <slot />
     </div>
   </div>
@@ -12,22 +12,17 @@
 import "../assets/scss/custom.scss";
 import "../assets/scss/global.scss";
 import Header from "../components/Structure/Header.vue";
-import Footer from "../components/Structure/Footer.vue";
+import MainMenu from "../components/Structure/MainMenu.vue";
 export default {
-  components: { Header, Footer },
+  components: { Header, MainMenu },
 };
 </script>
 
 <style scoped lang="scss">
-.header-space {
-  height: $header-height;
-  margin-bottom: 3rem;
-}
 .content {
   position: relative;
   min-height: 100vh;
   max-width: 100vw;
-  margin-bottom: 6rem;
 }
 .global-container {
   display: flex;
