@@ -1,6 +1,7 @@
 <template>
   <div class="tablon-container">
     <!-- <main></main> -->
+    <RecipePost :post-data="elements[0]"/>
     <BListGroupItem
       class="elemento"
       v-for="(element, index) in elements"
@@ -61,7 +62,11 @@
 
 <script>
 import { useBoardStore } from "~/store/board.js";
+import RecipePost from "~/components/Posts/RecipePost.vue";
 export default {
+  components: {
+    RecipePost,
+  },
   data() {
     return {
       elements: [
