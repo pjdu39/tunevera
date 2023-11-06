@@ -8,8 +8,9 @@
     >
       <RecipePost v-if="element.type === 'Receta'" :post-data="element"/>
       <PollPost v-if="element.type === 'Encuesta'" :post-data="element"/>
+      <DiscussionPost v-if="element.type === 'Discusion'" :post-data="element"/>
     </div>
-    
+    <!--
     <BListGroupItem
       class="elemento"
       v-for="(element, index) in elements"
@@ -41,7 +42,6 @@
                 'rem;'
               "
             ></div>
-            <!-- Por algún motivo desconocido, en este div estoy obligado a aplicar el text-align en el style, ya que no se aplica en la clase -->
             <div
               class="encuesta-opcion-barra encuesta-opcion-barra--fondo"
             ></div>
@@ -62,20 +62,22 @@
         <div class="comentarios">
           <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
         </div>
-        <!-- <div class="num">{{ element.comentarios.length }}</div> -->
       </div>
     </BListGroupItem>
+    -->
   </div>
 </template>
 
 <script>
 import { useBoardStore } from "~/store/board.js";
+import DiscussionPost from "~/components/Posts/DiscussionPost.vue";
 import PollPost from "~/components/Posts/PollPost.vue";
 import RecipePost from "~/components/Posts/RecipePost.vue";
 export default {
   components: {
     RecipePost,
-    PollPost
+    PollPost,
+    DiscussionPost
   },
   data() {
     return {
@@ -134,7 +136,7 @@ export default {
           ],
         },
         {
-          type: "Discusión",
+          type: "Discusion",
           title: "Cilantro o no?",
           time: null,
           description:
