@@ -1,7 +1,15 @@
 <template>
   <div class="tablon-container">
     <!-- <main></main> -->
-    <RecipePost :post-data="elements[0]"/>
+    <div
+      class=""
+      v-for="(element, index) in elements"
+      :key="index"
+    >
+      <RecipePost v-if="element.type === 'Receta'" :post-data="element"/>
+      <PollPost v-if="element.type === 'Encuesta'" :post-data="element"/>
+    </div>
+    
     <BListGroupItem
       class="elemento"
       v-for="(element, index) in elements"
@@ -62,10 +70,12 @@
 
 <script>
 import { useBoardStore } from "~/store/board.js";
+import PollPost from "~/components/Posts/PollPost.vue";
 import RecipePost from "~/components/Posts/RecipePost.vue";
 export default {
   components: {
     RecipePost,
+    PollPost
   },
   data() {
     return {

@@ -7,21 +7,27 @@
       <div class="signature">
         por <b>{{ postData.author }}</b>
       </div>
-      <div class="">
-        <h4 class="">{{ postData.title }}</h4>
-        {{ postData.time }}'
-        <font-awesome-icon icon="fa fa-clock" aria-hidden="true" />
-      </div>
-      <div>{{ postData.description }}</div>
-      <div class="interacciones">
-        <div class="likes">
-          <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
+      <h4 class="title">{{ postData.title }}</h4>
+      <div class="description">{{ postData.description }}</div>
+      <div class="bottom-info">
+        <div class="interactions">
+          <div class="interaction-wrapper">
+            <div class="interaction-icon">
+              <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
+            </div>
+            <div class="num-likes">{{ postData.likes }}</div>
+          </div>
+          <div class="interaction-wrapper">
+            <div class="interaction-icon">
+              <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
+            </div>
+            <!--<div class="num-comments">{{ postData.comentarios.length }}</div>-->
+          </div>
         </div>
-        <div class="num">{{ postData.likes }}</div>
-        <div class="comentarios">
-          <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
+        <div class="time">
+          {{ postData.time }}'
+          <font-awesome-icon icon="fa fa-clock" aria-hidden="true" />
         </div>
-        <!-- <div class="num">{{ postData.comentarios.length }}</div> -->
       </div>
     </div>
   </div>
@@ -62,11 +68,46 @@ const props = defineProps({
   object-fit: cover;
 }
 .post-info {
+  display: flex;
+  flex-direction: column;
   width: 50%;
+  padding: 0.5rem 1rem;
 }
 .signature {
+  flex-grow: 1;
   text-align: end;
   margin-left: auto;
   font-style: italic;
+}
+.title {
+  flex-grow: 0;
+}
+.description {
+  flex-grow: 20;
+}
+.bottom-info {
+  flex-grow: 0;
+  display: flex;
+  align-items: center; // Alineación vertical. Solo disponible en clases flex.
+  justify-content: space-between;
+}
+.interactions {
+  display: flex;
+}
+.interaction-wrapper {
+  display: flex;
+  line-height: 100%;
+  margin: 0 1rem 0 0;
+}
+.interaction-icon {
+  text-align: center;
+  color: $color-primary;
+  margin: 0 5px;
+}
+.num-likes {
+  font-size: small;
+}
+.time {
+  text-align: right;
 }
 </style>
