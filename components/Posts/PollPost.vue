@@ -9,7 +9,7 @@
       <div class="poll-options-container">
         <div class="poll-options">
             <div v-for="option in postData.options" :key="option.id">
-            <div class="encuesta-opcion">
+            <div class="option-wrapper">
                 <div class="encuesta-opcion-texto">{{ option.answer }}</div>
                 <div
                 class="encuesta-opcion-barra encuesta-opcion-barra--rellena"
@@ -186,12 +186,9 @@ const calculaBarraEncuesta = (pollOptions, option) => {
 
 // TODO: Adaptar todo esto y renombrarlo.
 
-.encuesta-opcion {
+.option-wrapper {
   position: relative;
-  /* width: 20rem; */
   height: 1.6rem;
-  /* display: inline-flex; */
-  margin: 0 0 0 0;
 }
 
 .encuesta-opcion-texto {
@@ -209,25 +206,19 @@ const calculaBarraEncuesta = (pollOptions, option) => {
   top: 0;
   left: 0;
   background-color: $color-primary;
-  border-radius: 0.5rem 0 0 0.5rem;
+  border-radius: 5px 0 0 5px;
   z-index: 5;
 }
 
 .encuesta-opcion-barra--rellena {
-  box-shadow: 1.5px 1.5px 5px -4px rgb(0, 0, 0),
-    -2px -2px 5px 0px rgb(248, 248, 248, 0.8),
-    -0.2px -1.5px 3px -4px rgb(0, 0, 0) inset,
-    2px 2px 2px -1.2px rgb(248, 248, 248, 0.8) inset;
 }
 
 .encuesta-opcion-barra--fondo {
   width: 20rem;
   padding-top: 0.1rem;
-  background-color: #d7d9da;
-  box-shadow: 3px 3px 5px -4px rgb(0, 0, 0) inset,
-    -0.1px -0.1px 2px 1.5px rgb(248, 248, 248, 0.6) inset;
-  border: 1px solid #d7d9da;
-  border-radius: 0.5rem;
+  background-color: $color-background;
+  // border: 1px solid $color-dark;
+  border-radius: 5px;
   font-size: 85%;
   z-index: 1;
 }
