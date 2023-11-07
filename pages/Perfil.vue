@@ -1,7 +1,16 @@
 <template>
-  <div class="mainBox fixed-col">
+  <div class="profile-container">
+    <div class="top-container">
+      <div class="profile-info-container"></div>
+      <div class="side-menu"></div>
+    </div>
+    <div class="profile-content-container">
+      
+    </div>
+
+    <!---->
     <b-row class="head">
-      <b-col md="5" class="fixed-col">
+      <b-col md="5" class="">
         <div class="perfil-vw">
           <div class="wrapper-marco">
             <div class="marco">
@@ -38,19 +47,14 @@
       </b-col>
     </b-row>
     <b-row class="separacion">
-      <b-col class="fixed-col" md="5">
+      <b-col md="5">
         <div class="separacion-linea"></div>
       </b-col>
-      <b-col class="fixed-col separacion-titulo" md="2">RECETAS</b-col>
-      <b-col class="fixed-col" md="5">
+      <b-col class="separacion-titulo" md="2">RECETAS</b-col>
+      <b-col md="5">
         <div class="separacion-linea"></div>
       </b-col>
     </b-row>
-    <!--
-    <div class="wrapper-separacion">
-      <div class="separacion"></div>
-      <div class="separacion-titulo">RECETAS</div>
-    </div> -->
     <div class="recetas">
       <BListGroupItem
         :class="'group-item-container ' + derechaIzquierda(index, 'group-item')"
@@ -141,40 +145,38 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.fixed-col {
-  padding-left: 0;
-}
 
-.redBox {
-  background-color: red;
-}
-
-.blueBox {
-  background-color: blue;
-}
-
-.greenBox {
-  background-color: green;
-}
-
-/*
-.goldenBox {
-  background-color: goldenrod;
-} */
-
-.mainBox {
+.profile-container {
   margin: auto;
   width: 44rem;
+  background-color: $color-background;
+  border-radius: 5px;
+}
+.top-container {
+  display: flex;
+  height: 12rem; // Provisional
+}
+.profile-info-container {
+  width: 90%;
 
-  background-color: #eaedee;
-  border-radius: 1rem;
-  box-shadow: 1.5px 1.5px 30px -10px #252b31;
+  // TODO: Borrar. Es solo para maquetar
+  background-color: aqua;
+}
+.side-menu {
+  width: 10%;
+
+  // TODO: Borrar. Es solo para maquetar
+  background-color: burlywood;
 }
 
-.pinkBox {
-  background-color: pink;
+.profile-content-container {
+
+  // TODO: Borrar. Es solo para maquetar
+  height: 45rem;
+  background-color: greenyellow;
 }
 
+// TODO: Adaptación, renombres y limpieza de todo lo que esté aquí debajo
 .wrapper-marco {
   display: inline-block;
   width: 9rem;
@@ -318,16 +320,11 @@ export default {
   height: auto;
 }
 
-/*
-.separacion {
-  border-bottom: 4px dotted brown;
-}
 
-.separacion-titulo {
-  text-align: center;
-  width: 6rem;
-  background-color: goldenrod;
-  margin-top: -1rem;
-  margin-left: 41%;
-} */
+@media (max-width: 800px) {
+  .profile-container {
+    margin: auto;
+    width: 80%;
+  }
+}
 </style>

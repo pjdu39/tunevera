@@ -1,5 +1,5 @@
 <template>
-  <div class="tablon-container">
+  <div class="board-container">
     <div
       class=""
       v-for="(element, index) in elements"
@@ -150,13 +150,13 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.tablon-container {
+.board-container {
   margin: auto;
   width: 44rem;
 }
 
 @media (max-width: 800px) {
-  .tablon-container {
+  .board-container {
     margin: auto;
     width: 80%;
   }

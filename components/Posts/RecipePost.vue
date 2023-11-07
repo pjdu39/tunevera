@@ -47,10 +47,6 @@ const props = defineProps({
   border: solid 2px $color-dark;
   border-radius: 5px;
   overflow: hidden;
-
-  // TODO: Borrar, es solo para maquetar
-  z-index: 20;
-  margin: 3rem 0;
 }
 .img-wrapper {
   position: relative;

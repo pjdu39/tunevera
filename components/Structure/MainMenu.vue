@@ -39,6 +39,7 @@ export default {};
   flex-direction: column;
   position: sticky;
   top: 0;
+  margin-bottom: 2rem;
   background-color: $color-background;
   width: 100vw;
   z-index: 50;

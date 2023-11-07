@@ -48,16 +48,17 @@ export default {
 }
 .secondary-options-banner {
   display: flex;
+  position: relative;
   height: $header-top-bar-height;
   background-color: #252b31;
   border-style: none;
 }
 .secondary-options-button {
   position: absolute;
-  right: 1.4rem;
-  height: 20%;
+  right: 1rem;
   aspect-ratio: 1/1;
-  font-size: 165%;
+  height: 100%;
+  padding: 0;
   background-color: transparent;
   border-style: none;
   box-shadow: none !important;
