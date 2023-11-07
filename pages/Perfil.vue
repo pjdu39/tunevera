@@ -1,14 +1,41 @@
 <template>
-  <div class="profile-container">
-    <div class="top-container">
-      <div class="profile-info-container"></div>
-      <div class="side-menu"></div>
+  <div class="profile">
+    <div class="top">
+      <div class="profile-info">
+        <div class="info-summary-section">
+          <div class="picture-cotainer">
+            <div class="picture-wrapper"></div>
+          </div>
+          <div class="info-summary">
+            <div class="summary-item"></div>
+            <div class="summary-item"></div>
+            <div class="summary-item"></div>
+          </div>
+        </div>
+        <div class="info-detail">
+          <div class="name"></div>
+          <div class="description"></div>
+        </div>
+      </div>
+      <div class="side-menu">
+        <div class="side-menu-button"></div>
+        <div class="side-menu-button"></div>
+        <div class="side-menu-button"></div>
+      </div>
     </div>
-    <div class="profile-content-container">
-      
+    <div class="profile-content">
+      <div class="p-recipe">1</div>
+      <div class="p-recipe">2</div>
+      <div class="p-recipe">3</div>
+      <div class="p-recipe">4</div>
+      <div class="p-recipe">5</div>
+      <div class="p-recipe">6</div>
+      <div class="p-recipe">7</div>
+      <div class="p-recipe">8</div>
+      <div class="p-recipe">9</div>
     </div>
 
-    <!---->
+    <!--OLD-->
     <b-row class="head">
       <b-col md="5" class="">
         <div class="perfil-vw">
@@ -145,35 +172,97 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-.profile-container {
+.profile {
   margin: auto;
   width: 44rem;
   background-color: $color-background;
   border-radius: 5px;
 }
-.top-container {
+.top {
   display: flex;
   height: 12rem; // Provisional
 }
-.profile-info-container {
+.profile-info {
   width: 90%;
+
+  // TODO: Borrar. Es solo para maquetar
+  border: 1px solid black;
+}
+.info-summary-section {
+  display: flex;
+  height: 50%;
+
+  // TODO: Borrar. Es solo para maquetar
+  background-color: darksalmon;
+}
+.picture-cotainer {
+  height: 100%;
+  aspect-ratio: 1/1;
+
+  // TODO: Borrar. Es solo para maquetar
+  background-color: pink;
+}
+.picture-wrapper {
+  height: 100%;
+  border-radius: 50%;
+
+  // TODO: Borrar. Es solo para maquetar
+  background-color: darkred;
+}
+.info-summary {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  flex-grow: 1;
+}
+.summary-item {
+  height: 100%;
+  width: 5rem;
+  font-size: 150%;
+
+  // TODO: Borrar. Es solo para maquetar
+  background-color: darkred;
+  border: 1px solid pink;
+}
+.info-detail {
+  height: 50%;
 
   // TODO: Borrar. Es solo para maquetar
   background-color: aqua;
 }
 .side-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
   width: 10%;
 
   // TODO: Borrar. Es solo para maquetar
   background-color: burlywood;
 }
-
-.profile-content-container {
+.side-menu-button {
+  height: 3rem; // Provisional
+  width: 3rem; // Provisional
+  border-radius: 50%;
 
   // TODO: Borrar. Es solo para maquetar
-  height: 45rem;
+  background-color: darkred;
+}
+.profile-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+
+  // TODO: Borrar. Es solo para maquetar
+  height: 55rem;
   background-color: greenyellow;
+}
+.p-recipe {
+
+  // TODO: Borrar. Es solo para maquetar
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: aliceblue;
 }
 
 // TODO: Adaptación, renombres y limpieza de todo lo que esté aquí debajo
@@ -319,7 +408,6 @@ export default {
   width: inherit;
   height: auto;
 }
-
 
 @media (max-width: 800px) {
   .profile-container {
