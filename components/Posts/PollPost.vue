@@ -6,39 +6,33 @@
     <h4 class="title">{{ postData.title }}</h4>
 
     <div class="post-body">
-      <div class="poll-options-container">
+      <div ref="optionContainer" class="poll-options-container">
         <div class="poll-options">
-            <div v-for="option in postData.options" :key="option.id">
+          <div v-for="option in postData.options" :key="option.id">
             <div class="option-wrapper">
-                <div class="encuesta-opcion-texto">{{ option.answer }}</div>
-                <div
-                class="encuesta-opcion-barra encuesta-opcion-barra--rellena"
+              <div class="option-text">{{ option.answer }}</div>
+              <div
+                class="option-bar"
                 :style="
-                    'width: ' +
-                    calculaBarraEncuesta(postData.options, option) +
-                    'rem;'
+                  'width: ' +
+                  calculaBarraEncuesta(postData.options, option) +
+                  'px;'
                 "
-                ></div>
-                <div
-                class="encuesta-opcion-barra encuesta-opcion-barra--fondo"
-                ></div>
-                <!-- Por algún motivo desconocido, en este div estoy obligado a aplicar el text-align en el style, ya que no se aplica en la clase -->
-                <div
-                class="encuesta-opcion-barra porcentaje"
-                style="text-align: end"
-                >
+              ></div>
+              <!-- Por algún motivo desconocido, en este div estoy obligado a aplicar el text-align en el style, ya que no se aplica en la clase -->
+              <div class="option-bar percentage" style="text-align: end">
                 {{ calculaPorcentajeEncuesta(postData.options, option) }} %
-                </div>
+              </div>
             </div>
-            </div>
+          </div>
         </div>
       </div>
 
       <div class="aspect-ratio-wrapper">
         <div class="aspect-ratio-container">
-            <div class="img-wrapper">
-                <NuxtImg src="/img/tarta-manzana.png" class="image" />
-            </div>
+          <div class="img-wrapper">
+            <NuxtImg src="/img/tarta-manzana.png" class="image" />
+          </div>
         </div>
       </div>
     </div>
@@ -58,9 +52,7 @@
           <!--<div class="num-comments">{{ postData.comentarios.length }}</div>-->
         </div>
       </div>
-      <div class="time-left">
-        Acaba en 2 días
-      </div>
+      <div class="time-left">Acaba en 2 días</div>
     </div>
   </div>
 </template>
@@ -70,6 +62,7 @@ const props = defineProps({
   postData: Object,
 });
 
+// CÁLCULO DE PORCENTAJE Y LAS BARRAS GRÁFICAS
 const calculaPorcentajeEncuesta = (pollOptions, option) => {
   let totalVotes = pollOptions.reduce((acum, x) => acum + x.votes, 0);
   let result = (option.votes / totalVotes) * 100;
@@ -78,12 +71,38 @@ const calculaPorcentajeEncuesta = (pollOptions, option) => {
 
   return result % 1 !== 0 ? result.toFixed(1) : result.toFixed(0);
 };
-
 const calculaBarraEncuesta = (pollOptions, option) => {
-  let porcentaje = calculaPorcentajeEncuesta(pollOptions, option);
-  let result = porcentaje / 5; // Divide entre 5 porque la longitud de la barra es 20rem (100 / 5 = 20)
+  if (!anchoActual.value) return;
+
+  const porcentaje = calculaPorcentajeEncuesta(pollOptions, option);
+  const coeficiente = parseInt(anchoActual.value) / 100;
+  let result = porcentaje * coeficiente;
+  
   return result.toFixed(1);
 };
+
+
+// OBTENCIÖN REACTIVO DEL ANCHO DEL CONTENEDOR
+const optionContainer = ref(null);
+const anchoDiv = ref(0);
+// Inicializa el observer en null para que pueda ser asignado luego
+let resizeObserver = null;
+onMounted(() => {
+  if (optionContainer.value) {
+    resizeObserver = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      anchoDiv.value = entry.contentRect.width;
+    });
+    resizeObserver.observe(optionContainer.value);
+  }
+});
+onUnmounted(() => {
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
+});
+// Propiedad computada que siempre reflejará el ancho actual del div
+const anchoActual = computed(() => anchoDiv.value);
 </script>
   
 <style scoped lang="scss">
@@ -180,27 +199,23 @@ const calculaBarraEncuesta = (pollOptions, option) => {
   font-size: small;
 }
 .time-left {
-    font-size: 80%;
+  font-size: 80%;
   text-align: right;
 }
-
-// TODO: Adaptar todo esto y renombrarlo.
-
 .option-wrapper {
   position: relative;
   height: 1.6rem;
 }
 
-.encuesta-opcion-texto {
+.option-text {
   display: inline-block;
-  position: sticky; /* TODO: Ver qué hace esto y cambiar si es necesario. Ahora está puesto para evitar que el valor por defecto impida que se aplique el z-index */
+  position: relative; // Esto es solo para generar un contexto de apilamiento
   margin-left: 0.5rem;
-  margin-top: 0.1rem;
   font-size: 85%;
   z-index: 10;
 }
 
-.encuesta-opcion-barra {
+.option-bar {
   position: absolute;
   height: 100%;
   top: 0;
@@ -210,21 +225,8 @@ const calculaBarraEncuesta = (pollOptions, option) => {
   z-index: 5;
 }
 
-.encuesta-opcion-barra--rellena {
-}
-
-.encuesta-opcion-barra--fondo {
-  width: 20rem;
-  padding-top: 0.1rem;
-  background-color: $color-background;
-  // border: 1px solid $color-dark;
-  border-radius: 5px;
-  font-size: 85%;
-  z-index: 1;
-}
-
-.porcentaje {
-  width: 20rem;
+.percentage {
+  width: 100%;
   padding-top: 0.1rem;
   padding-right: 0.5rem;
   background-color: transparent;
