@@ -4,103 +4,70 @@
       <div class="profile-info">
         <div class="info-summary-section">
           <div class="picture-cotainer">
-            <div class="picture-wrapper"></div>
+            <div class="picture-wrapper">
+              <NuxtImg class="profile-picture" :src="usuarioDummy.img" />
+            </div>
           </div>
           <div class="info-summary">
-            <div class="summary-item"></div>
-            <div class="summary-item"></div>
-            <div class="summary-item"></div>
+            <div class="summary-item">
+              <div class="s-i-num">{{ usuarioDummy.publicaciones }}</div>
+              <div class="s-i-text">Publicaciones</div>
+            </div>
+            <div class="summary-item">
+              <div class="s-i-num">{{ usuarioDummy.seguidores }}</div>
+              <div class="s-i-text">Seguidores</div>
+            </div>
+            <div class="summary-item">
+              <div class="s-i-num">{{ usuarioDummy.siguiendo }}</div>
+              <div class="s-i-text">Siguiendo</div>
+            </div>
           </div>
         </div>
         <div class="info-detail">
-          <div class="name"></div>
-          <div class="description"></div>
+          <div class="i-d-name">Carlos</div>
+          <div class="i-d-description">Bla bla bla soy un chef muy guay</div>
         </div>
       </div>
       <div class="side-menu">
-        <div class="side-menu-button"></div>
-        <div class="side-menu-button"></div>
-        <div class="side-menu-button"></div>
+        <button class="side-menu-button">
+          <font-awesome-icon icon="fa fa-utensils" aria-hidden="true" />
+        </button>
+        <button class="side-menu-button">
+          <font-awesome-icon icon="fa fa-book" aria-hidden="true" />
+        </button>
+        <button class="side-menu-button">
+          <font-awesome-icon icon="fa fa-chart-simple" aria-hidden="true" />
+        </button>
       </div>
     </div>
     <div class="profile-content">
-      <div class="p-recipe">1</div>
-      <div class="p-recipe">2</div>
-      <div class="p-recipe">3</div>
-      <div class="p-recipe">4</div>
-      <div class="p-recipe">5</div>
-      <div class="p-recipe">6</div>
-      <div class="p-recipe">7</div>
-      <div class="p-recipe">8</div>
-      <div class="p-recipe">9</div>
-    </div>
-
-    <!--OLD-->
-    <b-row class="head">
-      <b-col md="5" class="">
-        <div class="perfil-vw">
-          <div class="wrapper-marco">
-            <div class="marco">
-              <div class="wrapper-foto">
-                <img class="foto" :src="usuarioDummy.img" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="rank-img"></div>
-      </b-col>
-      <b-col md="7" class="main-info">
-        <b-row>
-          <b-col md="6">
-            <div class="perfil-info-box">
-              <div class="perfil-info-num">{{ usuarioDummy.seguidores }}</div>
-              <div class="perfil-info-lit">SEGUIDORES</div>
-            </div>
-          </b-col>
-          <b-col md="6">
-            <div class="perfil-info-box">
-              <div class="perfil-info-num">
-                {{ usuarioDummy.publicaciones }}
-              </div>
-              <div class="perfil-info-lit">RECETAS</div>
-              <!-- TODO: Sustituir este título por pestañas para ve distintas secciones relacionadas con el perfil. -->
-            </div>
-          </b-col>
-        </b-row>
-        <div class="descripcion">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Lorem ipsum,
-          dolor sit amet consectetur adipisicing elit.
-        </div>
-      </b-col>
-    </b-row>
-    <b-row class="separacion">
-      <b-col md="5">
-        <div class="separacion-linea"></div>
-      </b-col>
-      <b-col class="separacion-titulo" md="2">RECETAS</b-col>
-      <b-col md="5">
-        <div class="separacion-linea"></div>
-      </b-col>
-    </b-row>
-    <div class="recetas">
-      <BListGroupItem
-        :class="'group-item-container ' + derechaIzquierda(index, 'group-item')"
-        v-for="(receta, index) in recetasDummy"
-        :key="index"
-      >
-        <a :class="'receta-globo ' + derechaIzquierda(index, 'globo')" href="#">
-          <div v-if="index % 2 === 0" class="wrapper-dibujo">
-            <img class="dibujo" :src="seleccionaDibujo()" />
-          </div>
-          <div class="info_receta">
-            <h4>{{ receta.nombre }}</h4>
-            <div>{{ receta.descripcion }}</div>
-          </div>
-          <div v-if="index % 2 === 1" class="wrapper-dibujo">
-            <img class="dibujo" :src="seleccionaDibujo()" />
-          </div>
-        </a>
-      </BListGroupItem>
+      <div class="p-recipe">
+        <NuxtImg src="https://img.taste.com.au/EwM4aecP/taste/2007/05/how-to-deep-fry-108893-1-139501-1.jpeg" class="image" />
+      </div>
+      <div class="p-recipe">
+        <NuxtImg src="https://images.pexels.com/photos/15564188/pexels-photo-15564188/free-photo-of-pancakes-with-berries-and-marple-syrup.jpeg?auto=compress&cs=tinysrgb&w=1600" class="image" />
+      </div>
+      <div class="p-recipe">
+        <NuxtImg src="https://img.delicious.com.au/G-2mxbOh/w1200/del/2022/08/parmesan-crumbed-chicken-schnitzel-fried-eggs-and-apple-cabbage-slaw-173352-2.jpg" class="image" />
+      </div>
+      <div class="p-recipe">
+        <NuxtImg src="https://images.immediate.co.uk/production/volatile/sites/30/2014/01/Top-10-foods-to-try-in-Morocco-e1f2400.jpg?resize=768,574" class="image" />
+      </div>
+      <div class="p-recipe">
+        <NuxtImg src="https://api.vip.foodnetwork.ca/wp-content/uploads/2022/01/FNC_OGImage_Taiwanese-Beef-Noodle-Soup.jpg" class="image" />
+      </div>
+      <div class="p-recipe">
+        <NuxtImg src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVsaWNpb3VzJTIwZm9vZHxlbnwwfHwwfHx8MA%3D%3D" class="image" />
+      </div>
+      <div class="p-recipe">
+        <NuxtImg src="https://img.freepik.com/premium-photo/two-sandwiches-made-slice-meat-cheese-tomatoes-toasted-bread-wooden-table_244366-394.jpg" class="image" />
+      </div>
+      <div class="p-recipe">
+        <NuxtImg src="https://media.istockphoto.com/id/1141120666/photo/healhy-breakfast-toast-with-avocado-egg.webp?b=1&s=170667a&w=0&k=20&c=empvrMxDuC1F3uVrUSaBHLh9xC9rhuY78yTJnQaUS-w=" class="image" />
+      </div>
+      <div class="p-recipe">
+        <NuxtImg src="https://images.unsplash.com/photo-1515041761709-f9fc96e04cd3?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGZvb2QlMjBvbiUyMHBsYXRlfGVufDB8fDB8fHww" class="image" />
+      </div>
     </div>
   </div>
 </template>
@@ -114,6 +81,7 @@ export default {
         nombreCompleto: "Juan Pérez Delgado",
         publicaciones: 28,
         seguidores: 143,
+        siguiendo: 55,
         img: "/img/foto_perfil2.jpg",
       },
       recetasDummy: [
@@ -184,233 +152,101 @@ export default {
 }
 .profile-info {
   width: 90%;
-
-  // TODO: Borrar. Es solo para maquetar
-  border: 1px solid black;
 }
 .info-summary-section {
   display: flex;
   height: 50%;
-
-  // TODO: Borrar. Es solo para maquetar
-  background-color: darksalmon;
 }
 .picture-cotainer {
   height: 100%;
   aspect-ratio: 1/1;
-
-  // TODO: Borrar. Es solo para maquetar
-  background-color: pink;
 }
 .picture-wrapper {
+  position: relative;
   height: 100%;
+  overflow: hidden;
   border-radius: 50%;
-
-  // TODO: Borrar. Es solo para maquetar
-  background-color: darkred;
+}
+.profile-picture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .info-summary {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   height: 100%;
   flex-grow: 1;
 }
 .summary-item {
   height: 100%;
   width: 5rem;
+  text-align: center;
+}
+.s-i-num {
   font-size: 150%;
-
-  // TODO: Borrar. Es solo para maquetar
-  background-color: darkred;
-  border: 1px solid pink;
+  font-weight: bold;
+}
+.s-i-text {
+  font-size: 90%;
 }
 .info-detail {
   height: 50%;
+  font-size: 90%;
+}
+.i-d-name {
+  font-weight: bold;
+  margin: 5px 0;
+}
+.i-d-description {
 
-  // TODO: Borrar. Es solo para maquetar
-  background-color: aqua;
 }
 .side-menu {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  gap: 17px;
   align-items: center;
   width: 10%;
-
-  // TODO: Borrar. Es solo para maquetar
-  background-color: burlywood;
 }
 .side-menu-button {
-  height: 3rem; // Provisional
-  width: 3rem; // Provisional
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.7rem; // Provisional
+  width: 2.7rem; // Provisional
   border-radius: 50%;
-
-  // TODO: Borrar. Es solo para maquetar
-  background-color: darkred;
+  background-color: $color-primary;
 }
 .profile-content {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 3px;
-
-  // TODO: Borrar. Es solo para maquetar
-  height: 55rem;
-  background-color: greenyellow;
+  height: 45rem; // Provisional
 }
 .p-recipe {
+  position: relative;
 
   // TODO: Borrar. Es solo para maquetar
   border: 1px solid black;
   border-radius: 5px;
   background-color: aliceblue;
 }
-
-// TODO: Adaptación, renombres y limpieza de todo lo que esté aquí debajo
-.wrapper-marco {
-  display: inline-block;
-  width: 9rem;
-  height: 9rem;
-  overflow: hidden;
-  position: relative;
-  border-radius: 50%;
-  z-index: 5;
-}
-.marco {
-  padding: 0.5rem;
-  width: auto;
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
-  background-color: maroon;
+  object-fit: cover;
 }
 
-.wrapper-foto {
-  display: inline-block;
-  width: 8rem;
-  height: 8rem;
-  overflow: hidden;
-  position: relative;
-  border-radius: 50%;
-}
-
-.foto {
-  width: auto;
-  height: 100%;
-  /* Los márgenes están customizados a mano para cuadrar la foto donde quiero. TODO: quitar en el futuro */
-  margin-left: -0.4rem;
-  margin-bottom: 2rem;
-}
-
-.rank-img {
-  margin: 0 1rem;
-  height: 3rem;
-  background-color: brown;
-}
-
-.head {
-  padding: 1.3rem;
-}
-
-.perfil-vw {
-  text-align: center;
-}
-
-.main-info {
-  padding: 0.5rem 0.5rem 0.5rem 0;
-}
-
-.perfil-info-box {
-  display: inline-block;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-.perfil-info-num {
-  font-size: 160%;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-}
-.perfil-info-lit {
-  font-weight: 350;
-  font-size: 95%;
-  letter-spacing: 2px;
-}
-
-.descripcion {
-}
-
-.wrapper-separacion {
-  position: relative;
-}
-
-.separacion {
-  margin: 3rem 0;
-}
-
-.separacion-linea {
-  margin: 0 1.6rem;
-  border-bottom: 4px dotted brown;
-}
-
-.separacion-titulo {
-  text-align: center;
-  margin-top: -0.7rem;
-}
-
-.recetas {
-}
-
-.group-item-container {
-  border: none;
-  background-color: transparent;
-}
-
-.group-item-container--derecha {
-  text-align: end;
-}
-
-.group-item-container--izquierda {
-  text-align: end;
-}
-
-.receta-globo {
-  width: 80%;
-  display: inline-flex;
-  padding: 1rem;
-  color: black;
-  background-color: $color-primary;
-  border-radius: 2rem;
-}
-
-.receta-globo--izquierda {
-  margin-right: 20%;
-}
-
-.receta-globo--derecha {
-  /* margin-right: 0; */
-  margin-left: 20%;
-  text-align: right;
-}
-
-.info_receta {
-  vertical-align: middle;
-  margin: 0 0.9rem 0 0.9rem;
-}
-
-.wrapper-dibujo {
-  margin: 0 0 0.4rem 0;
-  display: inline-block;
-  width: 7rem; /* Valorar poner el mismo valor que en height por motivos de wrapping si hiciera falta. */
-  height: auto;
-  position: relative;
-  border-radius: 50%;
-  background-color: transparent;
-}
-
-.dibujo {
-  width: inherit;
-  height: auto;
-}
 
 @media (max-width: 800px) {
-  .profile-container {
+  .profile {
     margin: auto;
     width: 80%;
   }
