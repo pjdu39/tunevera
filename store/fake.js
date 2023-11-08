@@ -19,12 +19,12 @@ export const useFakeStore = defineStore({
         setLoginTokenError(payload) {
             this.getFakeLoginTokenState.error = payload;
         },
-        async fetchFakeLoginToken(idUser) {
+        async fetchFakeLoginToken(email) {
             const apiUrl = useRuntimeConfig().public.apiUrl;
 
             this.setLoginTokenLoading('loading');
             try {
-                const httpResponse = await fetch(`${ apiUrl }FakeLogin?IdUser=${ idUser }`);
+                const httpResponse = await fetch(`${ apiUrl }FakeLogin?Email=${ email }`);
 
                 if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.statusText } en el fetch`);
                 

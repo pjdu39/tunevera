@@ -1,26 +1,30 @@
-<template>
+<template>r
   <div class="container">
     <div class="login-card">
       <BFormGroup
-        id="fieldset-id-user"
-        class="input-container id-user-container"
-        label="IdUser"
-        label-for="input-id-user"
+        id="fieldset-email"
+        class="email-container"
+        label="Email"
+        label-for="input-email"
         :state="emailState"
       >
         <BFormInput
-          id="input-id-user"
-          class="input"
-          v-model="idUser"
+          id="input-email"
+          class="email-input"
+          v-model="email"
+          autocomplete="off"
           trim
         ></BFormInput>
       </BFormGroup>
-      <BButton class="login-button" @click="fetchFakeLoginToken()(idUser)">
+      <BButton class="login-button" @click="fetchFakeLoginToken()(email)">
         Login
       </BButton>
+
+      <!--
       <div class="token" v-if="getFakeLoginTokenState.loading === 'loaded'">
         {{ getFakeLoginTokenState.data.token }}
       </div>
+      -->
     </div>
   </div>
 </template>
@@ -31,7 +35,7 @@ export default {
   layout: "empty",
   data() {
     return {
-      idUser: null,
+      email: null,
     };
   },
   computed: {
@@ -42,7 +46,6 @@ export default {
   },
   methods: {
     fetchFakeLoginToken() {
-      console.log(this.idUser);
       const store = useFakeStore();
       return store.fetchFakeLoginToken;
     },
@@ -50,32 +53,38 @@ export default {
 };
 </script>
   
-<style scoped>
+<style scoped lang="scss">
 .container {
-  min-height: 100vh;
   display: flex;
-  /* justify-content: center;
-      align-items: center; */
+  justify-content: center;
 }
 .login-card {
-  position: relative;
-  margin: auto;
-  padding: 3rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 4rem;
+  padding: 0 2rem;
   width: 25rem;
-  height: 25rem;
-  background-color: #eaedee;
-  border-radius: 1rem;
-  box-shadow: 1.5px 1.5px 30px -10px #252b31;
+  height: 15rem;
+  border: 3px solid $color-dark;
+  border-radius: 5px;
 }
-.id-user-container {
-  margin-left: auto;
-  margin-right: auto;
+.email-container {
+  width: 100%;
+}
+.login-button {
+  width: 100%;
+  border-radius: 3rem;
+  background-color: $color-primary;
+  border: 1px solid $color-primary;
 }
 .token {
   max-width: 18rem;
   overflow-wrap: break-word;
 }
-.input {
-  border-radius: 0.8rem;
+.email-input {
+  border: 1px solid $color-dark;
+  border-radius: 5px;
 }
 </style>

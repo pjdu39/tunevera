@@ -229,10 +229,10 @@ export default {
 }
 .p-recipe {
   position: relative;
-
-  // TODO: Borrar. Es solo para maquetar
   border: 1px solid black;
   border-radius: 5px;
+
+  // TODO: Borrar. Es solo para maquetar
   background-color: aliceblue;
 }
 .image {
