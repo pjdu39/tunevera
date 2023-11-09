@@ -30,7 +30,11 @@ export const useFakeStore = defineStore({
                 
                 const data = await httpResponse.json();
                 
-                localStorage.setItem('tokenBearer', data.token);
+                // localStorage.setItem('tokenBearer', data.token);
+
+                // Establecer una cookie segura en lugar de usar localStorage
+                // document.cookie = `tokenBearer=${data.token};path=/;max-age=3600;Secure;SameSite=Lax`;
+                document.cookie = `tokenBearer=${data.token};path=/;`;
 
                 this.setLoginTokenData(data);
                 this.setLoginTokenLoading('loaded');

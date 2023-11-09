@@ -6,7 +6,6 @@
         class="email-container"
         label="Email"
         label-for="input-email"
-        :state="emailState"
       >
         <BFormInput
           id="input-email"

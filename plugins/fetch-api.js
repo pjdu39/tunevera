@@ -1,9 +1,11 @@
 export default defineNuxtPlugin((nuxtApp) => {
+    const { publicRuntimeConfig } = useRuntimeConfig();
+
     return {
         provide: {
             fetchApi: async (endpoint, options = {}) => {
-                const baseUrl = "https://localhost:44322/" // Sustituir por variable de entorno
-                const token = localStorage.getItem("tokenBearer");
+                const baseUrl = publicRuntimeConfig.apiUrl
+                const token = useCookie("tokenBearer");
                 const headers = {
                     "Authorization": `Bearer ${ token }`,
                     ...options.headers, // Esto permite cabeceras adicionales específicas de la solicitud

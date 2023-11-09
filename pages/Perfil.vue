@@ -42,101 +42,75 @@
     </div>
     <div class="profile-content">
       <div class="p-recipe">
-        <NuxtImg src="https://img.taste.com.au/EwM4aecP/taste/2007/05/how-to-deep-fry-108893-1-139501-1.jpeg" class="image" />
+        <NuxtImg
+          src="https://img.taste.com.au/EwM4aecP/taste/2007/05/how-to-deep-fry-108893-1-139501-1.jpeg"
+          class="image"
+        />
       </div>
       <div class="p-recipe">
-        <NuxtImg src="https://images.pexels.com/photos/15564188/pexels-photo-15564188/free-photo-of-pancakes-with-berries-and-marple-syrup.jpeg?auto=compress&cs=tinysrgb&w=1600" class="image" />
+        <NuxtImg
+          src="https://images.pexels.com/photos/15564188/pexels-photo-15564188/free-photo-of-pancakes-with-berries-and-marple-syrup.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          class="image"
+        />
       </div>
       <div class="p-recipe">
-        <NuxtImg src="https://img.delicious.com.au/G-2mxbOh/w1200/del/2022/08/parmesan-crumbed-chicken-schnitzel-fried-eggs-and-apple-cabbage-slaw-173352-2.jpg" class="image" />
+        <NuxtImg
+          src="https://img.delicious.com.au/G-2mxbOh/w1200/del/2022/08/parmesan-crumbed-chicken-schnitzel-fried-eggs-and-apple-cabbage-slaw-173352-2.jpg"
+          class="image"
+        />
       </div>
       <div class="p-recipe">
-        <NuxtImg src="https://images.immediate.co.uk/production/volatile/sites/30/2014/01/Top-10-foods-to-try-in-Morocco-e1f2400.jpg?resize=768,574" class="image" />
+        <NuxtImg
+          src="https://images.immediate.co.uk/production/volatile/sites/30/2014/01/Top-10-foods-to-try-in-Morocco-e1f2400.jpg?resize=768,574"
+          class="image"
+        />
       </div>
       <div class="p-recipe">
-        <NuxtImg src="https://api.vip.foodnetwork.ca/wp-content/uploads/2022/01/FNC_OGImage_Taiwanese-Beef-Noodle-Soup.jpg" class="image" />
+        <NuxtImg
+          src="https://api.vip.foodnetwork.ca/wp-content/uploads/2022/01/FNC_OGImage_Taiwanese-Beef-Noodle-Soup.jpg"
+          class="image"
+        />
       </div>
       <div class="p-recipe">
-        <NuxtImg src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVsaWNpb3VzJTIwZm9vZHxlbnwwfHwwfHx8MA%3D%3D" class="image" />
+        <NuxtImg
+          src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVsaWNpb3VzJTIwZm9vZHxlbnwwfHwwfHx8MA%3D%3D"
+          class="image"
+        />
       </div>
       <div class="p-recipe">
-        <NuxtImg src="https://img.freepik.com/premium-photo/two-sandwiches-made-slice-meat-cheese-tomatoes-toasted-bread-wooden-table_244366-394.jpg" class="image" />
+        <NuxtImg
+          src="https://img.freepik.com/premium-photo/two-sandwiches-made-slice-meat-cheese-tomatoes-toasted-bread-wooden-table_244366-394.jpg"
+          class="image"
+        />
       </div>
       <div class="p-recipe">
-        <NuxtImg src="https://media.istockphoto.com/id/1141120666/photo/healhy-breakfast-toast-with-avocado-egg.webp?b=1&s=170667a&w=0&k=20&c=empvrMxDuC1F3uVrUSaBHLh9xC9rhuY78yTJnQaUS-w=" class="image" />
+        <NuxtImg
+          src="https://media.istockphoto.com/id/1141120666/photo/healhy-breakfast-toast-with-avocado-egg.webp?b=1&s=170667a&w=0&k=20&c=empvrMxDuC1F3uVrUSaBHLh9xC9rhuY78yTJnQaUS-w="
+          class="image"
+        />
       </div>
       <div class="p-recipe">
-        <NuxtImg src="https://images.unsplash.com/photo-1515041761709-f9fc96e04cd3?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGZvb2QlMjBvbiUyMHBsYXRlfGVufDB8fDB8fHww" class="image" />
+        <NuxtImg
+          src="https://images.unsplash.com/photo-1515041761709-f9fc96e04cd3?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGZvb2QlMjBvbiUyMHBsYXRlfGVufDB8fDB8fHww"
+          class="image"
+        />
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      usuarioDummy: {
-        id: 1,
-        nombreCompleto: "Juan Pérez Delgado",
-        publicaciones: 28,
-        seguidores: 143,
-        siguiendo: 55,
-        img: "/img/foto_perfil2.jpg",
-      },
-      recetasDummy: [
-        {
-          id: 1,
-          nombre: "Huevos Rellenos",
-          descripcion:
-            "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
-        },
-        {
-          id: 2,
-          nombre: "Café Irlandés",
-          descripcion:
-            "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
-        },
-        {
-          id: 3,
-          nombre: "Cocido Madrileño",
-          descripcion:
-            "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
-        },
-        {
-          id: 4,
-          nombre: "Pavo Relleno",
-          descripcion:
-            "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
-        },
-      ],
-      dibujosComida: [
-        { name: "comida1", img: "/img/food_draw_1.png" },
-        { name: "comida2", img: "/img/food_draw_2.png" },
-        { name: "comida3", img: "/img/food_draw_3.png" },
-      ],
-    };
-  },
-  methods: {
-    derechaIzquierda(index, element) {
-      if (element === "group-item") {
-        return index % 2 === 0
-          ? "group-item-container--izquierda"
-          : "group-item-container--derecha";
-      } else if (element === "globo") {
-        return index % 2 === 0
-          ? "receta-globo--izquierda"
-          : "receta-globo--derecha";
-      }
-
-      return "";
-    },
-    seleccionaDibujo() {
-      let r = Math.floor(Math.random() * 3);
-      return this.dibujosComida[r].img;
-    },
-  },
-};
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+const usuarioDummy = reactive({
+  id: 1,
+  nombreCompleto: "Juan Pérez Delgado",
+  publicaciones: 28,
+  seguidores: 143,
+  siguiendo: 55,
+  img: "/img/foto_perfil2.jpg",
+});
 </script>
 
 <style scoped lang="scss">
@@ -202,7 +176,6 @@ export default {
   margin: 5px 0;
 }
 .i-d-description {
-
 }
 .side-menu {
   display: flex;
@@ -243,7 +216,6 @@ export default {
   height: 100%;
   object-fit: cover;
 }
-
 
 @media (max-width: 800px) {
   .profile {
