@@ -30,7 +30,7 @@ export const useBoardStore = defineStore({
             }
             catch(error) {
                 this.setData(null);
-                this.setLoading('waiting');
+                this.setLoading('error');
                 this.setError(error.message);
             }
         }

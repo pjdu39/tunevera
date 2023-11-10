@@ -20,6 +20,7 @@ export const useFakeStore = defineStore({
             this.getFakeLoginTokenState.error = payload;
         },
         async fetchFakeLoginToken(email) {
+            console.log(email)
             const apiUrl = useRuntimeConfig().public.apiUrl;
 
             this.setLoginTokenLoading('loading');
@@ -42,7 +43,7 @@ export const useFakeStore = defineStore({
             }
             catch(error) {
                 this.setLoginTokenData(null);
-                this.setLoginTokenLoading('waiting');
+                this.setLoginTokenLoading('error');
                 this.setLoginTokenError(error.message);
             }
         }

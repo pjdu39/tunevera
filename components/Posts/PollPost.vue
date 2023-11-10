@@ -82,7 +82,7 @@ const calculaBarraEncuesta = (pollOptions, option) => {
 };
 
 
-// OBTENCIÖN REACTIVO DEL ANCHO DEL CONTENEDOR
+// OBTENCIÓN REACTIVA DEL VALOR DEL ANCHO DEL CONTENEDOR
 const optionContainer = ref(null);
 const anchoDiv = ref(0);
 // Inicializa el observer en null para que pueda ser asignado luego

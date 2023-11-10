@@ -1,17 +1,17 @@
 export default defineNuxtPlugin((nuxtApp) => {
-    const { publicRuntimeConfig } = useRuntimeConfig();
 
     return {
         provide: {
             fetchApi: async (endpoint, options = {}) => {
-                const baseUrl = publicRuntimeConfig.apiUrl
-                const token = useCookie("tokenBearer");
+                const apiUrl = useRuntimeConfig().public.apiUrl;
+                const token = useCookie("tokenBearer").value;
+                console.log(token)
                 const headers = {
                     "Authorization": `Bearer ${ token }`,
                     ...options.headers, // Esto permite cabeceras adicionales específicas de la solicitud
                 };
 
-                const url = new URL(endpoint, baseUrl);
+                const url = new URL(endpoint, apiUrl);
 
                 const response = await fetch(url, { ...options, headers });
 

@@ -31,7 +31,7 @@ export const useRecipeStore = defineStore({
             }
             catch(error) {
                 this.setRecipeData(null);
-                this.setRecipeLoading('waiting');
+                this.setRecipeLoading('error');
                 this.setRecipeError(error.message);
             }
         }

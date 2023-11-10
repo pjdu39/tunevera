@@ -1,55 +1,76 @@
-<template>r
-  <div class="container">
-    <div class="login-card">
-      <BFormGroup
-        id="fieldset-email"
-        class="email-container"
-        label="Email"
-        label-for="input-email"
-      >
-        <BFormInput
-          id="input-email"
-          class="email-input"
-          v-model="email"
-          autocomplete="off"
-          trim
-        ></BFormInput>
-      </BFormGroup>
-      <BButton class="login-button" @click="fetchFakeLoginToken()(email)">
-        Login
-      </BButton>
-
-      <!--
-      <div class="token" v-if="getFakeLoginTokenState.loading === 'loaded'">
-        {{ getFakeLoginTokenState.data.token }}
+<template>
+  <div v-if="loading === 'waiting'">
+    <div class="container">
+      <div class="login-card">
+        <BFormGroup
+          id="fieldset-email"
+          class="email-container"
+          label="Email"
+          label-for="input-email"
+        >
+          <BFormInput
+            id="input-email"
+            class="email-input"
+            v-model="email"
+            autocomplete="off"
+            trim
+          ></BFormInput>
+        </BFormGroup>
+        <BButton class="login-button" @click="fetchFakeLoginToken()">
+          Login
+        </BButton>
       </div>
-      -->
+    </div>
+  </div>
+
+  <div v-else-if="loading === 'loading'" class="">
+    <div class="state-container">
+      <font-awesome-icon
+        icon="fa fa-spinner"
+        class="fa-pulse fa-lg loading"
+        aria-hidden="true"
+      />
+    </div>
+  </div>
+  <div v-else-if="loading === 'error'" class="">
+    <div class="state-container">
+      <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
+      <div>{{ error }}</div>
     </div>
   </div>
 </template>
   
-<script>
+<script setup>
+import { useRouter } from "vue-router";
 import { useFakeStore } from "~/store/fake.js";
-export default {
+
+definePageMeta({
   layout: "empty",
-  data() {
-    return {
-      email: null,
-    };
-  },
-  computed: {
-    getFakeLoginTokenState() {
-      const store = useFakeStore();
-      return store.getFakeLoginTokenState;
-    },
-  },
-  methods: {
-    fetchFakeLoginToken() {
-      const store = useFakeStore();
-      return store.fetchFakeLoginToken;
-    },
-  },
-};
+});
+
+// Estado reactivo
+const email = ref(null);
+
+// Acceso a la store
+const fakeStore = useFakeStore();
+
+// Propiedades computadas
+const loading = computed(() => fakeStore.getFakeLoginTokenState.loading);
+const error = computed(() => fakeStore.getFakeLoginTokenState.error);
+
+// Métodos
+const fetchFakeLoginToken = () => fakeStore.fetchFakeLoginToken(email.value);
+
+// Enrutador para redireccionar
+const router = useRouter();
+
+// Observar la propiedad y redirigir si es necesario
+watch(loading, (newValue) => {
+  if (newValue === "loaded") {
+    console.log("entro en el watch");
+    router.push("/Perfil");
+  }
+});
 </script>
   
 <style scoped lang="scss">
@@ -85,5 +106,21 @@ export default {
 .email-input {
   border: 1px solid $color-dark;
   border-radius: 5px;
+}
+
+.state-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 12rem; // Provisional
+  width: 100%;
+  font-size: 200%;
+}
+.loading {
+}
+.error {
+  color: $color-primary;
+  font-size: 200%; // Se acumula sobre el font-size: 200%; del contenedor
 }
 </style>
