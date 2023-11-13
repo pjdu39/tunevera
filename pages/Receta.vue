@@ -30,10 +30,7 @@
           <div class="general-info-bottom">
             <div class="general-info-left">
               <div class="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa
-                laboriosam necessitatibus aspernatur numquam soluta suscipit
-                dolores! Excepturi aperiam aliquam magni ea esse minus! Velit
-                magnam ducimus recusandae laborum reiciendis accusantium.
+                {{ getRecipeState.data.description }}
               </div>
               <div class="interaction-container">
                 <div class="interaction-icon">
@@ -71,16 +68,35 @@
         <div class="badge--tag">#verduras</div>
       </div>
       <div class="middle-section">
-        <div class="ingredients">
+        <div class="ingredients-container">
           <div class="middle-section-title">Ingredientes:</div>
-          <div>Aquí va un v-for</div>
+          <div
+            class="ingredient"
+            v-for="(ingredient, index) in getRecipeState.data.ingredients"
+            :key="index"
+          >
+            -
+            {{
+              ingredient.amount + " " + ingredient.unit + " " + ingredient.text
+            }}
+          </div>
         </div>
-        <div class="steps">
+        <div class="steps-container">
           <div class="middle-section-title">Pasos:</div>
-          <div>Aquí va otro v-for</div>
+          <div
+            class="step"
+            v-for="(step, index) in getRecipeState.data.steps"
+            :key="index"
+          >
+            <div class="">
+              <b>{{ index + 1 }}.</b> {{ step.text }}
+            </div>
+          </div>
         </div>
       </div>
-      <div class="comment-section"></div>
+      <div class="comment-section">
+        Comentarios
+      </div>
     </div>
 
     <!-- TODO: Borrar. Es legacy -->
@@ -193,18 +209,12 @@ export default {
 .recipe {
   margin: auto;
   width: 65rem;
-  height: 80rem;
-
-  /* Es solo para maquetar */
-  background-color: linen;
+  height: 100rem;
 }
 .top-section {
   display: flex;
   height: 25rem;
   width: 100%;
-
-  /* Es solo para maquetar */
-  background-color: lightcyan;
 }
 .img-wrapper {
   position: relative;
@@ -227,16 +237,14 @@ export default {
   width: min-content;
   flex-grow: 1;
   padding: 1rem;
-
-  /* Es solo para maquetar */
-  background-color: rgb(253, 204, 204);
+  border-right: 1px solid grey;
 }
 .general-info-top {
   display: flex;
-  height: 10%;
+  height: auto;
 }
 .recipe-title {
-  font-size: 160%;
+  font-size: 250%;
 }
 .signature {
   display: flex;
@@ -264,6 +272,14 @@ export default {
 }
 .properties {
 }
+.badge--vegan {
+  width: min-content;
+  padding: 1px 7px 4px 7px;
+  line-height: 100%;
+  border-radius: 5px;
+  color: white;
+  background-color: rgb(178, 241, 142);
+}
 .general-info-bottom {
   display: flex;
   justify-content: space-between;
@@ -281,6 +297,7 @@ export default {
 .interaction-container {
   display: flex;
   line-height: 100%;
+  font-size: 120%;
   margin: 0 1rem 0 0;
 }
 .interaction-icon {
@@ -325,33 +342,32 @@ export default {
 .middle-section {
   display: flex;
   width: 100%;
-
-  /* Es solo para maquetar */
-  height: 40rem;
-  background-color: whitesmoke;
 }
-.ingredients {
-  height: 100%;
-  width: 25rem;
+.ingredients-container {
+  height: fit-content;
+  min-width: 21rem;
   border-right: 1px solid $color-dark;
-
-  /* Es solo para maquetar */
-  background-color: wheat;
 }
 .middle-section-title {
+  margin-bottom: 1rem;
   font-size: 150%;
   text-decoration: underline;
   /* border-bottom: 2px solid $color-dark; */
 }
-.steps {
+.ingredient {
+  margin-left: 5px;
+  line-height: 27px;
+}
+.steps-container {
+  height: fit-content;
   padding: 0 2rem;
+}
+.step {
+  margin-bottom: 25px;
 }
 .comments-section {
   height: 30rem;
   width: 100%;
-
-  /* TODO: Borrar. Es solo para maquetar */
-  background-color: lavender;
 }
 
 /* TODO: Borrar. Es la versión antigua. ------------------------------------------------------------------------ */
