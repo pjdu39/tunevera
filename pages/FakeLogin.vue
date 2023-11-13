@@ -113,8 +113,6 @@ watch(loading, (newValue) => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 12rem; // Provisional
-  width: 100%;
   font-size: 200%;
 }
 .loading {

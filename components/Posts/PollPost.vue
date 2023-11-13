@@ -39,13 +39,13 @@
 
     <div class="bottom-info">
       <div class="interactions">
-        <div class="interaction-wrapper">
+        <div class="interaction-container">
           <div class="interaction-icon">
             <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
           </div>
           <div class="num-likes">{{ postData.likes }}</div>
         </div>
-        <div class="interaction-wrapper">
+        <div class="interaction-container">
           <div class="interaction-icon">
             <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
           </div>
@@ -115,10 +115,7 @@ const anchoActual = computed(() => anchoDiv.value);
   border-radius: 5px;
   overflow: hidden;
   padding: 0.5rem 1rem;
-
-  // TODO: Borrar, es solo para maquetar
-  z-index: 20;
-  margin: 3rem 0;
+  margin-bottom: 3rem;
 }
 .signature {
   flex-grow: 1;
@@ -185,7 +182,7 @@ const anchoActual = computed(() => anchoDiv.value);
 .interactions {
   display: flex;
 }
-.interaction-wrapper {
+.interaction-container {
   display: flex;
   line-height: 100%;
   margin: 0 1rem 0 0;
