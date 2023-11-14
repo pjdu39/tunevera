@@ -264,7 +264,7 @@ const usuarioDummy = reactive({
 }
 .loading {
 }
-.error {
+.error { // TODO: Considerar mover a clases globales
   color: $color-primary;
   font-size: 200%; // Se acumula sobre el font-size: 200%; del contenedor
 }
