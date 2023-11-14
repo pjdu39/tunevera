@@ -1,20 +1,20 @@
 <template>
-  <div class="mainBox">
-    <!-- TODO: Los tabs no tienen soporte aún en Bootstrap Vue Next. Comentarlos y crearlos manualmente hasta que existan. -->
-    <BTabs content-class="mt-3" class="tab-option">
-      <div class="page">
-        <BTab title="Receta" @click="cleanData">
-          <RecipeUpload />
-        </BTab>
-        <BTab title="Encuesta" @click="cleanData">
-          <PollUpload />
-        </BTab>
-        <BTab title="Artículo" @click="cleanData">
-          <DiscussionUpload />
-        </BTab>
-      </div>
-    </BTabs>
+  <div class="uploads">
+    <TabView content-class="mt-3" class="">
+      <TabPanel header="Receta">
+        <RecipeUpload />
+      </TabPanel>
+      <TabPanel header="Encuesta">
+        <PollUpload />
+      </TabPanel>
+      <TabPanel header="Artículo">
+        <DiscussionUpload />
+      </TabPanel>
+    </TabView>
+  </div>
 
+  <!-- TODO: Borrar. Legacy ------------------------------------------------------------------------------------------------------------>
+  <div class="mainBox">
     <TabView content-class="mt-3" class="tab-option">
       <div class="page">
         <TabPanel header="Receta" @click="cleanData">
@@ -49,22 +49,19 @@ export default {
     TabView,
     TabPanel,
   },
-  data() {
-    return {
-      descripcion: null,
-    };
-  },
-  methods: {
-    // TODO: Borrar. Esto sólo tenía sentido antes de separar cada formulario en componentes.
-    cleanData() {
-      this.title = null;
-      this.descripcion = null;
-    },
-  },
 };
 </script>
 
 <style scoped lang="scss">
+.uploads {
+  margin: auto;
+  padding: 5px 0;
+  width: 54rem;
+  border: 3px solid $color-dark;
+  border-radius: 5px;
+}
+
+/* TODO: Borrar. Legacy ------------------------------------------------------------------------------------------------------ */
 .mainBox {
   margin: auto;
   width: 53rem;
@@ -136,7 +133,6 @@ export default {
   padding: 0.4rem 0.5rem 0.4rem 0.4rem;
   margin-right: 0rem;
   margin-bottom: 1rem;
-
 
   background-color: $color-primary;
   /* TODO: Invertir los inset tratando de conseguir el mismo resultado. Con los inset simulando los bordes queda fatal al pulsar los botones */

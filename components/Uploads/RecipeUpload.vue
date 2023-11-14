@@ -251,7 +251,7 @@
   </div>
   <div v-else-if="newRecipeState.loading === 'error'">
     Ups, parece que algo falló. {{ newRecipeState.error }}
-    <BButton @click="setLoadingToWaiting()">Reintentar</BButton>
+    <BButton>Reintentar</BButton>
   </div>
 </template>
 
@@ -422,19 +422,11 @@ export default {
         this.postRecipeData.time -= diff;
       }
     },
-    setLoadingToWaiting() {
-      // TODO: Esto no funciona, crear una función en la store para manejar el loading si se requiere hacerlo.
-      /* this.loading = "waiting"; */
-    },
     Aceptar() {
       this.Resolve();
 
       // TODO: Validaciones de contenido sobre postRecipeData
       this.postRecipe()(this.postRecipeData);
-    },
-    // TODO: Borrar la función y el botón. Ya no tienen sentido
-    Atras() {
-      // this.postRecipe(this.postRecipeData);
     },
 
     pointTo(index) {
@@ -487,12 +479,50 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.input {
+
+.add-comment-txt-area {
+}
+input {
+  width: 90%;
+  margin-top: 4rem;
   border: none;
-  background-color: #f2f4f5;
-  border-radius: 0.7rem;
-  box-shadow: 2px 2px 3px 1px #55555525 inset,
-    -1.3px -1.3px 9px 2px rgb(255, 255, 255) inset;
+  border-bottom: 1px solid $color-dark;
+  border-radius: 0;
+  background-color: $color-background;
+}
+input:focus {
+  border: none;
+  outline: none !important;
+  box-shadow: none;
+  /*
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  */
+  border-bottom: 3px solid $color-dark;
+}
+textarea {
+  width: 90%;
+  margin-top: 4rem;
+  border: none;
+  border-bottom: 1px solid $color-dark;
+  border-radius: 0;
+  background-color: $color-background;
+  resize: none;
+}
+textarea:focus {
+  border: none;
+  outline: none !important;
+  box-shadow: none;
+  /*
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  */
+  border-bottom: 3px solid $color-dark;
+}
+
+
+/* TODO: Borrar. Legacy. ------------------------------------------------------------------------------------------*/
+.input {
 }
 .title-container {
   width: 100%;

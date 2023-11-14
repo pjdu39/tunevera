@@ -47,16 +47,38 @@ input[type="number"] {
 
 
 // Sobreescribir estilo de primevue
-
 .p-tabview-nav-link {
-  background-color: $color-primary;
-  color: white;
+  font-size: 120%;
+  background-color: transparent;
+  color: grey;
+  text-decoration: none;
+  border: none;
+
+  
+  
+  margin: 0.5rem 0;
+  padding: 0.25rem 1rem;
+  border-right: 1px solid grey;
+  border-radius: 0;
+}
+.p-tabview-title {
 }
 .p-tabview {
   background-color: transparent;
 }
+.p-tabview-nav {
+  padding: 0 8px;
+  border: none;
+}
 .p-tabview-panels {
   background-color: transparent;
+}
+.p-tabview-header {
+  border: none;
+}
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  color: $color-dark;
+  text-decoration: underline;
 }
 
 //-----------------------------------

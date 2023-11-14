@@ -1,6 +1,12 @@
 <template>
   <div class="recipe">
-    <div v-if="getRecipeState.loading === 'loading' || getRecipeState.loading === 'waiting'" class="spinner">
+    <div
+      v-if="
+        getRecipeState.loading === 'loading' ||
+        getRecipeState.loading === 'waiting'
+      "
+      class="spinner"
+    >
       <font-awesome-icon
         icon="fa-solid fa-spinner"
         class="fa-spin-pulse fa-lg"
@@ -342,6 +348,10 @@ textarea:focus {
   border: none;
   outline: none !important;
   box-shadow: none;
+  /*
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  */
   border-bottom: 3px solid $color-dark;
 }
 .title-comments {
