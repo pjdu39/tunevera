@@ -1,5 +1,127 @@
 <template>
   <div v-if="newRecipeState.loading === 'waiting'">
+    <div class="section section--top">
+      <div class="img-container">
+        <div class="wrapper-img">
+          <NuxtImg
+            class="image-fit"
+            src="https://www.svgrepo.com/show/4029/picture.svg"
+          />
+        </div>
+        <Button class="btn btn--add-img">
+          <span class="span--add-img">+</span>
+        </Button>
+      </div>
+      <div class="right-container">
+        <div class="title-box">
+          <div class="label">Título</div>
+          <input class="" />
+        </div>
+        <div class="interactive-inputs-container">
+          <div class="container-fraction">
+            <div class="interactive-input-box">
+              <div class="interactive-input-box-top">
+                <font-awesome-icon
+                  icon="fa-solid fa-clock"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
+              </div>
+              <div class="interactive-input-box-bottom">
+                <button class="btn btn--i-btn">
+                  <span class="span--i-btn">-</span>
+                </button>
+                <input type="number" class="interactive-input" />
+                <button class="btn btn--i-btn">
+                  <span class="span--i-btn">+</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="container-fraction">
+            <div class="interactive-input-box">
+              <div class="interactive-input-box-top">
+                <font-awesome-icon
+                  icon="fa-solid fa-utensils"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
+              </div>
+              <div class="interactive-input-box-bottom">
+                <button class="btn btn--i-btn">
+                  <span class="span--i-btn">-</span>
+                </button>
+                <input type="number" class="interactive-input" />
+                <button class="btn btn--i-btn">
+                  <span class="span--i-btn">+</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section section--description">
+      <div class="label">Descripción</div>
+      <Textarea v-model="description" autoResize rows="1" />
+    </div>
+    <div class="section section--ingredients">
+      <div class="ing-titles-container">
+        <div class="label ingredient-space">Ingredientes</div>
+        <div class="label amount-space">Cantidad</div>
+        <div class="label units-space">Unidades</div>
+      </div>
+      <div
+        v-for="(recipeIngredient, index) in postRecipeData.recipeIngredients"
+        :key="index"
+        class="ing-inputs-container"
+      >
+        <input
+          class="ingredient-input"
+          v-model="recipeIngredient.text"
+          @input="pointTo(index)"
+          @keydown="handleKeydown"
+          autocomplete="off"
+          trim
+        />
+        <div class="dropdown-container">
+          <div
+            v-if="showDropdown && index === currentInput"
+            class="dropdown-ingredients"
+            v-click-outside="onClickOutside"
+          >
+            <div
+              v-for="(s, i) in suggestions"
+              :key="s"
+              :class="{ highlighted: i === highlightedIndex }"
+              @click="selectSuggestion(s)"
+            >
+              {{ s }}
+            </div>
+          </div>
+        </div>
+        <input
+          class="amount-input"
+          type="number"
+          v-model="recipeIngredient.amount"
+          trim
+        />
+        <BFormSelect
+          class="units-input"
+          v-model="recipeIngredient.idUnit"
+          :options="getUnitsState.data"
+        ></BFormSelect>
+        <button
+          class="base-btn base-btn--quitar"
+          @click="EliminaIngrediente(recipeIngredient)"
+        >
+          <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+    <div class="section-box"></div>
+
+    <!-- TODO: Borrar todo lo que está debajo (pero dentro del v-if waiting). Legacy -->
     <div class="section">
       <h5>Título</h5>
       <b-row>
@@ -266,6 +388,7 @@ export default {
   },
   data() {
     return {
+      image: null,
       postRecipeData: {
         title: "",
         description: "",
@@ -479,12 +602,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-.add-comment-txt-area {
-}
 input {
-  width: 90%;
-  margin-top: 4rem;
+  width: 100%;
+  margin-top: 15px;
   border: none;
   border-bottom: 1px solid $color-dark;
   border-radius: 0;
@@ -498,11 +618,11 @@ input:focus {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   */
-  border-bottom: 3px solid $color-dark;
+  border-bottom: 2px solid $color-dark;
 }
 textarea {
   width: 90%;
-  margin-top: 4rem;
+  margin-top: 5px;
   border: none;
   border-bottom: 1px solid $color-dark;
   border-radius: 0;
@@ -517,9 +637,145 @@ textarea:focus {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   */
-  border-bottom: 3px solid $color-dark;
+  border-bottom: 2px solid $color-dark;
 }
 
+.section {
+  margin-bottom: 40px;
+}
+.section--top {
+  display: flex;
+  height: 16rem;
+}
+.img-container {
+  position: relative;
+  width: 16rem;
+}
+.wrapper-img {
+  position: relative;
+  height: 92%;
+  width: 92%;
+  overflow: hidden;
+
+  /* Solo para maquetar */
+  border: 1px solid black;
+}
+.image-fit {
+  /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper, no la clase de la imagen en sí. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-primary;
+  border-radius: 50%;
+  color: white;
+  padding: 0;
+}
+.span--add-img {
+  transform: translateY(-13%);
+}
+.btn--add-img {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 50px;
+  height: 50px;
+  line-height: 50px; /* Ajusta a la altura del botón. Depende del transform del span para que el texto lo aplique. */
+  font-size: 300%;
+  font-weight: bold;
+}
+.right-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  padding: 0 2rem;
+}
+.title-box {
+  height: 55%;
+}
+.label {
+  font-size: 150%;
+}
+.interactive-inputs-container {
+  display: flex;
+}
+.container-fraction {
+  width: 50%;
+}
+.interactive-input-box {
+  display: flex;
+  flex-direction: column;
+  width: min-content;
+}
+.interactive-input-box-top {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 150%;
+  color: grey;
+}
+.interactive-input-box-bottom {
+  display: flex;
+}
+.span--i-btn {
+  transform: translateY(-16%);
+}
+.btn--i-btn {
+  width: 30px;
+  height: 30px;
+  line-height: 20px; /* Ajusta a la altura del botón. Depende del transform del span para que el texto lo aplique. */
+  font-size: 150%;
+  font-weight: bold;
+}
+.interactive-input {
+  width: 40px;
+  margin: 0 12px;
+  text-align: center;
+}
+.section--description {
+}
+.section--ingredients {
+}
+.ing-titles-container {
+  display: flex;
+}
+.ingredient-space {
+  width: 40%;
+
+  /* Solo para maquetar */
+  background-color: gainsboro;
+}
+.amount-space {
+  width: 15%;
+
+  /* Solo para maquetar */
+  background-color: lavender;
+}
+.units-space {
+  width: 30%;
+
+  /* Solo para maquetar */
+  background-color: lightgray;
+}
+.ing-inputs-container {
+  display: flex;
+}
+.ingredient-input {
+  width: 40%;
+}
+.amount-input {
+  width: 15%;
+}
+.units-input {
+  width: 30%;
+}
 
 /* TODO: Borrar. Legacy. ------------------------------------------------------------------------------------------*/
 .input {
@@ -585,7 +841,6 @@ textarea:focus {
   margin-right: 0rem;
   margin-bottom: 1rem;
 
-
   background-color: $color-primary;
   /* TODO: Invertir los inset tratando de conseguir el mismo resultado. Con los inset simulando los bordes queda fatal al pulsar los botones */
   box-shadow: 1px 1px 6px -3px #575757, -1px -1px 1px 0.5px #70340071 inset,
@@ -640,5 +895,8 @@ input[type="file"] {
 .spinner {
   text-align: center;
   font-size: 180%;
+}
+.section-box {
+  margin-bottom: 30rem;
 }
 </style>
