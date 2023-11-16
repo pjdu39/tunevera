@@ -4,13 +4,20 @@
       <div class="img-container">
         <div class="wrapper-img">
           <NuxtImg
+            v-if="!foto"
             class="image-fit"
             src="https://www.svgrepo.com/show/4029/picture.svg"
           />
+          <img
+            v-else-if="foto"
+            class="image-fit"
+            :src="fotoUrl"
+          />
         </div>
-        <button class="btn btn--add-img">
+        <label class="btn btn--add-img">
+          <input type="file" @change="handleFileUpload">
           <span class="span--add-img">+</span>
-        </button>
+        </label>
       </div>
       <div class="right-container">
         <div class="title-box">
@@ -461,6 +468,7 @@ export default {
         tags: [],
       },
       foto: null,
+      fotoUrl: null,
       tiempo: 0,
       unidadesDummy: [
         { value: 1, text: "unidades" },
@@ -532,6 +540,13 @@ export default {
     fetchUnits() {
       const store = useUploadsStore();
       return store.fetchUnits;
+    },
+    handleFileUpload(event) {
+        this.foto = event.target.files[0];
+        if (this.foto) {
+            this.fotoUrl = URL.createObjectURL(this.foto);
+            console.log(this.fotoUrl)
+        }
     },
     OtroIngrediente() {
       if (this.PuedeAnadirIngrediente) {
