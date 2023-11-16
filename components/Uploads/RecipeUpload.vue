@@ -8,14 +8,14 @@
             src="https://www.svgrepo.com/show/4029/picture.svg"
           />
         </div>
-        <Button class="btn btn--add-img">
+        <button class="btn btn--add-img">
           <span class="span--add-img">+</span>
-        </Button>
+        </button>
       </div>
       <div class="right-container">
         <div class="title-box">
-          <div class="label">Título</div>
-          <input class="" />
+          <div class="label label--title">Título</div>
+          <input v-model="postRecipeData.title" class="input--title" />
         </div>
         <div class="interactive-inputs-container">
           <div class="container-fraction">
@@ -28,11 +28,20 @@
                 />
               </div>
               <div class="interactive-input-box-bottom">
-                <button class="btn btn--i-btn">
+                <button class="btn btn--i-btn" @click="sumTime(-5)">
                   <span class="span--i-btn">-</span>
                 </button>
-                <input type="number" class="interactive-input" />
-                <button class="btn btn--i-btn">
+                <input
+                  type="number"
+                  class="interactive-input"
+                  placeholder=""
+                  v-model="postRecipeData.time"
+                  min="0"
+                  autocomplete="off"
+                  v-click-outside="roundTime"
+                  @keydown="preventE"
+                />
+                <button class="btn btn--i-btn" @click="sumTime(5)">
                   <span class="span--i-btn">+</span>
                 </button>
               </div>
@@ -63,7 +72,7 @@
     </div>
     <div class="section section--description">
       <div class="label">Descripción</div>
-      <Textarea v-model="description" autoResize rows="1" />
+      <Textarea v-model="postRecipeData.description" autoResize rows="1" />
     </div>
     <div class="section section--ingredients">
       <div class="ing-titles-container">
@@ -76,46 +85,98 @@
         :key="index"
         class="ing-inputs-container"
       >
-        <input
-          class="ingredient-input"
-          v-model="recipeIngredient.text"
-          @input="pointTo(index)"
-          @keydown="handleKeydown"
-          autocomplete="off"
-          trim
-        />
-        <div class="dropdown-container">
-          <div
-            v-if="showDropdown && index === currentInput"
-            class="dropdown-ingredients"
-            v-click-outside="onClickOutside"
-          >
+        <div class="ingredient-input-wrapper">
+          <input
+            class="shorted-input"
+            v-model="recipeIngredient.text"
+            @input="pointTo(index)"
+            @keydown="handleKeydown"
+            autocomplete="off"
+            trim
+          />
+          <div class="">
             <div
-              v-for="(s, i) in suggestions"
-              :key="s"
-              :class="{ highlighted: i === highlightedIndex }"
-              @click="selectSuggestion(s)"
+              v-if="showDropdown && index === currentInput"
+              class=""
+              v-click-outside="onClickOutside"
             >
-              {{ s }}
+              <div
+                v-for="(s, i) in suggestions"
+                :key="s"
+                :class="{ highlighted: i === highlightedIndex }"
+                @click="selectSuggestion(s)"
+              >
+                {{ s }}
+              </div>
             </div>
           </div>
         </div>
-        <input
-          class="amount-input"
-          type="number"
-          v-model="recipeIngredient.amount"
-          trim
-        />
-        <BFormSelect
-          class="units-input"
-          v-model="recipeIngredient.idUnit"
-          :options="getUnitsState.data"
-        ></BFormSelect>
+        <div class="amount-input-wrapper">
+          <input
+            class="shorted-input"
+            type="number"
+            v-model="recipeIngredient.amount"
+            trim
+          />
+        </div>
+        <div class="units-input-wrapper">
+          <BFormSelect
+            class="shorted-input"
+            v-model="recipeIngredient.idUnit"
+            :options="getUnitsState.data"
+          ></BFormSelect>
+        </div>
+        <div class="delete-button-wrapper">
+          <button
+            class="btn btn--delete"
+            @click="EliminaIngrediente(recipeIngredient)"
+          >
+            <span class="span--btn-delete">
+              <font-awesome-icon icon="fa fa-trash-can" aria-hidden="true" />
+            </span>
+          </button>
+        </div>
+      </div>
+      <button
+        class="btn btn--i-btn"
+        @click="OtroIngrediente()"
+        :disabled="!PuedeAnadirIngrediente"
+      >
+        <span class="span--i-btn">+</span>
+      </button>
+    </div>
+    <div class="section section--steps">
+      <div class="label">Pasos</div>
+      <div
+        class="step-input-container"
+        v-for="(step, index) in postRecipeData.steps"
+        :key="index"
+      >
+        <div class="step-textarea-wrapper">
+          <Textarea
+            class="shorted-input"
+            maxlength="430"
+            rows="1"
+            autoResize
+            v-model="postRecipeData.steps[index]"
+            trim
+          ></Textarea>
+        </div>
+        <div class="delete-button-wrapper">
+          <button class="btn btn--delete" @click="EliminaPaso(step)">
+            <span class="span--btn-delete">
+              <font-awesome-icon icon="fa fa-trash-can" aria-hidden="true" />
+            </span>
+          </button>
+        </div>
+      </div>
+      <div>
         <button
-          class="base-btn base-btn--quitar"
-          @click="EliminaIngrediente(recipeIngredient)"
+          class="btn btn--i-btn"
+          @click="OtroPaso()"
+          :disabled="!PuedeAnadirPaso"
         >
-          <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
+          <span class="span--i-btn">+</span>
         </button>
       </div>
     </div>
@@ -158,6 +219,7 @@
         Tiempo (mins
         <font-awesome-icon icon="fa fa-clock" aria-hidden="true" />)
       </h6>
+      <!--
       <BFormGroup
         id="fieldset-time"
         class="input-container time-container"
@@ -181,6 +243,7 @@
           ><div class="time-btn-content">+</div></BButton
         >
       </BFormGroup>
+    -->
     </div>
     <div class="section">
       <h6>Descripción</h6>
@@ -480,7 +543,6 @@ export default {
       }
     },
     OtroPaso() {
-      console.log(this.postRecipeData.steps);
       if (this.PuedeAnadirPaso) {
         this.postRecipeData.steps.push("");
       }
@@ -498,6 +560,11 @@ export default {
       const index = this.postRecipeData.steps.indexOf(step);
       if (index > -1) {
         this.postRecipeData.steps.splice(index, 1);
+      }
+    },
+    preventE(event) {
+      if (event.keyCode === 69) {
+        event.preventDefault();
       }
     },
     // TODO: Actualmente borra la última posición si hay alguno vacío, en lugar de el que está vacío específicamente. Arreglar.
@@ -532,8 +599,13 @@ export default {
     },
     sumTime(n) {
       this.convertTimeToInt();
-
-      if (this.postRecipeData.time < 0) this.postRecipeData.time = 0;
+      
+      if (this.postRecipeData.time === 0 && n < 0) return
+      
+      if (this.postRecipeData.time < 0) {
+        this.postRecipeData.time = 0;
+        return
+      }
 
       const diff = this.postRecipeData.time % n;
 
@@ -639,6 +711,23 @@ textarea:focus {
   */
   border-bottom: 2px solid $color-dark;
 }
+select {
+  margin-top: 5px;
+  border: none;
+  border-bottom: 1px solid $color-dark;
+  border-radius: 0;
+  background-color: $color-background;
+}
+select:focus {
+  border: none;
+  outline: none !important;
+  box-shadow: none;
+  /*
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  */
+  border-bottom: 2px solid $color-dark;
+}
 
 .section {
   margin-bottom: 40px;
@@ -702,7 +791,13 @@ textarea:focus {
   height: 55%;
 }
 .label {
+  font-size: 130%;
+}
+.label--title {
   font-size: 150%;
+}
+.input--title {
+  font-size: 130%;
 }
 .interactive-inputs-container {
   display: flex;
@@ -747,34 +842,60 @@ textarea:focus {
   display: flex;
 }
 .ingredient-space {
-  width: 40%;
-
-  /* Solo para maquetar */
-  background-color: gainsboro;
+  width: 45%;
 }
 .amount-space {
   width: 15%;
-
-  /* Solo para maquetar */
-  background-color: lavender;
 }
 .units-space {
-  width: 30%;
-
-  /* Solo para maquetar */
-  background-color: lightgray;
+  width: 25%;
 }
 .ing-inputs-container {
   display: flex;
+  align-items: center;
+  height: 40px; // Mantener! Fijo la altura para que los estilos que arrastra el select no la modifique al desplegar sus opciones.
+  margin-bottom: 20px;
 }
-.ingredient-input {
-  width: 40%;
+.ingredient-input-wrapper {
+  width: 45%;
 }
-.amount-input {
+.amount-input-wrapper {
   width: 15%;
 }
-.units-input {
-  width: 30%;
+.units-input-wrapper {
+  width: 25%;
+}
+.delete-button-wrapper {
+  display: flex;
+  align-items: center;
+  width: 15%;
+}
+.span--btn-delete {
+  transform: translateY(-2%);
+}
+.btn--delete {
+  width: 30px;
+  height: 30px;
+  line-height: 30px; /* Ajusta a la altura del botón. Depende del transform del span para que el texto lo aplique. */
+  font-size: 110%;
+  font-weight: bold;
+  background-color: #df6666;
+}
+.shorted-input {
+  width: calc(100% - 2rem);
+}
+.section--steps {
+}
+.step-input-container {
+  display: flex;
+  align-items: center;
+  height: 40px; // Mantener! Fijo la altura para que los estilos que arrastra el select no la modifique al desplegar sus opciones.
+  margin-bottom: 20px;
+}
+.step-textarea-wrapper {
+  flex-grow: 1;
+}
+.step-textarea {
 }
 
 /* TODO: Borrar. Legacy. ------------------------------------------------------------------------------------------*/
