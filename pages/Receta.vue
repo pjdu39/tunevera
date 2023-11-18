@@ -173,7 +173,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchRecipe()(12); // TODO: Recibir este valor por url.
+    this.fetchRecipe()(1); // TODO: Recibir este valor por url.
   },
 };
 </script>

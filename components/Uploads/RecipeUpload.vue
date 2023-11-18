@@ -6,16 +6,13 @@
           <NuxtImg
             v-if="!foto"
             class="image-fit"
-            src="https://www.svgrepo.com/show/4029/picture.svg"
+            src="https://cdn.icon-icons.com/icons2/2570/PNG/512/image_icon_153794.png"
           />
-          <img
-            v-else-if="foto"
-            class="image-fit"
-            :src="fotoUrl"
-          />
+          <!-- https://www.svgrepo.com/show/4029/picture.svg -->
+          <img v-else-if="foto" class="image-fit" :src="fotoUrl" />
         </div>
         <label class="btn btn--add-img">
-          <input type="file" @change="handleFileUpload">
+          <input type="file" @change="handleFileUpload" />
           <span class="span--add-img">+</span>
         </label>
       </div>
@@ -79,7 +76,12 @@
     </div>
     <div class="section section--description">
       <div class="label">Descripción</div>
-      <Textarea v-model="postRecipeData.description" autoResize rows="1" />
+      <Textarea
+        v-model="postRecipeData.description"
+        maxlength="430"
+        rows="1"
+        autoResize
+      />
     </div>
     <div class="section section--ingredients">
       <div class="ing-titles-container">
@@ -124,6 +126,7 @@
             type="number"
             v-model="recipeIngredient.amount"
             trim
+            @keydown="preventE"
           />
         </div>
         <div class="units-input-wrapper">
@@ -186,249 +189,6 @@
           <span class="span--i-btn">+</span>
         </button>
       </div>
-    </div>
-    <div class="section-box"></div>
-
-    <!-- TODO: Borrar todo lo que está debajo (pero dentro del v-if waiting). Legacy -->
-    <div class="section">
-      <h5>Título</h5>
-      <b-row>
-        <b-col class="col-md-8">
-          <BFormGroup
-            id="fieldset-title"
-            class="input-container title-container"
-            label-for="input-title"
-          >
-            <BFormInput
-              id="input-title"
-              class="input input-title"
-              placeholder="Escribir título..."
-              v-model="postRecipeData.title"
-              autocomplete="off"
-              trim
-            ></BFormInput>
-          </BFormGroup>
-        </b-col>
-        <b-col class="col-md-4 subir-imagen">
-          <label class="base-btn base-btn--img">
-            <input type="file" :v-model="foto" />
-            <font-awesome-icon
-              icon="fa fa-camera-retro"
-              class="fa-lg"
-              aria-hidden="true"
-            />
-          </label>
-        </b-col>
-      </b-row>
-    </div>
-    <div class="section">
-      <h6>
-        Tiempo (mins
-        <font-awesome-icon icon="fa fa-clock" aria-hidden="true" />)
-      </h6>
-      <!--
-      <BFormGroup
-        id="fieldset-time"
-        class="input-container time-container"
-        label-for="input-time"
-        ><BButton class="time-btn"
-          ><div class="time-btn-content" @click="sumTime(-5)">-</div></BButton
-        >
-        <BFormInput
-          id="input-time"
-          class="input time-input"
-          placeholder=""
-          v-model="postRecipeData.time"
-          trim
-          type="number"
-          min="0"
-          autocomplete="off"
-          v-click-outside="roundTime"
-          onkeydown="return event.keyCode !== 69"
-        ></BFormInput
-        ><BButton class="time-btn" @click="sumTime(5)"
-          ><div class="time-btn-content">+</div></BButton
-        >
-      </BFormGroup>
-    -->
-    </div>
-    <div class="section">
-      <h6>Descripción</h6>
-      <b-row>
-        <b-col class="col-md-11">
-          <BFormGroup
-            id="fieldset-descripcion"
-            class="form-group-descripcion"
-            label-for="input-descripcion"
-          >
-            <BFormTextarea
-              id="input-descripcion"
-              class="input textarea textarea-descripcion--articulo"
-              placeholder=""
-              v-model="postRecipeData.description"
-              maxlength="530"
-              max-rows="8"
-              trim
-            ></BFormTextarea>
-          </BFormGroup>
-        </b-col>
-      </b-row>
-    </div>
-    <div class="section">
-      <h6>Ingredientes</h6>
-      <div>
-        <BListGroupItem
-          class="input-container"
-          v-for="(recipeIngredient, index) in postRecipeData.recipeIngredients"
-          :key="index"
-        >
-          <b-row>
-            <b-col class="col-md-6">
-              <BFormGroup
-                id="fieldset-literal"
-                class=""
-                label-for="input-literal"
-              >
-                <BFormInput
-                  id="input-literal"
-                  class="input input-literal"
-                  placeholder="Ingrediente..."
-                  v-model="recipeIngredient.text"
-                  @input="pointTo(index)"
-                  @keydown="handleKeydown"
-                  autocomplete="off"
-                  trim
-                ></BFormInput>
-                <div class="dropdown-container">
-                  <div
-                    v-if="showDropdown && index === currentInput"
-                    class="dropdown-ingredients"
-                    v-click-outside="onClickOutside"
-                  >
-                    <div
-                      v-for="(s, i) in suggestions"
-                      :key="s"
-                      :class="{ highlighted: i === highlightedIndex }"
-                      @click="selectSuggestion(s)"
-                    >
-                      {{ s }}
-                    </div>
-                  </div>
-                </div>
-              </BFormGroup>
-            </b-col>
-            <b-col class="col-md-2">
-              <BFormGroup
-                id="fieldset-cantidad"
-                class=""
-                label-for="input-cantidad"
-              >
-                <BFormInput
-                  id="input-cantidad"
-                  class="input input-cantidad"
-                  placeholder="Cantidad..."
-                  type="number"
-                  v-model="recipeIngredient.amount"
-                  trim
-                ></BFormInput>
-              </BFormGroup>
-            </b-col>
-            <b-col class="col-md-3">
-              <BFormSelect
-                class="input"
-                v-model="recipeIngredient.idUnit"
-                :options="getUnitsState.data"
-              ></BFormSelect>
-            </b-col>
-            <b-col class="col-md-1">
-              <button
-                class="base-btn base-btn--quitar"
-                @click="EliminaIngrediente(recipeIngredient)"
-              >
-                <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
-              </button>
-            </b-col>
-          </b-row>
-        </BListGroupItem>
-      </div>
-      <div>
-        <button
-          class="base-btn base-btn--anadir"
-          @click="OtroIngrediente()"
-          :disabled="!PuedeAnadirIngrediente"
-        >
-          <font-awesome-icon
-            icon="fa fa-plus"
-            class="fa-lg"
-            aria-hidden="true"
-          />
-        </button>
-      </div>
-    </div>
-    <div class="section">
-      <h6>Pasos</h6>
-      <div>
-        <BListGroupItem
-          class="input-container input-container--paso"
-          v-for="(step, index) in postRecipeData.steps"
-          :key="index"
-        >
-          <b-row>
-            <b-col class="col-md-11">
-              <BFormGroup
-                id="fieldset-paso"
-                class="form-group-paso"
-                label-for="input-paso"
-              >
-                <BFormTextarea
-                  id="input-paso"
-                  class="input textarea"
-                  placeholder="Escribir paso..."
-                  maxlength="430"
-                  max-rows="8"
-                  v-model="postRecipeData.steps[index]"
-                  trim
-                ></BFormTextarea>
-              </BFormGroup>
-            </b-col>
-            <b-col class="col-md-1">
-              <button
-                class="base-btn base-btn--quitar"
-                @click="EliminaPaso(step)"
-              >
-                <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
-              </button>
-            </b-col>
-          </b-row>
-        </BListGroupItem>
-      </div>
-      <div>
-        <button
-          class="base-btn base-btn--anadir"
-          @click="OtroPaso()"
-          :disabled="!PuedeAnadirPaso"
-        >
-          <font-awesome-icon
-            icon="fa fa-plus"
-            class="fa-lg"
-            aria-hidden="true"
-          />
-        </button>
-      </div>
-    </div>
-    <div class="section-end">
-      <b-row>
-        <b-col class="col-md-6">
-          <button class="base-btn base-btn--aceptar" @click="Atras()">
-            Atrás
-          </button>
-        </b-col>
-        <b-col class="col-md-6">
-          <button class="base-btn base-btn--aceptar" @click="Aceptar()">
-            Aceptar
-          </button>
-        </b-col>
-      </b-row>
     </div>
   </div>
   <div v-else-if="newRecipeState.loading === 'loading'" class="spinner">
@@ -542,11 +302,11 @@ export default {
       return store.fetchUnits;
     },
     handleFileUpload(event) {
-        this.foto = event.target.files[0];
-        if (this.foto) {
-            this.fotoUrl = URL.createObjectURL(this.foto);
-            console.log(this.fotoUrl)
-        }
+      this.foto = event.target.files[0];
+      if (this.foto) {
+        this.fotoUrl = URL.createObjectURL(this.foto);
+        console.log(this.fotoUrl);
+      }
     },
     OtroIngrediente() {
       if (this.PuedeAnadirIngrediente) {
@@ -614,12 +374,12 @@ export default {
     },
     sumTime(n) {
       this.convertTimeToInt();
-      
-      if (this.postRecipeData.time === 0 && n < 0) return
-      
+
+      if (this.postRecipeData.time === 0 && n < 0) return;
+
       if (this.postRecipeData.time < 0) {
         this.postRecipeData.time = 0;
-        return
+        return;
       }
 
       const diff = this.postRecipeData.time % n;
@@ -707,6 +467,9 @@ input:focus {
   */
   border-bottom: 2px solid $color-dark;
 }
+input[type="file"] {
+  display: none;
+}
 textarea {
   width: 90%;
   margin-top: 5px;
@@ -762,7 +525,7 @@ select:focus {
   overflow: hidden;
 
   /* Solo para maquetar */
-  border: 1px solid black;
+   /* border: 1px solid black; */
 }
 .image-fit {
   /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper, no la clase de la imagen en sí. */
@@ -904,7 +667,6 @@ select:focus {
 .step-input-container {
   display: flex;
   align-items: center;
-  height: 40px; // Mantener! Fijo la altura para que los estilos que arrastra el select no la modifique al desplegar sus opciones.
   margin-bottom: 20px;
 }
 .step-textarea-wrapper {
@@ -1018,9 +780,6 @@ select:focus {
 }
 .subir-imagen {
   text-align: center;
-}
-input[type="file"] {
-  display: none;
 }
 .input-container--paso {
   width: 100%;
