@@ -223,6 +223,7 @@ export default {
         title: "",
         description: "",
         time: 0,
+        servings: 0,
         recipeIngredients: [{ text: null, amount: null, idUnit: null }],
         steps: [""],
         tags: [],

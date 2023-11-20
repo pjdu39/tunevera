@@ -173,7 +173,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchRecipe()(1); // TODO: Recibir este valor por url.
+    this.fetchRecipe()(6); // TODO: Recibir este valor por url.
   },
 };
 </script>
@@ -217,7 +217,8 @@ export default {
   height: auto;
 }
 .recipe-title {
-  font-size: 250%;
+  max-width: 380px;
+  font-size: 210%;
 }
 .signature {
   display: flex;
@@ -230,6 +231,7 @@ export default {
 }
 .sign-img-wrapper {
   position: relative;
+  max-height: 50px;
   height: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
