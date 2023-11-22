@@ -45,6 +45,7 @@
                   v-click-outside="roundTime"
                   @keydown="preventE"
                 />
+                <!-- TODO: Bug. Pasos para reproducirlo: poner números en el input, seleccionarlo todo, pulsar cualquier letra (salvo la "e") -->
                 <button class="btn btn--i-btn" @click="sumTime(5)">
                   <span class="span--i-btn">+</span>
                 </button>
@@ -207,245 +208,234 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
+import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
 import vClickOutside from "v-click-outside";
-export default {
-  name: "RecipeUpload",
-  // TODO: Probar a borrar esto, el click-outside ya lo tiene el padre -> pages/Uploads.vue
-  directives: {
-    clickOutside: vClickOutside.directive,
-  },
-  data() {
-    return {
-      image: null,
-      postRecipeData: {
-        title: "",
-        description: "",
-        time: 0,
-        servings: 0,
-        recipeIngredients: [{ text: null, amount: null, idUnit: null }],
-        steps: [""],
-        tags: [],
-      },
-      foto: null,
-      fotoUrl: null,
-      tiempo: 0,
-      unidadesDummy: [
-        { value: 1, text: "unidades" },
-        { value: 2, text: "kg" },
-        { value: 3, text: "gr" },
-        { value: 4, text: "L" },
-        { value: 5, text: "ml" },
-        { value: 6, text: "cucharadas" },
-        { value: 7, text: "cucharaditas" },
-        { value: 8, text: "tazas" },
-        { value: 9, text: "tacitas" },
-        { value: 10, text: "libras" },
-        { value: 11, text: "onzas" },
-      ],
+import { blob } from "stream/consumers";
 
-      currentIngSearch: null,
-      ingredientSuggestionsDummy: [
-        { value: 1, text: "patata" },
-        { value: 2, text: "pera" },
-        { value: 3, text: "sal" },
-      ],
-      currentInput: 0,
-      highlightedIndex: -1,
-      showDropdown: false,
-    };
-  },
-  computed: {
-    newRecipeState() {
-      const store = useUploadsStore();
-      return store.newRecipeState;
-    },
-    getUnitsState() {
-      const store = useUploadsStore();
-      return store.getUnitsState;
-    },
-    PuedeAnadirIngrediente() {
-      let result = true;
-      this.postRecipeData.recipeIngredients.forEach((x) => {
-        if (!x.text) result = false;
-        /* if (!x.amount) result = false;
-        if (!x.idUnit) result = false; */
-      });
+onMounted(() => {
+  uploadsStore.fetchUnits();
+  blobStore.fetchSasToken()
+});
 
-      return result;
-    },
-    PuedeAnadirPaso() {
-      let result = true;
-      this.postRecipeData.steps.forEach((x) => {
-        if (!x) result = false;
-      });
+// Nombres y directivas
+const name = "RecipeUpload";
+const directives = { clickOutside: vClickOutside.directive };
 
-      return result;
-    },
+// Data
+const image = ref(null);
+const postRecipeData = ref({
+  title: "",
+  description: "",
+  time: 0,
+  servings: 0,
+  recipeIngredients: [{ text: null, amount: null, idUnit: null }],
+  steps: [""],
+  tags: [],
+});
+const foto = ref(null);
+const fotoUrl = ref(null);
+const tiempo = ref(0);
+const unidadesDummy = [
+  { value: 1, text: "unidades" },
+  { value: 2, text: "kg" },
+  { value: 3, text: "gr" },
+  { value: 4, text: "L" },
+  { value: 5, text: "ml" },
+  { value: 6, text: "cucharadas" },
+  { value: 7, text: "cucharaditas" },
+  { value: 8, text: "tazas" },
+  { value: 9, text: "tacitas" },
+  { value: 10, text: "libras" },
+  { value: 11, text: "onzas" },
+];
+const currentIngSearch = ref(null);
+const ingredientSuggestionsDummy = [
+  { value: 1, text: "patata" },
+  { value: 2, text: "pera" },
+  { value: 3, text: "sal" },
+];
+const currentInput = ref(0);
+const highlightedIndex = ref(-1);
+const showDropdown = ref(false);
 
-    suggestions() {
-      return this.ingredientSuggestionsDummy
-        .map((s) => s.text)
-        .filter((s) => s.includes(this.currentIngSearch));
-    },
-  },
-  mounted() {
-    this.fetchUnits()();
-  },
-  methods: {
-    postRecipe() {
-      const store = useUploadsStore();
-      return store.postRecipe;
-    },
-    fetchUnits() {
-      const store = useUploadsStore();
-      return store.fetchUnits;
-    },
-    handleFileUpload(event) {
-      this.foto = event.target.files[0];
-      if (this.foto) {
-        this.fotoUrl = URL.createObjectURL(this.foto);
-        console.log(this.fotoUrl);
+// Computed properties.
+const getUnitsState = computed(() => uploadsStore.getUnitsState);
+const PuedeAnadirIngrediente = computed(() => {
+  let result = true;
+  postRecipeData.value.recipeIngredients.forEach((x) => {
+    if (!x.text) result = false;
+  });
+  return result;
+});
+const PuedeAnadirPaso = computed(() => {
+  let result = true;
+  postRecipeData.value.steps.forEach((x) => {
+    if (!x) result = false;
+  });
+  return result;
+});
+const suggestions = computed(() => {
+  return ingredientSuggestionsDummy
+    .map((s) => s.text)
+    .filter((s) => s.includes(currentIngSearch.value));
+});
+
+// Manejo para subida de imágenes
+const blobStore = useBlobStore();
+const getSasTokenState = computed(() => blobStore.getSasTokenState);
+const getSasToken = async () => {
+  await blobStore.fetchSasToken()
+};
+const uploadImg = async () => {
+  if (foto.value) {
+    await blobStore.uploadFile(foto.value);
+  }
+};
+
+// Subir receta
+const uploadsStore = useUploadsStore();
+const newRecipeState = computed(() => uploadsStore.newRecipeState);
+const postRecipe = () => {
+  uploadsStore.postRecipe(postRecipeData.value);
+};
+
+// Manejo del formulario
+const handleFileUpload = (event) => {
+  foto.value = event.target.files[0];
+  if (foto.value) {
+    fotoUrl.value = URL.createObjectURL(foto.value);
+    console.log(fotoUrl.value);
+  }
+};
+const OtroIngrediente = () => {
+  if (PuedeAnadirIngrediente.value) {
+    postRecipeData.value.recipeIngredients.push({
+      text: null,
+      amount: null,
+      idUnit: null,
+    });
+  }
+};
+const OtroPaso = () => {
+  if (PuedeAnadirPaso.value) {
+    postRecipeData.value.steps.push("");
+  }
+};
+const EliminaIngrediente = (ingredient) => {
+  if (postRecipeData.value.recipeIngredients.length <= 1) return;
+  const index = postRecipeData.value.recipeIngredients.indexOf(ingredient);
+  if (index > -1) {
+    postRecipeData.value.recipeIngredients.splice(index, 1);
+  }
+};
+const EliminaPaso = (step) => {
+  if (postRecipeData.value.steps.length <= 1) return;
+
+  const index = postRecipeData.value.steps.indexOf(step);
+  if (index > -1) {
+    postRecipeData.value.steps.splice(index, 1);
+  }
+};
+const preventE = (event) => {
+  if (event.keyCode === 69) {
+    event.preventDefault();
+  }
+};
+const Resolve = () => {
+  if (!PuedeAnadirIngrediente.value) {
+    if (postRecipeData.value.recipeIngredients.length > 1)
+      postRecipeData.value.recipeIngredients.splice(
+        postRecipeData.value.recipeIngredients.length - 1,
+        1
+      );
+  }
+  if (!PuedeAnadirPaso.value) {
+    if (postRecipeData.value.steps.length > 1)
+      postRecipeData.value.steps.splice(
+        postRecipeData.value.steps.length - 1,
+        1
+      );
+  }
+};
+const convertTimeToInt = () => {
+  if (!postRecipeData.value.time) postRecipeData.value.time = 0;
+  postRecipeData.value.time = parseInt(postRecipeData.value.time);
+};
+const roundTime = () => {
+  convertTimeToInt();
+
+  if (postRecipeData.value.time < 0) postRecipeData.value.time = 0;
+  if (postRecipeData.value.time > 999) postRecipeData.value.time = 995;
+
+  postRecipeData.value.time =
+    postRecipeData.value.time - (postRecipeData.value.time % 5);
+};
+const sumTime = (n) => {
+  convertTimeToInt();
+
+  if (postRecipeData.value.time === 0 && n < 0) return;
+
+  if (postRecipeData.value.time < 0) {
+    postRecipeData.value.time = 0;
+    return;
+  }
+
+  const diff = postRecipeData.value.time % n;
+
+  if (n >= 0) {
+    postRecipeData.value.time += n - diff;
+  } else if (diff === 0) {
+    postRecipeData.value.time += n;
+  } else {
+    postRecipeData.value.time -= diff;
+  }
+};
+const Aceptar = () => {
+  Resolve();
+
+  // TODO: Validaciones de contenido sobre postRecipeData
+  postRecipe();
+};
+
+// Experimentos de sugerencias de ingredientes. Considerar una solución alternativa y borrarlo
+const pointTo = (index) => {
+  highlightedIndex.value = -1;
+  showDropdown.value = true;
+  currentInput.value = index;
+  currentIngSearch.value = postRecipeData.value.recipeIngredients[index].text;
+  // TODO: LLamada a la api
+};
+const selectSuggestion = (suggestion) => {
+  postRecipeData.value.recipeIngredients[currentInput.value].text = suggestion;
+  showDropdown.value = false;
+};
+const handleKeydown = (event) => {
+  switch (event.key) {
+    case "ArrowDown":
+      if (highlightedIndex.value < suggestions.value.length - 1) {
+        highlightedIndex.value++;
       }
-    },
-    OtroIngrediente() {
-      if (this.PuedeAnadirIngrediente) {
-        this.postRecipeData.recipeIngredients.push({
-          text: null,
-          amount: null,
-          idUnit: null,
-        });
+      break;
+    case "ArrowUp":
+      if (highlightedIndex.value > 0) {
+        highlightedIndex.value--;
       }
-    },
-    OtroPaso() {
-      if (this.PuedeAnadirPaso) {
-        this.postRecipeData.steps.push("");
+      break;
+    case "Enter":
+      if (highlightedIndex.value >= 0) {
+        selectSuggestion(suggestions.value[highlightedIndex.value]);
       }
-    },
-    EliminaIngrediente(ingredient) {
-      if (this.postRecipeData.recipeIngredients.length <= 1) return;
-      const index = this.postRecipeData.recipeIngredients.indexOf(ingredient);
-      if (index > -1) {
-        this.postRecipeData.recipeIngredients.splice(index, 1);
-      }
-    },
-    EliminaPaso(step) {
-      if (this.postRecipeData.steps.length <= 1) return;
+      break;
+  }
+};
 
-      const index = this.postRecipeData.steps.indexOf(step);
-      if (index > -1) {
-        this.postRecipeData.steps.splice(index, 1);
-      }
-    },
-    preventE(event) {
-      if (event.keyCode === 69) {
-        event.preventDefault();
-      }
-    },
-    // TODO: Actualmente borra la última posición si hay alguno vacío, en lugar de el que está vacío específicamente. Arreglar.
-    Resolve() {
-      if (!this.PuedeAnadirIngrediente) {
-        if (this.postRecipeData.recipeIngredients.length > 1)
-          this.postRecipeData.recipeIngredients.splice(
-            this.postRecipeData.recipeIngredients.length - 1,
-            1
-          );
-      }
-      if (!this.PuedeAnadirPaso) {
-        if (this.postRecipeData.steps.length > 1)
-          this.postRecipeData.steps.splice(
-            this.postRecipeData.steps.length - 1,
-            1
-          );
-      }
-    },
-    convertTimeToInt(event) {
-      if (!this.postRecipeData.time) this.postRecipeData.time = 0;
-      this.postRecipeData.time = parseInt(this.postRecipeData.time);
-    },
-    roundTime() {
-      this.convertTimeToInt();
-
-      if (this.postRecipeData.time < 0) this.postRecipeData.time = 0;
-      if (this.postRecipeData.time > 999) this.postRecipeData.time = 995;
-
-      this.postRecipeData.time =
-        this.postRecipeData.time - (this.postRecipeData.time % 5);
-    },
-    sumTime(n) {
-      this.convertTimeToInt();
-
-      if (this.postRecipeData.time === 0 && n < 0) return;
-
-      if (this.postRecipeData.time < 0) {
-        this.postRecipeData.time = 0;
-        return;
-      }
-
-      const diff = this.postRecipeData.time % n;
-
-      if (n >= 0) {
-        this.postRecipeData.time += n - diff;
-      } else if (diff === 0) {
-        this.postRecipeData.time += n;
-      } else {
-        this.postRecipeData.time -= diff;
-      }
-    },
-    Aceptar() {
-      this.Resolve();
-
-      // TODO: Validaciones de contenido sobre postRecipeData
-      this.postRecipe()(this.postRecipeData);
-    },
-
-    pointTo(index) {
-      // Resetea la sugerencia marcada por el highlight
-      this.highlightedIndex = -1;
-
-      this.showDropdown = true;
-
-      /* Indica cuál es el input de ingtrediente actualmente seleccionado para usarlo en las
-        posiciones de arrays sin tener que pasárlo como parámetro a cada método que lo usa */
-      this.currentInput = index;
-
-      /* Guarda el valor escrito en el input (que se asigna a postRecipeData.recipeIngredients[x] a través
-        del v-model) en la variable currentIngSearch que se usa para filtrar las sugerencias en una propiedad computada */
-      this.currentIngSearch = this.postRecipeData.recipeIngredients[index].text;
-
-      // TODO: LLamada a la api
-    },
-    selectSuggestion(suggestion) {
-      /* this.suggestionSelected = s.text; */
-      this.postRecipeData.recipeIngredients[this.currentInput].text =
-        suggestion;
-      this.showDropdown = false;
-    },
-    handleKeydown(event) {
-      switch (event.key) {
-        case "ArrowDown":
-          if (this.highlightedIndex < this.suggestions.length - 1) {
-            this.highlightedIndex++;
-          }
-          break;
-        case "ArrowUp":
-          if (this.highlightedIndex > 0) {
-            this.highlightedIndex--;
-          }
-          break;
-        case "Enter":
-          if (this.highlightedIndex >= 0) {
-            this.selectSuggestion(this.suggestions[this.highlightedIndex]);
-          }
-          break;
-      }
-    },
-    onClickOutside(event) {
-      console.log("im clicking outside!");
-      this.showDropdown = false;
-    },
-  },
+// Cosas del "clickoutside"
+const onClickOutside = (event) => {
+  console.log("im clicking outside!");
+  showDropdown.value = false;
 };
 </script>
 
@@ -526,7 +516,7 @@ select:focus {
   overflow: hidden;
 
   /* Solo para maquetar */
-   /* border: 1px solid black; */
+  /* border: 1px solid black; */
 }
 .image-fit {
   /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper, no la clase de la imagen en sí. */
