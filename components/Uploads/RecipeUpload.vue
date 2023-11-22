@@ -213,11 +213,10 @@ import { ref, computed } from "vue";
 import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
 import vClickOutside from "v-click-outside";
-import { blob } from "stream/consumers";
+// import { blob } from "stream/consumers";
 
 onMounted(() => {
   uploadsStore.fetchUnits();
-  blobStore.fetchSasToken()
 });
 
 // Nombres y directivas
@@ -286,12 +285,28 @@ const suggestions = computed(() => {
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
 const getSasTokenState = computed(() => blobStore.getSasTokenState);
-const getSasToken = async () => {
-  await blobStore.fetchSasToken()
-};
-const uploadImg = async () => {
+const uploadFileAndGetUrl = async () => {
   if (foto.value) {
-    await blobStore.uploadFile(foto.value);
+    await blobStore.uploadFileAndGetUrl(foto.value);
+  }
+};
+const handleFileUpload = async (event) => {
+  foto.value = event.target.files[0];
+  if (!foto.value) {
+    console.log('No se seleccionó ningún archivo');
+    return;
+  }
+  else {
+    fotoUrl.value = URL.createObjectURL(foto.value);
+  }
+
+  try {
+    const uploadedFileUrl = await blobStore.uploadFileAndGetUrl(foto.value);
+    console.log('URL del archivo subido:', uploadedFileUrl);
+    // Aquí puedes hacer algo con la URL, como mostrarla en la UI o guardarla en tu base de datos
+  } catch (error) {
+    console.error('Error al subir el archivo:', error.message);
+    // Manejar errores de subida aquí
   }
 };
 
@@ -303,13 +318,6 @@ const postRecipe = () => {
 };
 
 // Manejo del formulario
-const handleFileUpload = (event) => {
-  foto.value = event.target.files[0];
-  if (foto.value) {
-    fotoUrl.value = URL.createObjectURL(foto.value);
-    console.log(fotoUrl.value);
-  }
-};
 const OtroIngrediente = () => {
   if (PuedeAnadirIngrediente.value) {
     postRecipeData.value.recipeIngredients.push({
