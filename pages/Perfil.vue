@@ -24,7 +24,7 @@
           <div class="info-summary-section">
             <div class="picture-cotainer">
               <div class="picture-wrapper">
-                <NuxtImg class="profile-picture" :src="usuarioDummy.img" />
+                <NuxtImg class="profile-picture" :src="profile.pictureUrl" />
               </div>
             </div>
             <div class="info-summary">
