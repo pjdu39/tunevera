@@ -4,12 +4,27 @@
       <div class="img-container">
         <div class="wrapper-img">
           <NuxtImg
-            v-if="!foto"
+            v-if="uploadState.loading === 'waiting'"
             class="image-fit"
             src="https://cdn.icon-icons.com/icons2/2570/PNG/512/image_icon_153794.png"
           />
           <!-- https://www.svgrepo.com/show/4029/picture.svg -->
-          <img v-else-if="foto" class="image-fit" :src="fotoUrl" />
+          <div v-else-if="uploadState.loading === 'loading'" class="upload-state-container">
+            <font-awesome-icon
+              icon="fa fa-spinner"
+              class="fa-pulse fa-lg"
+              aria-hidden="true"
+            />
+          </div>
+          <NuxtImg
+            v-else-if="uploadState.loading === 'loaded'"
+            class="image-fit"
+            :src="uploadState.data"
+          />
+          <div v-else-if="uploadState.loading === 'error'" class="upload-state-container">
+            <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
+            <div>{{ uploadState.error }}</div>
+          </div>
         </div>
         <label class="btn btn--add-img">
           <input type="file" @change="handleFileUpload" />
@@ -234,8 +249,7 @@ const postRecipeData = ref({
   steps: [""],
   tags: [],
 });
-const foto = ref(null);
-const fotoUrl = ref(null);
+const img = ref(null);
 const tiempo = ref(0);
 const unidadesDummy = [
   { value: 1, text: "unidades" },
@@ -284,30 +298,18 @@ const suggestions = computed(() => {
 
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
-const getSasTokenState = computed(() => blobStore.getSasTokenState);
-const uploadFileAndGetUrl = async () => {
-  if (foto.value) {
-    await blobStore.uploadFileAndGetUrl(foto.value);
-  }
-};
+const uploadState = computed(() => blobStore.uploadState);
+
 const handleFileUpload = async (event) => {
-  foto.value = event.target.files[0];
-  if (!foto.value) {
-    console.log('No se seleccionó ningún archivo');
+  img.value = event.target.files[0];
+  if (!img.value) {
+    console.log("No se seleccionó ningún archivo");
     return;
   }
-  else {
-    fotoUrl.value = URL.createObjectURL(foto.value);
-  }
 
-  try {
-    const uploadedFileUrl = await blobStore.uploadFileAndGetUrl(foto.value);
-    console.log('URL del archivo subido:', uploadedFileUrl);
-    // Aquí puedes hacer algo con la URL, como mostrarla en la UI o guardarla en tu base de datos
-  } catch (error) {
-    console.error('Error al subir el archivo:', error.message);
-    // Manejar errores de subida aquí
-  }
+  await blobStore.uploadFileAndGetUrl(img.value);
+
+  event.target.value = "";
 };
 
 // Subir receta
@@ -522,6 +524,8 @@ select:focus {
   height: 92%;
   width: 92%;
   overflow: hidden;
+  border: 1px solid $color-dark;
+  border-radius: 5px;
 
   /* Solo para maquetar */
   /* border: 1px solid black; */
@@ -789,6 +793,18 @@ select:focus {
 .spinner {
   text-align: center;
   font-size: 180%;
+}
+.upload-state-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 180%;
+  height: 100%;
+}
+.error {
+  color: $color-primary;
+  font-size: 200%; // Se acumula sobre el font-size: 200%; del contenedor
 }
 .section-box {
   margin-bottom: 30rem;

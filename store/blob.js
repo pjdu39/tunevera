@@ -9,12 +9,17 @@ export const useBlobStore = defineStore({
             loading: 'waiting',
             error: null
         },
-        // Meter y usar el estado de uploadFileAndGetUrl
-        // TODO: Moverlo a un sitio provado, probablemente variables de entorno
+        uploadState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
+        // TODO: Moverlo a un sitio privado, probablemente variables de entorno
         containerName: 'cookbook-images-container',
         accountName: 'cookbookblobstoragedev',
     }),
     actions: {
+        // Sas token
         setSasTokenData(payload) {
             this.getSasTokenState.data = payload;
         },
@@ -24,6 +29,18 @@ export const useBlobStore = defineStore({
         setSasTokenError(payload) {
             this.getSasTokenState.error = payload;
         },
+
+        // Upload img
+        setUploadData(payload) {
+            this.uploadState.data = payload;
+        },
+        setUploadLoading(payload) {
+            this.uploadState.loading = payload;
+        },
+        setUploadError(payload) {
+            this.uploadState.error = payload;
+        },
+
         async fetchSasToken() {
             const { $fetchApi } = useNuxtApp();
             this.setSasTokenLoading('loading');
@@ -42,14 +59,25 @@ export const useBlobStore = defineStore({
         },
 
         async uploadFileAndGetUrl(file) {
+            this.setUploadLoading('loading');
+
+            await this.fetchSasToken();
+            
             if (!this.getSasTokenState.data) {
-                await this.fetchSasToken();
-                // console.log('getSasTokenState.data es: ' + this.getSasTokenState.data)
-            }
-            if (!this.getSasTokenState.data) {
-                // console.error('No se pudo obtener el SAS Token');
+                this.setUploadLoading('error');
+                this.setUploadError(this.getSasTokenState.error); // Muestra el error del sas token porque es ahí donde ha fallado
                 return;
             }
+
+            /* TODO: Esto está comentado porque no he encontrado una forma eficiente de detectar tokens caducados. Darle una vuelta para
+                evitar generar el token cada vez que se quiere subir una imagen. No es crítico, dado que el uso normal no es subir varias
+                imágenes por receta. Si no acabo implementando esa comprobación, hay que reducir drásticamente la duración del token, ahora
+                está en 10 minutos. 
+
+            if (!this.getSasTokenState.data) {
+                await this.fetchSasToken();
+            }
+            */
 
             const blobServiceClient = new BlobServiceClient(
                 `https://${this.accountName}.blob.core.windows.net?${this.getSasTokenState.data.token}`
@@ -59,15 +87,19 @@ export const useBlobStore = defineStore({
 
             try {
                 await blockBlobClient.uploadData(file);
-                console.log('Archivo subido correctamente');
+                // console.log('Archivo subido correctamente');
 
-                // Obtener y retornar la URL del archivo subido
                 const blobUrl = blockBlobClient.url;
-                return blobUrl;
+
+                this.setUploadData(blobUrl);
+                this.setUploadLoading('loaded');
+                this.setUploadError(null);
             }
             catch (error) {
-                console.error('Error al subir el archivo:', error);
-                // Aquí puedes manejar el error, como actualizar el estado de la tienda o notificar al usuario
+                this.setUploadData(null);
+                this.setUploadLoading('error');
+                this.setUploadError(error.message);
+                // console.error('Error al subir el archivo:', error);
             }
         },
     }
