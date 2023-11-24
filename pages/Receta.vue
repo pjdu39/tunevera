@@ -55,17 +55,20 @@
                 <button class="interaction-icon" @click="clickLike">
                   <font-awesome-icon
                     :icon="like ? 'fas fa-heart' : 'far fa-heart'"
+                    :class="cumputedLikeClass"
                     aria-hidden="true"
                   />
                 </button>
-                <div class="num-likes">{{ getRecipeState.data.likes }}</div>
+                <div class="num-likes">{{ getRecipeState.data.likes + localLike }}</div>
               </div>
+              <!-- TODO: Borrar, son los likes hardcodeados
               <div class="interaction-container">
                 <div class="interaction-icon">
                   <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
                 </div>
                 <div class="num-likes">2345</div>
               </div>
+              -->
             </div>
             <div class="general-info-right">
               <div class="icon-info-container">
@@ -170,15 +173,37 @@ const store = useRecipeStore();
 const getRecipeState = computed(() => store.getRecipeState);
 
 // Manejo de Likes
+const likeTimeout = ref(false);
+const localLike = ref(0)
 const like = computed({
-  get: () => store.getRecipeState.like,
+  get: () => store.getRecipeState.liked,
   set: (value) => store.updateLikeState(value),
 });
 const clickLike = () => {
-  like.value = !like.value;
+  if (!likeTimeout.value) {
+    likeTimeout.value = true;
 
-  store.like(store.getRecipeState.data.id);
+    like.value = !like.value;
+    store.like(store.getRecipeState.data.id);
+
+    // Esto se encarga de que suba o baje un like de manera coherente en local al pulsar el botón.
+    const initialLikeState = store.getRecipeState.data.liked
+    const direction = initialLikeState ? -1 : 0
+    localLike.value = like.value ? direction + 1 : direction
+
+    setTimeout(() => {
+      likeTimeout.value = false;
+    }, 1000);
+  }
 };
+const cumputedLikeClass = computed(() => {
+  if (likeTimeout.value) {
+    return (like.value ? 'fa-beat ' : '') + (like.value ? 'liked' : 'unliked');
+  }
+  else {
+    return like.value ? 'liked' : 'unliked'
+  }
+});
 
 // Métodos
 const fetchRecipe = () => {
@@ -197,6 +222,19 @@ button {
   padding: 0;
   background-color: transparent;
   border: none;
+}
+textarea {
+  resize: none;
+}
+textarea:focus {
+  border: none;
+  outline: none !important;
+  box-shadow: none;
+  /*
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  */
+  border-bottom: 3px solid $color-dark;
 }
 .recipe {
   margin: auto;
@@ -285,7 +323,7 @@ button {
 .interaction-container {
   display: flex;
   line-height: 100%;
-  font-size: 120%;
+  font-size: 140%;
   margin: 0 1rem 0 0;
 }
 .interaction-icon {
@@ -295,8 +333,14 @@ button {
 .interaction-icon--clicked {
   color: $color-primary;
 }
+.unliked {
+
+}
+.liked {
+  color: $color-primary;
+}
 .num-likes {
-  font-size: small;
+  font-size: 90%;
 }
 .general-info-right {
   display: flex;
@@ -363,19 +407,6 @@ button {
   border-bottom: 1px solid $color-dark;
   border-radius: 0;
   background-color: $color-background;
-}
-textarea {
-  resize: none;
-}
-textarea:focus {
-  border: none;
-  outline: none !important;
-  box-shadow: none;
-  /*
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  */
-  border-bottom: 3px solid $color-dark;
 }
 .title-comments {
   margin-top: 30px;

@@ -7,7 +7,7 @@ export const useRecipeStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null,
-            like: false // Considerar moverlo al data de likeState. No estoy seguro de si compensa
+            liked: false // Considerar moverlo al data de likeState. No estoy seguro de si compensa
         },
         likeState: {
             data: null,
@@ -40,7 +40,7 @@ export const useRecipeStore = defineStore({
 
         // Manejo local de estados
         setRecipeLike(payload) {
-            this.getRecipeState.like = payload;
+            this.getRecipeState.liked = payload;
         },
         async fetchRecipe(id) {
             const { $fetchApi } = useNuxtApp();
@@ -83,7 +83,6 @@ export const useRecipeStore = defineStore({
             }
         },
         updateLikeState(newValue) {
-            console.log(newValue)
             this.setRecipeLike(newValue);
         }
     }
