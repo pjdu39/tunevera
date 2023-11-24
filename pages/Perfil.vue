@@ -136,18 +136,8 @@ const profileLoading = computed(() => profileStore.getProfileInfoState.loading);
 const profileError = computed(() => profileStore.getProfileInfoState.error);
 
 const fetchProfileData = () => {
-  profileStore.fetchProfileInfo(null); // Reemplaza con el ID de usuario adecuado
+  profileStore.fetchProfileInfo(null); // Si se le pasa "null", obtiene el usuario del token bearer (es decir, el usuario logeado)
 };
-
-// Dummy
-const usuarioDummy = reactive({
-  id: 1,
-  nombreCompleto: "Juan Pérez Delgado",
-  publicaciones: 28,
-  seguidores: 143,
-  siguiendo: 55,
-  img: "/img/foto_perfil2.jpg",
-});
 </script>
 
 <style scoped lang="scss">

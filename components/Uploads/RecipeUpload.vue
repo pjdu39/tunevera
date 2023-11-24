@@ -239,7 +239,6 @@ const name = "RecipeUpload";
 const directives = { clickOutside: vClickOutside.directive };
 
 // Data
-const image = ref(null);
 const postRecipeData = ref({
   title: "",
   description: "",
@@ -250,7 +249,6 @@ const postRecipeData = ref({
   tags: [],
 });
 const img = ref(null);
-const tiempo = ref(0);
 const unidadesDummy = [
   { value: 1, text: "unidades" },
   { value: 2, text: "kg" },
