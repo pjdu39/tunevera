@@ -61,14 +61,6 @@
                 </button>
                 <div class="num-likes">{{ getRecipeState.data.likes + localLike }}</div>
               </div>
-              <!-- TODO: Borrar, son los likes hardcodeados
-              <div class="interaction-container">
-                <div class="interaction-icon">
-                  <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
-                </div>
-                <div class="num-likes">2345</div>
-              </div>
-              -->
             </div>
             <div class="general-info-right">
               <div class="icon-info-container">
@@ -205,12 +197,14 @@ const cumputedLikeClass = computed(() => {
   }
 });
 
-// Métodos
+// Carga datos
+const route = useRoute();
+const id = route.query.id;
+
 const fetchRecipe = () => {
-  store.fetchRecipe(6); // TODO: Recibir este valor por url.
+  store.fetchRecipe(id); // TODO: Recibir este valor por url.
 };
 
-// Ciclo de vida montado
 onMounted(() => {
   fetchRecipe();
 });

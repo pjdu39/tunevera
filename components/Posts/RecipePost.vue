@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe-post">
+  <NuxtLink class="recipe-post" :to="`/receta?id=${postData.id}`">
     <div class="img-wrapper">
       <NuxtImg src="/img/tarta-manzana.png" class="image" />
     </div>
@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup>
