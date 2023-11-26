@@ -86,11 +86,19 @@
                 />
               </div>
               <div class="interactive-input-box-bottom">
-                <button class="btn btn--i-btn">
+                <button class="btn btn--i-btn" @click="sumServing(-1)">
                   <span class="span--i-btn">-</span>
                 </button>
-                <input type="number" class="interactive-input" />
-                <button class="btn btn--i-btn">
+                <input
+                  type="number"
+                  class="interactive-input"
+                  placeholder=""
+                  v-model="postRecipeData.servings"
+                  min="0"
+                  autocomplete="off"
+                  @keydown="preventE"
+                />
+                <button class="btn btn--i-btn" @click="sumServing(1)">
                   <span class="span--i-btn">+</span>
                 </button>
               </div>
@@ -216,11 +224,7 @@
       </div>
     </div>
     <div>
-      <button
-        class=""
-        @click="uploadRecipe"
-        :disabled="!formCompleted"
-      >
+      <button class="" @click="uploadRecipe" :disabled="!formCompleted">
         <span class="">Subir</span>
       </button>
     </div>
@@ -255,13 +259,33 @@ onMounted(() => {
 const name = "RecipeUpload";
 const directives = { clickOutside: vClickOutside.directive };
 
+// Init computed properties.
+const uploadsStore = useUploadsStore();
+const getUnitsState = computed(() => uploadsStore.getUnitsState);
+
+// Manejo para subida de imágenes
+const blobStore = useBlobStore();
+const uploadState = computed(() => blobStore.uploadState);
+
+const handleFileUpload = async (event) => {
+  img.value = event.target.files[0];
+  if (!img.value) {
+    console.log("No se seleccionó ningún archivo");
+    return;
+  }
+
+  await blobStore.uploadFileAndGetUrl(img.value);
+
+  event.target.value = "";
+};
+
 // Data
 const postRecipeData = ref({
   title: "",
   description: "",
   time: 0,
   servings: 0,
-  pictureUrl: "",
+  pictureUrl: uploadState.data,
   recipeIngredients: [{ text: null, amount: null, idUnit: null }],
   steps: [""],
   tags: [],
@@ -289,26 +313,6 @@ const ingredientSuggestionsDummy = [
 const currentInput = ref(0);
 const highlightedIndex = ref(-1);
 const showDropdown = ref(false);
-
-// Init computed properties.
-const uploadsStore = useUploadsStore();
-const getUnitsState = computed(() => uploadsStore.getUnitsState);
-
-// Manejo para subida de imágenes
-const blobStore = useBlobStore();
-const uploadState = computed(() => blobStore.uploadState);
-
-const handleFileUpload = async (event) => {
-  img.value = event.target.files[0];
-  if (!img.value) {
-    console.log("No se seleccionó ningún archivo");
-    return;
-  }
-
-  await blobStore.uploadFileAndGetUrl(img.value);
-
-  event.target.value = "";
-};
 
 // Manejo del formulario
 const PuedeAnadirIngrediente = computed(() => {
@@ -359,6 +363,7 @@ const preventE = (event) => {
     event.preventDefault();
   }
 };
+// Time
 const convertTimeToInt = () => {
   if (!postRecipeData.value.time) postRecipeData.value.time = 0;
   postRecipeData.value.time = parseInt(postRecipeData.value.time);
@@ -392,6 +397,23 @@ const sumTime = (n) => {
     postRecipeData.value.time -= diff;
   }
 };
+// Servings
+const convertServingsToInt = () => {
+  if (!postRecipeData.value.servings) postRecipeData.value.servings = 0;
+  postRecipeData.value.servings = parseInt(postRecipeData.value.servings);
+};
+const sumServing = (n) => {
+  convertServingsToInt();
+
+  if (postRecipeData.value.servings === 0 && n < 0) return;
+
+  if (postRecipeData.value.servings < 0) {
+    postRecipeData.value.servings = 0;
+    return;
+  }
+
+  postRecipeData.value.servings += n;
+};
 
 // Subir receta
 const newRecipeState = computed(() => uploadsStore.newRecipeState);
@@ -405,7 +427,7 @@ const servingsCompleted = computed(() =>
   postRecipeData.value.servings ? true : false
 );
 const pictureUrlCompleted = computed(() =>
-  postRecipeData.value.pictureUrl ? true : false
+  uploadState.value.data ? true : false
 );
 const recipeIngredientsCompleted = computed(() => {
   if (postRecipeData.value.recipeIngredients.length === 0) return false;
@@ -441,7 +463,7 @@ const postRecipe = () => {
   uploadsStore.postRecipe(postRecipeData.value);
 };
 // TODO: Revisar estos "if" tan feos.
-const Resolve = () => {
+const CleanEmptyForms = () => {
   if (!PuedeAnadirIngrediente.value) {
     if (postRecipeData.value.recipeIngredients.length > 1)
       postRecipeData.value.recipeIngredients.splice(
@@ -458,9 +480,12 @@ const Resolve = () => {
   }
 };
 const uploadRecipe = () => {
-  Resolve();
+  CleanEmptyForms();
 
   if (!formCompleted) return;
+
+  postRecipeData.value.pictureUrl = uploadState.value.data;
+
   postRecipe();
 };
 
