@@ -29,6 +29,7 @@ export default {
         {
           type: "Receta",
           title: "Cocido",
+          pictureUrl: "/img/tarta-manzana.png",
           time: 35,
           description:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit",
@@ -61,6 +62,7 @@ export default {
         {
           type: "Receta",
           title: "Galletas",
+          pictureUrl: "/img/tarta-manzana.png",
           time: 50,
           description: "Lorem ipsum dolor sit amet adipisicing elit",
           author: "andrea",

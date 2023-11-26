@@ -1,7 +1,8 @@
 <template>
   <NuxtLink class="recipe-post" :to="`/receta?id=${postData.id}`">
     <div class="img-wrapper">
-      <NuxtImg src="/img/tarta-manzana.png" class="image" />
+      <div v-if="!postData.pictureUrl" class="image">Cargando...</div>
+      <NuxtImg v-else-if="postData.pictureUrl" v-cloak :src="postData.pictureUrl" class="image" />
     </div>
     <div class="post-info">
       <div class="signature">
