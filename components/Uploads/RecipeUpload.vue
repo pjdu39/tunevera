@@ -9,7 +9,10 @@
             src="https://cdn.icon-icons.com/icons2/2570/PNG/512/image_icon_153794.png"
           />
           <!-- https://www.svgrepo.com/show/4029/picture.svg -->
-          <div v-else-if="uploadState.loading === 'loading'" class="upload-state-container">
+          <div
+            v-else-if="uploadState.loading === 'loading'"
+            class="upload-state-container"
+          >
             <font-awesome-icon
               icon="fa fa-spinner"
               class="fa-pulse fa-lg"
@@ -21,8 +24,14 @@
             class="image-fit"
             :src="uploadState.data"
           />
-          <div v-else-if="uploadState.loading === 'error'" class="upload-state-container">
-            <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
+          <div
+            v-else-if="uploadState.loading === 'error'"
+            class="upload-state-container"
+          >
+            <font-awesome-icon
+              icon="fa fa-triangle-exclamation"
+              class="error"
+            />
             <div>{{ uploadState.error }}</div>
           </div>
         </div>
@@ -206,6 +215,15 @@
         </button>
       </div>
     </div>
+    <div>
+      <button
+        class=""
+        @click="uploadRecipe"
+        :disabled="!formCompleted"
+      >
+        <span class="">Subir</span>
+      </button>
+    </div>
   </div>
   <div v-else-if="newRecipeState.loading === 'loading'" class="spinner">
     <font-awesome-icon
@@ -228,7 +246,6 @@ import { ref, computed } from "vue";
 import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
 import vClickOutside from "v-click-outside";
-// import { blob } from "stream/consumers";
 
 onMounted(() => {
   uploadsStore.fetchUnits();
@@ -244,6 +261,7 @@ const postRecipeData = ref({
   description: "",
   time: 0,
   servings: 0,
+  pictureUrl: "",
   recipeIngredients: [{ text: null, amount: null, idUnit: null }],
   steps: [""],
   tags: [],
@@ -272,27 +290,9 @@ const currentInput = ref(0);
 const highlightedIndex = ref(-1);
 const showDropdown = ref(false);
 
-// Computed properties.
+// Init computed properties.
+const uploadsStore = useUploadsStore();
 const getUnitsState = computed(() => uploadsStore.getUnitsState);
-const PuedeAnadirIngrediente = computed(() => {
-  let result = true;
-  postRecipeData.value.recipeIngredients.forEach((x) => {
-    if (!x.text) result = false;
-  });
-  return result;
-});
-const PuedeAnadirPaso = computed(() => {
-  let result = true;
-  postRecipeData.value.steps.forEach((x) => {
-    if (!x) result = false;
-  });
-  return result;
-});
-const suggestions = computed(() => {
-  return ingredientSuggestionsDummy
-    .map((s) => s.text)
-    .filter((s) => s.includes(currentIngSearch.value));
-});
 
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
@@ -310,14 +310,21 @@ const handleFileUpload = async (event) => {
   event.target.value = "";
 };
 
-// Subir receta
-const uploadsStore = useUploadsStore();
-const newRecipeState = computed(() => uploadsStore.newRecipeState);
-const postRecipe = () => {
-  uploadsStore.postRecipe(postRecipeData.value);
-};
-
 // Manejo del formulario
+const PuedeAnadirIngrediente = computed(() => {
+  let result = true;
+  postRecipeData.value.recipeIngredients.forEach((x) => {
+    if (!x.text) result = false;
+  });
+  return result;
+});
+const PuedeAnadirPaso = computed(() => {
+  let result = true;
+  postRecipeData.value.steps.forEach((x) => {
+    if (!x) result = false;
+  });
+  return result;
+});
 const OtroIngrediente = () => {
   if (PuedeAnadirIngrediente.value) {
     postRecipeData.value.recipeIngredients.push({
@@ -350,22 +357,6 @@ const EliminaPaso = (step) => {
 const preventE = (event) => {
   if (event.keyCode === 69) {
     event.preventDefault();
-  }
-};
-const Resolve = () => {
-  if (!PuedeAnadirIngrediente.value) {
-    if (postRecipeData.value.recipeIngredients.length > 1)
-      postRecipeData.value.recipeIngredients.splice(
-        postRecipeData.value.recipeIngredients.length - 1,
-        1
-      );
-  }
-  if (!PuedeAnadirPaso.value) {
-    if (postRecipeData.value.steps.length > 1)
-      postRecipeData.value.steps.splice(
-        postRecipeData.value.steps.length - 1,
-        1
-      );
   }
 };
 const convertTimeToInt = () => {
@@ -401,14 +392,84 @@ const sumTime = (n) => {
     postRecipeData.value.time -= diff;
   }
 };
-const Aceptar = () => {
+
+// Subir receta
+const newRecipeState = computed(() => uploadsStore.newRecipeState);
+const titleCompleted = computed(() =>
+  postRecipeData.value.title ? true : false
+);
+const timeCompleted = computed(() =>
+  postRecipeData.value.time ? true : false
+);
+const servingsCompleted = computed(() =>
+  postRecipeData.value.servings ? true : false
+);
+const pictureUrlCompleted = computed(() =>
+  postRecipeData.value.pictureUrl ? true : false
+);
+const recipeIngredientsCompleted = computed(() => {
+  if (postRecipeData.value.recipeIngredients.length === 0) return false;
+  if (
+    postRecipeData.value.recipeIngredients.length === 1 &&
+    !postRecipeData.value.recipeIngredients[0].text
+  )
+    return false;
+  return true;
+});
+const stepsCompleted = computed(() => {
+  if (postRecipeData.value.steps.length === 0) return false;
+  if (postRecipeData.value.steps.length === 1 && !postRecipeData.value.steps[0])
+    return false;
+  return true;
+});
+const formCompleted = computed(() => {
+  if (
+    titleCompleted.value &&
+    timeCompleted.value &&
+    servingsCompleted.value &&
+    pictureUrlCompleted.value &&
+    recipeIngredientsCompleted.value &&
+    stepsCompleted.value
+  ) {
+    return true;
+  }
+
+  return false;
+});
+
+const postRecipe = () => {
+  uploadsStore.postRecipe(postRecipeData.value);
+};
+// TODO: Revisar estos "if" tan feos.
+const Resolve = () => {
+  if (!PuedeAnadirIngrediente.value) {
+    if (postRecipeData.value.recipeIngredients.length > 1)
+      postRecipeData.value.recipeIngredients.splice(
+        postRecipeData.value.recipeIngredients.length - 1,
+        1
+      );
+  }
+  if (!PuedeAnadirPaso.value) {
+    if (postRecipeData.value.steps.length > 1)
+      postRecipeData.value.steps.splice(
+        postRecipeData.value.steps.length - 1,
+        1
+      );
+  }
+};
+const uploadRecipe = () => {
   Resolve();
 
-  // TODO: Validaciones de contenido sobre postRecipeData
+  if (!formCompleted) return;
   postRecipe();
 };
 
-// Experimentos de sugerencias de ingredientes. Considerar una solución alternativa y borrarlo
+// Experimentos de sugerencias de ingredientes. Considerar una solución alternativa y/o borrarlo
+const suggestions = computed(() => {
+  return ingredientSuggestionsDummy
+    .map((s) => s.text)
+    .filter((s) => s.includes(currentIngSearch.value));
+});
 const pointTo = (index) => {
   highlightedIndex.value = -1;
   showDropdown.value = true;

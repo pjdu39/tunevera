@@ -14,9 +14,9 @@
 
 <script>
 import { useBoardStore } from "~/store/board.js";
-import DiscussionPost from "~/components/Posts/DiscussionPost.vue";
-import PollPost from "~/components/Posts/PollPost.vue";
-import RecipePost from "~/components/Posts/RecipePost.vue";
+import DiscussionPost from "~/components/Board/DiscussionPost.vue";
+import PollPost from "~/components/Board/PollPost.vue";
+import RecipePost from "~/components/Board/RecipePost.vue";
 export default {
   components: {
     RecipePost,
