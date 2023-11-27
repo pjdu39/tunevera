@@ -67,7 +67,6 @@ const router = useRouter();
 // Observar la propiedad y redirigir si es necesario
 watch(loading, (newValue) => {
   if (newValue === "loaded") {
-    console.log("entro en el watch");
     router.push("/Perfil");
   }
 });

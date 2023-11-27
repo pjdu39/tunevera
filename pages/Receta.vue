@@ -23,7 +23,7 @@
       <div class="top-section">
         <div class="img-wrapper">
           <NuxtImg
-            src="https://img.delicious.com.au/G-2mxbOh/w1200/del/2022/08/parmesan-crumbed-chicken-schnitzel-fried-eggs-and-apple-cabbage-slaw-173352-2.jpg"
+            :src="getRecipeState.data.pictureUrl"
             class="image-fit"
           />
         </div>
