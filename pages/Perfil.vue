@@ -60,6 +60,26 @@
         </div>
       </div>
       <div class="profile-content">
+        <div
+          v-if="recipesLoading === 'waiting' || recipesLoading === 'loading'"
+        >
+          Cargando...
+        </div>
+        <div v-else-if="recipesLoading === 'error'">{{ recipesError }}</div>
+        <div
+          v-else-if="recipesLoading === 'loaded'"
+          v-for="(recipe, index) in recipes"
+          :key="index"
+          class="p-recipe"
+        >
+          <NuxtLink class="recipe-post" :to="`/receta?id=${recipe.id}`">
+            <NuxtImg
+              :src="recipe.pictureUrl"
+              class="image"
+            />
+          </NuxtLink>
+        </div>
+        <!--
         <div class="p-recipe">
           <NuxtImg
             src="https://img.taste.com.au/EwM4aecP/taste/2007/05/how-to-deep-fry-108893-1-139501-1.jpeg"
@@ -114,6 +134,7 @@
             class="image"
           />
         </div>
+        -->
       </div>
     </div>
   </div>
@@ -123,20 +144,29 @@
 import { useProfileStore } from "~/store/profile.js";
 
 definePageMeta({
-  middleware: "auth"
+  middleware: "auth",
 });
 onMounted(() => {
   fetchProfileData();
+  fetchRecipesData();
 });
 
 // Acceso a api
 const profileStore = useProfileStore();
+// Profile
 const profile = computed(() => profileStore.getProfileInfoState.data);
 const profileLoading = computed(() => profileStore.getProfileInfoState.loading);
 const profileError = computed(() => profileStore.getProfileInfoState.error);
+// Recipes
+const recipes = computed(() => profileStore.getRecipesState.data);
+const recipesLoading = computed(() => profileStore.getRecipesState.loading);
+const recipesError = computed(() => profileStore.getRecipesState.error);
 
 const fetchProfileData = () => {
   profileStore.fetchProfileInfo(null); // Si se le pasa "null", obtiene el usuario del token bearer (es decir, el usuario logeado)
+};
+const fetchRecipesData = () => {
+  profileStore.fetchRecipes(null); // Si se le pasa "null", utiliza el usuario del token bearer (es decir, el usuario logeado)
 };
 </script>
 
@@ -224,16 +254,16 @@ const fetchProfileData = () => {
 .profile-content {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  /* grid-auto-rows: 1fr; /* Altura de fila como una fracción del contenedor */
   gap: 3px;
-  height: 45rem; // Provisional
+  min-height: 15rem;
 }
 .p-recipe {
   position: relative;
   border: 1px solid black;
   border-radius: 5px;
-
-  // TODO: Borrar. Es solo para maquetar
-  background-color: aliceblue;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
 }
 .image {
   position: absolute;
@@ -254,7 +284,8 @@ const fetchProfileData = () => {
 }
 .loading {
 }
-.error { // TODO: Considerar mover a clases globales
+.error {
+  // TODO: Considerar mover a clases globales
   color: $color-primary;
   font-size: 200%; // Se acumula sobre el font-size: 200%; del contenedor
 }

@@ -14,25 +14,16 @@
   </div>
 </template>
 
-<script>
-import vClickOutside from "v-click-outside";
+<script setup>
 import DiscussionUpload from "~/components/Uploads/DiscussionUpload.vue";
 import PollUpload from "~/components/Uploads/PollUpload.vue";
 import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-export default {
-  directives: {
-    clickOutside: vClickOutside.directive,
-  },
-  components: {
-    DiscussionUpload,
-    PollUpload,
-    RecipeUpload,
-    TabView,
-    TabPanel,
-  },
-};
+
+definePageMeta({
+  middleware: "auth",
+});
 </script>
 
 <style scoped lang="scss">

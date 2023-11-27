@@ -264,6 +264,7 @@ const uploadsStore = useUploadsStore();
 const getUnitsState = computed(() => uploadsStore.getUnitsState);
 
 // Manejo para subida de imágenes
+const img = ref(null);
 const blobStore = useBlobStore();
 const uploadState = computed(() => blobStore.uploadState);
 
@@ -290,7 +291,7 @@ const postRecipeData = ref({
   steps: [""],
   tags: [],
 });
-const img = ref(null);
+/*
 const unidadesDummy = [
   { value: 1, text: "unidades" },
   { value: 2, text: "kg" },
@@ -304,15 +305,7 @@ const unidadesDummy = [
   { value: 10, text: "libras" },
   { value: 11, text: "onzas" },
 ];
-const currentIngSearch = ref(null);
-const ingredientSuggestionsDummy = [
-  { value: 1, text: "patata" },
-  { value: 2, text: "pera" },
-  { value: 3, text: "sal" },
-];
-const currentInput = ref(0);
-const highlightedIndex = ref(-1);
-const showDropdown = ref(false);
+*/
 
 // Manejo del formulario
 const PuedeAnadirIngrediente = computed(() => {
@@ -416,6 +409,7 @@ const sumServing = (n) => {
 };
 
 // Subir receta
+// TODO: Añadir lógica de validación más allá de si el input está vacío o no.
 const newRecipeState = computed(() => uploadsStore.newRecipeState);
 const titleCompleted = computed(() =>
   postRecipeData.value.title ? true : false
