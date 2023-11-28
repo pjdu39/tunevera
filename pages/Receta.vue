@@ -30,9 +30,10 @@
         <div class="general-info">
           <div class="general-info-top">
             <div class="recipe-title">{{ getRecipeState.data.title }}</div>
-            <div class="signature">
+            <div class="signature-container">
+              <NuxtLink class="signature" :to="`/perfil?id=${getRecipeState.data.user.id}`">
               <div class="signature-name">
-                {{ getRecipeState.data.user.name }}
+                <b>@{{ getRecipeState.data.user.name }}</b>
               </div>
               <div class="sign-img-wrapper">
                 <NuxtImg
@@ -40,6 +41,7 @@
                   class="image-fit"
                 />
               </div>
+            </NuxtLink>
             </div>
           </div>
           <div class="properties">
@@ -273,11 +275,22 @@ textarea:focus {
   max-width: 380px;
   font-size: 210%;
 }
+.signature-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
 .signature {
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: right;
-  flex-grow: 1;
+  right: 0;
+  font-style: italic;
+}
+.signature:hover {
+  text-decoration: underline;
 }
 .signature-name {
   margin-right: 7px;
@@ -285,7 +298,7 @@ textarea:focus {
 .sign-img-wrapper {
   position: relative;
   max-height: 50px;
-  height: 100%;
+  min-height: 48px;
   aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 50%;

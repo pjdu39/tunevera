@@ -1,7 +1,7 @@
 <template>
   <div class="poll-post">
     <div class="signature">
-      por <b>{{ postData.author }}</b>
+      por <b>{{ postData.userName }}</b>
     </div>
     <h4 class="title">{{ postData.title }}</h4>
 
@@ -77,10 +77,9 @@ const calculaBarraEncuesta = (pollOptions, option) => {
   const porcentaje = calculaPorcentajeEncuesta(pollOptions, option);
   const coeficiente = parseInt(anchoActual.value) / 100;
   let result = porcentaje * coeficiente;
-  
+
   return result.toFixed(1);
 };
-
 
 // OBTENCIÓN REACTIVA DEL VALOR DEL ANCHO DEL CONTENEDOR
 const optionContainer = ref(null);

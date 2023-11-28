@@ -161,12 +161,15 @@ const profileError = computed(() => profileStore.getProfileInfoState.error);
 const recipes = computed(() => profileStore.getRecipesState.data);
 const recipesLoading = computed(() => profileStore.getRecipesState.loading);
 const recipesError = computed(() => profileStore.getRecipesState.error);
+// Parámetros por query string
+const route = useRoute();
+const id = route.query.id;
 
 const fetchProfileData = () => {
-  profileStore.fetchProfileInfo(null); // Si se le pasa "null", obtiene el usuario del token bearer (es decir, el usuario logeado)
+  profileStore.fetchProfileInfo(id); // Si se le pasa "null", obtiene el usuario del token bearer (es decir, el usuario logeado)
 };
 const fetchRecipesData = () => {
-  profileStore.fetchRecipes(null); // Si se le pasa "null", utiliza el usuario del token bearer (es decir, el usuario logeado)
+  profileStore.fetchRecipes(id); // Si se le pasa "null", utiliza el usuario del token bearer (es decir, el usuario logeado)
 };
 </script>
 

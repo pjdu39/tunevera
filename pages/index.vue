@@ -1,13 +1,12 @@
 <template>
   <div class="board-container">
-    <div
-      class=""
-      v-for="(element, index) in elements"
-      :key="index"
-    >
-      <RecipePost v-if="element.type === 'Receta'" :post-data="element"/>
-      <PollPost v-if="element.type === 'Encuesta'" :post-data="element"/>
-      <DiscussionPost v-if="element.type === 'Discusion'" :post-data="element"/>
+    <div class="" v-for="(element, index) in elements" :key="index">
+      <RecipePost v-if="element.type === 'Receta'" :post-data="element" />
+      <PollPost v-if="element.type === 'Encuesta'" :post-data="element" />
+      <DiscussionPost
+        v-if="element.type === 'Discusion'"
+        :post-data="element"
+      />
     </div>
   </div>
 </template>
@@ -21,11 +20,12 @@ export default {
   components: {
     RecipePost,
     PollPost,
-    DiscussionPost
+    DiscussionPost,
   },
   data() {
     return {
       elements: [
+        /*
         {
           type: "Receta",
           title: "Cocido",
@@ -33,7 +33,7 @@ export default {
           time: 35,
           description:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-          author: "carlos",
+          userName: "carlos",
           likes: 67,
           comments: [
             { usuario: "Pepe Hamond", texto: "Lorem ipsum dolor sit amet" },
@@ -44,12 +44,13 @@ export default {
             },
           ],
         },
+        */
         {
           type: "Encuesta",
           title: "Qué guiso queréis que os traiga esta semana?",
           time: null,
           description: null,
-          author: "aka_shiro",
+          userName: "aka_shiro",
           likes: 209,
           comments: [],
           options: [
@@ -59,13 +60,14 @@ export default {
             { id: 4, answer: "Ramen", votes: 287 },
           ],
         },
+        /*
         {
           type: "Receta",
           title: "Galletas",
           pictureUrl: "/img/tarta-manzana.png",
           time: 50,
           description: "Lorem ipsum dolor sit amet adipisicing elit",
-          author: "andrea",
+          userName: "andrea",
           likes: 216,
           comments: [
             {
@@ -81,13 +83,14 @@ export default {
             },
           ],
         },
+        */
         {
           type: "Discusion",
           title: "Cilantro o no?",
           time: null,
           description:
             "Qué opinais del uso del cilantro en la cocina latino americana?",
-          author: "sara_rivas_",
+          userName: "sara_rivas_",
           likes: 13,
           comments: [
             {
@@ -107,7 +110,7 @@ export default {
           title: "Cocido con o sin patata?",
           time: null,
           description: null,
-          author: "misco_jones",
+          userName: "misco_jones",
           likes: 693,
           comments: [],
           options: [

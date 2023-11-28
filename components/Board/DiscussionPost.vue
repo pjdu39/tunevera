@@ -2,7 +2,7 @@
   <div class="discussion-post">
     <div class="post-info">
       <div class="signature">
-        por <b>{{ postData.author }}</b>
+        por <b>{{ postData.userName }}</b>
       </div>
       <h4 class="title">{{ postData.title }}</h4>
       <div class="description">{{ postData.description }}</div>
