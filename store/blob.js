@@ -87,9 +87,13 @@ export const useBlobStore = defineStore({
 
             try {
                 await blockBlobClient.uploadData(file);
-                // console.log('Archivo subido correctamente');
 
-                const blobUrl = blockBlobClient.url;
+                // Construye la URL pública con el SAS
+                // const blobUrl = blockBlobClient.url;
+
+                // Construye la URL pública sin el SAS
+                const blobUrl = `https://${this.accountName}.blob.core.windows.net/${this.containerName}/${file.name}`;
+
 
                 this.setUploadData(blobUrl);
                 this.setUploadLoading('loaded');
@@ -99,7 +103,6 @@ export const useBlobStore = defineStore({
                 this.setUploadData(null);
                 this.setUploadLoading('error');
                 this.setUploadError(error.message);
-                // console.error('Error al subir el archivo:', error);
             }
         },
     }
