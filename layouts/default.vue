@@ -8,14 +8,11 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import "../assets/scss/custom.scss";
 import "../assets/scss/global.scss";
 import Header from "../components/Structure/Header.vue";
 import MainMenu from "../components/Structure/MainMenu.vue";
-export default {
-  components: { Header, MainMenu },
-};
 </script>
 
 <style scoped lang="scss">

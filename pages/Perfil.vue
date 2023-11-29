@@ -47,6 +47,28 @@
             <div class="i-d-description">{{ profile.description }}</div>
           </div>
         </div>
+        <div v-if="selfProfile" class="own-notifications-container">
+          <button class="own-notifications" @click="console.log(id)">
+            <font-awesome-icon
+              icon="fa fa-bell"
+              class="fa-lg"
+              aria-hidden="true"
+            />
+          </button>
+        </div>
+        <div v-else-if="!selfProfile" class="follow-container">
+          <button class="follow-box" @click="console.log(id)">
+            <div class="follow">Seguir</div>
+            <div class="notification">
+              <font-awesome-icon
+                icon="fa fa-bell"
+                class="fa-lg"
+                aria-hidden="true"
+              />
+            </div>
+          </button>
+        </div>
+        <!--
         <div class="side-menu">
           <button class="side-menu-button">
             <font-awesome-icon icon="fa fa-utensils" aria-hidden="true" />
@@ -58,6 +80,7 @@
             <font-awesome-icon icon="fa fa-chart-simple" aria-hidden="true" />
           </button>
         </div>
+        -->
       </div>
       <div class="profile-content">
         <div
@@ -73,10 +96,7 @@
           class="p-recipe"
         >
           <NuxtLink class="recipe-post" :to="`/receta?id=${recipe.id}`">
-            <NuxtImg
-              :src="recipe.pictureUrl"
-              class="image"
-            />
+            <NuxtImg :src="recipe.pictureUrl" class="image" />
           </NuxtLink>
         </div>
         <!--
@@ -151,26 +171,40 @@ onMounted(() => {
   fetchRecipesData();
 });
 
+// Parámetros por query string
+const route = useRoute();
+const id = computed(() => route.query.id || null);
+
 // Acceso a api
+// Propiedades coputadas
 const profileStore = useProfileStore();
 // Profile
 const profile = computed(() => profileStore.getProfileInfoState.data);
 const profileLoading = computed(() => profileStore.getProfileInfoState.loading);
 const profileError = computed(() => profileStore.getProfileInfoState.error);
+const selfProfile = computed(() => {
+  if (!id) return true;
+  return profileStore.getProfileInfoState.data.selfProfile;
+});
 // Recipes
 const recipes = computed(() => profileStore.getRecipesState.data);
 const recipesLoading = computed(() => profileStore.getRecipesState.loading);
 const recipesError = computed(() => profileStore.getRecipesState.error);
-// Parámetros por query string
-const route = useRoute();
-const id = route.query.id;
 
+// Métodos de llamadas
 const fetchProfileData = () => {
-  profileStore.fetchProfileInfo(id); // Si se le pasa "null", obtiene el usuario del token bearer (es decir, el usuario logeado)
+  profileStore.fetchProfileInfo(id.value);
 };
 const fetchRecipesData = () => {
-  profileStore.fetchRecipes(id); // Si se le pasa "null", utiliza el usuario del token bearer (es decir, el usuario logeado)
+  profileStore.fetchRecipes(id.value);
 };
+
+// Refresco del perfil al ir de uno ajeno al propio
+watch(id, (newVal, oldVal) => {
+  // TODO: Cuando tenga en navbar para cambiar entre recetas, discusiones y encuestas, ponerlo en recetas cuando pase por este watch.
+  fetchProfileData();
+  fetchRecipesData();
+});
 </script>
 
 <style scoped lang="scss">
@@ -237,6 +271,35 @@ const fetchRecipesData = () => {
 }
 .i-d-description {
 }
+.own-notifications-container {
+  margin-top: 8px;
+}
+.own-notifications {
+  font-size: 140%;
+  background-color: transparent;
+  color: $color-primary;
+  border: none;
+}
+.follow-container {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 8px;
+}
+.follow-box {
+  display: flex;
+  height: min-content;
+  padding: 3px 9px;
+  background-color: $color-primary;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+.follow {
+  margin-right: 7px;
+}
+.notification {
+}
+/*
 .side-menu {
   display: flex;
   flex-direction: column;
@@ -254,6 +317,7 @@ const fetchRecipesData = () => {
   border-radius: 50%;
   background-color: $color-primary;
 }
+*/
 .profile-content {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
