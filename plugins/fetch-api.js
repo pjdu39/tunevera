@@ -18,6 +18,20 @@ export default defineNuxtPlugin((nuxtApp) => {
                 if (!response.ok) throw new Error(`La respuesta del fetch no es OK: ${response.statusText}`);
 
                 return response.json();
+
+                // TODO: Esto está comentado porque peta la aplicación no sé por qué.
+                //      La idea es hacer que acepte valores primitivos sin formato json.
+                /*
+                try {
+                    return response.json();
+                }
+                catch(e) {
+                    console.error(e);
+                }
+                finally {
+                    return response;
+                }
+                */
             }
         }
     }
