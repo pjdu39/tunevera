@@ -424,7 +424,7 @@ textarea:focus {
 }
 .send-comment-container {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .send-comment {
   margin-right: 10%;
