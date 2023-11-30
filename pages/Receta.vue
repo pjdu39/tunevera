@@ -127,6 +127,10 @@
           autoResize
           rows="1"
         />
+        <div class="send-comment-container">
+          <button class="cancel-comment">Cancelar</button>
+          <button class="send-comment" :disabled="!canSend">Enviar</button>
+        </div>
         <div class="title-comments">Comentarios</div>
         <div class="comments-box">
           <div class="comment-container">
@@ -198,6 +202,9 @@ const cumputedLikeClass = computed(() => {
     return like.value ? 'liked' : 'unliked'
   }
 });
+
+// Manejo de comentarios
+const canSend = computed(() => comment.value ?? null)
 
 // Carga datos
 const route = useRoute();
@@ -414,6 +421,33 @@ textarea:focus {
   border-bottom: 1px solid $color-dark;
   border-radius: 0;
   background-color: $color-background;
+}
+.send-comment-container {
+  display: flex;
+  justify-content: end;
+}
+.send-comment {
+  margin-right: 10%;
+  padding: 5px 14px;
+  background-color: $color-primary;
+  color: white;
+  border-radius: 40px;
+}
+.send-comment:disabled {
+  background-color: rgb(204, 204, 204);
+}
+.cancel-comment {
+  margin-right: 15px;
+  padding: 5px 14px;
+  color: $color-dark;
+  border-radius: 40px;
+}
+.cancel-comment:hover {
+  text-decoration: underline;
+  /*
+  background-color: rgb(204, 204, 204);
+  color: white;
+  */
 }
 .title-comments {
   margin-top: 30px;

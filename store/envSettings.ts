@@ -1,4 +1,4 @@
-type Environment = 'staging' | 'development';
+/* type Environment = 'staging' | 'development';
 
 interface EnvironmentSettings {
     apiUrl: string;
@@ -26,6 +26,6 @@ const GlobalSettings: GlobalSettingsType = {
 
 export { GlobalSettings };
 export type { Environment };
-
+*/
 
 // TODO: Borrar todo el fichero
