@@ -7,9 +7,19 @@ export const useRecipeStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null,
-            liked: false // Considerar moverlo al data de likeState. No estoy seguro de si compensa
+            liked: false
         },
         likeState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
+        postCommentState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
+        fetchCommentsState: {
             data: null,
             loading: 'waiting',
             error: null
@@ -38,10 +48,35 @@ export const useRecipeStore = defineStore({
             this.likeState.error = payload;
         },
 
+        // Comments
+        fetchCommentsData(payload) {
+            this.fetchCommentsState.data = payload;
+        },
+        fetchCommentsLoading(payload) {
+            this.fetchCommentsState.loading = payload;
+        },
+        fetchCommentsError(payload) {
+            this.fetchCommentsState.error = payload;
+        },
+        commentData(payload) {
+            this.postCommentState.data = payload;
+        },
+        commentLoading(payload) {
+            this.postCommentState.loading = payload;
+        },
+        commentError(payload) {
+            this.postCommentState.error = payload;
+        },
+        addCommentData(payload) {
+            if (this.fetchCommentsState.data) this.fetchCommentsState.data.unshift(payload);
+        },
+
         // Manejo local de estados
         setRecipeLike(payload) {
             this.getRecipeState.liked = payload;
         },
+
+        // Recipe
         async fetchRecipe(id) {
             const { $fetchApi } = useNuxtApp();
             this.setRecipeLoading('loading');
@@ -60,6 +95,8 @@ export const useRecipeStore = defineStore({
                 this.setRecipeError(error.message);
             }
         },
+
+        // Likes
         async like(id) {
             const { $fetchApi } = useNuxtApp();
             this.likeLoading('loading');
@@ -84,6 +121,50 @@ export const useRecipeStore = defineStore({
         },
         updateLikeState(newValue) {
             this.setRecipeLike(newValue);
+        },
+        
+        // Comments
+        async fetchComments(idPost, numElements) {
+            const { $fetchApi } = useNuxtApp();
+            this.fetchCommentsLoading('loading');
+            try {
+                const data = await $fetchApi(`GetComments?IdPost=${ idPost }&NumElements=${ numElements }`);
+
+                this.fetchCommentsData(data);
+                this.fetchCommentsLoading('loaded');
+                this.fetchCommentsError(null);
+            }
+            catch(error) {
+                this.fetchCommentsData(null);
+                this.fetchCommentsLoading('error');
+                this.fetchCommentsError(error.message);
+            }
+        },
+        async comment(idPost, text) {
+            const { $fetchApi } = useNuxtApp();
+            this.commentLoading('loading');
+            try {
+                const data = await $fetchApi("comment", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ IdPost: idPost, Text: text })
+                });
+
+                this.commentData(data);
+
+                // Añade el comentario al array en local
+                this.addCommentData(data);
+
+                this.commentLoading('loaded');
+                this.commentError(null);
+            }
+            catch(error) {
+                this.commentData(null);
+                this.commentLoading('error');
+                this.commentError(error.message);
+            }
         }
     }
 });

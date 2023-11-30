@@ -5,7 +5,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             fetchApi: async (endpoint, options = {}) => {
                 const apiUrl = useRuntimeConfig().public.apiUrl;
                 const token = useCookie("tokenBearer").value;
-                console.log(token)
+                
                 const headers = {
                     "Authorization": `Bearer ${ token }`,
                     ...options.headers, // Esto permite cabeceras adicionales específicas de la solicitud

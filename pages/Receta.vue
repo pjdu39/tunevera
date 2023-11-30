@@ -22,26 +22,26 @@
     <div v-else-if="getRecipeState.loading === 'loaded'">
       <div class="top-section">
         <div class="img-wrapper">
-          <NuxtImg
-            :src="getRecipeState.data.pictureUrl"
-            class="image-fit"
-          />
+          <NuxtImg :src="getRecipeState.data.pictureUrl" class="image-fit" />
         </div>
         <div class="general-info">
           <div class="general-info-top">
             <div class="recipe-title">{{ getRecipeState.data.title }}</div>
             <div class="signature-container">
-              <NuxtLink class="signature" :to="`/perfil?id=${getRecipeState.data.user.id}`">
-              <div class="signature-name">
-                <b>@{{ getRecipeState.data.user.name }}</b>
-              </div>
-              <div class="sign-img-wrapper">
-                <NuxtImg
-                  :src="getRecipeState.data.user.pictureUrl"
-                  class="image-fit"
-                />
-              </div>
-            </NuxtLink>
+              <NuxtLink
+                class="signature"
+                :to="`/perfil?id=${getRecipeState.data.user.id}`"
+              >
+                <div class="signature-name">
+                  <b>@{{ getRecipeState.data.user.name }}</b>
+                </div>
+                <div class="sign-img-wrapper">
+                  <NuxtImg
+                    :src="getRecipeState.data.user.pictureUrl"
+                    class="image-fit"
+                  />
+                </div>
+              </NuxtLink>
             </div>
           </div>
           <div class="properties">
@@ -61,7 +61,9 @@
                     aria-hidden="true"
                   />
                 </button>
-                <div class="num-likes">{{ getRecipeState.data.likes + localLike }}</div>
+                <div class="num-likes">
+                  {{ getRecipeState.data.likes + localLike }}
+                </div>
               </div>
             </div>
             <div class="general-info-right">
@@ -120,19 +122,34 @@
         </div>
       </div>
       <div class="comments-section">
+        <!-- TODO: Redireccionar (o similar) al intentar comentar sin estar logeado. -->
         <Textarea
           v-model="comment"
           class="add-comment-txt-area"
           placeholder="Añade un comentario..."
           autoResize
           rows="1"
+          @focus="showSendComment = true"
         />
-        <div class="send-comment-container">
-          <button class="cancel-comment">Cancelar</button>
-          <button class="send-comment" :disabled="!canSend">Enviar</button>
+        <div v-if="showSendComment" class="send-comment-container">
+          <button class="cancel-comment" @click="cancelComment">
+            Cancelar
+          </button>
+          <button
+            class="send-comment"
+            :disabled="!canSend"
+            @click="sendComment"
+          >
+            Enviar
+          </button>
         </div>
+        <div v-else class="comment-space"></div>
         <div class="title-comments">Comentarios</div>
-        <div class="comments-box">
+        <div
+          v-for="(cmt, index) in fetchCommentsState.data"
+          :key="index"
+          class="comments-box"
+        >
           <div class="comment-container">
             <div class="comment-signature">
               <div class="c-sign-img-wrapper">
@@ -144,8 +161,7 @@
               <div class="c-sign-name">@PATATA_asesina</div>
             </div>
             <div class="comment">
-              Wow buenísimo que rico sdfujksid sdf sdgujn dfh dgd fg, tres
-              manitas arriba
+              {{ cmt.text }}
             </div>
           </div>
         </div>
@@ -157,7 +173,6 @@
 <script setup>
 import { useRecipeStore } from "~/store/recipe.js";
 
-const comment = ref(null);
 const usuarioDummy = ref({
   id: 1,
   nombreCompleto: "Juan Pérez Delgado",
@@ -172,7 +187,7 @@ const getRecipeState = computed(() => store.getRecipeState);
 
 // Manejo de Likes
 const likeTimeout = ref(false);
-const localLike = ref(0)
+const localLike = ref(0);
 const like = computed({
   get: () => store.getRecipeState.liked,
   set: (value) => store.updateLikeState(value),
@@ -185,9 +200,9 @@ const clickLike = () => {
     store.like(store.getRecipeState.data.id);
 
     // Esto se encarga de que suba o baje un like de manera coherente en local al pulsar el botón.
-    const initialLikeState = store.getRecipeState.data.liked
-    const direction = initialLikeState ? -1 : 0
-    localLike.value = like.value ? direction + 1 : direction
+    const initialLikeState = store.getRecipeState.data.liked;
+    const direction = initialLikeState ? -1 : 0;
+    localLike.value = like.value ? direction + 1 : direction;
 
     setTimeout(() => {
       likeTimeout.value = false;
@@ -196,26 +211,41 @@ const clickLike = () => {
 };
 const cumputedLikeClass = computed(() => {
   if (likeTimeout.value) {
-    return (like.value ? 'fa-beat ' : '') + (like.value ? 'liked' : 'unliked');
-  }
-  else {
-    return like.value ? 'liked' : 'unliked'
+    return (like.value ? "fa-beat " : "") + (like.value ? "liked" : "unliked");
+  } else {
+    return like.value ? "liked" : "unliked";
   }
 });
 
 // Manejo de comentarios
-const canSend = computed(() => comment.value ?? null)
+const comment = ref(null);
+const fetchCommentsState = computed(() => store.fetchCommentsState);
+// const postCommentState = computed(() => store.postCommentState);
+const showSendComment = ref(false);
+const canSend = computed(() => comment.value ?? null);
+const cancelComment = () => {
+  showSendComment.value = false;
+  comment.value = null;
+};
+const sendComment = () => {
+  store.comment(id, comment.value);
+  cancelComment();
+};
 
 // Carga datos
 const route = useRoute();
 const id = route.query.id;
 
 const fetchRecipe = () => {
-  store.fetchRecipe(id); // TODO: Recibir este valor por url.
+  store.fetchRecipe(id);
+};
+const fetchComments = () => {
+  store.fetchComments(id, 10);
 };
 
 onMounted(() => {
   fetchRecipe();
+  fetchComments();
 });
 </script>
   
@@ -348,7 +378,6 @@ textarea:focus {
   color: $color-primary;
 }
 .unliked {
-
 }
 .liked {
   color: $color-primary;
@@ -425,6 +454,8 @@ textarea:focus {
 .send-comment-container {
   display: flex;
   justify-content: flex-end;
+  padding: 5px 0;
+  min-height: 40px;
 }
 .send-comment {
   margin-right: 10%;
@@ -448,6 +479,9 @@ textarea:focus {
   background-color: rgb(204, 204, 204);
   color: white;
   */
+}
+.comment-space {
+  min-height: 45px;
 }
 .title-comments {
   margin-top: 30px;
