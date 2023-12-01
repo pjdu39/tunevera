@@ -57,16 +57,7 @@
           </button>
         </div>
         <div v-else-if="!selfProfile" class="follow-container">
-          <button class="follow-box" @click="console.log(id)">
-            <div class="follow">Seguir</div>
-            <div class="notification">
-              <font-awesome-icon
-                icon="fa fa-bell"
-                class="fa-lg"
-                aria-hidden="true"
-              />
-            </div>
-          </button>
+          <FollowButton :id="id" />
         </div>
         <!--
         <div class="side-menu">
@@ -161,6 +152,7 @@
 </template>
 
 <script setup>
+import FollowButton from "~/components/Profile/FollowButton.vue";
 import { useProfileStore } from "~/store/profile.js";
 
 definePageMeta({
@@ -285,20 +277,7 @@ watch(id, (newVal, oldVal) => {
   align-items: flex-start;
   margin-top: 8px;
 }
-.follow-box {
-  display: flex;
-  height: min-content;
-  padding: 3px 9px;
-  background-color: $color-primary;
-  color: white;
-  border: none;
-  border-radius: 5px;
-}
-.follow {
-  margin-right: 7px;
-}
-.notification {
-}
+
 /*
 .side-menu {
   display: flex;

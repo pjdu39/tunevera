@@ -348,7 +348,7 @@ textarea:focus {
   line-height: 100%;
   border-radius: 5px;
   color: white;
-  background-color: rgb(178, 241, 142);
+  background-color: $color-vegan;
 }
 .general-info-bottom {
   display: flex;
@@ -465,7 +465,7 @@ textarea:focus {
   border-radius: 40px;
 }
 .send-comment:disabled {
-  background-color: rgb(204, 204, 204);
+  background-color: $color-soft-grey;
 }
 .cancel-comment {
   margin-right: 15px;

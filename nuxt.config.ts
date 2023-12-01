@@ -47,7 +47,6 @@ const config: NuxtConfig = {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    // TODO: Revisar por qué no se están exportando los SCSS
     "~/assets/scss/styles.scss",
     "~/assets/scss/global.scss",
     "@fortawesome/fontawesome-svg-core/styles.css",
