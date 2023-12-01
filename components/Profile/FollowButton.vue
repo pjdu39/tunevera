@@ -1,36 +1,53 @@
 <template>
-  <div class="component-wrapper"></div>
-  <button class="follow-box" @click="showOptions = !showOptions">
-    <div class="notification">
-      <font-awesome-icon icon="fa fa-bell" class="fa-lg" aria-hidden="true" />
-    </div>
-    <div class="follow">Seguir</div>
-  </button>
-  <div v-if="showOptions" class="follow-options">
-    <button class="option" @click="showOptions = false">
+  <div class="component-wrapper">
+    <button class="follow-box" @click="showOptions = !showOptions">
       <div class="notification">
         <font-awesome-icon icon="fa fa-bell" class="fa-lg" aria-hidden="true" />
       </div>
-      <div class="">Todas</div>
+      <div class="follow">Seguir</div>
     </button>
-    <button class="option" @click="showOptions = false">
-      <div class="notification">
-        <font-awesome-icon icon="far fa-bell" class="fa-lg" aria-hidden="true" />
-      </div>
-      <div class="">Personalizadas</div>
-    </button>
-    <button class="option" @click="showOptions = false">
-      <div class="notification">
-        <font-awesome-icon icon="far fa-bell-slash" class="fa-lg" aria-hidden="true" />
-      </div>
-      <div class="">Ninguna</div>
-    </button>
-    <button class="option" @click="showOptions = false">
-      <div class="notification">
-        <font-awesome-icon icon="fa fa-user" class="fa-lg" aria-hidden="true" />
-      </div>
-      <div class="">Dejar de seguir</div>
-    </button>
+    <div v-if="showOptions" class="follow-options">
+      <button class="option" @click="showOptions = false">
+        <div class="notification">
+          <font-awesome-icon
+            icon="fa fa-bell"
+            class="fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+        <div class="">Todas</div>
+      </button>
+      <button class="option" @click="showOptions = false">
+        <div class="notification">
+          <font-awesome-icon
+            icon="far fa-bell"
+            class="fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+        <div class="">Personalizadas</div>
+      </button>
+      <button class="option" @click="showOptions = false">
+        <div class="notification">
+          <font-awesome-icon
+            icon="far fa-bell-slash"
+            class="fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+        <div class="">Ninguna</div>
+      </button>
+      <button class="option" @click="showOptions = false">
+        <div class="notification">
+          <font-awesome-icon
+            icon="fa fa-user"
+            class="fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+        <div class="">Dejar de seguir</div>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -51,7 +68,8 @@ const showOptions = ref(false);
   justify-content: center;
   align-items: center;
   height: 30px;
-  width: 100px;
+  width: 110px;
+  padding-right: 12px;
   background-color: $color-primary;
   color: white;
   border: none;
@@ -60,16 +78,15 @@ const showOptions = ref(false);
 .follow {
 }
 .notification {
-    display: flex;
-    justify-content: center;
-    min-width: 25px;
+  display: flex;
+  justify-content: center;
+  min-width: 25px;
   margin-right: 7px;
 }
 .follow-options {
   position: absolute;
-  margin-top: 30px;
   height: auto;
-  width: auto;
+  width: max-content;
   border: 3px solid $color-dark;
   border-radius: 5px;
 }
