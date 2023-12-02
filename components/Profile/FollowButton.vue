@@ -1,23 +1,11 @@
 <template>
   <div class="component-wrapper">
-    <button class="follow-box" @click="showOptions = !showOptions">
-      <div class="notification">
-        <font-awesome-icon icon="fa fa-bell" class="fa-lg" aria-hidden="true" />
-      </div>
-      <div class="follow">Seguir</div>
-    </button>
-    <div v-if="showOptions" class="follow-options">
-      <button class="option" @click="showOptions = false">
-        <div class="notification">
-          <font-awesome-icon
-            icon="fa fa-bell"
-            class="fa-lg"
-            aria-hidden="true"
-          />
-        </div>
-        <div class="">Todas</div>
-      </button>
-      <button class="option" @click="showOptions = false">
+    <div class="main-button-container">
+      <button
+        v-if="!alreadyFollowing"
+        class="follow-box"
+        @click="follow(), (localFollow = true)"
+      >
         <div class="notification">
           <font-awesome-icon
             icon="far fa-bell"
@@ -25,54 +13,149 @@
             aria-hidden="true"
           />
         </div>
-        <div class="">Personalizadas</div>
+        <div class="follow">Seguir</div>
       </button>
-      <button class="option" @click="showOptions = false">
+      <button
+        v-else-if="alreadyFollowing"
+        class="follow-box follow-box--already-following"
+        @click="showOptions = !showOptions"
+      >
         <div class="notification">
           <font-awesome-icon
-            icon="far fa-bell-slash"
+            :icon="bellIcon"
             class="fa-lg"
             aria-hidden="true"
           />
         </div>
-        <div class="">Ninguna</div>
+        <div class="follow">Siguiendo</div>
       </button>
-      <button class="option" @click="showOptions = false">
-        <div class="notification">
-          <font-awesome-icon
-            icon="fa fa-user"
-            class="fa-lg"
-            aria-hidden="true"
-          />
-        </div>
-        <div class="">Dejar de seguir</div>
-      </button>
+    </div>
+    <div v-if="showOptions" class="follow-options">
+      <div v-for="(option, index) in options" :key="index">
+        <button class="option" @click="option.action(), (showOptions = false)">
+          <div class="notification">
+            <font-awesome-icon
+              :icon="option.icon"
+              class="fa-lg"
+              aria-hidden="true"
+            />
+          </div>
+          <div class="">{{ option.text }}</div>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useFollowerStore } from "~/store/follower.js";
+
 const props = defineProps({
-  id: Number,
+  data: Object,
 });
 
+// Data
+const notifications = ref("P");
+
+// Acceso a api
+const store = useFollowerStore();
+
+const followState = computed(() => store.followState);
+const unfollowState = computed(() => store.unfollowState);
+const setNotificationsState = computed(() => store.setNotificationsState);
+
+const follow = () => store.follow(props.data.id.value);
+const unfollow = () => store.unfollow(props.data.id.value);
+const setNotifications = () =>
+  store.setNotifications(props.data.id.value, notifications.value);
+
+// Manejo del botón
+const localFollow = ref(null)
+//const localNotifications = ref(null)
 const showOptions = ref(false);
+const alreadyFollowing = computed(() => {
+  if (localFollow.value === null) return props.data.following;
+  return localFollow.value;
+});
+const bellIcon = computed(() => {
+  const n = notifications.value;
+  //if (localNotifications.value !== null) n = localNotifications.value
+
+  switch(n) {
+    case 'A':
+      return 'fa fa-bell'
+    case 'P':
+      return 'far fa-bell'
+    case 'N':
+      return 'far fa-bell-slash'
+  }
+});
+const options = [
+  {
+    text: "Todas",
+    icon: "fa fa-bell",
+    action: () => {
+      notifications.value = "A";
+      setNotifications();
+    },
+  },
+  {
+    text: "Personalizadas",
+    icon: "far fa-bell",
+    action: () => {
+      notifications.value = "P";
+      setNotifications();
+    },
+  },
+  {
+    text: "Ninguna",
+    icon: "far fa-bell-slash",
+    action: () => {
+      notifications.value = "N";
+      setNotifications();
+    },
+  },
+  {
+    text: "Dejar de seguir",
+    icon: "fa fa-user",
+    action: () => {
+      unfollow();
+      localFollow.value = false;
+    },
+  },
+];
 </script>
 
 <style lang="scss" scoped>
 .component-wrapper {
   position: relative;
 }
+.main-button-container {
+  /*
+  display: flex;
+  justify-content: flex-end;
+  */
+  min-width: 140px;
+}
 .follow-box {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 30px;
-  width: 110px;
-  padding-right: 12px;
+  min-height: 30px;
+  min-width: 110px;
+  padding: 0 15px 0 12px;
   background-color: $color-primary;
   color: white;
   border: none;
+  border-radius: 5px;
+}
+.follow-box:hover {
+  text-decoration: underline;
+}
+.follow-box--already-following {
+  padding: 0 15px 0 9px;
+  background-color: transparent;
+  color: $color-dark;
+  border: 2px solid $color-dark;
   border-radius: 5px;
 }
 .follow {
@@ -87,7 +170,7 @@ const showOptions = ref(false);
   position: absolute;
   height: auto;
   width: max-content;
-  border: 3px solid $color-dark;
+  border: 2px solid $color-dark;
   border-radius: 5px;
 }
 .option {

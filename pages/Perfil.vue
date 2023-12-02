@@ -57,7 +57,7 @@
           </button>
         </div>
         <div v-else-if="!selfProfile" class="follow-container">
-          <FollowButton :id="id" />
+          <FollowButton :data="followButtonData" />
         </div>
         <!--
         <div class="side-menu">
@@ -177,6 +177,9 @@ const profileError = computed(() => profileStore.getProfileInfoState.error);
 const selfProfile = computed(() => {
   if (!id) return true;
   return profileStore.getProfileInfoState.data.selfProfile;
+});
+const followButtonData = computed(() => {
+  return { id: id, following: profile.value.following }
 });
 // Recipes
 const recipes = computed(() => profileStore.getRecipesState.data);
