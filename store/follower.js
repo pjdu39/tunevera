@@ -17,6 +17,10 @@ export const useFollowerStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null
+        },
+        localFollowState: {
+            following: null,
+            notifications: null
         }
     }),
     actions: {
@@ -53,6 +57,14 @@ export const useFollowerStore = defineStore({
             this.setNotificationsState.error = payload;
         },
 
+        // Set local states
+        setLocalFollowingState(payload) {
+            this.localFollowState.following = payload
+        },
+        setLocalNotificationsState(payload) {
+            this.localFollowState.notifications = payload
+        },
+
         async follow(id) {
             const { $fetchApi } = useNuxtApp();
             this.setFollowLoading('loading');
@@ -64,6 +76,9 @@ export const useFollowerStore = defineStore({
                     },
                     body: JSON.stringify({ IdUserToFollow: id })
                 });
+
+                this.setLocalFollowingState(true);
+                this.setLocalNotificationsState('P');
 
                 this.setFollowData(data);
                 this.setFollowLoading('loaded');
@@ -83,6 +98,9 @@ export const useFollowerStore = defineStore({
                 const data = await $fetchApi(`Unfollow?IdUserToFollow=${ id }`, {
                     method: 'DELETE'
                 });
+
+                this.setLocalFollowingState(false);
+                this.setLocalNotificationsState(null);
 
                 this.setUnfollowData(data);
                 this.setUnfollowLoading('loaded');
@@ -109,6 +127,8 @@ export const useFollowerStore = defineStore({
                         Notifications: notifications
                     })
                 });
+
+                this.setLocalNotificationsState(notifications.value);
 
                 this.setNotificationsData(data);
                 this.setNotificationsLoading('loaded');

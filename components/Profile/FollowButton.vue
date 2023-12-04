@@ -54,40 +54,45 @@ const props = defineProps({
   data: Object,
 });
 
-// Data
-const notifications = ref("P");
-
 // Acceso a api
 const store = useFollowerStore();
 
 const followState = computed(() => store.followState);
 const unfollowState = computed(() => store.unfollowState);
 const setNotificationsState = computed(() => store.setNotificationsState);
+const localFollowState = computed(() => store.localFollowState);
 
 const follow = () => store.follow(props.data.id.value);
 const unfollow = () => store.unfollow(props.data.id.value);
-const setNotifications = () =>
-  store.setNotifications(props.data.id.value, notifications.value);
+const setNotifications = (notifications) =>
+  store.setNotifications(props.data.id.value, notifications);
 
 // Manejo del botón
-const localFollow = ref(null)
-//const localNotifications = ref(null)
 const showOptions = ref(false);
 const alreadyFollowing = computed(() => {
-  if (localFollow.value === null) return props.data.following;
-  return localFollow.value;
+  if (localFollowState.value.following === null)
+    return props.data.follow.following;
+  return localFollowState.value.following;
+});
+const notificationsState = computed(() => {
+  if(localFollowState === null) return 'P'
+
+  if (localFollowState.value.notifications === null)
+    return !props.data.follow.notifications ? 'P' : props.data.follow.notifications.value;
+
+  return localFollowState.value.notifications;
 });
 const bellIcon = computed(() => {
-  const n = notifications.value;
-  //if (localNotifications.value !== null) n = localNotifications.value
+  let n = 'P'
+  if(notificationsState) n = notificationsState.value;
 
-  switch(n) {
-    case 'A':
-      return 'fa fa-bell'
-    case 'P':
-      return 'far fa-bell'
-    case 'N':
-      return 'far fa-bell-slash'
+  switch (n) {
+    case "A":
+      return "fa fa-bell";
+    case "P":
+      return "far fa-bell";
+    case "N":
+      return "far fa-bell-slash";
   }
 });
 const options = [
@@ -95,32 +100,36 @@ const options = [
     text: "Todas",
     icon: "fa fa-bell",
     action: () => {
-      notifications.value = "A";
-      setNotifications();
+      store.setLocalNotificationsState("A");
+      //notifications.value = "A";
+      setNotifications("A");
     },
   },
   {
     text: "Personalizadas",
     icon: "far fa-bell",
     action: () => {
-      notifications.value = "P";
-      setNotifications();
+      store.setLocalNotificationsState("P");
+      // notifications.value = "P";
+      setNotifications("P");
     },
   },
   {
     text: "Ninguna",
     icon: "far fa-bell-slash",
     action: () => {
-      notifications.value = "N";
-      setNotifications();
+      store.setLocalNotificationsState("N");
+      // notifications.value = "N";
+      setNotifications("N");
     },
   },
   {
     text: "Dejar de seguir",
     icon: "fa fa-user",
     action: () => {
+      store.setLocalFollowingState(false);
       unfollow();
-      localFollow.value = false;
+      // localFollow.value = false;
     },
   },
 ];

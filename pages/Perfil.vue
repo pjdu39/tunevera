@@ -179,7 +179,7 @@ const selfProfile = computed(() => {
   return profileStore.getProfileInfoState.data.selfProfile;
 });
 const followButtonData = computed(() => {
-  return { id: id, following: profile.value.following }
+  return { id: id, follow: profile.value.follow }
 });
 // Recipes
 const recipes = computed(() => profileStore.getRecipesState.data);
@@ -196,7 +196,7 @@ const fetchRecipesData = () => {
 
 // Refresco del perfil al ir de uno ajeno al propio
 watch(id, (newVal, oldVal) => {
-  // TODO: Cuando tenga en navbar para cambiar entre recetas, discusiones y encuestas, ponerlo en recetas cuando pase por este watch.
+  // TODO: Cuando tenga el navbar para cambiar entre recetas, discusiones y encuestas, ponerlo en recetas cuando pase por este watch.
   fetchProfileData();
   fetchRecipesData();
 });
