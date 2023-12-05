@@ -1,6 +1,38 @@
 <template>
   <div v-if="newDiscussionState.loading === 'waiting'">
     <div class="section">
+      <div class="title-container">
+        <div class="label label--title">Tema</div>
+        <input
+          class="title-input"
+          placeholder="¿Sobre qué quieres hablar?"
+          v-model="postDiscussionData.title"
+          trim
+        />
+      </div>
+    </div>
+    <div class="section">
+      <div class="description-container">
+        <div class="label label--title">Cuerpo</div>
+        <input
+          class="description-input"
+          placeholder="Cuerpo de texto (opcional)"
+          v-model="postDiscussionData.description"
+          trim
+        />
+      </div>
+    </div>
+    <div>
+      <button class="" @click="uploadDiscussion" :disabled="!formCompleted">
+        <span class="">Subir</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- TODO: Borrar. Legacy -->
+  <!--
+  <div v-if="newDiscussionState.loading === 'waiting'">
+    <div class="section">
       <h5>Tema</h5>
       <b-row>
         <b-col class="col-md-11">
@@ -55,6 +87,8 @@
       </b-row>
     </div>
   </div>
+-->
+
   <div v-else-if="newDiscussionState.loading === 'loading'" class="spinner">
     <font-awesome-icon
       icon="fa fa-spinner"
@@ -68,55 +102,119 @@
   <div v-else-if="newDiscussionState.loading === 'error'">Error</div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
 import { useUploadsStore } from "~/store/uploads";
-export default {
-  name: "DiscussionUpload",
-  data() {
-    return {
-      postDiscussionData: {
-        title: "",
-        description: "",
-      },
-    };
-  },
-  computed: {
-    newDiscussionState() {
-      const store = useUploadsStore();
-      return store.newDiscussionState;
-    },
-  },
-  methods: {
-    postDiscussion() {
-      const store = useUploadsStore();
-      return store.postDiscussion;
-    },
-    setLoadingToWaiting() {
-      // TODO: Esto no funciona, crear una función en la store para manejar el loading si se requiere hacerlo.
-      /* this.loading = "waiting"; */
-    },
-    Aceptar() {
-      // TODO: Validaciones de contenido sobre postPollData
-      this.postDiscussion()(this.postDiscussionData);
-    },
-    // TODO: Borrar la función y el botón. Ya no tienen sentido
-    Atras() {
-      // this.postPoll(this.postPollData);
-    },
-  },
+
+// Definición de la propiedad reactiva para los datos de la discusión
+const postDiscussionData = ref({
+  title: "",
+  description: "",
+});
+
+// Usando la store
+const store = useUploadsStore();
+
+// Computed para el estado de la nueva discusión
+const newDiscussionState = computed(() => store.newDiscussionState);
+
+// Subir discusión
+const titleCompleted = computed(() =>
+  postDiscussionData.value.title ? true : false
+);
+const descriptionCompleted = computed(() =>
+  postDiscussionData.value.description ? true : false
+);
+const formCompleted = computed(() => {
+  if (titleCompleted.value && descriptionCompleted.value) {
+    return true;
+  }
+
+  return false;
+});
+const uploadDiscussion = () => {
+  if (!formCompleted) return;
+
+  store.postDiscussion(postDiscussionData.value);
 };
 </script>
 
 <style scoped lang="scss">
+input {
+  width: 100%;
+  margin-top: 15px;
+  border: none;
+  border-bottom: 1px solid $color-dark;
+  border-radius: 0;
+  background-color: $color-background;
+}
+input:focus {
+  border: none;
+  outline: none !important;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  border-bottom: 2px solid $color-dark;
+}
+textarea {
+  width: 90%;
+  margin-top: 5px;
+  border: none;
+  border-bottom: 1px solid $color-dark;
+  border-radius: 0;
+  background-color: $color-background;
+  resize: none;
+}
+textarea:focus {
+  border: none;
+  outline: none !important;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  border-bottom: 2px solid $color-dark;
+}
+select {
+  margin-top: 5px;
+  border: none;
+  border-bottom: 1px solid $color-dark;
+  border-radius: 0;
+  background-color: $color-background;
+}
+select:focus {
+  border: none;
+  outline: none !important;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  border-bottom: 2px solid $color-dark;
+}
+.section {
+  margin-bottom: 40px;
+}
+.title-container {
+  width: 50%
+}
+.label {
+  font-size: 130%;
+}
+.label--title {
+  font-size: 150%;
+}
+.title-input {
+}
+.description-container {
+  width: calc(100% - 5rem);
+}
+.description-input {
+}
+
+/* TODO: Borrar. Legacy -------------------------------------------------------------------- */
 .input {
   border: none;
   background-color: #f2f4f5;
   border-radius: 0.7rem;
   box-shadow: 2px 2px 3px 1px #55555525 inset,
     -1.3px -1.3px 9px 2px rgb(255, 255, 255) inset;
-}
-.title-container {
-  width: 100%;
 }
 .input-title {
   font-size: 110%;
@@ -125,7 +223,6 @@ export default {
   padding: 0.4rem 0.5rem 0.4rem 0.4rem;
   margin-right: 0rem;
   margin-bottom: 1rem;
-  
 
   background-color: $color-primary;
   /* TODO: Invertir los inset tratando de conseguir el mismo resultado. Con los inset simulando los bordes queda fatal al pulsar los botones */

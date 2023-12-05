@@ -4,7 +4,7 @@
       <div class="question-container">
         <div class="title-box">
           <div class="label label--title">Pregunta</div>
-          <input v-model="postPollData.title" class="input--title" />
+          <input v-model="postPollData.title" />
         </div>
       </div>
     </div>
@@ -166,12 +166,10 @@ const store = useUploadsStore();
 // Computed para el estado de la encuesta
 const newPollState = computed(() => store.newPollState);
 
-// Computed para verificar si se puede añadir otra respuesta
+// Manejo de formmulario
 const canAddOption = computed(() => {
   return postPollData.value.options.every((x) => x);
 });
-
-// Manejo de formmulario
 const addOption = () => {
   if (canAddOption.value) {
     postPollData.value.options.push("");
@@ -185,11 +183,11 @@ const deleteOption = (index) => {
 const titleCompleted = computed(() =>
   postPollData.value.title ? true : false
 );
-const optionsCompletes = computed(() =>
+const optionsCompleted = computed(() =>
   postPollData.value.options.filter((x) => x).length >= 2 ? true : false
 );
 const formCompleted = computed(() => {
-  if (titleCompleted.value && optionsCompletes.value) {
+  if (titleCompleted.value && optionsCompleted.value) {
     return true;
   }
 
@@ -205,7 +203,6 @@ const cleanEmptyForms = () => {
     }
   }
 };
-
 const uploadPoll = () => {
   cleanEmptyForms();
 
@@ -228,10 +225,8 @@ input:focus {
   border: none;
   outline: none !important;
   box-shadow: none;
-  /*
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
-  */
   border-bottom: 2px solid $color-dark;
 }
 textarea {
