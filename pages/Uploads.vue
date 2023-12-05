@@ -29,7 +29,7 @@ definePageMeta({
 <style scoped lang="scss">
 .uploads {
   margin: auto;
-  padding: 5px 0;
+  padding: 5px 10px;
   width: 55rem;
   border: 3px solid $color-dark;
   border-radius: 5px;

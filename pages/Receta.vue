@@ -151,15 +151,15 @@
           class="comments-box"
         >
           <div class="comment-container">
-            <div class="comment-signature">
+            <NuxtLink
+              class="comment-signature"
+              :to="`/perfil?id=${cmt.user.id}`"
+            >
               <div class="c-sign-img-wrapper">
-                <NuxtImg
-                  :src="cmt.user.pictureUrl"
-                  class="image-fit"
-                />
+                <NuxtImg :src="cmt.user.pictureUrl" class="image-fit" />
               </div>
               <div class="c-sign-name">@{{ cmt.user.name }}</div>
-            </div>
+            </NuxtLink>
             <div class="comment">
               {{ cmt.text }}
             </div>
@@ -488,13 +488,21 @@ textarea:focus {
   font-size: 150%;
 }
 .comment-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   margin-top: 20px;
 }
 .comment-signature {
+  position: absolute;
   display: flex;
   align-items: center;
+  justify-content: left;
+  left: 0;
+  font-style: italic;
+}
+.comment-signature:hover {
+  text-decoration: underline;
 }
 .c-sign-img-wrapper {
   position: relative;
@@ -509,6 +517,7 @@ textarea:focus {
   font-weight: bold;
 }
 .comment {
-  margin: 7px 0 0 45px;
+  font-size: 90%;
+  margin: 37px 0 0 45px;
 }
 </style>

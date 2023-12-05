@@ -172,7 +172,7 @@
         <div class="delete-button-wrapper">
           <button
             class="btn btn--delete"
-            @click="EliminaIngrediente(recipeIngredient)"
+            @click="deleteIngredient(recipeIngredient)"
           >
             <span class="span--btn-delete">
               <font-awesome-icon icon="fa fa-trash-can" aria-hidden="true" />
@@ -182,8 +182,8 @@
       </div>
       <button
         class="btn btn--i-btn"
-        @click="OtroIngrediente()"
-        :disabled="!PuedeAnadirIngrediente"
+        @click="addIngredient()"
+        :disabled="!canAddIngredient"
       >
         <span class="span--i-btn">+</span>
       </button>
@@ -206,7 +206,7 @@
           ></Textarea>
         </div>
         <div class="delete-button-wrapper">
-          <button class="btn btn--delete" @click="EliminaPaso(step)">
+          <button class="btn btn--delete" @click="deleteStep(step)">
             <span class="span--btn-delete">
               <font-awesome-icon icon="fa fa-trash-can" aria-hidden="true" />
             </span>
@@ -216,8 +216,8 @@
       <div>
         <button
           class="btn btn--i-btn"
-          @click="OtroPaso()"
-          :disabled="!PuedeAnadirPaso"
+          @click="addStep()"
+          :disabled="!canAddStep"
         >
           <span class="span--i-btn">+</span>
         </button>
@@ -308,22 +308,22 @@ const unidadesDummy = [
 */
 
 // Manejo del formulario
-const PuedeAnadirIngrediente = computed(() => {
+const canAddIngredient = computed(() => {
   let result = true;
   postRecipeData.value.recipeIngredients.forEach((x) => {
     if (!x.text) result = false;
   });
   return result;
 });
-const PuedeAnadirPaso = computed(() => {
+const canAddStep = computed(() => {
   let result = true;
   postRecipeData.value.steps.forEach((x) => {
     if (!x) result = false;
   });
   return result;
 });
-const OtroIngrediente = () => {
-  if (PuedeAnadirIngrediente.value) {
+const addIngredient = () => {
+  if (canAddIngredient.value) {
     postRecipeData.value.recipeIngredients.push({
       text: null,
       amount: null,
@@ -331,19 +331,19 @@ const OtroIngrediente = () => {
     });
   }
 };
-const OtroPaso = () => {
-  if (PuedeAnadirPaso.value) {
+const addStep = () => {
+  if (canAddStep.value) {
     postRecipeData.value.steps.push("");
   }
 };
-const EliminaIngrediente = (ingredient) => {
+const deleteIngredient = (ingredient) => {
   if (postRecipeData.value.recipeIngredients.length <= 1) return;
   const index = postRecipeData.value.recipeIngredients.indexOf(ingredient);
   if (index > -1) {
     postRecipeData.value.recipeIngredients.splice(index, 1);
   }
 };
-const EliminaPaso = (step) => {
+const deleteStep = (step) => {
   if (postRecipeData.value.steps.length <= 1) return;
 
   const index = postRecipeData.value.steps.indexOf(step);
@@ -452,20 +452,16 @@ const formCompleted = computed(() => {
 
   return false;
 });
-
-const postRecipe = () => {
-  uploadsStore.postRecipe(postRecipeData.value);
-};
 // TODO: Revisar estos "if" tan feos.
-const CleanEmptyForms = () => {
-  if (!PuedeAnadirIngrediente.value) {
+const cleanEmptyForms = () => {
+  if (!canAddIngredient.value) {
     if (postRecipeData.value.recipeIngredients.length > 1)
       postRecipeData.value.recipeIngredients.splice(
         postRecipeData.value.recipeIngredients.length - 1,
         1
       );
   }
-  if (!PuedeAnadirPaso.value) {
+  if (!canAddStep.value) {
     if (postRecipeData.value.steps.length > 1)
       postRecipeData.value.steps.splice(
         postRecipeData.value.steps.length - 1,
@@ -474,13 +470,13 @@ const CleanEmptyForms = () => {
   }
 };
 const uploadRecipe = () => {
-  CleanEmptyForms();
+  cleanEmptyForms();
 
   if (!formCompleted) return;
 
   postRecipeData.value.pictureUrl = uploadState.value.data;
 
-  postRecipe();
+  uploadsStore.postRecipe(postRecipeData.value);
 };
 
 // Experimentos de sugerencias de ingredientes. Considerar una solución alternativa y/o borrarlo
@@ -540,10 +536,8 @@ input:focus {
   border: none;
   outline: none !important;
   box-shadow: none;
-  /*
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
-  */
   border-bottom: 2px solid $color-dark;
 }
 input[type="file"] {
@@ -562,10 +556,8 @@ textarea:focus {
   border: none;
   outline: none !important;
   box-shadow: none;
-  /*
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
-  */
   border-bottom: 2px solid $color-dark;
 }
 select {
@@ -579,10 +571,8 @@ select:focus {
   border: none;
   outline: none !important;
   box-shadow: none;
-  /*
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
-  */
   border-bottom: 2px solid $color-dark;
 }
 
