@@ -45,6 +45,7 @@ export default {
           ],
         },
         */
+       /*
         {
           type: "Encuesta",
           title: "Qué guiso queréis que os traiga esta semana?",
@@ -60,6 +61,7 @@ export default {
             { id: 4, answer: "Ramen", votes: 287 },
           ],
         },
+        */
         /*
         {
           type: "Receta",
@@ -84,6 +86,7 @@ export default {
           ],
         },
         */
+       /*
         {
           type: "Discusion",
           title: "Cilantro o no?",
@@ -118,6 +121,7 @@ export default {
             { id: 2, answer: "Sin patata", votes: 856 },
           ],
         },
+        */
       ],
     };
   },
