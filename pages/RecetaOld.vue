@@ -175,7 +175,7 @@ export default {
         nombreCompleto: "Juan Pérez Delgado",
         publicaciones: 28,
         seguidores: 143,
-        img: import("/img/foto_perfil2.jpg"),
+        // img: import("/img/foto_perfil2.jpg"),
       },
       recetaDummy: {
         titulo: "Huevos Fritos",

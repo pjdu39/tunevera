@@ -173,14 +173,6 @@
 <script setup>
 import { useRecipeStore } from "~/store/recipe.js";
 
-const usuarioDummy = ref({
-  id: 1,
-  nombreCompleto: "Juan Pérez Delgado",
-  publicaciones: 28,
-  seguidores: 143,
-  img: new URL("/img/foto_perfil2.jpg", import.meta.url),
-});
-
 // Acceso al store
 const store = useRecipeStore();
 const getRecipeState = computed(() => store.getRecipeState);
