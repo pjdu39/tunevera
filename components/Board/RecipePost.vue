@@ -16,13 +16,13 @@
             <div class="interaction-icon">
               <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
             </div>
-            <div class="num-likes">{{ postData.likes }}</div>
+            <div class="num-interactions">{{ postData.likes }}</div>
           </div>
           <div class="interaction-container">
             <div class="interaction-icon">
               <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
             </div>
-            <!--<div class="num-comments">{{ postData.comentarios.length }}</div>-->
+            <div class="num-interactions">{{ postData.numComments }}</div>
           </div>
         </div>
         <div class="time">
@@ -105,7 +105,7 @@ const props = defineProps({
   color: $color-primary;
   margin: 0 5px;
 }
-.num-likes {
+.num-interactions {
   font-size: small;
 }
 .time {

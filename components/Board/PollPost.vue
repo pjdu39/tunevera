@@ -4,15 +4,25 @@
       por <b>{{ postData.userName }}</b>
     </div>
     <h4 class="title">{{ postData.title }}</h4>
-
     <div class="post-body">
-      <div ref="optionContainer" class="poll-options-container">
+
+      <div v-show="!isVoted" ref="optionContainer" class="poll-options-container">
         <div class="poll-options">
-          <div v-for="option in postData.options" :key="option.id">
+          <div v-for="(option, index) in postData.options" :key="index">
+            <button class="option-button" @click="vote(index, postData.id, option), option.voted = true">
+              <div class="option-button-text">{{ option.answer }}</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-show="isVoted" ref="optionContainer" class="poll-options-container">
+        <div class="poll-options">
+          <div v-for="(option, index) in localOptions" :key="index">
             <div class="option-wrapper">
               <div class="option-text">{{ option.answer }}</div>
               <div
-                class="option-bar"
+                :class="['option-bar', { 'option-bar--selected': chosenOptionId === index }]"
                 :style="
                   'width: ' +
                   calculaBarraEncuesta(postData.options, option) +
@@ -43,13 +53,13 @@
           <div class="interaction-icon">
             <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
           </div>
-          <div class="num-likes">{{ postData.likes }}</div>
+          <div class="num-interactions">{{ postData.likes }}</div>
         </div>
         <div class="interaction-container">
           <div class="interaction-icon">
             <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
           </div>
-          <!--<div class="num-comments">{{ postData.comentarios.length }}</div>-->
+          <!--<div class="num-interactions">{{ postData.numComments }}</div>-->
         </div>
       </div>
       <div class="time-left">Acaba en 2 días</div>
@@ -58,10 +68,35 @@
 </template>
   
 <script setup>
+import { usePollStore } from "~/store/poll.js";
+
 const props = defineProps({
   postData: Object,
 });
 
+// Utilizando la store
+const store = usePollStore();
+
+
+// Manejo de votaciones
+const localOptions = ref([ ...props.postData.options ])
+const isVoted = ref(false);
+const chosenOptionId = ref(null)
+const vote = (index, idPost, option) => {
+  option.votes += 1;
+  isVoted.value = true;
+  chosenOptionId.value = index;
+  store.vote(idPost, option.id);
+}
+onMounted(() => {
+  isVoted.value = props.postData.options.some(x => x.voted);
+  if (isVoted.value) {
+    chosenOptionId.value = props.postData.options.find(x => x.voted).optionNumber - 1 // Se le resta 1 porque index (el del v-for) empieza en 0
+  }
+});
+
+
+// Ajuste fino de encuestas responsive.
 // CÁLCULO DE PORCENTAJE Y LAS BARRAS GRÁFICAS
 const calculaPorcentajeEncuesta = (pollOptions, option) => {
   let totalVotes = pollOptions.reduce((acum, x) => acum + x.votes, 0);
@@ -80,7 +115,6 @@ const calculaBarraEncuesta = (pollOptions, option) => {
 
   return result.toFixed(1);
 };
-
 // OBTENCIÓN REACTIVA DEL VALOR DEL ANCHO DEL CONTENEDOR
 const optionContainer = ref(null);
 const anchoDiv = ref(0);
@@ -191,7 +225,7 @@ const anchoActual = computed(() => anchoDiv.value);
   color: $color-primary;
   margin: 0 5px;
 }
-.num-likes {
+.num-interactions {
   font-size: small;
 }
 .time-left {
@@ -200,7 +234,7 @@ const anchoActual = computed(() => anchoDiv.value);
 }
 .option-wrapper {
   position: relative;
-  height: 1.6rem;
+  height: 26px;
 }
 
 .option-text {
@@ -210,15 +244,31 @@ const anchoActual = computed(() => anchoDiv.value);
   font-size: 85%;
   z-index: 10;
 }
-
 .option-bar {
   position: absolute;
   height: 100%;
   top: 0;
   left: 0;
-  background-color: $color-primary;
+  background-color: $color-soft-grey;
   border-radius: 5px 0 0 5px;
   z-index: 5;
+}
+.option-bar--selected {
+  background-color: $color-primary;
+}
+.option-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  background-color: transparent;
+  border: 2px solid $color-dark;
+  border-radius: 5px;
+}
+.option-button-text {
+  height: 22px;
+  font-size: 85%;
 }
 
 .percentage {
