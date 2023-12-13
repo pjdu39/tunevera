@@ -43,7 +43,11 @@
       <div class="right-container">
         <div class="title-box">
           <div class="label label--title">Título</div>
-          <input v-model="postRecipeData.title" class="input--title" />
+          <input
+            v-model="postRecipeData.title"
+            class="input--title"
+            :maxlength="titleMaxLenght"
+          />
         </div>
         <div class="interactive-inputs-container">
           <div class="container-fraction">
@@ -65,8 +69,10 @@
                   placeholder=""
                   v-model="postRecipeData.time"
                   min="0"
+                  :max="maxTime"
                   autocomplete="off"
                   v-click-outside="roundTime"
+                  @input="validateTime"
                   @keydown="preventE"
                 />
                 <!-- TODO: Bug. Pasos para reproducirlo: poner números en el input, seleccionarlo todo, pulsar cualquier letra (salvo la "e") -->
@@ -95,7 +101,9 @@
                   placeholder=""
                   v-model="postRecipeData.servings"
                   min="0"
+                  :max="maxServings"
                   autocomplete="off"
+                  @input="validateServings"
                   @keydown="preventE"
                 />
                 <button class="btn btn--i-btn" @click="sumServing(1)">
@@ -111,7 +119,7 @@
       <div class="label">Descripción</div>
       <Textarea
         v-model="postRecipeData.description"
-        maxlength="430"
+        :maxlength="descriptionMaxLenght"
         rows="1"
         autoResize
       />
@@ -131,11 +139,12 @@
           <input
             class="shorted-input"
             v-model="recipeIngredient.text"
-            @input="pointTo(index)"
-            @keydown="handleKeydown"
+            :maxlength="ingredientMaxLenght"
             autocomplete="off"
             trim
           />
+          <!-- @input="pointTo(index)" @keydown="handleKeydown" -->
+          <!--
           <div class="">
             <div
               v-if="showDropdown && index === currentInput"
@@ -152,13 +161,15 @@
               </div>
             </div>
           </div>
+          -->
         </div>
         <div class="amount-input-wrapper">
           <input
             class="shorted-input"
             type="number"
-            v-model="recipeIngredient.amount"
-            trim
+            v-model.number="recipeIngredient.amount"
+            :max="maxAmount"
+            @input="validateAmount(index)"
             @keydown="preventE"
           />
         </div>
@@ -224,7 +235,7 @@
       </div>
     </div>
     <div>
-      <button class="" @click="uploadRecipe" :disabled="!formCompleted">
+      <button class="" @click="uploadRecipe" :disabled="!validForm">
         <span class="">Subir</span>
       </button>
     </div>
@@ -250,6 +261,15 @@ import { ref, computed } from "vue";
 import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
 import vClickOutside from "v-click-outside";
+
+// Constantes
+const titleMaxLenght = 60;
+const descriptionMaxLenght = 450;
+const maxTime = 999;
+const maxServings = 50;
+const ingredientMaxLenght = 70; // Ampliable hasta 100.
+const maxAmount = 9999.99;
+const stepMaxLenght = 450;
 
 onMounted(() => {
   uploadsStore.fetchUnits();
@@ -337,17 +357,21 @@ const addStep = () => {
   }
 };
 const deleteIngredient = (ingredient) => {
-  if (postRecipeData.value.recipeIngredients.length <= 1) return;
   const index = postRecipeData.value.recipeIngredients.indexOf(ingredient);
-  if (index > -1) {
+
+  if (postRecipeData.value.recipeIngredients.length === 1) {
+    const empty = { text: null, amount: null, idUnit: null };
+    postRecipeData.value.recipeIngredients.splice(index, 1, empty);
+  } else {
     postRecipeData.value.recipeIngredients.splice(index, 1);
   }
 };
 const deleteStep = (step) => {
-  if (postRecipeData.value.steps.length <= 1) return;
-
   const index = postRecipeData.value.steps.indexOf(step);
-  if (index > -1) {
+
+  if (postRecipeData.value.steps.length === 1) {
+    postRecipeData.value.steps.splice(index, 1, "");
+  } else {
     postRecipeData.value.steps.splice(index, 1);
   }
 };
@@ -389,6 +413,13 @@ const sumTime = (n) => {
   } else {
     postRecipeData.value.time -= diff;
   }
+
+  validateTime();
+};
+const validateTime = () => {
+  if (postRecipeData.value.time > maxTime) postRecipeData.value.time = maxTime;
+
+  if (postRecipeData.value.time < 0) postRecipeData.value.time = 0;
 };
 // Servings
 const convertServingsToInt = () => {
@@ -406,46 +437,90 @@ const sumServing = (n) => {
   }
 
   postRecipeData.value.servings += n;
+
+  validateServings();
+};
+const validateServings = () => {
+  if (postRecipeData.value.servings > maxServings)
+    postRecipeData.value.servings = maxServings;
+
+  if (postRecipeData.value.servings < 0) postRecipeData.value.servings = 0;
+};
+// Amount
+const validateAmount = (index) => {
+  // Se maneja con una copia por temas de reactividad de vue en arrays. El método splice es reactivo.
+  let ingredient = postRecipeData.value.recipeIngredients[index];
+
+  if (ingredient.amount > maxAmount) {
+    ingredient = { ...ingredient, amount: maxAmount };
+  } else if (ingredient.amount < 0) {
+    ingredient = { ...ingredient, amount: 0 };
+  }
+
+  postRecipeData.value.recipeIngredients.splice(index, 1, ingredient);
 };
 
 // Subir receta
 // TODO: Añadir lógica de validación más allá de si el input está vacío o no.
 const newRecipeState = computed(() => uploadsStore.newRecipeState);
-const titleCompleted = computed(() =>
-  postRecipeData.value.title ? true : false
+const validTitle = computed(() =>
+  postRecipeData.value.title &&
+  postRecipeData.value.title.length <= titleMaxLenght
+    ? true
+    : false
 );
-const timeCompleted = computed(() =>
-  postRecipeData.value.time ? true : false
+const validDescription = computed(() =>
+  postRecipeData.value.description.length <= descriptionMaxLenght ? true : false
 );
-const servingsCompleted = computed(() =>
-  postRecipeData.value.servings ? true : false
+const validTime = computed(() =>
+  postRecipeData.value.time && postRecipeData.value.time <= maxTime
+    ? true
+    : false
 );
-const pictureUrlCompleted = computed(() =>
+const validServings = computed(() =>
+  postRecipeData.value.servings && postRecipeData.value.servings <= maxServings
+    ? true
+    : false
+);
+const validPictureUrl = computed(() =>
+  // TODO: Cuando se le asignen nombres a la imagen, comprobar que el nombre es correcto y coincide con el id de la pulicación
   uploadState.value.data ? true : false
 );
-const recipeIngredientsCompleted = computed(() => {
+const validRecipeIngredients = computed(() => {
   if (postRecipeData.value.recipeIngredients.length === 0) return false;
   if (
     postRecipeData.value.recipeIngredients.length === 1 &&
     !postRecipeData.value.recipeIngredients[0].text
   )
     return false;
+  if (
+    postRecipeData.value.recipeIngredients.some(
+      (x) => x.text.length > ingredientMaxLenght
+    )
+  )
+    return false;
+  if (postRecipeData.value.recipeIngredients.some((x) => x.amount > maxAmount))
+    return false;
+
   return true;
 });
-const stepsCompleted = computed(() => {
+const validSteps = computed(() => {
   if (postRecipeData.value.steps.length === 0) return false;
   if (postRecipeData.value.steps.length === 1 && !postRecipeData.value.steps[0])
     return false;
+  if (postRecipeData.value.steps.some((x) => x.length > stepMaxLenght))
+    return false;
   return true;
 });
-const formCompleted = computed(() => {
+const validForm = computed(() => {
   if (
-    titleCompleted.value &&
-    timeCompleted.value &&
-    servingsCompleted.value &&
-    pictureUrlCompleted.value &&
-    recipeIngredientsCompleted.value &&
-    stepsCompleted.value
+    validTitle.value &&
+    validDescription.value &&
+    validTime.value &&
+    validServings.value &&
+    validPictureUrl.value &&
+    validRecipeIngredients.value &&
+    validSteps.value
   ) {
     return true;
   }
@@ -472,7 +547,7 @@ const cleanEmptyForms = () => {
 const uploadRecipe = () => {
   cleanEmptyForms();
 
-  if (!formCompleted) return;
+  if (!validForm) return;
 
   postRecipeData.value.pictureUrl = uploadState.value.data;
 

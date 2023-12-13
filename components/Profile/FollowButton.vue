@@ -75,16 +75,18 @@ const alreadyFollowing = computed(() => {
   return localFollowState.value.following;
 });
 const notificationsState = computed(() => {
-  if(localFollowState === null) return 'P'
+  if (localFollowState === null) return "P";
 
   if (localFollowState.value.notifications === null)
-    return !props.data.follow.notifications ? 'P' : props.data.follow.notifications.value;
+    return !props.data.follow.notifications
+      ? "P"
+      : props.data.follow.notifications.value;
 
   return localFollowState.value.notifications;
 });
 const bellIcon = computed(() => {
-  let n = 'P'
-  if(notificationsState) n = notificationsState.value;
+  let n = "P";
+  if (notificationsState) n = notificationsState.value;
 
   switch (n) {
     case "A":
