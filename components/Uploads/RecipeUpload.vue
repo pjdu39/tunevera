@@ -290,38 +290,20 @@ const blobStore = useBlobStore();
 const uploadState = computed(() => blobStore.uploadState);
 
 const createUUID = () => {
-  const myUUID = uuidv4();
-  console.log('Generated UUID:', myUUID);
-  return myUUID;
+  return uuidv4();
 };
 const getFileExtension = (filename) => {
   return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
 }
 const handleFileUpload = async (event) => {
-  /* 
-  img.value = event.target.files[0];
-  if (!img.value) {
-    console.log("No se seleccionó ningún archivo");
-    return;
-  }
-
-  await blobStore.uploadFileAndGetUrl(img.value);
-
-  event.target.value = "";
-  */
-
   const originalFile = event.target.files[0];
   if (!originalFile) {
     console.log("No se seleccionó ningún archivo");
     return;
   }
 
-  console.log(createUUID());
-
-  // Definir el nuevo nombre del archivo
   const newFileName = `i-${createUUID()}.${getFileExtension(originalFile.name)}`;
 
-  // Crear un nuevo objeto File con el nuevo nombre
   const newFile = new File([originalFile], newFileName, {
     type: originalFile.type,
     lastModified: originalFile.lastModified,
@@ -339,7 +321,7 @@ const postRecipeData = ref({
   time: 0,
   servings: 0,
   pictureUrl: uploadState.data,
-  recipeIngredients: [{ text: null, amount: null, idUnit: null }],
+  recipeIngredients: [{ text: "", amount: null, idUnit: null }],
   steps: [""],
   tags: [],
 });
@@ -362,7 +344,7 @@ const canAddStep = computed(() => {
 const addIngredient = () => {
   if (canAddIngredient.value) {
     postRecipeData.value.recipeIngredients.push({
-      text: null,
+      text: "",
       amount: null,
       idUnit: null,
     });
@@ -487,6 +469,18 @@ const validateAmount = (index) => {
   // Se maneja con una copia por temas de reactividad de vue en arrays. El método splice es reactivo.
   let ingredient = postRecipeData.value.recipeIngredients[index];
 
+  // Convertir a string para facilitar la comprobación de los decimales
+  let amountStr = ingredient.amount.toString();
+
+  // Comprobar si hay más de un decimal
+  if (amountStr.includes('.')) {
+    let parts = amountStr.split('.');
+    if (parts[1].length > 1) {
+      // Si hay más de un decimal, truncar
+      ingredient.amount = parseFloat(parts[0] + '.' + parts[1].charAt(0));
+    }
+  }
+
   if (ingredient.amount > maxAmount) {
     ingredient = { ...ingredient, amount: maxAmount };
   } else if (ingredient.amount < 0) {
@@ -591,6 +585,7 @@ const uploadRecipe = () => {
 };
 
 // Experimentos de sugerencias de ingredientes. Considerar una solución alternativa y/o borrarlo
+/*
 const suggestions = computed(() => {
   return ingredientSuggestionsDummy
     .map((s) => s.text)
@@ -626,6 +621,7 @@ const handleKeydown = (event) => {
       break;
   }
 };
+*/
 
 // Cosas del "clickoutside"
 const onClickOutside = (event) => {
