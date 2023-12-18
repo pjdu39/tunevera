@@ -34,4 +34,17 @@ definePageMeta({
   border: 3px solid $color-dark;
   border-radius: 5px;
 }
+
+@media (max-width: 1100px) {
+  .uploads {
+    margin: auto;
+    width: 80%;
+  }
+}
+@media (max-width: 600px) {
+  .uploads {
+    margin: auto;
+    width: 95%;
+  }
+}
 </style>

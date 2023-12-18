@@ -632,7 +632,7 @@ const onClickOutside = (event) => {
 
 <style scoped lang="scss">
 input {
-  width: 100%;
+  width: calc(100% - 80px);
   margin-top: 15px;
   border: none;
   border-bottom: 1px solid $color-dark;
@@ -651,7 +651,7 @@ input[type="file"] {
   display: none;
 }
 textarea {
-  width: 90%;
+  width: calc(100% - 80px);
   margin-top: 5px;
   border: none;
   border-bottom: 1px solid $color-dark;
@@ -688,11 +688,12 @@ select:focus {
 }
 .section--top {
   display: flex;
-  height: 16rem;
+  height: auto;
 }
 .img-container {
   position: relative;
   width: 16rem;
+  height: 16rem;
 }
 .wrapper-img {
   position: relative;
@@ -701,9 +702,6 @@ select:focus {
   overflow: hidden;
   border: 1px solid $color-dark;
   border-radius: 5px;
-
-  /* Solo para maquetar */
-  /* border: 1px solid black; */
 }
 .image-fit {
   /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper, no la clase de la imagen en sí. */
@@ -744,7 +742,7 @@ select:focus {
   flex-direction: column;
   justify-content: space-between;
   flex-grow: 1;
-  padding: 0 2rem;
+  padding: 0 0 0 2rem;
 }
 .title-box {
   height: 55%;
@@ -854,6 +852,32 @@ select:focus {
   flex-grow: 1;
 }
 .step-textarea {
+}
+
+@media (max-width: 850px) {
+  .section--top {
+    flex-direction: column;
+  }
+  .right-container {
+    padding: 0;
+  }
+  .title-box {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  input {
+    width: 95%;
+  }
+  textarea {
+    width: 95%;
+  }
+  .img-container{
+    width: auto;
+    height: auto;
+    aspect-ratio: 1/1;
+  }
 }
 
 /* TODO: Borrar. Legacy. ------------------------------------------------------------------------------------------*/
