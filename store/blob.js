@@ -69,16 +69,6 @@ export const useBlobStore = defineStore({
                 return;
             }
 
-            /* TODO: Esto está comentado porque no he encontrado una forma eficiente de detectar tokens caducados. Darle una vuelta para
-                evitar generar el token cada vez que se quiere subir una imagen. No es crítico, dado que el uso normal no es subir varias
-                imágenes por receta. Si no acabo implementando esa comprobación, hay que reducir drásticamente la duración del token, ahora
-                está en 10 minutos. 
-
-            if (!this.getSasTokenState.data) {
-                await this.fetchSasToken();
-            }
-            */
-
             const blobServiceClient = new BlobServiceClient(
                 `https://${this.accountName}.blob.core.windows.net?${this.getSasTokenState.data.token}`
             );

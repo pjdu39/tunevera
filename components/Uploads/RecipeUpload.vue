@@ -73,7 +73,7 @@
                   autocomplete="off"
                   v-click-outside="roundTime"
                   @input="validateTime"
-                  @keydown="preventE"
+                  @keydown="preventNonNumeric"
                 />
                 <!-- TODO: Bug. Pasos para reproducirlo: poner números en el input, seleccionarlo todo, pulsar cualquier letra (salvo la "e") -->
                 <button class="btn btn--i-btn" @click="sumTime(5)">
@@ -104,7 +104,7 @@
                   :max="maxServings"
                   autocomplete="off"
                   @input="validateServings"
-                  @keydown="preventE"
+                  @keydown="preventNonNumeric"
                 />
                 <button class="btn btn--i-btn" @click="sumServing(1)">
                   <span class="span--i-btn">+</span>
@@ -170,7 +170,7 @@
             v-model.number="recipeIngredient.amount"
             :max="maxAmount"
             @input="validateAmount(index)"
-            @keydown="preventE"
+            @keydown="preventNonDecimal"
           />
         </div>
         <div class="units-input-wrapper">
@@ -260,6 +260,7 @@
 import { ref, computed } from "vue";
 import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
+import { v4 as uuidv4 } from 'uuid';
 import vClickOutside from "v-click-outside";
 
 // Constantes
@@ -284,11 +285,20 @@ const uploadsStore = useUploadsStore();
 const getUnitsState = computed(() => uploadsStore.getUnitsState);
 
 // Manejo para subida de imágenes
-const img = ref(null);
+//const img = ref(null);
 const blobStore = useBlobStore();
 const uploadState = computed(() => blobStore.uploadState);
 
+const createUUID = () => {
+  const myUUID = uuidv4();
+  console.log('Generated UUID:', myUUID);
+  return myUUID;
+};
+const getFileExtension = (filename) => {
+  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
+}
 const handleFileUpload = async (event) => {
+  /* 
   img.value = event.target.files[0];
   if (!img.value) {
     console.log("No se seleccionó ningún archivo");
@@ -296,6 +306,28 @@ const handleFileUpload = async (event) => {
   }
 
   await blobStore.uploadFileAndGetUrl(img.value);
+
+  event.target.value = "";
+  */
+
+  const originalFile = event.target.files[0];
+  if (!originalFile) {
+    console.log("No se seleccionó ningún archivo");
+    return;
+  }
+
+  console.log(createUUID());
+
+  // Definir el nuevo nombre del archivo
+  const newFileName = `i-${createUUID()}.${getFileExtension(originalFile.name)}`;
+
+  // Crear un nuevo objeto File con el nuevo nombre
+  const newFile = new File([originalFile], newFileName, {
+    type: originalFile.type,
+    lastModified: originalFile.lastModified,
+  });
+
+  await blobStore.uploadFileAndGetUrl(newFile);
 
   event.target.value = "";
 };
@@ -311,21 +343,6 @@ const postRecipeData = ref({
   steps: [""],
   tags: [],
 });
-/*
-const unidadesDummy = [
-  { value: 1, text: "unidades" },
-  { value: 2, text: "kg" },
-  { value: 3, text: "gr" },
-  { value: 4, text: "L" },
-  { value: 5, text: "ml" },
-  { value: 6, text: "cucharadas" },
-  { value: 7, text: "cucharaditas" },
-  { value: 8, text: "tazas" },
-  { value: 9, text: "tacitas" },
-  { value: 10, text: "libras" },
-  { value: 11, text: "onzas" },
-];
-*/
 
 // Manejo del formulario
 const canAddIngredient = computed(() => {
@@ -375,8 +392,27 @@ const deleteStep = (step) => {
     postRecipeData.value.steps.splice(index, 1);
   }
 };
-const preventE = (event) => {
-  if (event.keyCode === 69) {
+const preventNonNumeric = (event) => {
+  // Permite la tecla de borrar y la tecla de tabulación
+  if (event.keyCode === 8 || event.keyCode === 9)
+    return;
+  
+  const char = String.fromCharCode(event.keyCode);
+
+  // Verifica si el carácter no es un dígito numérico
+  if (/\D/.test(char) && !event.ctrlKey && !event.metaKey) {
+    event.preventDefault();
+  }
+};
+const preventNonDecimal = (event) => {
+  // Permite la tecla de borrar, tabulación, puntos y comas
+  if (event.keyCode === 8 || event.keyCode === 9 || event.keyCode === 188 || event.keyCode === 190)
+    return;
+
+  const char = String.fromCharCode(event.keyCode);
+
+  // Verifica si el carácter no es un dígito numérico
+  if (/\D/.test(char) && !event.ctrlKey && !event.metaKey) {
     event.preventDefault();
   }
 };
@@ -690,6 +726,9 @@ select:focus {
   border-radius: 50%;
   color: white;
   padding: 0;
+}
+.btn:disabled {
+  background-color: $color-soft-grey;
 }
 .span--add-img {
   transform: translateY(-13%);
