@@ -169,6 +169,7 @@
             type="number"
             v-model.number="recipeIngredient.amount"
             :max="maxAmount"
+            :disabled="!makeSense(index)"
             @input="validateAmount(index)"
             @keydown="preventNonDecimal"
           />
@@ -178,6 +179,7 @@
             class="shorted-input"
             v-model="recipeIngredient.idUnit"
             :options="getUnitsState.data"
+            @change="updateAmount(index)"
           ></BFormSelect>
         </div>
         <div class="delete-button-wrapper">
@@ -260,7 +262,7 @@
 import { ref, computed } from "vue";
 import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import vClickOutside from "v-click-outside";
 
 // Constantes
@@ -294,7 +296,7 @@ const createUUID = () => {
 };
 const getFileExtension = (filename) => {
   return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
-}
+};
 const handleFileUpload = async (event) => {
   const originalFile = event.target.files[0];
   if (!originalFile) {
@@ -302,7 +304,9 @@ const handleFileUpload = async (event) => {
     return;
   }
 
-  const newFileName = `i-${createUUID()}.${getFileExtension(originalFile.name)}`;
+  const newFileName = `i-${createUUID()}.${getFileExtension(
+    originalFile.name
+  )}`;
 
   const newFile = new File([originalFile], newFileName, {
     type: originalFile.type,
@@ -376,9 +380,8 @@ const deleteStep = (step) => {
 };
 const preventNonNumeric = (event) => {
   // Permite la tecla de borrar y la tecla de tabulación
-  if (event.keyCode === 8 || event.keyCode === 9)
-    return;
-  
+  if (event.keyCode === 8 || event.keyCode === 9) return;
+
   const char = String.fromCharCode(event.keyCode);
 
   // Verifica si el carácter no es un dígito numérico
@@ -388,7 +391,12 @@ const preventNonNumeric = (event) => {
 };
 const preventNonDecimal = (event) => {
   // Permite la tecla de borrar, tabulación, puntos y comas
-  if (event.keyCode === 8 || event.keyCode === 9 || event.keyCode === 188 || event.keyCode === 190)
+  if (
+    event.keyCode === 8 ||
+    event.keyCode === 9 ||
+    event.keyCode === 188 ||
+    event.keyCode === 190
+  )
     return;
 
   const char = String.fromCharCode(event.keyCode);
@@ -465,6 +473,22 @@ const validateServings = () => {
   if (postRecipeData.value.servings < 0) postRecipeData.value.servings = 0;
 };
 // Amount
+const makeSense = (index) => {
+  if (!getUnitsState.value.data) return true;
+  const unit = getUnitsState.value.data.find(
+    (x) => x.text === "al gusto"
+  ).value;
+
+  if (!postRecipeData.value.recipeIngredients[index]) return true;
+  if (postRecipeData.value.recipeIngredients[index].idUnit === unit) return false;
+
+  return true;
+};
+const updateAmount = (index) => {
+    if (!makeSense(index)) {
+        postRecipeData.value.recipeIngredients[index].amount = null;
+    }
+};
 const validateAmount = (index) => {
   // Se maneja con una copia por temas de reactividad de vue en arrays. El método splice es reactivo.
   let ingredient = postRecipeData.value.recipeIngredients[index];
@@ -473,11 +497,11 @@ const validateAmount = (index) => {
   let amountStr = ingredient.amount.toString();
 
   // Comprobar si hay más de un decimal
-  if (amountStr.includes('.')) {
-    let parts = amountStr.split('.');
+  if (amountStr.includes(".")) {
+    let parts = amountStr.split(".");
     if (parts[1].length > 1) {
       // Si hay más de un decimal, truncar
-      ingredient.amount = parseFloat(parts[0] + '.' + parts[1].charAt(0));
+      ingredient.amount = parseFloat(parts[0] + "." + parts[1].charAt(0));
     }
   }
 
@@ -646,6 +670,9 @@ input:focus {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   border-bottom: 2px solid $color-dark;
+}
+input:disabled {
+  border-color: $color-soft-grey;
 }
 input[type="file"] {
   display: none;
@@ -873,7 +900,7 @@ select:focus {
   textarea {
     width: 95%;
   }
-  .img-container{
+  .img-container {
     width: auto;
     height: auto;
     aspect-ratio: 1/1;
