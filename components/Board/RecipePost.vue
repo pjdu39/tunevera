@@ -2,32 +2,55 @@
   <NuxtLink class="recipe-post" :to="`/receta?id=${postData.id}`">
     <div class="img-wrapper">
       <div v-if="!postData.pictureUrl" class="image">Cargando...</div>
-      <NuxtImg v-else-if="postData.pictureUrl" v-cloak :src="postData.pictureUrl" class="image" />
+      <NuxtImg
+        v-else-if="postData.pictureUrl"
+        v-cloak
+        :src="postData.pictureUrl"
+        class="image"
+      />
     </div>
     <div class="post-info">
       <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
         por <b>{{ postData.userName }}</b>
       </NuxtLink>
       <h4 class="title">{{ postData.title }}</h4>
-      <div class="description">{{ postData.description }}</div>
-      <div class="bottom-info">
-        <div class="interactions">
-          <div class="interaction-container">
-            <div class="interaction-icon">
-              <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
+      <div class="general-info-bottom">
+        <div class="general-info-left">
+          <div class="description">{{ postData.description }}</div>
+          <div class="bottom-info">
+            <div class="interactions">
+              <div class="interaction-container">
+                <div class="interaction-icon">
+                  <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
+                </div>
+                <div class="num-interactions">{{ postData.likes }}</div>
+              </div>
+              <div class="interaction-container">
+                <div class="interaction-icon">
+                  <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
+                </div>
+                <div class="num-interactions">{{ postData.numComments }}</div>
+              </div>
             </div>
-            <div class="num-interactions">{{ postData.likes }}</div>
-          </div>
-          <div class="interaction-container">
-            <div class="interaction-icon">
-              <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
-            </div>
-            <div class="num-interactions">{{ postData.numComments }}</div>
           </div>
         </div>
-        <div class="time">
-          {{ postData.time }}'
-          <font-awesome-icon icon="fa fa-clock" aria-hidden="true" />
+        <div class="general-info-right">
+          <div class="icon-info-container">
+                {{ postData.servings }}'
+                <font-awesome-icon
+                  icon="fa fa-utensils"
+                  class="icon-info"
+                  aria-hidden="true"
+                />
+              </div>
+              <div class="icon-info-container">
+                {{ postData.time }}'
+                <font-awesome-icon
+                  icon="fa fa-clock"
+                  class="icon-info"
+                  aria-hidden="true"
+                />
+              </div>
         </div>
       </div>
     </div>
@@ -69,10 +92,11 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   width: 50%;
-  padding: 0.5rem 1rem;
+  padding: 10px 17px 12px 17px;
 }
 .signature {
-  flex-grow: 1;
+  /* flex-grow: 1; */
+  margin-bottom: 8px;
   text-align: end;
   margin-left: auto;
   font-style: italic;
@@ -83,8 +107,19 @@ const props = defineProps({
 .title {
   flex-grow: 0;
 }
+.general-info-bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  margin-top: 1rem;
+}
+.general-info-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 80%;
+}
 .description {
-  flex-grow: 20;
 }
 .bottom-info {
   flex-grow: 0;
@@ -108,7 +143,18 @@ const props = defineProps({
 .num-interactions {
   font-size: small;
 }
-.time {
-  text-align: right;
+.general-info-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 20%;
+}
+.icon-info-container {
+  margin-top: 5px;
+  color: $color-dark;
+}
+.icon-info {
+  aspect-ratio: 1 / 1;
 }
 </style>

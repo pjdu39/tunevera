@@ -22,22 +22,22 @@
     <div v-else-if="getRecipeState.loading === 'loaded'">
       <div class="top-section">
         <div class="img-wrapper">
-          <NuxtImg :src="getRecipeState.data.pictureUrl" class="image-fit" />
+          <NuxtImg :src="recipeData.pictureUrl" class="image-fit" />
         </div>
         <div class="general-info">
           <div class="general-info-top">
-            <div class="recipe-title">{{ getRecipeState.data.title }}</div>
+            <div class="recipe-title">{{ recipeData.title }}</div>
             <div class="signature-container">
               <NuxtLink
                 class="signature"
-                :to="`/perfil?id=${getRecipeState.data.user.id}`"
+                :to="`/perfil?id=${recipeData.user.id}`"
               >
                 <div class="signature-name">
-                  <b>@{{ getRecipeState.data.user.name }}</b>
+                  <b>@{{ recipeData.user.name }}</b>
                 </div>
                 <div class="sign-img-wrapper">
                   <NuxtImg
-                    :src="getRecipeState.data.user.pictureUrl"
+                    :src="recipeData.user.pictureUrl"
                     class="image-fit"
                   />
                 </div>
@@ -46,12 +46,12 @@
           </div>
           <div class="properties">
             <!-- TODO: Poner condiciones, ahora es solo un ejemplo -->
-            <div class="badge--vegan">VEGANO</div>
+            <div class="badge--vegan" :hidden="veggie === ''">{{ veggie }}</div>
           </div>
           <div class="general-info-bottom">
             <div class="general-info-left">
               <div class="description">
-                {{ getRecipeState.data.description }}
+                {{ recipeData.description }}
               </div>
               <div class="interaction-container">
                 <button class="interaction-icon" @click="clickLike">
@@ -62,13 +62,13 @@
                   />
                 </button>
                 <div class="num-likes">
-                  {{ getRecipeState.data.likes + localLike }}
+                  {{ recipeData.likes + localLike }}
                 </div>
               </div>
             </div>
             <div class="general-info-right">
               <div class="icon-info-container">
-                4
+                {{ recipeData.servings }}
                 <font-awesome-icon
                   icon="fa fa-utensils"
                   class="icon-info"
@@ -76,7 +76,7 @@
                 />
               </div>
               <div class="icon-info-container">
-                35'
+                {{ recipeData.time }}'
                 <font-awesome-icon
                   icon="fa fa-clock"
                   class="icon-info"
@@ -99,7 +99,7 @@
           <div class="middle-section-title">Ingredientes:</div>
           <div
             class="ingredient"
-            v-for="(ingredient, index) in getRecipeState.data.ingredients"
+            v-for="(ingredient, index) in recipeData.ingredients"
             :key="index"
           >
             -
@@ -112,7 +112,7 @@
           <div class="middle-section-title">Pasos:</div>
           <div
             class="step"
-            v-for="(step, index) in getRecipeState.data.steps"
+            v-for="(step, index) in recipeData.steps"
             :key="index"
           >
             <div class="">
@@ -176,6 +176,7 @@ import { useRecipeStore } from "~/store/recipe.js";
 // Acceso al store
 const store = useRecipeStore();
 const getRecipeState = computed(() => store.getRecipeState);
+const recipeData = computed(() => getRecipeState.value.data);
 
 // Manejo de Likes
 const likeTimeout = ref(false);
@@ -189,10 +190,10 @@ const clickLike = () => {
     likeTimeout.value = true;
 
     like.value = !like.value;
-    store.like(store.getRecipeState.data.id);
+    store.like(store.recipeData.value.id);
 
     // Esto se encarga de que suba o baje un like de manera coherente en local al pulsar el botón.
-    const initialLikeState = store.getRecipeState.data.liked;
+    const initialLikeState = store.recipeData.value.liked;
     const direction = initialLikeState ? -1 : 0;
     localLike.value = like.value ? direction + 1 : direction;
 
@@ -238,6 +239,14 @@ const fetchComments = () => {
 onMounted(() => {
   fetchRecipe();
   fetchComments();
+});
+
+const veggie = computed(() => {
+  if(!recipeData.value.ingredients) return ""
+
+  if(!recipeData.value.ingredients.some(x => !x.vegan)) return "Vegano"
+  if(!recipeData.value.ingredients.some(x => !x.vegetarian)) return "Vegetariano"
+  return ""
 });
 </script>
   
