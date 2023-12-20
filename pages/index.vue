@@ -70,7 +70,9 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  observer.disconnect();
+  if (observer) {
+    observer.disconnect();
+  }
 });
 </script>
 
