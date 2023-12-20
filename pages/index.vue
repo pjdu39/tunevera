@@ -8,156 +8,72 @@
         :post-data="element"
       />
     </div>
+    <div ref="observerElement"></div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, onUnmounted } from "vue";
 import { useBoardStore } from "~/store/board.js";
 import DiscussionPost from "~/components/Board/DiscussionPost.vue";
 import PollPost from "~/components/Board/PollPost.vue";
 import RecipePost from "~/components/Board/RecipePost.vue";
-export default {
-  components: {
-    RecipePost,
-    PollPost,
-    DiscussionPost,
-  },
-  data() {
-    return {
-      elements: [
-        /*
-        {
-          type: "Receta",
-          title: "Cocido",
-          pictureUrl: "/img/tarta-manzana.png",
-          time: 35,
-          description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-          userName: "carlos",
-          likes: 67,
-          comments: [
-            { usuario: "Pepe Hamond", texto: "Lorem ipsum dolor sit amet" },
-            {
-              usuario: "Carlos",
-              texto:
-                "Consectetur adipisicing elit. Dolor sit amet consectetur adipisicing",
-            },
-          ],
-        },
-        */
-       /*
-        {
-          type: "Encuesta",
-          title: "Qué guiso queréis que os traiga esta semana?",
-          time: null,
-          description: null,
-          userName: "aka_shiro",
-          likes: 209,
-          comments: [],
-          options: [
-            { id: 1, answer: "Lentejas", votes: 109 },
-            { id: 2, answer: "Caldo gallego", votes: 135 },
-            { id: 3, answer: "Guiso de pollo", votes: 21 },
-            { id: 4, answer: "Ramen", votes: 287 },
-          ],
-        },
-        */
-        /*
-        {
-          type: "Receta",
-          title: "Galletas",
-          pictureUrl: "/img/tarta-manzana.png",
-          time: 50,
-          description: "Lorem ipsum dolor sit amet adipisicing elit",
-          userName: "andrea",
-          likes: 216,
-          comments: [
-            {
-              usuario: "Pepe Hamond",
-              texto:
-                "Consectetur adipisicing elit. Dolor sit amet ipsum dolor sit consectetur adipisicing hahah",
-            },
-            { usuario: "Carlos", texto: "Lorem ipsum dolor sit amet." },
-            {
-              usuario: "Andrea",
-              texto:
-                "Consectetur elit adipisicing. Dolor sit amet consectetur adipisicing",
-            },
-          ],
-        },
-        */
-       /*
-        {
-          type: "Discusion",
-          title: "Cilantro o no?",
-          time: null,
-          description:
-            "Qué opinais del uso del cilantro en la cocina latino americana?",
-          userName: "sara_rivas_",
-          likes: 13,
-          comments: [
-            {
-              usuario: "Pepe Hamond",
-              texto:
-                "Lorem ipsum dolor sit consectetur adipisicing hahah. sit amet.",
-            },
-            {
-              usuario: "Andrea",
-              texto:
-                "Consectetur elit adipisicing. Dolor sit amet consectetur adipisicing",
-            },
-          ],
-        },
-        {
-          type: "Encuesta",
-          title: "Cocido con o sin patata?",
-          time: null,
-          description: null,
-          userName: "misco_jones",
-          likes: 693,
-          comments: [],
-          options: [
-            { id: 1, answer: "Con patata", votes: 38 },
-            { id: 2, answer: "Sin patata", votes: 856 },
-          ],
-        },
-        */
-      ],
-    };
-  },
-  computed: {
-    // TODO: Considerar meter estos elementos de la store en un solo elemento que contenga {data, loading, error} como en uploads.
-    // También habría que cambiarlo en la store.
-    data() {
-      const store = useBoardStore();
-      return store.data;
-    },
-    loading() {
-      const store = useBoardStore();
-      return store.loading;
-    },
-    error() {
-      const store = useBoardStore();
-      return store.error;
-    },
-  },
-  created() {
-    this.fetchBoardElements()(50);
-  },
-  watch: {
-    data(newVal, oldVal) {
-      if (this.loading === "loaded" && this.error === null)
-        this.elements.push(...newVal);
-    },
-  },
-  methods: {
-    fetchBoardElements() {
-      const store = useBoardStore();
-      return store.fetchBoardElements;
-    },
-  },
+
+const boardStore = useBoardStore();
+const elements = ref([]);
+const observerElement = ref(null);
+let observer; // Declara observer aquí
+
+// Accede directamente a las propiedades reactivas del store
+const { loading, error } = boardStore;
+
+// Función para cargar más elementos
+const loadMoreElements = async () => {
+  // Aquí puedes ajustar la lógica para cargar más elementos
+  // Por ejemplo, aumentar el número de elementos solicitados o manejar la paginación
+  await boardStore.fetchBoardElements(5);
+
+  if (boardStore.loading === "loaded" && boardStore.error === null) {
+    elements.value = [...elements.value, ...boardStore.data]
+  }
 };
+
+onMounted(async () => {
+  await boardStore.fetchBoardElements(5);
+
+  /*
+  watchEffect(() => {
+    // TODO: Considerar borrar este watch, ya que resetea el valor de elements y no puedo acumularlos
+    if (boardStore.loading === "loaded" && boardStore.error === null) {
+      elements.value = [...boardStore.data];
+    }
+  });
+  */
+
+  // IntersectionObserver para detectar cuando el usuario llega al final de la lista
+  observer = new IntersectionObserver(
+    async (entries) => {
+      if (entries[0].isIntersecting) {
+        await loadMoreElements();
+      }
+    },
+    {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0,
+    }
+  );
+
+  if (observerElement.value) {
+    observer.observe(observerElement.value);
+  }
+});
+
+onUnmounted(() => {
+  observer.disconnect();
+});
 </script>
+
 <style scoped lang="scss">
 .board-container {
   margin: auto;

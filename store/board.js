@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 export const useBoardStore = defineStore({
     id: 'board',
     state: () => ({
-        data: null,
+        data: [],
         loading: 'waiting',
         error: null
     }),
@@ -29,7 +29,7 @@ export const useBoardStore = defineStore({
                 this.setError(null);
             }
             catch(error) {
-                this.setData(null);
+                this.setData([]);
                 this.setLoading('error');
                 this.setError(error.message);
             }
