@@ -21,6 +21,7 @@ import RecipePost from "~/components/Board/RecipePost.vue";
 
 const boardStore = useBoardStore();
 const elements = ref([]);
+const page = ref(0);
 const observerElement = ref(null);
 let observer; // Declara observer aquí
 
@@ -29,9 +30,9 @@ const { loading, error } = boardStore;
 
 // Función para cargar más elementos
 const loadMoreElements = async () => {
-  // Aquí puedes ajustar la lógica para cargar más elementos
-  // Por ejemplo, aumentar el número de elementos solicitados o manejar la paginación
-  await boardStore.fetchBoardElements(5);
+  page.value += 1;
+  
+  await boardStore.fetchBoardElements(5, page.value);
 
   if (boardStore.loading === "loaded" && boardStore.error === null) {
     elements.value = [...elements.value, ...boardStore.data]
@@ -39,7 +40,7 @@ const loadMoreElements = async () => {
 };
 
 onMounted(async () => {
-  await boardStore.fetchBoardElements(5);
+  // await boardStore.fetchBoardElements(5, 1);
 
   /*
   watchEffect(() => {

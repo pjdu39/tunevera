@@ -18,15 +18,19 @@ export const useBoardStore = defineStore({
         setError(payload) {
             this.error = payload
         },
-        async fetchBoardElements(numElements) {
+        nextPage() {
+            this.page++;
+        },
+        async fetchBoardElements(numElements, page) {
             const { $fetchApi } = useNuxtApp();
             this.setLoading('loading');
             try {
-                const data = await $fetchApi(`GetBoardElements?NumElements=${ numElements }`);
+                const data = await $fetchApi(`GetBoardElements?NumElements=${ numElements }&Page=${ page }`);
 
                 this.setData(data);
                 this.setLoading('loaded');
                 this.setError(null);
+                console.log(page)
             }
             catch(error) {
                 this.setData([]);
