@@ -168,6 +168,15 @@ const options = [
   color: $color-dark;
   border: 2px solid $color-dark;
   border-radius: 5px;
+  animation: follow 500ms;
+}
+@keyframes follow {
+  from {
+    background-color: $color-primary;
+  }
+  to {
+    background-color: transparent;
+  }
 }
 .follow {
 }
