@@ -73,10 +73,9 @@
         </div>
         -->
       </div>
-
       <TabView content-class="mt-3" class="profile-tab">
         <TabPanel header="RECETAS">
-          <ProfileRecipes />
+          <ProfileRecipes :id="id" />
         </TabPanel>
         <TabPanel header="ENCUESTAS">
           <ProfilePolls />
@@ -85,81 +84,6 @@
           <ProfileDiscussion />
         </TabPanel>
       </TabView>
-
-      <div class="profile-content">
-        <div
-          v-if="recipesLoading === 'waiting' || recipesLoading === 'loading'"
-        >
-          Cargando...
-        </div>
-        <div v-else-if="recipesLoading === 'error'">{{ recipesError }}</div>
-        <div
-          v-else-if="recipesLoading === 'loaded'"
-          v-for="(recipe, index) in recipes"
-          :key="index"
-          class="p-recipe"
-        >
-          <NuxtLink class="recipe-post" :to="`/receta?id=${recipe.id}`">
-            <NuxtImg :src="recipe.pictureUrl" class="image" />
-          </NuxtLink>
-        </div>
-        <!--
-        <div class="p-recipe">
-          <NuxtImg
-            src="https://img.taste.com.au/EwM4aecP/taste/2007/05/how-to-deep-fry-108893-1-139501-1.jpeg"
-            class="image"
-          />
-        </div>
-        <div class="p-recipe">
-          <NuxtImg
-            src="https://images.pexels.com/photos/15564188/pexels-photo-15564188/free-photo-of-pancakes-with-berries-and-marple-syrup.jpeg?auto=compress&cs=tinysrgb&w=1600"
-            class="image"
-          />
-        </div>
-        <div class="p-recipe">
-          <NuxtImg
-            src="https://img.delicious.com.au/G-2mxbOh/w1200/del/2022/08/parmesan-crumbed-chicken-schnitzel-fried-eggs-and-apple-cabbage-slaw-173352-2.jpg"
-            class="image"
-          />
-        </div>
-        <div class="p-recipe">
-          <NuxtImg
-            src="https://images.immediate.co.uk/production/volatile/sites/30/2014/01/Top-10-foods-to-try-in-Morocco-e1f2400.jpg?resize=768,574"
-            class="image"
-          />
-        </div>
-        <div class="p-recipe">
-          <NuxtImg
-            src="https://api.vip.foodnetwork.ca/wp-content/uploads/2022/01/FNC_OGImage_Taiwanese-Beef-Noodle-Soup.jpg"
-            class="image"
-          />
-        </div>
-        <div class="p-recipe">
-          <NuxtImg
-            src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVsaWNpb3VzJTIwZm9vZHxlbnwwfHwwfHx8MA%3D%3D"
-            class="image"
-          />
-        </div>
-        <div class="p-recipe">
-          <NuxtImg
-            src="https://img.freepik.com/premium-photo/two-sandwiches-made-slice-meat-cheese-tomatoes-toasted-bread-wooden-table_244366-394.jpg"
-            class="image"
-          />
-        </div>
-        <div class="p-recipe">
-          <NuxtImg
-            src="https://media.istockphoto.com/id/1141120666/photo/healhy-breakfast-toast-with-avocado-egg.webp?b=1&s=170667a&w=0&k=20&c=empvrMxDuC1F3uVrUSaBHLh9xC9rhuY78yTJnQaUS-w="
-            class="image"
-          />
-        </div>
-        <div class="p-recipe">
-          <NuxtImg
-            src="https://images.unsplash.com/photo-1515041761709-f9fc96e04cd3?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGZvb2QlMjBvbiUyMHBsYXRlfGVufDB8fDB8fHww"
-            class="image"
-          />
-        </div>
-        -->
-      </div>
     </div>
   </div>
 </template>
@@ -176,7 +100,6 @@ definePageMeta({
 });
 onMounted(() => {
   fetchProfileData();
-  fetchRecipesData();
 });
 
 // Parámetros por query string
@@ -197,24 +120,16 @@ const selfProfile = computed(() => {
 const followButtonData = computed(() => {
   return { id: id, follow: profile.value.follow }
 });
-// Recipes
-const recipes = computed(() => profileStore.getRecipesState.data);
-const recipesLoading = computed(() => profileStore.getRecipesState.loading);
-const recipesError = computed(() => profileStore.getRecipesState.error);
 
 // Métodos de llamadas
 const fetchProfileData = () => {
   profileStore.fetchProfileInfo(id.value);
-};
-const fetchRecipesData = () => {
-  profileStore.fetchRecipes(id.value);
 };
 
 // Refresco del perfil al ir de uno ajeno al propio
 watch(id, (newVal, oldVal) => {
   // TODO: Cuando tenga el navbar para cambiar entre recetas, discusiones y encuestas, ponerlo en recetas cuando pase por este watch.
   fetchProfileData();
-  fetchRecipesData();
 });
 </script>
 
@@ -347,28 +262,6 @@ watch(id, (newVal, oldVal) => {
   background-color: $color-primary;
 }
 */
-.profile-content {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  /* grid-auto-rows: 1fr; /* Altura de fila como una fracción del contenedor */
-  gap: 3px;
-  min-height: 15rem;
-}
-.p-recipe {
-  position: relative;
-  border: 1px solid black;
-  border-radius: 5px;
-  overflow: hidden;
-  aspect-ratio: 1 / 1;
-}
-.image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 .state-container {
   display: flex;
   flex-direction: column;
