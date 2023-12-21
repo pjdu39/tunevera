@@ -1,28 +1,41 @@
 <template>
   <div class="poll-post">
-    <div class="signature">
+    <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
       por <b>{{ postData.userName }}</b>
-    </div>
+    </NuxtLink>
     <h4 class="title">{{ postData.title }}</h4>
     <div class="post-body">
-
-      <div v-show="!isVoted" ref="optionContainer" class="poll-options-container">
+      <div
+        v-show="!isVoted"
+        ref="optionContainer"
+        class="poll-options-container"
+      >
         <div class="poll-options">
           <div v-for="(option, index) in postData.options" :key="index">
-            <button class="option-button" @click="vote(index, postData.id, option), option.voted = true">
+            <button
+              class="option-button"
+              @click="vote(index, postData.id, option), (option.voted = true)"
+            >
               <div class="option-button-text">{{ option.answer }}</div>
             </button>
           </div>
         </div>
       </div>
 
-      <div v-show="isVoted" ref="optionContainer" class="poll-options-container">
+      <div
+        v-show="isVoted"
+        ref="optionContainer"
+        class="poll-options-container"
+      >
         <div class="poll-options">
           <div v-for="(option, index) in localOptions" :key="index">
             <div class="option-wrapper">
               <div class="option-text">{{ option.answer }}</div>
               <div
-                :class="['option-bar', { 'option-bar--selected': chosenOptionId === index }]"
+                :class="[
+                  'option-bar',
+                  { 'option-bar--selected': chosenOptionId === index },
+                ]"
                 :style="
                   'width: ' +
                   calculaBarraEncuesta(postData.options, option) +
@@ -77,24 +90,23 @@ const props = defineProps({
 // Utilizando la store
 const store = usePollStore();
 
-
 // Manejo de votaciones
-const localOptions = ref([ ...props.postData.options ])
+const localOptions = ref([...props.postData.options]);
 const isVoted = ref(false);
-const chosenOptionId = ref(null)
+const chosenOptionId = ref(null);
 const vote = (index, idPost, option) => {
   option.votes += 1;
   isVoted.value = true;
   chosenOptionId.value = index;
   store.vote(idPost, option.id);
-}
+};
 onMounted(() => {
-  isVoted.value = props.postData.options.some(x => x.voted);
+  isVoted.value = props.postData.options.some((x) => x.voted);
   if (isVoted.value) {
-    chosenOptionId.value = props.postData.options.find(x => x.voted).optionNumber - 1 // Se le resta 1 porque index (el del v-for) empieza en 0
+    chosenOptionId.value =
+      props.postData.options.find((x) => x.voted).optionNumber - 1; // Se le resta 1 porque index (el del v-for) empieza en 0
   }
 });
-
 
 // Ajuste fino de encuestas responsive.
 // CÁLCULO DE PORCENTAJE Y LAS BARRAS GRÁFICAS
@@ -155,6 +167,9 @@ const anchoActual = computed(() => anchoDiv.value);
   text-align: end;
   margin-left: auto;
   font-style: italic;
+}
+.signature:hover {
+  text-decoration: underline;
 }
 .title {
   flex-grow: 0;

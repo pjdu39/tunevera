@@ -1,9 +1,9 @@
 <template>
   <div class="discussion-post">
     <div class="post-info">
-      <div class="signature">
+      <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
         por <b>{{ postData.userName }}</b>
-      </div>
+      </NuxtLink>
       <h4 class="title">{{ postData.title }}</h4>
       <div class="description">{{ postData.description }}</div>
       <div class="bottom-info">
@@ -53,6 +53,9 @@ const props = defineProps({
   text-align: end;
   margin-left: auto;
   font-style: italic;
+}
+.signature:hover {
+  text-decoration: underline;
 }
 .title {
   flex-grow: 0;

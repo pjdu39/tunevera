@@ -73,6 +73,19 @@
         </div>
         -->
       </div>
+
+      <TabView content-class="mt-3" class="profile-tab">
+        <TabPanel header="RECETAS">
+          <ProfileRecipes />
+        </TabPanel>
+        <TabPanel header="ENCUESTAS">
+          <ProfilePolls />
+        </TabPanel>
+        <TabPanel header="ARTICULOS">
+          <ProfileDiscussion />
+        </TabPanel>
+      </TabView>
+
       <div class="profile-content">
         <div
           v-if="recipesLoading === 'waiting' || recipesLoading === 'loading'"
@@ -152,6 +165,9 @@
 </template>
 
 <script setup>
+import ProfileRecipes from "~/components/Profile/ProfileRecipes.vue";
+import ProfilePolls from "~/components/Profile/ProfilePolls.vue";
+import ProfileDiscussion from "~/components/Profile/ProfileDiscussion.vue";
 import FollowButton from "~/components/Profile/FollowButton.vue";
 import { useProfileStore } from "~/store/profile.js";
 
@@ -280,6 +296,37 @@ watch(id, (newVal, oldVal) => {
   align-items: flex-start;
   margin-top: 8px;
 }
+.profile-tab{
+  width: 100%;
+}
+/* Aumentar la especificidad para el ul */
+::v-deep ul.p-tabview-nav {
+  padding: 0;
+}
+
+/* Aumentar la especificidad para los li */
+::v-deep ul.p-tabview-nav > li {
+  display: block;
+  width: 100%;
+}
+
+::v-deep ul.p-tabview-nav > li.p-tabview-selected {
+  text-decoration: underline;
+}
+
+/* Aumentar la especificidad para los enlaces */
+::v-deep ul.p-tabview-nav > li > a {
+  place-content: center;
+  border: none;
+}
+/* Aumentar la especificidad para el contenido */
+::v-deep .p-tabview-panels{
+  padding: 0;
+}
+
+// display: block; en los li 
+
+// place-content: center; en el contenido del la pestaña en sí, es decir, en el a dentro del li
 
 /*
 .side-menu {
