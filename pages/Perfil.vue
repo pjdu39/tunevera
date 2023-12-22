@@ -215,28 +215,32 @@ watch(id, (newVal, oldVal) => {
   width: 100%;
 }
 /* Aumentar la especificidad para el ul */
-::v-deep ul.p-tabview-nav {
+:deep(ul.p-tabview-nav) {
   padding: 0;
 }
 
 /* Aumentar la especificidad para los li */
-::v-deep ul.p-tabview-nav > li {
+:deep(ul.p-tabview-nav > li) {
   display: block;
   width: 100%;
 }
 
-::v-deep ul.p-tabview-nav > li.p-tabview-selected {
+:deep(ul.p-tabview-nav > li.p-tabview-selected) {
   text-decoration: underline;
 }
 
 /* Aumentar la especificidad para los enlaces */
-::v-deep ul.p-tabview-nav > li > a {
+:deep(ul.p-tabview-nav > li > a) {
   place-content: center;
   border: none;
 }
 /* Aumentar la especificidad para el contenido */
-::v-deep .p-tabview-panels{
+:deep(.p-tabview-panels) {
   padding: 0;
+}
+
+:deep(ul.p-tabview-nav > li.p-tabview-ink-bar) {
+  display: none;
 }
 
 // display: block; en los li 
