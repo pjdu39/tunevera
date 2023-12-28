@@ -5,10 +5,6 @@ import { defineNuxtConfig } from 'nuxt/config'
 import { BootstrapVueNext } from 'bootstrap-vue-next';
 */
 
-//import { Environment, GlobalSettings } from "./store/envSettings";
-
-// const appEnv: Environment  = process.env.NODE_ENV as Environment
-
 const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
 dotenv.config({ path: envFile });
 
@@ -67,7 +63,8 @@ const config: NuxtConfig = {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     "~/plugins/fontawesome.js",
-    "~/plugins/fetch-api.js"
+    "~/plugins/fetch-api.js",
+    "~/plugins/auth0.js"
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
