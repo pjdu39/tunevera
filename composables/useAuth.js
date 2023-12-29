@@ -17,5 +17,32 @@ export function useAuth() {
     }
   };
 
-  return { login };
+  const user = computed(() => auth0.value?.user);
+  const isAuthenticated = computed(() => auth0.value?.isAuthenticated);
+  const isLoading = computed(() => auth0.value?.isLoading);
+
+  const doLogout = () => {
+    if (auth0.value) {
+      auth0.value.logout({
+        logoutParams: { 
+          returnTo: window.location.origin 
+        }
+      });
+    }
+  };
+
+  const redirectCallback = () => {
+    if (auth0.value) {
+      auth0.value.handleRedirectCallback();
+    }
+  };
+
+  return {
+    login,
+    user,
+    isAuthenticated,
+    isLoading,
+    doLogout,
+    redirectCallback
+  };
 }
