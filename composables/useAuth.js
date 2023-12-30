@@ -23,6 +23,7 @@ export function useAuth() {
 
   const doLogout = () => {
     if (auth0.value) {
+      removeToken();
       auth0.value.logout({
         logoutParams: { 
           returnTo: window.location.origin 
@@ -31,11 +32,31 @@ export function useAuth() {
     }
   };
 
-  const redirectCallback = () => {
+  const redirectCallback = async () => {
     if (auth0.value) {
       auth0.value.handleRedirectCallback();
+      await setToken()
     }
   };
+
+  const setToken = async () => {
+    if (auth0.value) {
+        try {
+          const token = await auth0.value.getAccessTokenSilently({
+            audience: 'https://cookbook-api.com'
+          });
+
+          document.cookie = `tokenBearer=${token};path=/;`;
+        } catch (error) {
+          console.error("Error al obtener el token:", error);
+        }
+    }
+  };
+
+  const removeToken = async () => {
+    document.cookie = 'tokenBearer=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  };
+
 
   return {
     login,
