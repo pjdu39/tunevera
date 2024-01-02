@@ -6,9 +6,9 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 import { useAuth } from "~/composables/useAuth";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 const { redirectCallback } = useAuth();
@@ -18,11 +18,11 @@ onMounted(async () => {
     // Manejar la respuesta de Auth0 y extraer el código de la URL
     await redirectCallback();
     // Redirigir al usuario a su destino final, como su perfil o la página de inicio
-    router.push('/');
+    router.push("/perfil");
   } catch (e) {
     console.error(e);
     // Manejar el error, posiblemente redirigir al usuario a una página de error
-    router.push('/error');
+    router.push("/error");
   }
 });
 </script>

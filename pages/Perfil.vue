@@ -18,13 +18,17 @@
         <div>{{ profileError }}</div>
       </div>
     </div>
-    <div v-else-if="profileLoading === 'loaded'">
+    <div v-else-if="profileLoading === 'loaded' && !profile.id">
+      Formulario para completar registro
+      <RegistrationForm />
+    </div>
+    <div v-else-if="profileLoading === 'loaded' && profile.id">
       <div class="top">
         <div class="profile-info">
           <div class="info-summary-section">
             <div class="picture-cotainer">
               <div class="picture-wrapper">
-                <NuxtImg class="profile-picture" :src="profile.pictureUrl" />
+                <NuxtImg v-if="profile.pictureUrl" class="profile-picture" :src="profile.pictureUrl" />
               </div>
             </div>
             <div class="info-summary">
@@ -59,19 +63,6 @@
         <div v-else-if="!selfProfile" class="follow-container">
           <FollowButton :data="followButtonData" />
         </div>
-        <!--
-        <div class="side-menu">
-          <button class="side-menu-button">
-            <font-awesome-icon icon="fa fa-utensils" aria-hidden="true" />
-          </button>
-          <button class="side-menu-button">
-            <font-awesome-icon icon="fa fa-book" aria-hidden="true" />
-          </button>
-          <button class="side-menu-button">
-            <font-awesome-icon icon="fa fa-chart-simple" aria-hidden="true" />
-          </button>
-        </div>
-        -->
       </div>
       <TabView content-class="mt-3" class="profile-tab">
         <TabPanel header="RECETAS">
@@ -92,6 +83,7 @@
 import ProfileRecipes from "~/components/Profile/ProfileRecipes.vue";
 import ProfilePolls from "~/components/Profile/ProfilePolls.vue";
 import ProfileDiscussion from "~/components/Profile/ProfileDiscussion.vue";
+import RegistrationForm from "~/components/Profile/RegistrationForm.vue";
 import FollowButton from "~/components/Profile/FollowButton.vue";
 import { useProfileStore } from "~/store/profile.js";
 
