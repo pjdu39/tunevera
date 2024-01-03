@@ -19,7 +19,6 @@
       </div>
     </div>
     <div v-else-if="profileLoading === 'loaded' && !profile.id">
-      Formulario para completar registro
       <RegistrationForm />
     </div>
     <div v-else-if="profileLoading === 'loaded' && profile.id">

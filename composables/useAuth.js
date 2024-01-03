@@ -5,11 +5,9 @@ import { useAuth0 } from '@auth0/auth0-vue';
 export function useAuth() {
   const auth0 = ref(null);
 
-  onMounted(() => {
-    if (process.client) {
-      auth0.value = useAuth0();
-    }
-  });
+  if (process.client) {
+    auth0.value = useAuth0();
+  }
 
   const login = () => {
     if (auth0.value) {
@@ -40,6 +38,7 @@ export function useAuth() {
   };
 
   const setToken = async () => {
+    console.log(auth0.value)
     if (auth0.value) {
         try {
           const token = await auth0.value.getAccessTokenSilently({
@@ -64,6 +63,7 @@ export function useAuth() {
     isAuthenticated,
     isLoading,
     doLogout,
-    redirectCallback
+    redirectCallback,
+    setToken
   };
 }

@@ -62,9 +62,9 @@ const config: NuxtConfig = {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    "~/plugins/auth0.js",
     "~/plugins/fontawesome.js",
-    "~/plugins/fetch-api.js",
-    "~/plugins/auth0.js"
+    "~/plugins/fetch-api.js"
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

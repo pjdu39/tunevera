@@ -1,20 +1,23 @@
 import { useCookie, useNuxtApp } from '#app'
+import { useAuth } from '~/composables/useAuth';
 
-export default defineNuxtRouteMiddleware(() => {
-  const nuxtApp = useNuxtApp();
+export default defineNuxtRouteMiddleware(async () => {
+  const { isAuthenticated, setToken } = useAuth();
+  await isAuthenticated.value;
   let token;
 
-  if (process.server) {
-    // console.log("Estoy en el lado del servidor")
+  if (!isAuthenticated.value) {
+    return navigateTo('/login');
+  }
 
-    // Acceder al objeto de solicitud en SSR.
+  // Lado de Servidor
+  if (process.server) {
+    const nuxtApp = useNuxtApp();
     const req = nuxtApp.ssrContext.req;
     token = useCookie(req, 'tokenBearer');
   }
+  // Lado de Cliente
   else if (process.client) {
-    // console.log("Estoy en el lado del cliente")
-
-    // Leer la cookie desde el cliente.
     token = document.cookie.split(';').find(c => c.trim().startsWith('tokenBearer='));
     if (token) {
       token = token.split('=')[1];
@@ -22,7 +25,17 @@ export default defineNuxtRouteMiddleware(() => {
   }
 
   if (!token) {
-    return navigateTo('/login');
+    await setToken();
+
+    // Vuelve a comprobar si el token está ahora disponible
+    token = document.cookie.split(';').find(c => c.trim().startsWith('tokenBearer='));
+    
+    console.log('El token ahora es: ' + token)
+
+    if (!token) {
+      // Si todavía no hay token, redirige a la página de login
+      return navigateTo('/login');
+    }
   }
 
   // TODO: Añadir lógica que evite que se pueda ir a rutas protegidas si el usuario no ha completado el registro.

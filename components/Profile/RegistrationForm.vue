@@ -1,5 +1,6 @@
 <template>
   <div v-if="signUpState.loading === 'waiting'" class="container">
+    <label for="">Formulario para completar registro</label>
     <input
       class="row nickname-input"
       v-model="nickname"
