@@ -1,6 +1,6 @@
 <template>
   <div class="delete-me-container">
-    <div v-if="isLoading">Loading ...</div>
+    <div v-if="clientLoaded && isLoading">Loading ...</div>
     <div v-else>
       <pre v-if="isAuthenticated">
         <h2>Estoy logeado</h2>
@@ -19,6 +19,12 @@
 
 <script setup>
 import { useAuth } from "~/composables/useAuth";
+
+const clientLoaded = ref(false);
+
+onMounted(() => {
+  clientLoaded.value = true;
+});
 
 const { login, doLogout, user, isAuthenticated, isLoading } = useAuth();
 </script>

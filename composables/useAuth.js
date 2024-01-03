@@ -38,7 +38,6 @@ export function useAuth() {
   };
 
   const setToken = async () => {
-    console.log(auth0.value)
     if (auth0.value) {
         try {
           const token = await auth0.value.getAccessTokenSilently({
