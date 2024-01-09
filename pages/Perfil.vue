@@ -85,17 +85,24 @@ import ProfileDiscussion from "~/components/Profile/ProfileDiscussion.vue";
 import RegistrationForm from "~/components/Profile/RegistrationForm.vue";
 import FollowButton from "~/components/Profile/FollowButton.vue";
 import { useProfileStore } from "~/store/profile.js";
+import { useAuth } from '~/composables/useAuth';
 
+/*
 definePageMeta({
   middleware: "auth",
 });
-onMounted(() => {
-  fetchProfileData();
-});
+*/
+
+const { guard } = useAuth();
 
 // Parámetros por query string
 const route = useRoute();
 const id = computed(() => route.query.id || null);
+
+onMounted(() => {
+  guard(route.path);
+  fetchProfileData();
+});
 
 // Acceso a api
 // Propiedades coputadas

@@ -20,9 +20,19 @@ import PollUpload from "~/components/Uploads/PollUpload.vue";
 import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
+import { useAuth } from '~/composables/useAuth';
 
+/*
 definePageMeta({
   middleware: "auth",
+});
+*/
+
+const { guard } = useAuth();
+const route = useRoute();
+
+onMounted(() => {
+  guard(route.path);
 });
 </script>
 

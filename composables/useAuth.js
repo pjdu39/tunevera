@@ -1,6 +1,6 @@
 // composables/useAuth.js
 import { onMounted, ref } from 'vue';
-import { useAuth0 } from '@auth0/auth0-vue';
+import { useAuth0, authGuard } from '@auth0/auth0-vue';
 
 export function useAuth() {
   const auth0 = ref(null);
@@ -55,6 +55,10 @@ export function useAuth() {
     document.cookie = 'tokenBearer=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   };
 
+  const guard = (path) => {
+    return authGuard(path);
+  }
+
 
   return {
     login,
@@ -63,6 +67,7 @@ export function useAuth() {
     isLoading,
     doLogout,
     redirectCallback,
-    setToken
+    setToken,
+    guard
   };
 }

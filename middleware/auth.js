@@ -1,3 +1,4 @@
+/*
 import { useCookie, useNuxtApp } from '#app'
 import { useAuth } from '~/composables/useAuth';
 
@@ -6,7 +7,10 @@ export default defineNuxtRouteMiddleware(async () => {
   await isAuthenticated.value;
   let token;
 
+  console.log('Estoy pasando por el middleware')
+
   if (!isAuthenticated.value) {
+    console.log('No estoy autenticado')
     return navigateTo('/login');
   }
 
@@ -40,4 +44,11 @@ export default defineNuxtRouteMiddleware(async () => {
 
   // TODO: Añadir lógica que evite que se pueda ir a rutas protegidas si el usuario no ha completado el registro.
 })
+*/
 
+import { authGuard } from "@auth0/auth0-vue";
+
+export default function (context) {
+  console.log(context)
+  return authGuard(context.path);
+}
