@@ -5,8 +5,8 @@
         <div class="wrapper-img">
           <NuxtImg
             v-if="uploadState.loading === 'waiting'"
-            class="image-fit"
-            src="https://cdn.icon-icons.com/icons2/2570/PNG/512/image_icon_153794.png"
+            class="image-fit image-empty"
+            src="https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image.svg"
           />
           <!-- https://www.svgrepo.com/show/4029/picture.svg -->
           <div
@@ -295,7 +295,7 @@ const createUUID = () => {
   return uuidv4();
 };
 const getFileExtension = (filename) => {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
+  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
 };
 const handleFileUpload = async (event) => {
   const originalFile = event.target.files[0];
@@ -304,7 +304,7 @@ const handleFileUpload = async (event) => {
     return;
   }
 
-  const newFileName = `i-${createUUID()}.${getFileExtension(
+  const newFileName = `r-${createUUID()}.${getFileExtension(
     originalFile.name
   )}`;
 
@@ -733,11 +733,20 @@ select:focus {
 .image-fit {
   /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper, no la clase de la imagen en sí. */
   position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /*
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  */
   object-fit: cover;
+}
+.image-empty {
+  width: 600px;
+  height: auto;
 }
 .btn {
   display: flex;
