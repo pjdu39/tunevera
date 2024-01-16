@@ -7,10 +7,15 @@ export const useLoginStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null
+        },
+        patchAuth0UserState: {
+            data: null,
+            loading: 'waiting',
+            error: null
         }
     }),
     actions: {
-        // User
+        // Registro en bbdd propia
         setSignUpData(payload) {
             this.signUpState.data = payload;
         },
@@ -19,6 +24,17 @@ export const useLoginStore = defineStore({
         },
         setSignUpError(payload) {
             this.signUpState.error = payload;
+        },
+
+        // Modificar datos del usuario en Auth0
+        patchAuth0UserData(payload) {
+            this.patchAuth0UserState.data = payload;
+        },
+        patchAuth0UserLoading(payload) {
+            this.patchAuth0UserState.loading = payload;
+        },
+        patchAuth0UserError(payload) {
+            this.patchAuth0UserState.error = payload;
         },
 
         async signUp(userData) {
@@ -42,6 +58,50 @@ export const useLoginStore = defineStore({
                 this.setSignUpLoading('error');
                 this.setSignUpError(error.message);
             }
-        }
+        },
+
+        async patchAuth0User(id, auth0UserData) {
+            const { $fetchApi } = useNuxtApp();
+
+            /* 
+            const auth0BaseUrl = 'https://login.auth0.com';
+            */
+
+            this.setSignUpLoading('loading');
+            try {
+                const data = await $fetchApi(`api/v2/users/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(auth0UserData)
+                }, 'https://dev-7x0hetr3bl3hslrx.eu.auth0.com');
+
+                /*
+                const httpResponse = await fetch(`${auth0BaseUrl}/api/v2/users/{id}?Id=${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(auth0UserData)
+                });
+
+                if (!httpResponse.ok) throw new Error(`Error ${ httpResponse.status }:${ httpResponse.statusText } en la URL ${errorInfo.url}`);
+
+                const data = await httpResponse.json();
+                */
+
+                this.setSignUpData(data);
+                this.setSignUpLoading('loaded');
+                this.setSignUpError(null);
+            }
+            catch(error) {
+                this.setSignUpData(null);
+                this.setSignUpLoading('error');
+                this.setSignUpError(error.message);
+            }
+        },
     }
 });

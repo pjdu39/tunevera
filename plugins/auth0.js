@@ -7,7 +7,8 @@ export default defineNuxtPlugin((nuxtApp) => {
             domain: "dev-7x0hetr3bl3hslrx.eu.auth0.com", // TODO: Usar variables de entorno
             clientId: "8fMvHWwsTJGlfgOiyBYyVb4KjzcWISBL", // TODO: Usar variables de entorno
             authorizationParams: {
-              redirect_uri: 'http://localhost:3000/callback'
+              redirect_uri: 'http://localhost:3000/callback',
+              audience: 'https://dev-7x0hetr3bl3hslrx.eu.auth0.com/api/v2/'// TODO: Usar variables de entorno
             },
             onRedirectCallback: appState => {
                 nuxtApp.$router.push(

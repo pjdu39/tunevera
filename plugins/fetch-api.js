@@ -2,8 +2,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     return {
         provide: {
-            fetchApi: async (endpoint, options = {}) => {
-                const apiUrl = useRuntimeConfig().public.apiUrl;
+            fetchApi: async (endpoint, options = {}, customBaseUrl = null) => {
+                const apiUrl = customBaseUrl || useRuntimeConfig().public.apiUrl;
                 const token = useCookie("tokenBearer").value;
                 
                 const headers = {

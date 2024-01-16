@@ -4,13 +4,17 @@
       <div class="img-container">
         <div class="wrapper-img">
           <NuxtImg
-            v-if="user.picture"
+            v-if="imageUrl"
+            class="image-fit"
+            :src="imageUrl"
+          />
+          <NuxtImg
+            v-else-if="user.picture"
             class="image-fit"
             :src="user.picture"
           />
-          <!-- https://www.svgrepo.com/show/4029/picture.svg -->
           <div
-            v-else-if="uploadState.loading === 'loading'"
+            v-else
             class="upload-state-container"
           >
             <font-awesome-icon
@@ -19,21 +23,9 @@
               aria-hidden="true"
             />
           </div>
-          <NuxtImg
-            v-else-if="uploadState.loading === 'loaded'"
-            class="image-fit"
-            :src="uploadState.data"
-          />
-          <div
-            v-else-if="uploadState.loading === 'error'"
-            class="upload-state-container"
-          >
-            <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
-            <div>{{ uploadState.error }}</div>
-          </div>
         </div>
         <label class="btn btn--add-img">
-          <input type="file" @change="handleFileUpload" />
+          <input type="file" @change="handleFileChange" />
           <span class="span--add-img">+</span>
         </label>
       </div>
@@ -100,7 +92,6 @@
 
 <script setup>
 import { useAuth } from "~/composables/useAuth";
-import { useBlobStore } from "~/store/blob.js";
 import { useLoginStore } from "~/store/login.js";
 
 // Auth0
@@ -109,14 +100,20 @@ const { user, isAuthenticated, isLoading } = useAuth();
 // Datos y llamadas de registro
 const loginStore = useLoginStore();
 const signUpState = computed(() => loginStore.signUpState);
-const signUp = () => {
+const signUp = async () => {
+  console.log('Entro en el signUp')
+  const auth0Response = await patchAuth0User();
+
+  console.log(auth0Response)
+  if(!auth0Response) return
+
   const userData = {
     nickname: nickname.value,
-    email: "pepito@gmail.com",
+    email: user.value.email,
     birthDate: `${day.value}/${month.value}/${year.value}`,
     description: description.value,
     location: location.value,
-    pictureUrl: pictureUrl.value,
+    pictureUrl: user.value.picture,
   };
 
   loginStore.signUp(userData);
@@ -127,33 +124,42 @@ const month = ref(null);
 const day = ref(null);
 const description = ref(null);
 const location = ref(null);
-const pictureUrl = ref(null);
+const imageFile = ref(null);
+
+const imageUrl = computed(() => {
+  return imageFile.value ? URL.createObjectURL(imageFile.value) : null;
+});
+
+const patchAuth0UserState = computed(() => loginStore.patchAuth0UserState);
+const patchAuth0User = () => {
+  if (!user.value) return
+
+  console.log(user)
+
+  let parts = user.value.sub.split('|');
+  let userId = parts[1];
+
+  const body = {};
+
+  if (nickname.value) body.nickname = nickname.value;
+  if (imageFile.value) body.picture = imageFile.value;
+  // if (year.value && month.value && day.value) body.birthDate = `${day.value}/${month.value}/${year.value}`;
+
+  loginStore.patchAuth0User(userId, body);
+}
 
 // Validaciones
 // TODO: Propiedades computadas que validen la integridad de los datos: Lenght de los textos, campo obligatorios, fechas válidas, etc.
 
 // Manejo para subida de imágenes
-//const img = ref(null);
-const blobStore = useBlobStore();
-const uploadState = computed(() => blobStore.uploadState);
-
-const handleFileUpload = async (event) => {
-  const originalFile = event.target.files[0];
-  if (!originalFile) {
-    console.log("No se seleccionó ningún archivo");
-    return;
+const handleFileChange = async (event) => {
+  console.log(event.target.files[0])
+  const file  = event.target.files[0];
+  if (file && file.type.startsWith('image/')) {
+    imageFile.value = file;
+  } else {
+    imageFile.value = null;
   }
-
-  const newFileName = ""; // Obtiene el nombre de la imagen de auth0
-
-  const newFile = new File([originalFile], newFileName, {
-    type: originalFile.type,
-    lastModified: originalFile.lastModified,
-  });
-
-  await blobStore.uploadFileAndGetUrl(newFile);
-
-  event.target.value = "";
 };
 
 </script>

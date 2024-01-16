@@ -40,9 +40,9 @@ export function useAuth() {
   const setToken = async () => {
     if (auth0.value) {
         try {
-          const token = await auth0.value.getAccessTokenSilently({
+          const token = await auth0.value.getAccessTokenSilently(/*{
             audience: 'https://cookbook-api.com'
-          });
+          }*/);
 
           document.cookie = `tokenBearer=${token};path=/;`;
         } catch (error) {
