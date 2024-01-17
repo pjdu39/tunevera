@@ -40,13 +40,14 @@ export function useAuth() {
   const setToken = async () => {
     if (auth0.value) {
         try {
-          const token = await auth0.value.getAccessTokenSilently(/*{
-            audience: 'https://cookbook-api.com'
-          }*/);
+          const token = await auth0.value.getAccessTokenSilently({
+            /* audience: 'https://cookbook-api.com',
+            scope: 'openid profile email update:users update:users_app_metadata update:current_user_metadata' */
+          });
 
           document.cookie = `tokenBearer=${token};path=/;`;
         } catch (error) {
-          console.error("Error al obtener el token:", error);
+          console.error("Error al obtener el token en la función setToken():", error);
         }
     }
   };

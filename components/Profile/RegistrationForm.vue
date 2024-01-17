@@ -4,9 +4,9 @@
       <div class="img-container">
         <div class="wrapper-img">
           <NuxtImg
-            v-if="imageUrl"
+            v-if="uploadState.loading === 'loaded'"
             class="image-fit"
-            :src="imageUrl"
+            :src="uploadState.data"
           />
           <NuxtImg
             v-else-if="user.picture"
@@ -25,11 +25,11 @@
           </div>
         </div>
         <label class="btn btn--add-img">
-          <input type="file" @change="handleFileChange" />
+          <input type="file" @change="handleFileUpload" />
           <span class="span--add-img">+</span>
         </label>
       </div>
-      <button class="button" @click="signUp">Guardar</button>
+      <button class="button" :disabled="!validForm" @click="signUp">Guardar</button>
     </div>
     <div class="section">
       <div class="label">Nombre de usuario *</div>
@@ -37,7 +37,7 @@
         class="nickname-input"
         v-model="nickname"
         :placeholder="user.nickname ?? ''"
-        maxlength="30"
+        :maxlength="nicknameMaxLenght"
         autocomplete="off"
       />
     </div>
@@ -74,7 +74,7 @@
       <div class="label">Descripción</div>
       <Textarea
         v-model="description"
-        maxlength="30"
+        :maxlength="descriptionMaxLenght"
         rows="1"
         autocomplete="off"
         autoResize
@@ -92,7 +92,13 @@
 
 <script setup>
 import { useAuth } from "~/composables/useAuth";
+import { useBlobStore } from "~/store/blob.js";
 import { useLoginStore } from "~/store/login.js";
+
+// Constantes
+const nicknameMinLenght = 3;
+const nicknameMaxLenght = 30;
+const descriptionMaxLenght = 500;
 
 // Auth0
 const { user, isAuthenticated, isLoading } = useAuth();
@@ -100,67 +106,124 @@ const { user, isAuthenticated, isLoading } = useAuth();
 // Datos y llamadas de registro
 const loginStore = useLoginStore();
 const signUpState = computed(() => loginStore.signUpState);
+const nickname = ref(null);
+const year = ref(null);
+const month = ref(null);
+const day = ref(null);
+const description = ref(null);
+/* const location = ref(null); */
 const signUp = async () => {
-  console.log('Entro en el signUp')
-  const auth0Response = await patchAuth0User();
+  if (!validForm) return
 
-  console.log(auth0Response)
-  if(!auth0Response) return
+  patchAuth0User();
+
+  await wait(() => patchAuth0UserState.value.data);
+
+  console.log(patchAuth0UserState.value.data)
+
+  if(!patchAuth0UserState.value.data) return
 
   const userData = {
     nickname: nickname.value,
     email: user.value.email,
     birthDate: `${day.value}/${month.value}/${year.value}`,
     description: description.value,
-    location: location.value,
+    /* location: location.value, */
     pictureUrl: user.value.picture,
   };
 
   loginStore.signUp(userData);
 };
-const nickname = ref(null);
-const year = ref(null);
-const month = ref(null);
-const day = ref(null);
-const description = ref(null);
-const location = ref(null);
-const imageFile = ref(null);
-
-const imageUrl = computed(() => {
-  return imageFile.value ? URL.createObjectURL(imageFile.value) : null;
-});
-
 const patchAuth0UserState = computed(() => loginStore.patchAuth0UserState);
 const patchAuth0User = () => {
-  if (!user.value) return
+  if (!validForm) return
 
-  console.log(user)
+  const body = {
+    user_metadata: {
+    }
+  };
 
-  let parts = user.value.sub.split('|');
-  let userId = parts[1];
+  body.user_metadata.nickname = nickname.value;
+  body.user_metadata.birthDate = `${day.value}/${month.value}/${year.value}`;
 
-  const body = {};
+  if (uploadState.value.data) body.user_metadata.picture = uploadState.value.data;
+  if (nickname.value) body.user_metadata.description = description.value;
 
-  if (nickname.value) body.nickname = nickname.value;
-  if (imageFile.value) body.picture = imageFile.value;
-  // if (year.value && month.value && day.value) body.birthDate = `${day.value}/${month.value}/${year.value}`;
-
-  loginStore.patchAuth0User(userId, body);
+  loginStore.patchAuth0User(user.value.sub, body);
 }
 
 // Validaciones
 // TODO: Propiedades computadas que validen la integridad de los datos: Lenght de los textos, campo obligatorios, fechas válidas, etc.
+const validNickname = computed(() =>
+  nickname.value &&
+  nickname.value.length >= nicknameMinLenght &&
+  nickname.value.length <= nicknameMaxLenght
+);
+const validBirthDate = computed(() => {
+  if (!year.value || !month.value || !day.value) return false
+
+  const yearVal = parseInt(year.value);
+  const monthVal = parseInt(month.value);
+  const dayVal = parseInt(day.value);
+
+  return yearVal &&
+    monthVal &&
+    dayVal &&
+    yearVal < 2100 &&
+    yearVal > 1900 &&
+    monthVal <= 12 &&
+    monthVal >= 1 &&
+    dayVal <= 31 &&
+    dayVal >= 1;
+});
+const validDescription = computed(() => {
+  if (!description.value) return true 
+  return description.value.length <= descriptionMaxLenght ? true : false
+});
+const validForm = computed(() =>  
+  validNickname.value && validBirthDate.value && validDescription.value && user.value ? true : false
+);
 
 // Manejo para subida de imágenes
-const handleFileChange = async (event) => {
-  console.log(event.target.files[0])
-  const file  = event.target.files[0];
-  if (file && file.type.startsWith('image/')) {
-    imageFile.value = file;
-  } else {
-    imageFile.value = null;
-  }
+const blobStore = useBlobStore();
+const uploadState = computed(() => blobStore.uploadState);
+const getFileExtension = (filename) => {
+  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
 };
+const handleFileUpload = async (event) => {
+  const originalFile = event.target.files[0];
+  if (!originalFile) {
+    console.log("No se seleccionó ningún archivo");
+    return;
+  }
+
+  const newFileName = `u-${user.value.sub}.${getFileExtension(
+    originalFile.name
+  )}`;
+
+  const newFile = new File([originalFile], newFileName, {
+    type: originalFile.type,
+    lastModified: originalFile.lastModified,
+  });
+
+  await blobStore.uploadFileAndGetUrl(newFile);
+
+  event.target.value = "";
+};
+
+// Tools
+// TODO: Moverlo a un composable reutilizable
+const wait = async (conditionFunc, checkInterval = 500, timeout = 5000) => {
+  let startTime = Date.now();
+
+  while (!conditionFunc()) {
+      if (Date.now() - startTime > timeout) {
+          console.log("Tiempo de espera superado.");
+          return;
+      }
+      await new Promise(resolve => setTimeout(resolve, checkInterval));
+  }
+}
 
 </script>
 
@@ -289,5 +352,8 @@ textarea:focus {
   border-radius: 20px;
   background-color: $color-primary;
   color: white;
+}
+.button:disabled {
+  background-color: $color-soft-grey;
 }
 </style>

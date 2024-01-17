@@ -8,7 +8,8 @@ export default defineNuxtPlugin((nuxtApp) => {
             clientId: "8fMvHWwsTJGlfgOiyBYyVb4KjzcWISBL", // TODO: Usar variables de entorno
             authorizationParams: {
               redirect_uri: 'http://localhost:3000/callback',
-              audience: 'https://dev-7x0hetr3bl3hslrx.eu.auth0.com/api/v2/'// TODO: Usar variables de entorno
+              audience: 'https://dev-7x0hetr3bl3hslrx.eu.auth0.com/api/v2/', // TODO: Usar variables de entorno
+              scope: 'openid profile email update:current_user_metadata'
             },
             onRedirectCallback: appState => {
                 nuxtApp.$router.push(
