@@ -63,7 +63,7 @@ export const useLoginStore = defineStore({
         async patchAuth0User(id, auth0UserData) {
             const { $fetchApi } = useNuxtApp();
 
-            this.setSignUpLoading('loading');
+            this.patchAuth0UserLoading('loading');
             try {
                 const data = await $fetchApi(`api/v2/users/${id}`, {
                     method: 'PATCH',
@@ -74,14 +74,14 @@ export const useLoginStore = defineStore({
                     body: JSON.stringify(auth0UserData)
                 }, 'https://dev-7x0hetr3bl3hslrx.eu.auth0.com'); // TODO: Pasar a variables de entorno
 
-                this.setSignUpData(data);
-                this.setSignUpLoading('loaded');
-                this.setSignUpError(null);
+                this.patchAuth0UserData(data);
+                this.patchAuth0UserLoading('loaded');
+                this.patchAuth0UserError(null);
             }
             catch(error) {
-                this.setSignUpData(null);
-                this.setSignUpLoading('error');
-                this.setSignUpError(error.message);
+                this.patchAuth0UserData(null);
+                this.patchAuth0UserLoading('error');
+                this.patchAuth0UserError(error.message);
             }
         },
     }

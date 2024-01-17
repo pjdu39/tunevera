@@ -119,8 +119,6 @@ const signUp = async () => {
 
   await wait(() => patchAuth0UserState.value.data);
 
-  console.log(patchAuth0UserState.value.data)
-
   if(!patchAuth0UserState.value.data) return
 
   const userData = {
@@ -193,7 +191,7 @@ const getFileExtension = (filename) => {
 const handleFileUpload = async (event) => {
   const originalFile = event.target.files[0];
   if (!originalFile) {
-    console.log("No se seleccionó ningún archivo");
+    console.error("No se seleccionó ningún archivo");
     return;
   }
 
@@ -218,7 +216,6 @@ const wait = async (conditionFunc, checkInterval = 500, timeout = 5000) => {
 
   while (!conditionFunc()) {
       if (Date.now() - startTime > timeout) {
-          console.log("Tiempo de espera superado.");
           return;
       }
       await new Promise(resolve => setTimeout(resolve, checkInterval));
