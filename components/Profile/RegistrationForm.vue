@@ -127,7 +127,7 @@ const signUp = async () => {
     birthDate: `${day.value}/${month.value}/${year.value}`,
     description: description.value,
     /* location: location.value, */
-    pictureUrl: user.value.picture,
+    pictureUrl: uploadState.value.data ?? user.value.picture,
   };
 
   loginStore.signUp(userData);
