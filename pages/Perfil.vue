@@ -64,7 +64,13 @@
               />
             </button>
             <div class="options-container">
-              <button class="options-btn" @click="clickShowOptions">...</button>
+              <button class="options-btn" @click="clickShowOptions">
+                <font-awesome-icon
+                  icon="fa fa-ellipsis-vertical"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
+              </button>
               <div class="dropdown-options-container" :hidden="!showOptions">
                 <div class="dropdown-wrapper">
                   <button class="option">Editar perfil</button>
@@ -229,20 +235,38 @@ const clickShowOptions = () => (showOptions.value = !showOptions.value);
   display: flex;
   flex-direction: column;
   align-content: flex-end;
+  margin-left: 30px;
 }
 .options-btn {
-  max-width: min-content;
+  height: 37px;
+  width: 27px;
+  //max-width: min-content;
+  background-color: transparent;
+  border-radius: 3px;
+  border: none;
+  font-size: 140%;
+}
+.options-btn:hover {
+  background-color: $color-soft-grey;
 }
 .dropdown-options-container {
   position: relative;
 }
 .dropdown-wrapper {
   position: absolute;
+  border: 2px solid $color-dark;
+  border-radius: 5px;
 }
 .option {
   white-space: nowrap;
   width: 100%;
   text-align: start;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid grey;
+}
+.option:hover {
+  background-color: $color-soft-grey;
 }
 .follow-container {
   display: flex;
