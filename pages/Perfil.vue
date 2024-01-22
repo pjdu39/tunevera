@@ -27,7 +27,11 @@
           <div class="info-summary-section">
             <div class="picture-cotainer">
               <div class="picture-wrapper">
-                <NuxtImg v-if="profile.pictureUrl" class="profile-picture" :src="profile.pictureUrl" />
+                <NuxtImg
+                  v-if="profile.pictureUrl"
+                  class="profile-picture"
+                  :src="profile.pictureUrl"
+                />
               </div>
             </div>
             <div class="info-summary">
@@ -50,14 +54,25 @@
             <div class="i-d-description">{{ profile.description }}</div>
           </div>
         </div>
-        <div v-if="selfProfile" class="own-notifications-container">
-          <button class="own-notifications" @click="console.log(id)">
-            <font-awesome-icon
-              icon="fa fa-bell"
-              class="fa-lg"
-              aria-hidden="true"
-            />
-          </button>
+        <div v-if="selfProfile">
+          <div class="own-notifications-container">
+            <button class="own-notifications" @click="console.log(id)">
+              <font-awesome-icon
+                icon="fa fa-bell"
+                class="fa-lg"
+                aria-hidden="true"
+              />
+            </button>
+            <div class="options-container">
+              <button class="options-btn" @click="clickShowOptions">...</button>
+              <div class="dropdown-options-container" :hidden="!showOptions">
+                <div class="dropdown-wrapper">
+                  <button class="option">Editar perfil</button>
+                  <button class="option">Cerrar sesión</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div v-else-if="!selfProfile" class="follow-container">
           <FollowButton :data="followButtonData" />
@@ -85,7 +100,7 @@ import ProfileDiscussion from "~/components/Profile/ProfileDiscussion.vue";
 import RegistrationForm from "~/components/Profile/RegistrationForm.vue";
 import FollowButton from "~/components/Profile/FollowButton.vue";
 import { useProfileStore } from "~/store/profile.js";
-import { useAuth } from '~/composables/useAuth';
+import { useAuth } from "~/composables/useAuth";
 
 /*
 definePageMeta({
@@ -116,7 +131,7 @@ const selfProfile = computed(() => {
   return profileStore.getProfileInfoState.data.selfProfile;
 });
 const followButtonData = computed(() => {
-  return { id: id, follow: profile.value.follow }
+  return { id: id, follow: profile.value.follow };
 });
 
 // Métodos de llamadas
@@ -129,6 +144,10 @@ watch(id, (newVal, oldVal) => {
   // TODO: Cuando tenga el navbar para cambiar entre recetas, discusiones y encuestas, ponerlo en recetas cuando pase por este watch.
   fetchProfileData();
 });
+
+// Manejo de opciones de perfil
+const showOptions = ref(false);
+const clickShowOptions = () => (showOptions.value = !showOptions.value);
 </script>
 
 <style scoped lang="scss">
@@ -196,6 +215,8 @@ watch(id, (newVal, oldVal) => {
 .i-d-description {
 }
 .own-notifications-container {
+  display: flex;
+  justify-content: flex-end;
   margin-top: 8px;
 }
 .own-notifications {
@@ -204,12 +225,31 @@ watch(id, (newVal, oldVal) => {
   color: $color-primary;
   border: none;
 }
+.options-container {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+}
+.options-btn {
+  max-width: min-content;
+}
+.dropdown-options-container {
+  position: relative;
+}
+.dropdown-wrapper {
+  position: absolute;
+}
+.option {
+  white-space: nowrap;
+  width: 100%;
+  text-align: start;
+}
 .follow-container {
   display: flex;
   align-items: flex-start;
   margin-top: 8px;
 }
-.profile-tab{
+.profile-tab {
   width: 100%;
 }
 /* Aumentar la especificidad para el ul */
@@ -241,7 +281,7 @@ watch(id, (newVal, oldVal) => {
   display: none;
 }
 
-// display: block; en los li 
+// display: block; en los li
 
 // place-content: center; en el contenido del la pestaña en sí, es decir, en el a dentro del li
 
