@@ -190,10 +190,10 @@ const clickLike = () => {
     likeTimeout.value = true;
 
     like.value = !like.value;
-    store.like(store.recipeData.value.id);
+    store.like(recipeData.value.id);
 
     // Esto se encarga de que suba o baje un like de manera coherente en local al pulsar el botón.
-    const initialLikeState = store.recipeData.value.liked;
+    const initialLikeState = recipeData.value.liked;
     const direction = initialLikeState ? -1 : 0;
     localLike.value = like.value ? direction + 1 : direction;
 

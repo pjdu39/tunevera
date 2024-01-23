@@ -13,10 +13,7 @@
             class="image-fit"
             :src="user.picture"
           />
-          <div
-            v-else
-            class="upload-state-container"
-          >
+          <div v-else class="upload-state-container">
             <font-awesome-icon
               icon="fa fa-spinner"
               class="fa-pulse fa-lg"
@@ -29,7 +26,9 @@
           <span class="span--add-img">+</span>
         </label>
       </div>
-      <button class="button" :disabled="!validForm" @click="signUp">Guardar</button>
+      <button class="button" :disabled="!validForm" @click="signUp">
+        Guardar
+      </button>
     </div>
     <div class="section">
       <div class="label">Nombre de usuario *</div>
@@ -44,30 +43,19 @@
     <div class="section">
       <div class="label">Fecha de nacimiento *</div>
       <div class="date">
-        <input
-          class="date-input"
-          v-model="day"
-          placeholder="día"
-          min="1"
-          max="31"
-          autocomplete="off"
-        />
-        <input
-          class="date-input"
-          v-model="month"
-          placeholder="mes"
-          min="1"
-          max="12"
-          autocomplete="off"
-        />
-        <input
-          class="date-input"
-          v-model="year"
-          placeholder="año"
-          min="1900"
-          max="2100"
-          autocomplete="off"
-        />
+        <select v-model="selectedDay">
+          <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
+        </select>
+        <select v-model="selectedMonth">
+          <option v-for="month in months" :key="month.value" :value="month.value">
+            {{ month.name }}
+          </option>
+        </select>
+        <select v-model="selectedYear">
+          <option v-for="year in years" :key="year" :value="year">
+            {{ year }}
+          </option>
+        </select>
       </div>
     </div>
     <div class="section">
@@ -100,6 +88,36 @@ const nicknameMinLenght = 3;
 const nicknameMaxLenght = 30;
 const descriptionMaxLenght = 500;
 
+// Select de fechas
+const currentYear = new Date().getFullYear();
+
+const selectedDay = ref(null);
+const selectedMonth = ref(null);
+const selectedYear = ref(null);
+
+const days = Array.from({ length: 31 }, (_, i) => i + 1);
+const months = [
+    { name: 'Enero', value: 1 },
+    { name: 'Febrero', value: 2 },
+    { name: 'Marzo', value: 3 },
+    { name: 'Abril', value: 4 },
+    { name: 'Mayo', value: 5 },
+    { name: 'Junio', value: 6 },
+    { name: 'Julio', value: 7 },
+    { name: 'Agosto', value: 8 },
+    { name: 'Septiembre', value: 9 },
+    { name: 'Octubre', value: 10 },
+    { name: 'Noviembre', value: 11 },
+    { name: 'Diciembre', value: 12 },
+];
+const years = Array.from({ length: currentYear - 1899 }, (_, i) => i + 1900);
+
+const birthDate = computed(() => {
+  if (!validBirthDate.value) return null
+
+  return `${selectedDay.value}/${selectedMonth.value}/${selectedYear.value}`
+});
+
 // Auth0
 const { user, isAuthenticated, isLoading } = useAuth();
 
@@ -107,24 +125,21 @@ const { user, isAuthenticated, isLoading } = useAuth();
 const loginStore = useLoginStore();
 const signUpState = computed(() => loginStore.signUpState);
 const nickname = ref(null);
-const year = ref(null);
-const month = ref(null);
-const day = ref(null);
 const description = ref(null);
 /* const location = ref(null); */
 const signUp = async () => {
-  if (!validForm) return
+  if (!validForm) return;
 
   patchAuth0User();
 
   await wait(() => patchAuth0UserState.value.data);
 
-  if(!patchAuth0UserState.value.data) return
+  if (!patchAuth0UserState.value.data) return;
 
   const userData = {
     nickname: nickname.value,
     email: user.value.email,
-    birthDate: `${day.value}/${month.value}/${year.value}`,
+    birthDate: birthDate,
     description: description.value,
     /* location: location.value, */
     pictureUrl: uploadState.value.data ?? user.value.picture,
@@ -134,59 +149,65 @@ const signUp = async () => {
 };
 const patchAuth0UserState = computed(() => loginStore.patchAuth0UserState);
 const patchAuth0User = () => {
-  if (!validForm) return
+  if (!validForm) return;
 
   const body = {
-    user_metadata: {
-    }
+    user_metadata: {},
   };
 
   body.user_metadata.nickname = nickname.value;
-  body.user_metadata.birthDate = `${day.value}/${month.value}/${year.value}`;
+  body.user_metadata.birthDate = birthDate;
 
-  if (uploadState.value.data) body.user_metadata.picture = uploadState.value.data;
+  if (uploadState.value.data)
+    body.user_metadata.picture = uploadState.value.data;
   if (nickname.value) body.user_metadata.description = description.value;
 
   loginStore.patchAuth0User(user.value.sub, body);
-}
+};
 
 // Validaciones
 // TODO: Propiedades computadas que validen la integridad de los datos: Lenght de los textos, campo obligatorios, fechas válidas, etc.
-const validNickname = computed(() =>
-  nickname.value &&
-  nickname.value.length >= nicknameMinLenght &&
-  nickname.value.length <= nicknameMaxLenght
+const validNickname = computed(
+  () =>
+    nickname.value &&
+    nickname.value.length >= nicknameMinLenght &&
+    nickname.value.length <= nicknameMaxLenght
 );
 const validBirthDate = computed(() => {
-  if (!year.value || !month.value || !day.value) return false
+  if (!selectedYear.value || !selectedMonth.value || !selectedDay.value) return false;
 
-  const yearVal = parseInt(year.value);
-  const monthVal = parseInt(month.value);
-  const dayVal = parseInt(day.value);
-
-  return yearVal &&
-    monthVal &&
-    dayVal &&
-    yearVal < 2100 &&
-    yearVal > 1900 &&
-    monthVal <= 12 &&
-    monthVal >= 1 &&
-    dayVal <= 31 &&
-    dayVal >= 1;
+  return (
+    selectedYear.value &&
+    selectedMonth.value &&
+    selectedDay.value &&
+    selectedYear.value < 2100 &&
+    selectedYear.value > 1900 &&
+    selectedMonth.value <= 12 &&
+    selectedMonth.value >= 1 &&
+    selectedDay.value <= 31 &&
+    selectedDay.value >= 1
+  );
 });
 const validDescription = computed(() => {
-  if (!description.value) return true 
-  return description.value.length <= descriptionMaxLenght ? true : false
+  if (!description.value) return true;
+  return description.value.length <= descriptionMaxLenght ? true : false;
 });
-const validForm = computed(() =>  
-  validNickname.value && validBirthDate.value && validDescription.value && user.value ? true : false
+const validForm = computed(() =>
+  validNickname.value &&
+  validBirthDate.value &&
+  validDescription.value &&
+  user.value
+    ? true
+    : false
 );
 
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
 const uploadState = computed(() => blobStore.uploadState);
 const getFileExtension = (filename) => {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
+  return filename
+    .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
+    .toLowerCase();
 };
 const handleFileUpload = async (event) => {
   const originalFile = event.target.files[0];
@@ -215,13 +236,12 @@ const wait = async (conditionFunc, checkInterval = 500, timeout = 5000) => {
   let startTime = Date.now();
 
   while (!conditionFunc()) {
-      if (Date.now() - startTime > timeout) {
-          return;
-      }
-      await new Promise(resolve => setTimeout(resolve, checkInterval));
+    if (Date.now() - startTime > timeout) {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, checkInterval));
   }
-}
-
+};
 </script>
 
 <style scoped lang="scss">

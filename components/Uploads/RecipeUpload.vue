@@ -280,8 +280,8 @@ const stepMaxLenght = 450;
 // Protección de ruta con login
 const route = useRoute();
 
-onMounted(() => {
-  guard(route.path);
+onMounted(async () => {
+  await guard(route.path);
   uploadsStore.fetchUnits();
 });
 

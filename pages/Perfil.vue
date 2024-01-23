@@ -73,8 +73,26 @@
               </button>
               <div class="dropdown-options-container" :hidden="!showOptions">
                 <div class="dropdown-wrapper">
-                  <button class="option">Editar perfil</button>
-                  <button class="option">Cerrar sesión</button>
+                  <button class="option">
+                    <div class="option-icon-wrapper">
+                      <font-awesome-icon
+                        icon="fa fa-pencil"
+                        class="fa-lg"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div>Editar perfil</div>
+                  </button>
+                  <button class="option" @click="doLogout">
+                    <div class="option-icon-wrapper">
+                      <font-awesome-icon
+                        icon="fa fa-power-off"
+                        class="fa-lg"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div>Cerrar sesión</div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -114,14 +132,14 @@ definePageMeta({
 });
 */
 
-const { guard } = useAuth();
+const { guard, doLogout } = useAuth();
 
 // Parámetros por query string
 const route = useRoute();
 const id = computed(() => route.query.id || null);
 
-onMounted(() => {
-  guard(route.path);
+onMounted(async () => {
+  await guard(route.path);
   fetchProfileData();
 });
 
@@ -249,6 +267,12 @@ const clickShowOptions = () => (showOptions.value = !showOptions.value);
 .options-btn:hover {
   background-color: $color-soft-grey;
 }
+.option-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  min-width: 25px;
+  margin-right: 7px;
+}
 .dropdown-options-container {
   position: relative;
 }
@@ -258,6 +282,11 @@ const clickShowOptions = () => (showOptions.value = !showOptions.value);
   border-radius: 5px;
 }
 .option {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  min-width: 140px;
+  padding: 0 13px 0 10px;
   white-space: nowrap;
   width: 100%;
   text-align: start;

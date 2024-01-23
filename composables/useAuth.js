@@ -56,7 +56,8 @@ export function useAuth() {
     document.cookie = 'tokenBearer=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   };
 
-  const guard = (path) => {
+  const guard = async (path) => {
+    await setToken();
     return authGuard(path);
   }
 
