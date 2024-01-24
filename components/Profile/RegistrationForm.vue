@@ -26,9 +26,12 @@
           <span class="span--add-img">+</span>
         </label>
       </div>
-      <button class="button" :disabled="!validForm" @click="signUp">
-        Guardar
-      </button>
+      <div>
+        <button class="button cancel-btn" @click="cancel">Cancelar</button>
+        <button class="button" :disabled="!validForm" @click="signUp">
+          Guardar
+        </button>
+      </div>
     </div>
     <div class="section">
       <div class="label">Nombre de usuario *</div>
@@ -47,7 +50,11 @@
           <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
         </select>
         <select class="date-select" v-model="selectedMonth">
-          <option v-for="month in months" :key="month.value" :value="month.value">
+          <option
+            v-for="month in months"
+            :key="month.value"
+            :value="month.value"
+          >
             {{ month.name }}
           </option>
         </select>
@@ -97,25 +104,25 @@ const selectedYear = ref(null);
 
 const days = Array.from({ length: 31 }, (_, i) => i + 1);
 const months = [
-    { name: 'Enero', value: 1 },
-    { name: 'Febrero', value: 2 },
-    { name: 'Marzo', value: 3 },
-    { name: 'Abril', value: 4 },
-    { name: 'Mayo', value: 5 },
-    { name: 'Junio', value: 6 },
-    { name: 'Julio', value: 7 },
-    { name: 'Agosto', value: 8 },
-    { name: 'Septiembre', value: 9 },
-    { name: 'Octubre', value: 10 },
-    { name: 'Noviembre', value: 11 },
-    { name: 'Diciembre', value: 12 },
+  { name: "Enero", value: 1 },
+  { name: "Febrero", value: 2 },
+  { name: "Marzo", value: 3 },
+  { name: "Abril", value: 4 },
+  { name: "Mayo", value: 5 },
+  { name: "Junio", value: 6 },
+  { name: "Julio", value: 7 },
+  { name: "Agosto", value: 8 },
+  { name: "Septiembre", value: 9 },
+  { name: "Octubre", value: 10 },
+  { name: "Noviembre", value: 11 },
+  { name: "Diciembre", value: 12 },
 ];
 const years = Array.from({ length: currentYear - 1899 }, (_, i) => i + 1900);
 
 const birthDate = computed(() => {
-  if (!validBirthDate.value) return null
+  if (!validBirthDate.value) return null;
 
-  return `${selectedDay.value}/${selectedMonth.value}/${selectedYear.value}`
+  return `${selectedDay.value}/${selectedMonth.value}/${selectedYear.value}`;
 });
 
 // Auth0
@@ -136,16 +143,21 @@ const signUp = async () => {
 
   if (!patchAuth0UserState.value.data) return;
 
-  const userData = {
-    nickname: nickname.value,
-    email: user.value.email,
-    birthDate: birthDate,
-    description: description.value,
-    /* location: location.value, */
-    pictureUrl: uploadState.value.data ?? user.value.picture,
-  };
+  if (props.isEditing) {
+    console.log('Llamar a endpoint EditProfile')
+  }
+  else {
+    const userData = {
+      nickname: nickname.value,
+      email: user.value.email,
+      birthDate: birthDate,
+      description: description.value,
+      /* location: location.value, */
+      pictureUrl: uploadState.value.data ?? user.value.picture,
+    };
 
-  loginStore.signUp(userData);
+    loginStore.signUp(userData);
+  }
 };
 const patchAuth0UserState = computed(() => loginStore.patchAuth0UserState);
 const patchAuth0User = () => {
@@ -156,7 +168,7 @@ const patchAuth0User = () => {
   };
 
   body.user_metadata.nickname = nickname.value;
-  body.user_metadata.birthDate = birthDate;
+  body.user_metadata.birthDate = birthDate.value;
 
   if (uploadState.value.data)
     body.user_metadata.picture = uploadState.value.data;
@@ -174,7 +186,8 @@ const validNickname = computed(
     nickname.value.length <= nicknameMaxLenght
 );
 const validBirthDate = computed(() => {
-  if (!selectedYear.value || !selectedMonth.value || !selectedDay.value) return false;
+  if (!selectedYear.value || !selectedMonth.value || !selectedDay.value)
+    return false;
 
   return (
     selectedYear.value &&
@@ -242,6 +255,17 @@ const wait = async (conditionFunc, checkInterval = 500, timeout = 5000) => {
     await new Promise((resolve) => setTimeout(resolve, checkInterval));
   }
 };
+
+// Salir del formulario
+const emit = defineEmits(['exit']);
+
+const cancel = () => {
+  emit('exit');
+};
+
+const props = defineProps({
+  isEditing: Boolean
+});
 </script>
 
 <style scoped lang="scss">
@@ -382,9 +406,9 @@ select:focus {
   margin-right: 10px;
 }
 .button {
-  width: 130px;
+  width: 120px;
   height: 30px;
-  margin: 10px 15px 0 0;
+  margin: 10px 10px 0 0;
   border: none;
   border-radius: 20px;
   background-color: $color-primary;
@@ -392,5 +416,13 @@ select:focus {
 }
 .button:disabled {
   background-color: $color-soft-grey;
+}
+.cancel-btn {
+  color: $color-dark;
+  border-radius: 40px;
+  background-color: transparent;
+}
+.cancel-btn:hover {
+  text-decoration: underline;
 }
 </style>

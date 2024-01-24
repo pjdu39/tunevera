@@ -18,10 +18,10 @@
         <div>{{ profileError }}</div>
       </div>
     </div>
-    <div v-else-if="profileLoading === 'loaded' && !profile.id">
-      <RegistrationForm />
+    <div v-else-if="profileLoading === 'loaded' && showForm">
+      <RegistrationForm :is-editing="isEditing" @exit="handleExit" />
     </div>
-    <div v-else-if="profileLoading === 'loaded' && profile.id">
+    <div v-else-if="profileLoading === 'loaded' && !showForm">
       <div class="top">
         <div class="profile-info">
           <div class="info-summary-section">
@@ -73,7 +73,7 @@
               </button>
               <div class="dropdown-options-container" :hidden="!showOptions">
                 <div class="dropdown-wrapper">
-                  <button class="option">
+                  <button class="option" @click="isEditing = true">
                     <div class="option-icon-wrapper">
                       <font-awesome-icon
                         icon="fa fa-pencil"
@@ -132,7 +132,7 @@ definePageMeta({
 });
 */
 
-const { guard, doLogout } = useAuth();
+const { guard, doLogout, logoutAndRedirectToLogin } = useAuth();
 
 // Parámetros por query string
 const route = useRoute();
@@ -172,6 +172,25 @@ watch(id, (newVal, oldVal) => {
 // Manejo de opciones de perfil
 const showOptions = ref(false);
 const clickShowOptions = () => (showOptions.value = !showOptions.value);
+
+// Manejo de propiedades que determinan si se debe mostrar el formulario de registro/edición o no.
+const isSignedUp = computed(() => profile.value.id ? true : false);
+const isEditing = ref(false);
+
+const showForm = computed(() => !isSignedUp.value || isEditing.value);
+
+const handleExit = () => {
+  // Utiliza las propiedades computadas para deducir cómo debería salir del formulario.
+
+  // Si se está registrando por primera vez, hace logout.
+
+  // Si solo está editando, setea isEditing a false.
+
+  if (!isSignedUp.value) logoutAndRedirectToLogin();
+  else if (isEditing.value) isEditing.value = false;
+
+  // Si incluyo en la store estados y funciones para manejarlo en otras vistas, usar dichas funciones de actualización aquí.
+};
 </script>
 
 <style scoped lang="scss">
