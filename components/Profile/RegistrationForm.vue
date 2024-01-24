@@ -89,6 +89,7 @@
 import { useAuth } from "~/composables/useAuth";
 import { useBlobStore } from "~/store/blob.js";
 import { useLoginStore } from "~/store/login.js";
+import { useProfileStore } from "~/store/profile.js";
 
 // Constantes
 const nicknameMinLenght = 3;
@@ -131,6 +132,8 @@ const { user, isAuthenticated, isLoading } = useAuth();
 // Datos y llamadas de registro
 const loginStore = useLoginStore();
 const signUpState = computed(() => loginStore.signUpState);
+const profileStore = useProfileStore();
+const editProfileState = computed(() => profileStore.editProfileState);
 const nickname = ref(null);
 const description = ref(null);
 /* const location = ref(null); */
@@ -144,13 +147,21 @@ const signUp = async () => {
   if (!patchAuth0UserState.value.data) return;
 
   if (props.isEditing) {
-    console.log('Llamar a endpoint EditProfile')
+    const body = {
+    };
+
+    if (nickname.value) body.nickname = nickname.value;
+    if (birthDate.value) body.birthDate = birthDate.value;
+    if (description.value) body.description = description.value;
+    // if (description.value) body.description = description.value;
+    
+    profileStore.editProfile(body)
   }
   else {
     const userData = {
       nickname: nickname.value,
       email: user.value.email,
-      birthDate: birthDate,
+      birthDate: birthDate.value,
       description: description.value,
       /* location: location.value, */
       pictureUrl: uploadState.value.data ?? user.value.picture,
@@ -172,7 +183,7 @@ const patchAuth0User = () => {
 
   if (uploadState.value.data)
     body.user_metadata.picture = uploadState.value.data;
-  if (nickname.value) body.user_metadata.description = description.value;
+  if (description.value) body.user_metadata.description = description.value;
 
   loginStore.patchAuth0User(user.value.sub, body);
 };
@@ -194,7 +205,7 @@ const validBirthDate = computed(() => {
     selectedMonth.value &&
     selectedDay.value &&
     selectedYear.value < 2100 &&
-    selectedYear.value > 1900 &&
+    selectedYear.value >= 1900 &&
     selectedMonth.value <= 12 &&
     selectedMonth.value >= 1 &&
     selectedDay.value <= 31 &&

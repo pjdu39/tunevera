@@ -8,6 +8,11 @@ export const useProfileStore = defineStore({
             loading: 'waiting',
             error: null
         },
+        editProfileState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
         getRecipesState: {
             data: null,
             loading: 'waiting',
@@ -24,6 +29,17 @@ export const useProfileStore = defineStore({
         },
         setProfileInfoError(payload) {
             this.getProfileInfoState.error = payload;
+        },
+
+        // Edit Profile
+        setEditProfileData(payload) {
+            this.editProfileState.data = payload;
+        },
+        setEditProfileLoading(payload) {
+            this.editProfileState.loading = payload;
+        },
+        setEditProfileError(payload) {
+            this.editProfileState.error = payload;
         },
 
         // Recipes
@@ -51,6 +67,29 @@ export const useProfileStore = defineStore({
                 this.setProfileInfoData(null);
                 this.setProfileInfoLoading('error');
                 this.setProfileInfoError(error.message);
+            }
+        },
+
+        async editProfile(body) {
+            const { $fetchApi } = useNuxtApp();
+            this.setEditProfileLoading('loading');
+            try {
+                const data = await $fetchApi('EditProfile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                this.setEditProfileData(data);
+                this.setEditProfileLoading('loaded');
+                this.setEditProfileError(null);
+            }
+            catch(error) {
+                this.setEditProfileData(null);
+                this.setEditProfileLoading('error');
+                this.setEditProfileError(error.message);
             }
         },
 
