@@ -43,15 +43,15 @@
     <div class="section">
       <div class="label">Fecha de nacimiento *</div>
       <div class="date">
-        <select v-model="selectedDay">
+        <select class="date-select" v-model="selectedDay">
           <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
         </select>
-        <select v-model="selectedMonth">
+        <select class="date-select" v-model="selectedMonth">
           <option v-for="month in months" :key="month.value" :value="month.value">
             {{ month.name }}
           </option>
         </select>
-        <select v-model="selectedYear">
+        <select class="date-select" v-model="selectedYear">
           <option v-for="year in years" :key="year" :value="year">
             {{ year }}
           </option>
@@ -286,6 +286,21 @@ textarea:focus {
   -moz-box-shadow: none;
   border-bottom: 2px solid $color-dark;
 }
+select {
+  margin-top: 5px;
+  border: none;
+  border-bottom: 1px solid $color-dark;
+  border-radius: 0;
+  background-color: $color-background;
+}
+select:focus {
+  border: none;
+  outline: none !important;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  border-bottom: 2px solid $color-dark;
+}
 
 .container {
   display: flex;
@@ -294,6 +309,7 @@ textarea:focus {
   border: 3px solid $color-dark;
 }
 .section {
+  min-height: 70px;
   margin-bottom: 40px;
 }
 .section--top {
@@ -355,11 +371,15 @@ textarea:focus {
   display: flex;
   justify-content: flex-start;
   gap: 10px;
+  min-height: 35px;
+  margin-top: 10px;
   margin-right: 0;
   margin-left: 0;
 }
-.date-input {
-  width: 60px;
+.date-select {
+  display: inline-block;
+  padding-right: 23px;
+  margin-right: 10px;
 }
 .button {
   width: 130px;
