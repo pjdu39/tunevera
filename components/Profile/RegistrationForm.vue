@@ -4,14 +4,9 @@
       <div class="img-container">
         <div class="wrapper-img">
           <NuxtImg
-            v-if="uploadState.loading === 'loaded'"
+            v-if="picture"
             class="image-fit"
-            :src="uploadState.data"
-          />
-          <NuxtImg
-            v-else-if="user.picture"
-            class="image-fit"
-            :src="user.picture"
+            :src="picture"
           />
           <div v-else class="upload-state-container">
             <font-awesome-icon
@@ -28,7 +23,7 @@
       </div>
       <div>
         <button class="button cancel-btn" @click="cancel">Cancelar</button>
-        <button class="button" :disabled="!validForm" @click="signUp">
+        <button class="button" :disabled="!validForm" @click="save">
           Guardar
         </button>
       </div>
@@ -77,10 +72,6 @@
     </div>
   </div>
   <div v-else-if="loading === 'loading'">procesando...</div>
-  <!--
-  <div v-else-if="loading === 'loaded'">
-    registro completado con éxito
-  </div> -->
   <div v-else-if="loading === 'error'">
     Vaya! Parece que algo falló. Error: {{ apiError }}
   </div>
@@ -137,8 +128,13 @@ const profileStore = useProfileStore();
 const editProfileState = computed(() => profileStore.editProfileState);
 const nickname = ref(null);
 const description = ref(null);
-/* const location = ref(null); */
-const signUp = async () => {
+const picture = computed(() => {
+  if(uploadState.value.loading === 'loaded') return uploadState.value.data
+  if(props.isEditing && props.profileInfo) return props.profileInfo.pictureUrl
+  if(user.value.picture) return user.value.picture
+  else return null
+});
+const save = async () => {
   if (!validForm) return;
 
   patchAuth0User();
@@ -271,7 +267,8 @@ const cancel = () => {
 };
 
 const props = defineProps({
-  isEditing: Boolean
+  isEditing: Boolean,
+  profileInfo: Object
 });
 
 // Redirección tras guardar
@@ -279,6 +276,21 @@ watch(loading, (newValue) => {
   if (newValue === 'loaded') {
     window.location.reload();
   }
+});
+
+onMounted(() => {
+  nickname.value = props.profileInfo.name ?? null
+
+  if (props.profileInfo.birthdate) {
+    const parts = props.profileInfo.birthdate.split('/');
+    if (parts.length === 3) {
+      selectedDay.value = parseInt(parts[0], 10);
+      selectedMonth.value = parseInt(parts[1], 10);
+      selectedYear.value = parseInt(parts[2], 10);
+    }
+  }
+  
+  description.value = props.profileInfo.description ?? null
 });
 
 // Tools

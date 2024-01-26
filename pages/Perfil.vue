@@ -19,7 +19,7 @@
       </div>
     </div>
     <div v-else-if="profileLoading === 'loaded' && showForm">
-      <RegistrationForm :is-editing="isEditing" @exit="handleExit" />
+      <RegistrationForm :is-editing="isEditing" :profile-info="isEditing ? profile : null" @exit="handleExit" />
     </div>
     <div v-else-if="profileLoading === 'loaded' && !showForm">
       <div class="top">
@@ -126,12 +126,6 @@ import FollowButton from "~/components/Profile/FollowButton.vue";
 import { useProfileStore } from "~/store/profile.js";
 import { useAuth } from "~/composables/useAuth";
 
-/*
-definePageMeta({
-  middleware: "auth",
-});
-*/
-
 const { guard, doLogout, logoutAndRedirectToLogin } = useAuth();
 
 // Parámetros por query string
@@ -144,7 +138,6 @@ onMounted(async () => {
 });
 
 // Acceso a api
-// Propiedades coputadas
 const profileStore = useProfileStore();
 // Profile
 const profile = computed(() => profileStore.getProfileInfoState.data);
@@ -181,15 +174,11 @@ const showForm = computed(() => !isSignedUp.value || isEditing.value);
 
 const handleExit = () => {
   // Utiliza las propiedades computadas para deducir cómo debería salir del formulario.
-
   // Si se está registrando por primera vez, hace logout.
-
   // Si solo está editando, setea isEditing a false.
 
   if (!isSignedUp.value) logoutAndRedirectToLogin();
   else if (isEditing.value) isEditing.value = false;
-
-  // Si incluyo en la store estados y funciones para manejarlo en otras vistas, usar dichas funciones de actualización aquí.
 };
 </script>
 
