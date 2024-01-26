@@ -1,5 +1,5 @@
 <template>
-  <div v-if="signUpState.loading === 'waiting'" class="container">
+  <div v-if="loading === 'waiting'" class="container">
     <div class="section section--top">
       <div class="img-container">
         <div class="wrapper-img">
@@ -76,12 +76,13 @@
       />
     </div>
   </div>
-  <div v-else-if="signUpState.loading === 'loading'">procesando...</div>
-  <div v-else-if="signUpState.loading === 'loaded'">
+  <div v-else-if="loading === 'loading'">procesando...</div>
+  <!--
+  <div v-else-if="loading === 'loaded'">
     registro completado con éxito
-  </div>
-  <div v-else-if="signUpState.loading === 'error'">
-    Vaya! Parece que algo falló. Error: {{ signUpState.error }}
+  </div> -->
+  <div v-else-if="loading === 'error'">
+    Vaya! Parece que algo falló. Error: {{ apiError }}
   </div>
 </template>
 
@@ -254,6 +255,32 @@ const handleFileUpload = async (event) => {
   event.target.value = "";
 };
 
+// Manejo conjunto de estados.
+const loading = computed(() => {
+  if (patchAuth0UserState.value.loading === 'loading') return 'loading'
+
+  return props.isEditing ? editProfileState.value.loading : signUpState.value.loading
+})
+const apiError = computed(() => props.isEditing ? editProfileState.value.error : signUpState.value.error)
+
+// Salir del formulario
+const emit = defineEmits(['exit']);
+
+const cancel = () => {
+  emit('exit');
+};
+
+const props = defineProps({
+  isEditing: Boolean
+});
+
+// Redirección tras guardar
+watch(loading, (newValue) => {
+  if (newValue === 'loaded') {
+    window.location.reload();
+  }
+});
+
 // Tools
 // TODO: Moverlo a un composable reutilizable
 const wait = async (conditionFunc, checkInterval = 500, timeout = 5000) => {
@@ -266,17 +293,6 @@ const wait = async (conditionFunc, checkInterval = 500, timeout = 5000) => {
     await new Promise((resolve) => setTimeout(resolve, checkInterval));
   }
 };
-
-// Salir del formulario
-const emit = defineEmits(['exit']);
-
-const cancel = () => {
-  emit('exit');
-};
-
-const props = defineProps({
-  isEditing: Boolean
-});
 </script>
 
 <style scoped lang="scss">
