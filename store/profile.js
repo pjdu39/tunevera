@@ -13,6 +13,11 @@ export const useProfileStore = defineStore({
             loading: 'waiting',
             error: null
         },
+        getCheckValidNameState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
         getRecipesState: {
             data: null,
             loading: 'waiting',
@@ -40,6 +45,17 @@ export const useProfileStore = defineStore({
         },
         setEditProfileError(payload) {
             this.editProfileState.error = payload;
+        },
+
+        // Check valid name
+        setCheckValidNameData(payload) {
+            this.getCheckValidNameState.data = payload;
+        },
+        setCheckValidNameLoading(payload) {
+            this.getCheckValidNameState.loading = payload;
+        },
+        setCheckValidNameError(payload) {
+            this.getCheckValidNameState.error = payload;
         },
 
         // Recipes
@@ -90,6 +106,23 @@ export const useProfileStore = defineStore({
                 this.setEditProfileData(null);
                 this.setEditProfileLoading('error');
                 this.setEditProfileError(error.message);
+            }
+        },
+
+        async checkValidName(name) {
+            const { $fetchApi } = useNuxtApp();
+            this.setCheckValidNameLoading('loading');
+            try {
+                const data = await $fetchApi(`CheckValidName?Name=${ name }`);
+
+                this.setCheckValidNameData(data);
+                this.setCheckValidNameLoading('loaded');
+                this.setCheckValidNameError(null);
+            }
+            catch(error) {
+                this.setCheckValidNameData(null);
+                this.setCheckValidNameLoading('error');
+                this.setCheckValidNameError(error.message);
             }
         },
 

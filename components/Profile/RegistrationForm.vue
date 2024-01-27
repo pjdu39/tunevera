@@ -3,11 +3,7 @@
     <div class="section section--top">
       <div class="img-container">
         <div class="wrapper-img">
-          <NuxtImg
-            v-if="picture"
-            class="image-fit"
-            :src="picture"
-          />
+          <NuxtImg v-if="picture" class="image-fit" :src="picture" />
           <div v-else class="upload-state-container">
             <font-awesome-icon
               icon="fa fa-spinner"
@@ -30,13 +26,23 @@
     </div>
     <div class="section">
       <div class="label">Nombre de usuario *</div>
-      <input
-        class="nickname-input"
-        v-model="nickname"
-        :placeholder="user.nickname ?? ''"
-        :maxlength="nicknameMaxLenght"
-        autocomplete="off"
-      />
+      <div class="name-input-container">
+        <input
+          class="nickname-input"
+          v-model="nickname"
+          type="text"
+          :placeholder="user.nickname ?? ''"
+          :maxlength="nicknameMaxLenght"
+          autocomplete="off"
+        />
+        <font-awesome-icon
+          icon="fa fa-spinner"
+          class="fa-pulse fa-lg"
+          aria-hidden="true"
+        />
+        <div>{{ checkValidNameState.loading }}</div>
+        <div>{{ checkValidNameState.data }}</div>
+      </div>
     </div>
     <div class="section">
       <div class="label">Fecha de nacimiento *</div>
@@ -85,7 +91,7 @@ import { useProfileStore } from "~/store/profile.js";
 
 // Constantes
 const nicknameMinLenght = 3;
-const nicknameMaxLenght = 30;
+const nicknameMaxLenght = 20;
 const descriptionMaxLenght = 500;
 
 // Select de fechas
@@ -129,10 +135,10 @@ const editProfileState = computed(() => profileStore.editProfileState);
 const nickname = ref(null);
 const description = ref(null);
 const picture = computed(() => {
-  if(uploadState.value.loading === 'loaded') return uploadState.value.data
-  if(props.isEditing && props.profileInfo) return props.profileInfo.pictureUrl
-  if(user.value.picture) return user.value.picture
-  else return null
+  if (uploadState.value.loading === "loaded") return uploadState.value.data;
+  if (props.isEditing && props.profileInfo) return props.profileInfo.pictureUrl;
+  if (user.value.picture) return user.value.picture;
+  else return null;
 });
 const save = async () => {
   if (!validForm) return;
@@ -144,17 +150,15 @@ const save = async () => {
   if (!patchAuth0UserState.value.data) return;
 
   if (props.isEditing) {
-    const body = {
-    };
+    const body = {};
 
     if (nickname.value) body.nickname = nickname.value;
     if (birthDate.value) body.birthDate = birthDate.value;
     if (description.value) body.description = description.value;
     // if (description.value) body.description = description.value;
-    
-    profileStore.editProfile(body)
-  }
-  else {
+
+    profileStore.editProfile(body);
+  } else {
     const userData = {
       nickname: nickname.value,
       email: user.value.email,
@@ -222,6 +226,56 @@ const validForm = computed(() =>
     : false
 );
 
+// Validación de nombre de usuario
+const checkValidNameState = computed(() => profileStore.getCheckValidNameState);
+
+let inputTimer = null;
+let isReverting = true; // Nueva variable para controlar la reversión
+
+const checkName = () => {
+  clearTimeout(inputTimer);
+  profileStore.setCheckValidNameLoading("loading");
+  inputTimer = setTimeout(() => {
+    profileStore.checkValidName(nickname.value);
+  }, 1000);
+};
+
+
+const check = computed(() => 'valid');
+/* 
+Estados posibles:
+  true    valid
+  false   invalid
+  error   invalid
+  loading loading
+  waiting waiting
+
+En fuinción de lo anterior, calcular:
+  icon
+  class
+
+*/
+
+watch(nickname, (newVal, oldVal) => {
+  if (validInput(newVal)) {
+    if (!isReverting) { // Solo llamar a checkName si no estamos revirtiendo
+      checkName();
+    }
+  } else if (newVal !== oldVal) {
+    isReverting = true; // Indicar que estamos revirtiendo el valor
+    nickname.value = oldVal;
+    // Restablecer isReverting después de que el cambio haya sido aplicado
+    setTimeout(() => {
+      isReverting = false;
+    }, 0);
+  }
+});
+
+const validInput = (valor) => {
+  const patron = /^[a-zA-Z0-9_]*$/;
+  return patron.test(valor);
+}
+
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
 const uploadState = computed(() => blobStore.uploadState);
@@ -253,44 +307,49 @@ const handleFileUpload = async (event) => {
 
 // Manejo conjunto de estados.
 const loading = computed(() => {
-  if (patchAuth0UserState.value.loading === 'loading') return 'loading'
+  if (patchAuth0UserState.value.loading === "loading") return "loading";
 
-  return props.isEditing ? editProfileState.value.loading : signUpState.value.loading
-})
-const apiError = computed(() => props.isEditing ? editProfileState.value.error : signUpState.value.error)
+  return props.isEditing
+    ? editProfileState.value.loading
+    : signUpState.value.loading;
+});
+const apiError = computed(() =>
+  props.isEditing ? editProfileState.value.error : signUpState.value.error
+);
 
 // Salir del formulario
-const emit = defineEmits(['exit']);
+const emit = defineEmits(["exit"]);
 
 const cancel = () => {
-  emit('exit');
+  emit("exit");
 };
 
 const props = defineProps({
   isEditing: Boolean,
-  profileInfo: Object
+  profileInfo: Object,
 });
 
 // Redirección tras guardar
 watch(loading, (newValue) => {
-  if (newValue === 'loaded') {
+  if (newValue === "loaded") {
     window.location.reload();
   }
 });
 
+// Relleno inicial de campos.
 onMounted(() => {
-  nickname.value = props.profileInfo.name ?? null
+  nickname.value = props.profileInfo.name ?? null;
 
   if (props.profileInfo.birthdate) {
-    const parts = props.profileInfo.birthdate.split('/');
+    const parts = props.profileInfo.birthdate.split("/");
     if (parts.length === 3) {
       selectedDay.value = parseInt(parts[0], 10);
       selectedMonth.value = parseInt(parts[1], 10);
       selectedYear.value = parseInt(parts[2], 10);
     }
   }
-  
-  description.value = props.profileInfo.description ?? null
+
+  description.value = props.profileInfo.description ?? null;
 });
 
 // Tools
@@ -309,7 +368,7 @@ const wait = async (conditionFunc, checkInterval = 500, timeout = 5000) => {
 
 <style scoped lang="scss">
 input {
-  width: calc(100% - 180px);
+  width: calc(100% - 360px);
   margin-top: 15px;
   border: none;
   border-bottom: 1px solid $color-dark;
@@ -335,6 +394,9 @@ input[type="file"] {
 textarea {
   width: calc(100% - 180px);
   margin-top: 5px;
+  padding-left: 2px;
+  padding-bottom: 1px;
+  padding: 13px 2px 1px 2px;
   border: none;
   border-bottom: 1px solid $color-dark;
   border-radius: 0;
@@ -429,6 +491,11 @@ select:focus {
 .label {
   font-weight: 600;
   font-size: 110%;
+}
+.name-input-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
 }
 .date {
   display: flex;
