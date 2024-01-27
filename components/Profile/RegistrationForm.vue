@@ -77,8 +77,14 @@
       />
     </div>
   </div>
-  <div v-else-if="loading === 'loading'">procesando...</div>
-  <div v-else-if="loading === 'error'">
+  <div v-else-if="loading === 'loading'" class="state-container">
+    <font-awesome-icon
+      icon="fa fa-spinner"
+      class="fa-pulse fa-lg"
+      aria-hidden="true"
+    />
+  </div>
+  <div v-else-if="loading === 'error'" class="state-container">
     Vaya! Parece que algo falló. Error: {{ apiError }}
   </div>
 </template>
@@ -230,7 +236,7 @@ const validForm = computed(() =>
 const checkValidNameState = computed(() => profileStore.getCheckValidNameState);
 
 let inputTimer = null;
-const oldNickname = ref('');
+const oldNickname = ref("");
 
 const checkName = (event) => {
   const newValue = event.target.value;
@@ -284,31 +290,43 @@ const handleFileUpload = async (event) => {
 };
 
 const check = computed(() => {
-  if (checkValidNameState.value.loading === 'waiting') return 'waiting'
-  if (checkValidNameState.value.loading === 'loading') return 'loading'
-  if (checkValidNameState.value.loading === 'loaded' && !checkValidNameState.value.data) return 'invalid'
-  if (checkValidNameState.value.loading === 'loaded' && checkValidNameState.value.error) return 'invalid'
-  if (!validNickname.value) return 'invalid'
-  if (checkValidNameState.value.loading === 'loaded' && checkValidNameState.value.data) return 'valid'
-  return '';
+  if (checkValidNameState.value.loading === "waiting") return "waiting";
+  if (checkValidNameState.value.loading === "loading") return "loading";
+  if (
+    checkValidNameState.value.loading === "loaded" &&
+    !checkValidNameState.value.data
+  )
+    return "invalid";
+  if (
+    checkValidNameState.value.loading === "loaded" &&
+    checkValidNameState.value.error
+  )
+    return "invalid";
+  if (!validNickname.value) return "invalid";
+  if (
+    checkValidNameState.value.loading === "loaded" &&
+    checkValidNameState.value.data
+  )
+    return "valid";
+  return "";
 });
 
 const icon = computed(() => {
-  if(check.value === 'waiting') return null
-  if(check.value === 'loading') return 'fa fa-spinner'
-  if(check.value === 'valid') return 'fa-regular fa-circle-check'
-  if(check.value === 'invalid') return 'fa-regular fa-circle-xmark'
+  if (check.value === "waiting") return null;
+  if (check.value === "loading") return "fa fa-spinner";
+  if (check.value === "valid") return "fa-regular fa-circle-check";
+  if (check.value === "invalid") return "fa-regular fa-circle-xmark";
   return null;
 });
 const iconClass = computed(() => {
-  if(check.value === 'waiting') return ''
-  if(check.value === 'loading') return 'fa-pulse fa-lg'
-  if(check.value === 'valid') return 'fa-lg valid'
-  if(check.value === 'invalid') return 'fa-lg invalid'
-  return '';
+  if (check.value === "waiting") return "";
+  if (check.value === "loading") return "fa-pulse fa-lg";
+  if (check.value === "valid") return "fa-lg valid";
+  if (check.value === "invalid") return "fa-lg invalid";
+  return "";
 });
 
-const validationMsg = computed(() => 'Este nombre no está disponible');
+const validationMsg = computed(() => "Este nombre no está disponible");
 
 // Manejo conjunto de estados.
 const loading = computed(() => {
@@ -343,8 +361,8 @@ watch(loading, (newValue) => {
 
 // Relleno inicial de campos.
 onMounted(() => {
-  if(!props.profileInfo) return
-  
+  if (!props.profileInfo) return;
+
   nickname.value = props.profileInfo.name ?? null;
   oldNickname.value = props.profileInfo.name ?? null;
 
@@ -435,6 +453,16 @@ select:focus {
   border-bottom: 2px solid $color-dark;
 }
 
+.state-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 12rem; // Provisional
+  width: 100%;
+  font-size: 200%;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -506,7 +534,7 @@ select:focus {
   gap: 10px;
 }
 .valid {
-  color: green;
+  color: rgb(0, 192, 0);
 }
 .invalid {
   color: red;
