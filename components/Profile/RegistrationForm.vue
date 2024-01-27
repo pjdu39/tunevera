@@ -33,15 +33,15 @@
           type="text"
           :placeholder="user.nickname ?? ''"
           :maxlength="nicknameMaxLenght"
+          @input="checkName"
           autocomplete="off"
         />
         <font-awesome-icon
-          icon="fa fa-spinner"
-          class="fa-pulse fa-lg"
+          v-if="icon"
+          :icon="icon"
+          :class="iconClass"
           aria-hidden="true"
         />
-        <div>{{ checkValidNameState.loading }}</div>
-        <div>{{ checkValidNameState.data }}</div>
       </div>
     </div>
     <div class="section">
@@ -90,8 +90,8 @@ import { useLoginStore } from "~/store/login.js";
 import { useProfileStore } from "~/store/profile.js";
 
 // Constantes
-const nicknameMinLenght = 3;
-const nicknameMaxLenght = 20;
+const nicknameMinLenght = 4;
+const nicknameMaxLenght = 15;
 const descriptionMaxLenght = 500;
 
 // Select de fechas
@@ -230,51 +230,29 @@ const validForm = computed(() =>
 const checkValidNameState = computed(() => profileStore.getCheckValidNameState);
 
 let inputTimer = null;
-let isReverting = true; // Nueva variable para controlar la reversión
+const oldNickname = ref('');
 
-const checkName = () => {
-  clearTimeout(inputTimer);
-  profileStore.setCheckValidNameLoading("loading");
-  inputTimer = setTimeout(() => {
-    profileStore.checkValidName(nickname.value);
-  }, 1000);
+const checkName = (event) => {
+  const newValue = event.target.value;
+
+  if (validInput(newValue)) {
+    oldNickname.value = newValue; // Actualizar el valor antiguo si el nuevo valor es válido
+    nickname.value = newValue;
+
+    clearTimeout(inputTimer);
+    profileStore.setCheckValidNameLoading("loading");
+    inputTimer = setTimeout(() => {
+      profileStore.checkValidName(nickname.value);
+    }, 500);
+  } else {
+    nickname.value = oldNickname.value; // Revertir al valor antiguo si el nuevo valor no es válido
+  }
 };
 
-
-const check = computed(() => 'valid');
-/* 
-Estados posibles:
-  true    valid
-  false   invalid
-  error   invalid
-  loading loading
-  waiting waiting
-
-En fuinción de lo anterior, calcular:
-  icon
-  class
-
-*/
-
-watch(nickname, (newVal, oldVal) => {
-  if (validInput(newVal)) {
-    if (!isReverting) { // Solo llamar a checkName si no estamos revirtiendo
-      checkName();
-    }
-  } else if (newVal !== oldVal) {
-    isReverting = true; // Indicar que estamos revirtiendo el valor
-    nickname.value = oldVal;
-    // Restablecer isReverting después de que el cambio haya sido aplicado
-    setTimeout(() => {
-      isReverting = false;
-    }, 0);
-  }
-});
-
-const validInput = (valor) => {
+const validInput = (value) => {
   const patron = /^[a-zA-Z0-9_]*$/;
-  return patron.test(valor);
-}
+  return patron.test(value);
+};
 
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
@@ -304,6 +282,33 @@ const handleFileUpload = async (event) => {
 
   event.target.value = "";
 };
+
+const check = computed(() => {
+  if (checkValidNameState.value.loading === 'waiting') return 'waiting'
+  if (checkValidNameState.value.loading === 'loading') return 'loading'
+  if (checkValidNameState.value.loading === 'loaded' && !checkValidNameState.value.data) return 'invalid'
+  if (checkValidNameState.value.loading === 'loaded' && checkValidNameState.value.error) return 'invalid'
+  if (!validNickname.value) return 'invalid'
+  if (checkValidNameState.value.loading === 'loaded' && checkValidNameState.value.data) return 'valid'
+  return '';
+});
+
+const icon = computed(() => {
+  if(check.value === 'waiting') return null
+  if(check.value === 'loading') return 'fa fa-spinner'
+  if(check.value === 'valid') return 'fa-regular fa-circle-check'
+  if(check.value === 'invalid') return 'fa-regular fa-circle-xmark'
+  return null;
+});
+const iconClass = computed(() => {
+  if(check.value === 'waiting') return ''
+  if(check.value === 'loading') return 'fa-pulse fa-lg'
+  if(check.value === 'valid') return 'fa-lg valid'
+  if(check.value === 'invalid') return 'fa-lg invalid'
+  return '';
+});
+
+const validationMsg = computed(() => 'Este nombre no está disponible');
 
 // Manejo conjunto de estados.
 const loading = computed(() => {
@@ -338,7 +343,10 @@ watch(loading, (newValue) => {
 
 // Relleno inicial de campos.
 onMounted(() => {
+  if(!props.profileInfo) return
+  
   nickname.value = props.profileInfo.name ?? null;
+  oldNickname.value = props.profileInfo.name ?? null;
 
   if (props.profileInfo.birthdate) {
     const parts = props.profileInfo.birthdate.split("/");
@@ -368,7 +376,7 @@ const wait = async (conditionFunc, checkInterval = 500, timeout = 5000) => {
 
 <style scoped lang="scss">
 input {
-  width: calc(100% - 360px);
+  width: calc(100% - 425px);
   margin-top: 15px;
   border: none;
   border-bottom: 1px solid $color-dark;
@@ -496,6 +504,12 @@ select:focus {
   display: flex;
   align-items: flex-end;
   gap: 10px;
+}
+.valid {
+  color: green;
+}
+.invalid {
+  color: red;
 }
 .date {
   display: flex;
