@@ -17,10 +17,14 @@ const config: NuxtConfig = {
     public: {
       apiUrl: process.env.API_URL,
       env: envFile,
-      port: process.env.PORT
+      port: process.env.PORT,
+      authProviderDomain: process.env.AUTH_PROVIDER_DOMAIN,
+      authProviderClientId: process.env.AUTH_PROVIDER_CLIENT_ID,
+      authProviderRedirectUri: process.env.AUTH_PROVIDER_REDIRECT_URI,
+      authProviderAudience: process.env.AUTH_PROVIDER_AUDIENCE,
     }
   },
-  // Revisar si el contenido de "Server" está haciendo algo actualmente
+  // TODO: Revisar si el contenido de "Server" está haciendo algo actualmente
   server: {
     port: process.env.PORT || 3000,
     host: process.env.HOST || 'localhost',

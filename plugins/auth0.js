@@ -3,12 +3,14 @@ import { createAuth0 } from '@auth0/auth0-vue';
 
 export default defineNuxtPlugin((nuxtApp) => {
     if (process.client) {
+        const { authProviderDomain, authProviderClientId, authProviderRedirectUri, authProviderAudience } = useRuntimeConfig().public;
+
         nuxtApp.vueApp.use(createAuth0({
-            domain: "dev-7x0hetr3bl3hslrx.eu.auth0.com", // TODO: Usar variables de entorno
-            clientId: "8fMvHWwsTJGlfgOiyBYyVb4KjzcWISBL", // TODO: Usar variables de entorno
+            domain: authProviderDomain,
+            clientId: authProviderClientId,
             authorizationParams: {
-              redirect_uri: 'http://localhost:3000/callback',
-              audience: 'https://dev-7x0hetr3bl3hslrx.eu.auth0.com/api/v2/', // TODO: Usar variables de entorno
+              redirect_uri: authProviderRedirectUri,
+              audience: authProviderAudience,
               scope: 'openid profile email update:current_user_metadata'
             },
             onRedirectCallback: appState => {

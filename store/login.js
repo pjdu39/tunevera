@@ -62,6 +62,8 @@ export const useLoginStore = defineStore({
 
         async patchAuth0User(id, auth0UserData) {
             const { $fetchApi } = useNuxtApp();
+            const { authProviderDomain } = useRuntimeConfig().public;
+            console.log('authProviderDomain:', authProviderDomain);
 
             this.patchAuth0UserLoading('loading');
             try {
@@ -72,7 +74,7 @@ export const useLoginStore = defineStore({
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify(auth0UserData)
-                }, 'https://dev-7x0hetr3bl3hslrx.eu.auth0.com'); // TODO: Pasar a variables de entorno
+                }, `https://${authProviderDomain}`); // TODO: Pasar a variables de entorno
 
                 this.patchAuth0UserData(data);
                 this.patchAuth0UserLoading('loaded');

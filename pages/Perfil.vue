@@ -268,12 +268,15 @@ const handleExit = () => {
   width: 27px;
   //max-width: min-content;
   background-color: transparent;
-  border-radius: 3px;
+  border-radius: 5px;
   border: none;
   font-size: 140%;
 }
 .options-btn:hover {
   background-color: $color-soft-grey;
+}
+.options-btn:active {
+  background-color: transparent;
 }
 .option-icon-wrapper {
   display: flex;
