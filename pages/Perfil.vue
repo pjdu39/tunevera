@@ -133,6 +133,7 @@ const route = useRoute();
 const id = computed(() => route.query.id || null);
 
 onMounted(async () => {
+  console.log('A continuación aplico el guard')
   await guard(route.path);
   fetchProfileData();
 });
