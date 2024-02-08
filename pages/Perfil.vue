@@ -19,7 +19,11 @@
       </div>
     </div>
     <div v-else-if="profileLoading === 'loaded' && showForm">
-      <RegistrationForm :is-editing="isEditing" :profile-info="isEditing ? profile : null" @exit="handleExit" />
+      <RegistrationForm
+        :is-editing="isEditing"
+        :profile-info="isEditing ? profile : null"
+        @exit="handleExit"
+      />
     </div>
     <div v-else-if="profileLoading === 'loaded' && !showForm">
       <div class="top">
@@ -133,7 +137,6 @@ const route = useRoute();
 const id = computed(() => route.query.id || null);
 
 onMounted(async () => {
-  console.log('A continuación aplico el guard')
   await guard(route.path);
   fetchProfileData();
 });
@@ -168,7 +171,7 @@ const showOptions = ref(false);
 const clickShowOptions = () => (showOptions.value = !showOptions.value);
 
 // Manejo de propiedades que determinan si se debe mostrar el formulario de registro/edición o no.
-const isSignedUp = computed(() => profile.value.id ? true : false);
+const isSignedUp = computed(() => (profile.value.id ? true : false));
 const isEditing = ref(false);
 
 const showForm = computed(() => !isSignedUp.value || isEditing.value);
@@ -372,11 +375,12 @@ const handleExit = () => {
 .state-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 12rem; // Provisional
+  height: auto;
   width: 100%;
-  font-size: 200%;
+  font-size: 100%;
+
+  overflow-wrap: anywhere;
 }
 .loading {
 }

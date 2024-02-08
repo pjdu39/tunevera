@@ -63,7 +63,6 @@ export const useLoginStore = defineStore({
         async patchAuth0User(id, auth0UserData) {
             const { $fetchApi } = useNuxtApp();
             const { authProviderDomain } = useRuntimeConfig().public;
-            console.log('authProviderDomain:', authProviderDomain);
 
             this.patchAuth0UserLoading('loading');
             try {

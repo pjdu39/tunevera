@@ -14,16 +14,27 @@ export default defineNuxtPlugin((nuxtApp) => {
                 const url = new URL(endpoint, apiUrl);
 
                 const response = await fetch(url, { ...options, headers });
-
-                if (!response.ok) throw new Error(`La respuesta del fetch no es OK: ${response.statusText}`);
-
                 
+                let responseBody;
+
                 try {
-                    return response.json();
+                    responseBody = await response.text(); // Primero intenta leer el cuerpo como texto
+                    if (!response.ok) {
+                        throw new Error(`La respuesta del fetch no es OK: ${response.statusText} (Estado: ${response.status}). Cuerpo de la respuesta: ${responseBody}`);
+                    }
+                } catch (error) {
+                    // Manejo del error al leer el cuerpo de la respuesta
+                    throw new Error(`Error al leer el cuerpo de la respuesta: ${error}`);
                 }
-                catch(e) {
+
+                try {
+                    // Intenta parsear el texto a JSON
+                    return JSON.parse(responseBody);
+                } catch (e) {
                     console.error(e);
-                    return response;
+                    // Si hay un error al parsear, puedes decidir qué hacer aquí.
+                    // Por ejemplo, podrías lanzar un nuevo error o simplemente devolver null.
+                    throw new Error(`Error al parsear el cuerpo de la respuesta a JSON: ${e}`);
                 }
             }
         }
