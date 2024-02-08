@@ -4,12 +4,12 @@
       <button
         v-if="!alreadyFollowing"
         class="follow-box"
-        @click="follow(), (localFollow = true)"
+        @click="follow()"
       >
         <div class="notification">
           <font-awesome-icon
-            icon="far fa-bell"
-            class="fa-lg"
+            :icon="followIcon"
+            :class="followClass"
             aria-hidden="true"
           />
         </div>
@@ -84,6 +84,18 @@ const notificationsState = computed(() => {
       : props.data.follow.notifications.value;
 
   return localFollowState.value.notifications;
+});
+const followIcon = computed(() => {
+  if (followState.value.loading === 'loading') 
+    return 'fa fa-spinner'
+
+  return 'far fa-bell fa-lg'
+});
+const followClass = computed(() => {
+  if (followState.value.loading === 'loading') 
+    return 'fa-pulse'
+
+  return 'fa-lg'
 });
 const bellIcon = computed(() => {
   let n = "P";

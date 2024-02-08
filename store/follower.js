@@ -65,6 +65,10 @@ export const useFollowerStore = defineStore({
             this.localFollowState.notifications = payload
         },
 
+        localFollow(value) {
+            this.setLocalFollowingState(value);
+        },
+
         async follow(id) {
             const { $fetchApi } = useNuxtApp();
             this.setFollowLoading('loading');
