@@ -113,6 +113,11 @@ export const useFollowerStore = defineStore({
             }
         },
 
+        flush() {
+            this.setLocalFollowingState(null);
+            this.setLocalNotificationsState(null);
+        },
+
         async setNotifications(id, notifications) {
             const { $fetchApi } = useNuxtApp();
             this.setNotificationsLoading('loading');

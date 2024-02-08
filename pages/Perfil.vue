@@ -353,25 +353,7 @@ const handleExit = () => {
 
 // place-content: center; en el contenido del la pestaña en sí, es decir, en el a dentro del li
 
-/*
-.side-menu {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 17px;
-  align-items: center;
-  width: 10%;
-}
-.side-menu-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 2.7rem; // Provisional
-  width: 2.7rem; // Provisional
-  border-radius: 50%;
-  background-color: $color-primary;
-}
-*/
+
 .state-container {
   display: flex;
   flex-direction: column;

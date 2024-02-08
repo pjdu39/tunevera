@@ -224,7 +224,7 @@ const validDescription = computed(() => {
   return description.value.length <= descriptionMaxLenght ? true : false;
 });
 const validForm = computed(() =>
-  check.value === 'valid' &&
+  (check.value === 'valid' || check.value === 'waiting') &&
   validBirthDate.value &&
   validDescription.value &&
   user.value

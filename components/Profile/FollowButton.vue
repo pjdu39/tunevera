@@ -70,8 +70,9 @@ const setNotifications = (notifications) =>
 // Manejo del botón
 const showOptions = ref(false);
 const alreadyFollowing = computed(() => {
-  if (localFollowState.value.following === null)
+  if (localFollowState.value.following === null) 
     return props.data.follow.following;
+  
   return localFollowState.value.following;
 });
 const notificationsState = computed(() => {
@@ -135,6 +136,11 @@ const options = [
     },
   },
 ];
+
+// Limpia estados locales
+onUnmounted(() => {
+  store.flush();
+});
 </script>
 
 <style lang="scss" scoped>
