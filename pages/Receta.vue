@@ -409,7 +409,7 @@ textarea:focus {
   height: 6rem;
 }
 .badge--tag {
-  padding: 1px 7px 4px 7px;
+  padding: 2px 7px 4px 7px;
   line-height: 100%;
   border-radius: 5px;
   color: white;

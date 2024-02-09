@@ -124,6 +124,25 @@
         autoResize
       />
     </div>
+    <div class="section section--tags">
+      <div class="tag-input-wrapper">
+        <div class="label">Tags</div>
+        <input class="input--tag" :maxlength="tagMaxLenght" />
+        <button class="btn btn--add-tag">+</button>
+      </div>
+      <div class="selected-tags-container">
+        <div
+          class="badge--tag"
+          v-for="(tag, index) in postRecipeData.tags"
+          :key="index"
+        >
+          <div class="tag-text">#{{ tag }}</div>
+          <button class="btn btn--remove-tag">
+            <font-awesome-icon icon="fa fa-delete-left" class="" />
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="section section--ingredients">
       <div class="ing-titles-container">
         <div class="label ingredient-space">Ingredientes</div>
@@ -143,25 +162,6 @@
             autocomplete="off"
             trim
           />
-          <!-- @input="pointTo(index)" @keydown="handleKeydown" -->
-          <!--
-          <div class="">
-            <div
-              v-if="showDropdown && index === currentInput"
-              class=""
-              v-click-outside="onClickOutside"
-            >
-              <div
-                v-for="(s, i) in suggestions"
-                :key="s"
-                :class="{ highlighted: i === highlightedIndex }"
-                @click="selectSuggestion(s)"
-              >
-                {{ s }}
-              </div>
-            </div>
-          </div>
-          -->
         </div>
         <div class="amount-input-wrapper">
           <input
@@ -265,12 +265,12 @@ import { useUploadsStore } from "~/store/uploads.js";
 import { v4 as uuidv4 } from "uuid";
 import vClickOutside from "v-click-outside";
 
-
 const { guard } = useAuth();
 
 // Constantes
 const titleMaxLenght = 60;
 const descriptionMaxLenght = 450;
+const tagMaxLenght = 30;
 const maxTime = 999;
 const maxServings = 50;
 const ingredientMaxLenght = 70; // Ampliable hasta 100.
@@ -302,7 +302,9 @@ const createUUID = () => {
   return uuidv4();
 };
 const getFileExtension = (filename) => {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
+  return filename
+    .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
+    .toLowerCase();
 };
 const handleFileUpload = async (event) => {
   const originalFile = event.target.files[0];
@@ -329,12 +331,12 @@ const handleFileUpload = async (event) => {
 const postRecipeData = ref({
   title: "",
   description: "",
+  tags: ["vegie", "oriental"],
   time: 0,
   servings: 0,
   pictureUrl: uploadState.data,
   recipeIngredients: [{ text: "", amount: null, idUnit: null }],
   steps: [""],
-  tags: [],
 });
 
 // Manejo del formulario
@@ -487,14 +489,15 @@ const makeSense = (index) => {
   ).value;
 
   if (!postRecipeData.value.recipeIngredients[index]) return true;
-  if (postRecipeData.value.recipeIngredients[index].idUnit === unit) return false;
+  if (postRecipeData.value.recipeIngredients[index].idUnit === unit)
+    return false;
 
   return true;
 };
 const updateAmount = (index) => {
-    if (!makeSense(index)) {
-        postRecipeData.value.recipeIngredients[index].amount = null;
-    }
+  if (!makeSense(index)) {
+    postRecipeData.value.recipeIngredients[index].amount = null;
+  }
 };
 const validateAmount = (index) => {
   // Se maneja con una copia por temas de reactividad de vue en arrays. El método splice es reactivo.
@@ -614,45 +617,6 @@ const uploadRecipe = () => {
 
   uploadsStore.postRecipe(postRecipeData.value);
 };
-
-// Experimentos de sugerencias de ingredientes. Considerar una solución alternativa y/o borrarlo
-/*
-const suggestions = computed(() => {
-  return ingredientSuggestionsDummy
-    .map((s) => s.text)
-    .filter((s) => s.includes(currentIngSearch.value));
-});
-const pointTo = (index) => {
-  highlightedIndex.value = -1;
-  showDropdown.value = true;
-  currentInput.value = index;
-  currentIngSearch.value = postRecipeData.value.recipeIngredients[index].text;
-  // TODO: LLamada a la api
-};
-const selectSuggestion = (suggestion) => {
-  postRecipeData.value.recipeIngredients[currentInput.value].text = suggestion;
-  showDropdown.value = false;
-};
-const handleKeydown = (event) => {
-  switch (event.key) {
-    case "ArrowDown":
-      if (highlightedIndex.value < suggestions.value.length - 1) {
-        highlightedIndex.value++;
-      }
-      break;
-    case "ArrowUp":
-      if (highlightedIndex.value > 0) {
-        highlightedIndex.value--;
-      }
-      break;
-    case "Enter":
-      if (highlightedIndex.value >= 0) {
-        selectSuggestion(suggestions.value[highlightedIndex.value]);
-      }
-      break;
-  }
-};
-*/
 
 // Cosas del "clickoutside"
 const onClickOutside = (event) => {
@@ -799,6 +763,30 @@ select:focus {
 .input--title {
   font-size: 130%;
 }
+.input--tag {
+  max-width: 350px;
+}
+.selected-tags-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+.badge--tag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 7px 4px 7px;
+  line-height: 100%;
+  border-radius: 5px;
+  color: white;
+  background-color: $color-primary;
+}
+.btn--remove-tag {
+  height: 13px;
+  width: 13px;
+  margin-top: 3px;
+  line-height: 30%;
+}
 .interactive-inputs-container {
   display: flex;
 }
@@ -835,6 +823,11 @@ select:focus {
   text-align: center;
 }
 .section--description {
+}
+.section--tags {
+}
+.tag-input-wrapper {
+  min-height: 85px;
 }
 .section--ingredients {
 }
@@ -923,122 +916,7 @@ select:focus {
   }
 }
 
-/* TODO: Borrar. Legacy. ------------------------------------------------------------------------------------------*/
-.input {
-}
-.title-container {
-  width: 100%;
-}
-.time-container {
-  margin-top: 1rem;
-}
-.time-input {
-  display: inline-block;
-  text-align: center;
-  width: 3.2rem;
-  padding: 0 0.8rem 0 0.8rem;
-  margin-right: 0.25rem;
-}
-.time-btn {
-  font-size: 130%;
-  padding: 0rem;
-  margin: 0 0.3rem 0.25rem 0.3rem;
-  height: 2.1rem;
-  width: 2.1rem;
-  border-radius: 1rem;
-  color: #252b31;
-  background-color: #f2f4f5;
-  border: 1px solid rgba(249, 249, 249);
-  box-shadow: 5px 5px 3px -1px #252b310a, -4px -4px 4px -2px rgb(255, 255, 255),
-    -10px -10px 30px -80px #252b31 inset;
-}
-/* Sobreescribo la clase btn de bootstrapvue, pero solo cuando anida a mi clase.
-   Tomar de referencia para evitar sobreescribir masivamente como hice en custom.scss */
-.btn.time-btn:active {
-  color: #252b31;
-  background-color: #f2f4f5;
-  border: 1px solid rgba(249, 249, 249);
-  box-shadow: 5px 5px 2px -1px #252b310a inset,
-    -4px -4px 4px -2px rgb(255, 255, 255) inset !important;
-}
-.time-btn-content {
-  margin: -0.3rem 0 0 0;
-  font-weight: bold;
-}
-.input-title {
-  font-size: 110%;
-}
-.dropdown-container {
-  position: relative;
-}
-.dropdown-ingredients {
-  position: absolute;
-  background-color: white;
-  padding: 1rem 0 1rem 1rem;
-  width: 100%;
-  z-index: 10;
-}
-.highlighted {
-  background-color: #007bff;
-  color: white;
-}
-.base-btn {
-  padding: 0.4rem 0.5rem 0.4rem 0.4rem;
-  margin-right: 0rem;
-  margin-bottom: 1rem;
-
-  background-color: $color-primary;
-  /* TODO: Invertir los inset tratando de conseguir el mismo resultado. Con los inset simulando los bordes queda fatal al pulsar los botones */
-  box-shadow: 1px 1px 6px -3px #575757, -1px -1px 1px 0.5px #70340071 inset,
-    -1px -1px 6px 1.5px rgb(255, 255, 255),
-    0.4px 0.4px 1px 0.5px rgb(255, 216, 165) inset;
-  color: #eaedee;
-  border-radius: 0.9rem;
-  border-style: none;
-}
-.base-btn:hover {
-  color: #ffffff;
-}
-.base-btn:active {
-  color: #ffffff;
-  box-shadow: -1px -1px 6px -3px #575757, 1px 1px 1px 0.5px #70340041 inset,
-    1px 1px 6px 1.5px rgb(255, 255, 255),
-    -0.4px -0.4px 1px 0.5px rgb(255, 216, 165) inset;
-}
-.base-btn--img {
-  text-align: center;
-  width: 4rem;
-}
-.base-btn--anadir {
-  width: 2.5rem;
-}
-.base-btn--quitar {
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 2rem;
-  padding: 0.37rem 0.35rem 0.4rem 0.4rem;
-  box-shadow: 1px 1px 4px 0px #252b31;
-  color: #eaedee;
-  background-color: #d34545;
-}
-/* base-btn--aceptar es para los botones "Atrás" y "Aceptar que voy a quitar" */
-.base-btn--aceptar {
-  margin-top: 4rem;
-  width: 100%;
-}
-.subir-imagen {
-  text-align: center;
-}
-.input-container--paso {
-  width: 100%;
-}
-.textarea::-webkit-scrollbar {
-  display: none;
-}
-.spinner {
-  text-align: center;
-  font-size: 180%;
-}
+// TODO: Revisar. Esto estaba en la parte legacy pero creo que se está usando.
 .upload-state-container {
   display: flex;
   flex-direction: column;
@@ -1050,8 +928,5 @@ select:focus {
 .error {
   color: $color-primary;
   font-size: 200%; // Se acumula sobre el font-size: 200%; del contenedor
-}
-.section-box {
-  margin-bottom: 30rem;
 }
 </style>
