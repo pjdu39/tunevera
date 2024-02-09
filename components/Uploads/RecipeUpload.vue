@@ -241,8 +241,12 @@
       </div>
     </div>
     <div>
-      <button class="" @click="uploadRecipe" :disabled="!validForm">
-        <span class="">Subir</span>
+      <button
+        class="btn btn--publicar"
+        @click="uploadRecipe"
+        :disabled="!validForm"
+      >
+        Publicar
       </button>
     </div>
   </div>
@@ -804,7 +808,7 @@ select:focus {
 .btn--remove-tag {
   height: 13px;
   width: 13px;
-  margin-top: 3px;
+  margin-top: 2px;
 }
 .interactive-inputs-container {
   display: flex;
@@ -907,6 +911,10 @@ select:focus {
   flex-grow: 1;
 }
 .step-textarea {
+}
+.btn--publicar {
+  padding: 1px 8px 2px 8px;
+  border-radius: 6px;
 }
 
 @media (max-width: 850px) {
