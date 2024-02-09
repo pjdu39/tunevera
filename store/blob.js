@@ -95,5 +95,11 @@ export const useBlobStore = defineStore({
                 this.setUploadError(error.message);
             }
         },
+
+        flush() {
+            this.setUploadData(null);
+            this.setUploadLoading('waiting');
+            this.setUploadError(null);
+        },
     }
 });

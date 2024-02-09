@@ -1,259 +1,261 @@
 <template>
-  <div v-if="newRecipeState.loading === 'waiting'">
-    <div class="section section--top">
-      <div class="img-container">
-        <div class="wrapper-img">
-          <NuxtImg
-            v-if="uploadState.loading === 'waiting'"
-            class="image-fit image-empty"
-            src="https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image.svg"
-          />
-          <!-- https://www.svgrepo.com/show/4029/picture.svg -->
-          <div
-            v-else-if="uploadState.loading === 'loading'"
-            class="upload-state-container"
-          >
-            <font-awesome-icon
-              icon="fa fa-spinner"
-              class="fa-pulse fa-lg"
-              aria-hidden="true"
-            />
-          </div>
-          <NuxtImg
-            v-else-if="uploadState.loading === 'loaded'"
-            class="image-fit"
-            :src="uploadState.data"
-          />
-          <div
-            v-else-if="uploadState.loading === 'error'"
-            class="upload-state-container"
-          >
-            <font-awesome-icon
-              icon="fa fa-triangle-exclamation"
-              class="error"
-            />
-            <div>{{ uploadState.error }}</div>
-          </div>
-        </div>
-        <label class="btn btn--add-img">
-          <input type="file" @change="handleFileUpload" />
-          <span class="span--add-img">+</span>
-        </label>
-      </div>
-      <div class="right-container">
-        <div class="title-box">
-          <div class="label label--title">Título</div>
-          <input
-            v-model="postRecipeData.title"
-            class="input--title"
-            :maxlength="titleMaxLenght"
-          />
-        </div>
-        <div class="interactive-inputs-container">
-          <div class="container-fraction">
-            <div class="interactive-input-box">
-              <div class="interactive-input-box-top">
-                <font-awesome-icon
-                  icon="fa-solid fa-clock"
-                  class="fa-lg"
-                  aria-hidden="true"
-                />
-              </div>
-              <div class="interactive-input-box-bottom">
-                <button class="btn btn--i-btn" @click="sumTime(-5)">
-                  <span class="span--i-btn">-</span>
-                </button>
-                <input
-                  type="number"
-                  class="interactive-input"
-                  placeholder=""
-                  v-model="postRecipeData.time"
-                  min="0"
-                  :max="maxTime"
-                  autocomplete="off"
-                  v-click-outside="roundTime"
-                  @input="validateTime"
-                  @keydown="preventNonNumeric"
-                />
-                <!-- TODO: Bug. Pasos para reproducirlo: poner números en el input, seleccionarlo todo, pulsar cualquier letra (salvo la "e") -->
-                <button class="btn btn--i-btn" @click="sumTime(5)">
-                  <span class="span--i-btn">+</span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="container-fraction">
-            <div class="interactive-input-box">
-              <div class="interactive-input-box-top">
-                <font-awesome-icon
-                  icon="fa-solid fa-utensils"
-                  class="fa-lg"
-                  aria-hidden="true"
-                />
-              </div>
-              <div class="interactive-input-box-bottom">
-                <button class="btn btn--i-btn" @click="sumServing(-1)">
-                  <span class="span--i-btn">-</span>
-                </button>
-                <input
-                  type="number"
-                  class="interactive-input"
-                  placeholder=""
-                  v-model="postRecipeData.servings"
-                  min="0"
-                  :max="maxServings"
-                  autocomplete="off"
-                  @input="validateServings"
-                  @keydown="preventNonNumeric"
-                />
-                <button class="btn btn--i-btn" @click="sumServing(1)">
-                  <span class="span--i-btn">+</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="section section--description">
-      <div class="label">Descripción</div>
-      <Textarea
-        v-model="postRecipeData.description"
-        :maxlength="descriptionMaxLenght"
-        rows="1"
-        autoResize
-      />
-    </div>
-    <div class="section section--tags">
-      <div class="tag-input-container">
-        <div class="label">Tags</div>
-        <div class="tag-input-wrapper">
-          <input v-model="tag" class="input--tag" :maxlength="tagMaxLenght" />
-          <button
-            class="btn btn--add-tag"
-            :disabled="!canAddTag"
-            @click="addTag(tag)"
-          >
-            <span class="span--add-tag-btn">+</span>
-          </button>
-        </div>
-      </div>
-      <div class="selected-tags-container">
+  <div class="section section--top">
+    <div class="img-container">
+      <div class="wrapper-img">
+        <NuxtImg
+          v-if="uploadState.loading === 'waiting'"
+          class="image-fit image-empty"
+          src="https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image.svg"
+        />
+        <!-- https://www.svgrepo.com/show/4029/picture.svg -->
         <div
-          class="badge--tag"
-          v-for="(item, index) in postRecipeData.tags"
-          :key="index"
+          v-else-if="uploadState.loading === 'loading'"
+          class="upload-state-container"
         >
-          <div class="tag-text">#{{ item }}</div>
-          <button class="btn btn--remove-tag" @click="removeTag(index)">
-            <font-awesome-icon icon="fa fa-delete-left" class="" />
-          </button>
+          <font-awesome-icon
+            icon="fa fa-spinner"
+            class="fa-pulse fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+        <NuxtImg
+          v-else-if="uploadState.loading === 'loaded'"
+          class="image-fit"
+          :src="uploadState.data"
+        />
+        <div
+          v-else-if="uploadState.loading === 'error'"
+          class="upload-state-container"
+        >
+          <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
+          <div>{{ uploadState.error }}</div>
+        </div>
+      </div>
+      <label class="btn btn--add-img">
+        <input type="file" @change="handleFileUpload" />
+        <span class="span--add-img">+</span>
+      </label>
+    </div>
+    <div class="right-container">
+      <div class="title-box">
+        <div class="label label--title">Título</div>
+        <input
+          v-model="postRecipeData.title"
+          class="input--title"
+          :maxlength="titleMaxLenght"
+        />
+      </div>
+      <div class="interactive-inputs-container">
+        <div class="container-fraction">
+          <div class="interactive-input-box">
+            <div class="interactive-input-box-top">
+              <font-awesome-icon
+                icon="fa-solid fa-clock"
+                class="fa-lg"
+                aria-hidden="true"
+              />
+            </div>
+            <div class="interactive-input-box-bottom">
+              <button class="btn btn--i-btn" @click="sumTime(-5)">
+                <span class="span--i-btn">-</span>
+              </button>
+              <input
+                type="number"
+                class="interactive-input"
+                placeholder=""
+                v-model="postRecipeData.time"
+                min="0"
+                :max="maxTime"
+                autocomplete="off"
+                v-click-outside="roundTime"
+                @input="validateTime"
+                @keydown="preventNonNumeric"
+              />
+              <!-- TODO: Bug. Pasos para reproducirlo: poner números en el input, seleccionarlo todo, pulsar cualquier letra (salvo la "e") -->
+              <button class="btn btn--i-btn" @click="sumTime(5)">
+                <span class="span--i-btn">+</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="container-fraction">
+          <div class="interactive-input-box">
+            <div class="interactive-input-box-top">
+              <font-awesome-icon
+                icon="fa-solid fa-utensils"
+                class="fa-lg"
+                aria-hidden="true"
+              />
+            </div>
+            <div class="interactive-input-box-bottom">
+              <button class="btn btn--i-btn" @click="sumServing(-1)">
+                <span class="span--i-btn">-</span>
+              </button>
+              <input
+                type="number"
+                class="interactive-input"
+                placeholder=""
+                v-model="postRecipeData.servings"
+                min="0"
+                :max="maxServings"
+                autocomplete="off"
+                @input="validateServings"
+                @keydown="preventNonNumeric"
+              />
+              <button class="btn btn--i-btn" @click="sumServing(1)">
+                <span class="span--i-btn">+</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="section section--ingredients">
-      <div class="ing-titles-container">
-        <div class="label ingredient-space">Ingredientes</div>
-        <div class="label amount-space">Cantidad</div>
-        <div class="label units-space">Unidades</div>
-      </div>
-      <div
-        v-for="(recipeIngredient, index) in postRecipeData.recipeIngredients"
-        :key="index"
-        class="ing-inputs-container"
-      >
-        <div class="ingredient-input-wrapper">
-          <input
-            class="shorted-input"
-            v-model="recipeIngredient.text"
-            :maxlength="ingredientMaxLenght"
-            autocomplete="off"
-            trim
-          />
-        </div>
-        <div class="amount-input-wrapper">
-          <input
-            class="shorted-input"
-            type="number"
-            v-model.number="recipeIngredient.amount"
-            :max="maxAmount"
-            :disabled="!makeSense(index)"
-            @input="validateAmount(index)"
-            @keydown="preventNonDecimal"
-          />
-        </div>
-        <div class="units-input-wrapper">
-          <BFormSelect
-            class="shorted-input"
-            v-model="recipeIngredient.idUnit"
-            :options="getUnitsState.data"
-            @change="updateAmount(index)"
-          ></BFormSelect>
-        </div>
-        <div class="delete-button-wrapper">
-          <button
-            class="btn btn--delete"
-            @click="deleteIngredient(recipeIngredient)"
-          >
-            <span class="span--btn-delete">
-              <font-awesome-icon icon="fa fa-trash-can" aria-hidden="true" />
-            </span>
-          </button>
-        </div>
-      </div>
-      <button
-        class="btn btn--i-btn"
-        @click="addIngredient()"
-        :disabled="!canAddIngredient"
-      >
-        <span class="span--i-btn">+</span>
-      </button>
-    </div>
-    <div class="section section--steps">
-      <div class="label">Pasos</div>
-      <div
-        class="step-input-container"
-        v-for="(step, index) in postRecipeData.steps"
-        :key="index"
-      >
-        <div class="step-textarea-wrapper">
-          <Textarea
-            class="shorted-input"
-            maxlength="430"
-            rows="1"
-            autoResize
-            v-model="postRecipeData.steps[index]"
-            trim
-          ></Textarea>
-        </div>
-        <div class="delete-button-wrapper">
-          <button class="btn btn--delete" @click="deleteStep(step)">
-            <span class="span--btn-delete">
-              <font-awesome-icon icon="fa fa-trash-can" aria-hidden="true" />
-            </span>
-          </button>
-        </div>
-      </div>
-      <div>
+  </div>
+  <div class="section section--description">
+    <div class="label">Descripción</div>
+    <Textarea
+      v-model="postRecipeData.description"
+      :maxlength="descriptionMaxLenght"
+      rows="1"
+      autoResize
+    />
+  </div>
+  <div class="section section--tags">
+    <div class="tag-input-container">
+      <div class="label">Tags</div>
+      <div class="tag-input-wrapper">
+        <input v-model="tag" class="input--tag" :maxlength="tagMaxLenght" />
         <button
-          class="btn btn--i-btn"
-          @click="addStep()"
-          :disabled="!canAddStep"
+          class="btn btn--add-tag"
+          :disabled="!canAddTag"
+          @click="addTag(tag)"
         >
-          <span class="span--i-btn">+</span>
+          <span class="span--add-tag-btn">+</span>
+        </button>
+      </div>
+    </div>
+    <div class="selected-tags-container">
+      <div
+        class="badge--tag"
+        v-for="(item, index) in postRecipeData.tags"
+        :key="index"
+      >
+        <div class="tag-text">#{{ item }}</div>
+        <button class="btn btn--remove-tag" @click="removeTag(index)">
+          <font-awesome-icon icon="fa fa-delete-left" class="" />
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="section section--ingredients">
+    <div class="ing-titles-container">
+      <div class="label ingredient-space">Ingredientes</div>
+      <div class="label amount-space">Cantidad</div>
+      <div class="label units-space">Unidades</div>
+    </div>
+    <div
+      v-for="(recipeIngredient, index) in postRecipeData.recipeIngredients"
+      :key="index"
+      class="ing-inputs-container"
+    >
+      <div class="ingredient-input-wrapper">
+        <input
+          class="shorted-input"
+          v-model="recipeIngredient.text"
+          :maxlength="ingredientMaxLenght"
+          autocomplete="off"
+          trim
+        />
+      </div>
+      <div class="amount-input-wrapper">
+        <input
+          class="shorted-input"
+          type="number"
+          v-model.number="recipeIngredient.amount"
+          :max="maxAmount"
+          :disabled="!makeSense(index)"
+          @input="validateAmount(index)"
+          @keydown="preventNonDecimal"
+        />
+      </div>
+      <div class="units-input-wrapper">
+        <BFormSelect
+          class="shorted-input"
+          v-model="recipeIngredient.idUnit"
+          :options="getUnitsState.data"
+          @change="updateAmount(index)"
+        ></BFormSelect>
+      </div>
+      <div class="delete-button-wrapper">
+        <button
+          class="btn btn--delete"
+          @click="deleteIngredient(recipeIngredient)"
+        >
+          <span class="span--btn-delete">
+            <font-awesome-icon icon="fa fa-trash-can" aria-hidden="true" />
+          </span>
+        </button>
+      </div>
+    </div>
+    <button
+      class="btn btn--i-btn"
+      @click="addIngredient()"
+      :disabled="!canAddIngredient"
+    >
+      <span class="span--i-btn">+</span>
+    </button>
+  </div>
+  <div class="section section--steps">
+    <div class="label">Pasos</div>
+    <div
+      class="step-input-container"
+      v-for="(step, index) in postRecipeData.steps"
+      :key="index"
+    >
+      <div class="step-textarea-wrapper">
+        <Textarea
+          class="shorted-input"
+          maxlength="430"
+          rows="1"
+          autoResize
+          v-model="postRecipeData.steps[index]"
+          trim
+        ></Textarea>
+      </div>
+      <div class="delete-button-wrapper">
+        <button class="btn btn--delete" @click="deleteStep(step)">
+          <span class="span--btn-delete">
+            <font-awesome-icon icon="fa fa-trash-can" aria-hidden="true" />
+          </span>
         </button>
       </div>
     </div>
     <div>
-      <button
-        class="btn btn--publicar"
-        @click="uploadRecipe"
-        :disabled="!validForm"
-      >
-        Publicar
+      <button class="btn btn--i-btn" @click="addStep()" :disabled="!canAddStep">
+        <span class="span--i-btn">+</span>
       </button>
     </div>
   </div>
+  <div>
+    <button
+      class="btn btn--publicar"
+      @click="uploadRecipe"
+      :disabled="!validForm"
+    >
+      <span>Publicar</span>
+      <font-awesome-icon
+        v-if="newRecipeState.loading === 'loading'"
+        icon="fa fa-spinner"
+        class="fa-pulse fa-lg"
+        aria-hidden="true"
+      />
+    </button>
+  </div>
+  <div v-if="newRecipeState.loading === 'error'">
+    <div>Mostrar este mensaje a Pablo.</div>
+    <div>Ups, parece que algo falló. {{ newRecipeState.error }}</div>
+  </div>
+  <!--
   <div v-else-if="newRecipeState.loading === 'loading'" class="spinner">
     <font-awesome-icon
       icon="fa fa-spinner"
@@ -266,8 +268,9 @@
   </div>
   <div v-else-if="newRecipeState.loading === 'error'">
     Ups, parece que algo falló. {{ newRecipeState.error }}
-    <BButton>Reintentar</BButton>
+    <button>Reintentar</button>
   </div>
+  -->
 </template>
 
 <script setup>
@@ -346,7 +349,7 @@ const postRecipeData = ref({
   tags: [],
   time: 0,
   servings: 0,
-  pictureUrl: uploadState.data,
+  pictureUrl: null,
   recipeIngredients: [{ text: "", amount: null, idUnit: null }],
   steps: [""],
 });
@@ -650,6 +653,23 @@ const uploadRecipe = () => {
 
   uploadsStore.postRecipe(postRecipeData.value);
 };
+// Redirección tras guardar
+const router = useRouter();
+watch(
+  () => newRecipeState.value.loading,
+  (newValue) => {
+    console.log(newValue);
+    if (newValue === "loaded") {
+      console.log(newRecipeState.value.data);
+      router.push(`/receta?id=${newRecipeState.value.data}`);
+    }
+  }
+);
+
+// Desmontaje
+onUnmounted(() => {
+  blobStore.flush();
+});
 
 // Cosas del "clickoutside"
 const onClickOutside = (event) => {
@@ -938,6 +958,8 @@ select:focus {
 .step-textarea {
 }
 .btn--publicar {
+  display: flex;
+  gap: 10px;
   padding: 1px 8px 2px 8px;
   border-radius: 6px;
 }

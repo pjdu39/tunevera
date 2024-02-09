@@ -141,7 +141,12 @@ const editProfileState = computed(() => profileStore.editProfileState);
 const nickname = ref(null);
 const description = ref(null);
 const picture = computed(() => {
-  if (uploadState.value.loading === "loaded") return uploadState.value.data;
+  if (uploadState.value.loading === "loading") return null;
+  if (uploadState.value.loading === "loaded") {
+    const timestamp = new Date().getTime();
+    let url = `${uploadState.value.data}?v=${timestamp}`;
+    return url;
+  }
   if (props.isEditing && props.profileInfo) return props.profileInfo.pictureUrl;
   if (user.value.picture) return user.value.picture;
   else return null;
@@ -224,7 +229,7 @@ const validDescription = computed(() => {
   return description.value.length <= descriptionMaxLenght ? true : false;
 });
 const validForm = computed(() =>
-  (check.value === 'valid' || check.value === 'waiting') &&
+  (check.value === "valid" || check.value === "waiting") &&
   validBirthDate.value &&
   validDescription.value &&
   user.value
@@ -268,6 +273,7 @@ const getFileExtension = (filename) => {
     .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
     .toLowerCase();
 };
+const imageUpdateIndicator = ref(0); // Esto es para solicitar la imagen de nuevo al servidor, ya que su url no cambia.
 const handleFileUpload = async (event) => {
   const originalFile = event.target.files[0];
   if (!originalFile) {
@@ -287,6 +293,9 @@ const handleFileUpload = async (event) => {
   await blobStore.uploadFileAndGetUrl(newFile);
 
   event.target.value = "";
+
+  // Actualiza el indicador después de subir el archivo
+  imageUpdateIndicator.value = new Date().getTime();
 };
 
 const check = computed(() => {
@@ -376,6 +385,12 @@ onMounted(() => {
   }
 
   description.value = props.profileInfo.description ?? null;
+});
+
+// Desmontaje
+onUnmounted(() => {
+  profileStore.fetchProfileInfo(props.profileInfo.id);
+  blobStore.flush();
 });
 
 // Tools
