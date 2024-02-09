@@ -125,10 +125,14 @@
       />
     </div>
     <div class="section section--tags">
-      <div class="tag-input-wrapper">
+      <div class="tag-input-container">
         <div class="label">Tags</div>
-        <input class="input--tag" :maxlength="tagMaxLenght" />
-        <button class="btn btn--add-tag">+</button>
+        <div class="tag-input-wrapper">
+          <input class="input--tag" :maxlength="tagMaxLenght" />
+          <button class="btn btn--add-tag">
+            <span class="span--add-tag-btn">+</span>
+          </button>
+        </div>
       </div>
       <div class="selected-tags-container">
         <div
@@ -763,8 +767,23 @@ select:focus {
 .input--title {
   font-size: 130%;
 }
+.tag-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 .input--tag {
   max-width: 350px;
+}
+.span--add-tag-btn {
+  transform: translateY(-16%);
+}
+.btn--add-tag {
+  width: 30px;
+  height: 30px;
+  line-height: 20px; /* Ajusta a la altura del botón. Depende del transform del span para que el texto lo aplique. */
+  font-size: 150%;
+  font-weight: bold;
 }
 .selected-tags-container {
   display: flex;
@@ -780,12 +799,12 @@ select:focus {
   border-radius: 5px;
   color: white;
   background-color: $color-primary;
+  font-weight: bold;
 }
 .btn--remove-tag {
   height: 13px;
   width: 13px;
   margin-top: 3px;
-  line-height: 30%;
 }
 .interactive-inputs-container {
   display: flex;
@@ -826,7 +845,7 @@ select:focus {
 }
 .section--tags {
 }
-.tag-input-wrapper {
+.tag-input-container {
   min-height: 85px;
 }
 .section--ingredients {
