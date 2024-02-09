@@ -129,7 +129,11 @@
         <div class="label">Tags</div>
         <div class="tag-input-wrapper">
           <input v-model="tag" class="input--tag" :maxlength="tagMaxLenght" />
-          <button class="btn btn--add-tag" :disabled="!canAddTag" @click="addTag(tag)">
+          <button
+            class="btn btn--add-tag"
+            :disabled="!canAddTag"
+            @click="addTag(tag)"
+          >
             <span class="span--add-tag-btn">+</span>
           </button>
         </div>
@@ -339,7 +343,7 @@ const handleFileUpload = async (event) => {
 const postRecipeData = ref({
   title: "",
   description: "",
-  tags: ["vegie", "oriental"],
+  tags: [],
   time: 0,
   servings: 0,
   pictureUrl: uploadState.data,
@@ -497,11 +501,10 @@ const canAddTag = computed(() => {
   if (postRecipeData.value.tags.length >= 5) return false;
 
   return true;
-})
+});
 const addTag = (item) => {
   if (item === null) return;
-
-  // Validar que no exista uno igual en el array. TODO: incluir esta validación en la api también.
+  if (postRecipeData.value.tags.includes(item)) return;
 
   postRecipeData.value.tags.push(item);
 

@@ -88,11 +88,13 @@
         </div>
       </div>
       <div class="tags-section">
-        <div class="badge--tag">#vegano</div>
-        <div class="badge--tag">#sinLactosa</div>
-        <div class="badge--tag">#glutenFree</div>
-        <div class="badge--tag">#pollo</div>
-        <div class="badge--tag">#verduras</div>
+        <div
+          class="badge--tag"
+          v-for="(item, index) in recipeData.tags"
+          :key="index"
+        >
+          #{{ item }}
+        </div>
       </div>
       <div class="middle-section">
         <div class="ingredients-container">
@@ -242,11 +244,12 @@ onMounted(() => {
 });
 
 const veggie = computed(() => {
-  if(!recipeData.value.ingredients) return ""
+  if (!recipeData.value.ingredients) return "";
 
-  if(!recipeData.value.ingredients.some(x => !x.vegan)) return "Vegano"
-  if(!recipeData.value.ingredients.some(x => !x.vegetarian)) return "Vegetariano"
-  return ""
+  if (!recipeData.value.ingredients.some((x) => !x.vegan)) return "Vegano";
+  if (!recipeData.value.ingredients.some((x) => !x.vegetarian))
+    return "Vegetariano";
+  return "";
 });
 </script>
   
@@ -418,6 +421,7 @@ textarea:focus {
 .middle-section {
   display: flex;
   width: 100%;
+  margin-top: 40px;
 }
 .ingredients-container {
   height: fit-content;
