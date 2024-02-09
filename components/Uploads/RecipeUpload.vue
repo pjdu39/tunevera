@@ -128,8 +128,8 @@
       <div class="tag-input-container">
         <div class="label">Tags</div>
         <div class="tag-input-wrapper">
-          <input class="input--tag" :maxlength="tagMaxLenght" />
-          <button class="btn btn--add-tag">
+          <input v-model="tag" class="input--tag" :maxlength="tagMaxLenght" />
+          <button class="btn btn--add-tag" :disabled="!canAddTag" @click="addTag(tag)">
             <span class="span--add-tag-btn">+</span>
           </button>
         </div>
@@ -137,11 +137,11 @@
       <div class="selected-tags-container">
         <div
           class="badge--tag"
-          v-for="(tag, index) in postRecipeData.tags"
+          v-for="(item, index) in postRecipeData.tags"
           :key="index"
         >
-          <div class="tag-text">#{{ tag }}</div>
-          <button class="btn btn--remove-tag">
+          <div class="tag-text">#{{ item }}</div>
+          <button class="btn btn--remove-tag" @click="removeTag(index)">
             <font-awesome-icon icon="fa fa-delete-left" class="" />
           </button>
         </div>
@@ -489,6 +489,28 @@ const validateServings = () => {
 
   if (postRecipeData.value.servings < 0) postRecipeData.value.servings = 0;
 };
+
+// Tags
+const tag = ref(null);
+const canAddTag = computed(() => {
+  if (!tag.value) return false;
+  if (postRecipeData.value.tags.length >= 5) return false;
+
+  return true;
+})
+const addTag = (item) => {
+  if (item === null) return;
+
+  // Validar que no exista uno igual en el array. TODO: incluir esta validación en la api también.
+
+  postRecipeData.value.tags.push(item);
+
+  tag.value = null;
+};
+const removeTag = (index) => {
+  if (index !== -1) postRecipeData.value.tags.splice(index, 1);
+};
+
 // Amount
 const makeSense = (index) => {
   if (!getUnitsState.value.data) return true;
