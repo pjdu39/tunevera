@@ -5,7 +5,7 @@
         <NuxtImg
           v-if="uploadState.loading === 'waiting'"
           class="image-fit image-empty"
-          src="https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image.svg"
+          src="https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image.png"
         />
         <!-- https://www.svgrepo.com/show/4029/picture.svg -->
         <div

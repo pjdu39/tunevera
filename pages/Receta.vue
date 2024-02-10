@@ -173,7 +173,7 @@
 </template>
   
 <script setup>
-import { useRecipeStore } from "~/store/recipe.js";
+import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
 
 // Acceso al store
 const store = useRecipeStore();
@@ -215,7 +215,6 @@ const cumputedLikeClass = computed(() => {
 // Manejo de comentarios
 const comment = ref(null);
 const fetchCommentsState = computed(() => store.fetchCommentsState);
-// const postCommentState = computed(() => store.postCommentState);
 const showSendComment = ref(false);
 const canSend = computed(() => comment.value ?? null);
 const cancelComment = () => {
@@ -267,10 +266,8 @@ textarea:focus {
   border: none;
   outline: none !important;
   box-shadow: none;
-  /*
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
-  */
   border-bottom: 3px solid $color-dark;
 }
 .recipe {
