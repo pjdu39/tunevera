@@ -1,29 +1,31 @@
 <template>
-  <div class="discussion-post">
-    <div class="post-info">
-      <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
-        por <b>{{ postData.userName }}</b>
-      </NuxtLink>
-      <h4 class="title">{{ postData.title }}</h4>
-      <div class="description">{{ postData.description }}</div>
-      <div class="bottom-info">
-        <div class="interactions">
-          <div class="interaction-container">
-            <div class="interaction-icon">
-              <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
+  <NuxtLink class="discussion-post" :to="`/foro?id=${postData.id}`">
+    <div class="">
+      <div class="post-info">
+        <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
+          por <b>{{ postData.userName }}</b>
+        </NuxtLink>
+        <h4 class="title">{{ postData.title }}</h4>
+        <div class="description">{{ postData.description }}</div>
+        <div class="bottom-info">
+          <div class="interactions">
+            <div class="interaction-container">
+              <div class="interaction-icon">
+                <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
+              </div>
+              <div class="num-likes">{{ postData.likes }}</div>
             </div>
-            <div class="num-likes">{{ postData.likes }}</div>
-          </div>
-          <div class="interaction-container">
-            <div class="interaction-icon">
-              <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
+            <div class="interaction-container">
+              <div class="interaction-icon">
+                <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
+              </div>
+              <!--<div class="num-comments">{{ postData.comentarios.length }}</div>-->
             </div>
-            <!--<div class="num-comments">{{ postData.comentarios.length }}</div>-->
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </NuxtLink>
 </template>
   
   <script setup>

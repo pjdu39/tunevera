@@ -19,50 +19,70 @@
         <div>Error hardcodeado</div>
       </div>
     </div>
-
-    <div class="post">
-      <div class="signature">
-        <div class="signature-img">
-          {{ getSubjectState.data.user.pictureUrl }}
-        </div>
-        <div class="signature-name">{{ getSubjectState.data.user.name }}</div>
-      </div>
-      <div class="title">{{ getSubjectState.data.title }}</div>
-      <div class="content">{{ getSubjectState.data.description }}</div>
-    </div>
-
-    <div class="comments-section">
-      <!-- TODO: Redireccionar (o similar) al intentar comentar sin estar logeado. -->
-      <Textarea
-        v-model="comment"
-        class="add-comment-txt-area"
-        placeholder="Añade un comentario..."
-        autoResize
-        rows="1"
-        @focus="showSendComment = true"
-      />
-      <div v-if="showSendComment" class="send-comment-container">
-        <button class="cancel-comment" @click="cancelComment">Cancelar</button>
-        <button class="send-comment" :disabled="!canSend" @click="sendComment">
-          Enviar
-        </button>
-      </div>
-      <div v-else class="comment-space"></div>
-      <div class="title-comments">Comentarios</div>
-      <div
-        v-for="(cmt, index) in fetchCommentsState.data"
-        :key="index"
-        class="comments-box"
-      >
-        <div class="comment-container">
-          <NuxtLink class="comment-signature" :to="`/perfil?id=${cmt.user.id}`">
-            <div class="c-sign-img-wrapper">
-              <NuxtImg :src="cmt.user.pictureUrl" class="image-fit" />
+    <div v-else-if="getSubjectState.loading === 'loaded'">
+      <div class="post">
+        <div class="signature-container">
+          <NuxtLink
+            :to="`/perfil?id=${getSubjectState.data.user.id}`"
+            class="signature"
+          >
+            <div class="sign-img-wrapper">
+              <NuxtImg
+                :src="getSubjectState.data.user.pictureUrl"
+                class="image-fit"
+              />
             </div>
-            <div class="c-sign-name">@{{ cmt.user.name }}</div>
+            <div class="signature-name">
+              <b>@{{ getSubjectState.data.user.name }}</b>
+            </div>
           </NuxtLink>
-          <div class="comment">
-            {{ cmt.text }}
+        </div>
+        <div class="title">{{ getSubjectState.data.title }}</div>
+        <div class="content">{{ getSubjectState.data.description }}</div>
+      </div>
+
+      <div class="comments-section">
+        <!-- TODO: Redireccionar (o similar) al intentar comentar sin estar logeado. -->
+        <Textarea
+          v-model="comment"
+          class="add-comment-txt-area"
+          placeholder="Añade un comentario..."
+          autoResize
+          rows="1"
+          @focus="showSendComment = true"
+        />
+        <div v-if="showSendComment" class="send-comment-container">
+          <button class="cancel-comment" @click="cancelComment">
+            Cancelar
+          </button>
+          <button
+            class="send-comment"
+            :disabled="!canSend"
+            @click="sendComment"
+          >
+            Enviar
+          </button>
+        </div>
+        <div v-else class="comment-space"></div>
+        <div class="title-comments">Comentarios</div>
+        <div
+          v-for="(cmt, index) in fetchCommentsState.data"
+          :key="index"
+          class="comments-box"
+        >
+          <div class="comment-container">
+            <NuxtLink
+              class="comment-signature"
+              :to="`/perfil?id=${cmt.user.id}`"
+            >
+              <div class="c-sign-img-wrapper">
+                <NuxtImg :src="cmt.user.pictureUrl" class="image-fit" />
+              </div>
+              <div class="c-sign-name">@{{ cmt.user.name }}</div>
+            </NuxtLink>
+            <div class="comment">
+              {{ cmt.text }}
+            </div>
           </div>
         </div>
       </div>
@@ -72,7 +92,8 @@
 
 <script setup>
 import { useSubjectStore } from "~/store/subject.js";
-import { useCommentStore } from "~/store/recipe.js";
+import { useCommentStore } from "~/store/comment.js";
+import Signature from "~/components/Post/Signature.vue";
 
 // Acceso al store
 const subjectStore = useSubjectStore();
@@ -80,6 +101,7 @@ const commentStore = useCommentStore();
 
 // Manejo de la publicación
 const getSubjectState = computed(() => subjectStore.getSubjectState);
+const subjectData = computed(() => getSubjectState.value.data);
 
 // Manejo de comentarios
 const comment = ref(null);
@@ -91,7 +113,7 @@ const cancelComment = () => {
   comment.value = null;
 };
 const sendComment = () => {
-    commentStore.comment(id, comment.value);
+  commentStore.comment(id, comment.value);
   cancelComment();
 };
 
@@ -103,7 +125,7 @@ const fetchSubject = () => {
   subjectStore.fetchSubject(id);
 };
 const fetchComments = () => {
-    commentStore.fetchComments(id, 10);
+  commentStore.fetchComments(id, 10);
 };
 
 onMounted(() => {
@@ -133,14 +155,58 @@ textarea:focus {
 
 .container {
   margin: auto;
-  width: 65rem;
+  width: 51rem;
 }
 .post {
-  border: 3px solid $color-dark;
-  border-radius: 3px;
+  margin: auto;
+  padding: 7px 12px;
+  border: 2px solid $color-dark;
+  border-radius: 5px;
+}
+.signature-container {
+  height: 60px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-grow: 1;
+  margin-bottom: 15px;
 }
 .signature {
+  position: absolute;
   display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: left;
+  font-style: italic;
+}
+.signature:hover {
+  text-decoration: underline;
+}
+.signature-name {
+  margin-right: 7px;
+}
+.sign-img-wrapper {
+  position: relative;
+  max-height: 50px;
+  min-height: 48px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.image-fit {
+  /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper, no la clase de la imagen en sí. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.title {
+  font-size: 120%;
+  font-style: italic;
+  margin-bottom: 30px;
 }
 .comments-section {
   width: 100%;
