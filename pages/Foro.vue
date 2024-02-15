@@ -16,7 +16,7 @@
     <div v-if="getSubjectState.loading === 'error'">
       <div class="state-container">
         <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
-        <div>Error hardcodeado</div>
+        <div>Error hardcodeado en cliente</div>
       </div>
     </div>
     <div v-else-if="getSubjectState.loading === 'loaded'">
@@ -42,29 +42,34 @@
       </div>
 
       <div class="comments-section">
-        <!-- TODO: Redireccionar (o similar) al intentar comentar sin estar logeado. -->
-        <Textarea
-          v-model="comment"
-          class="add-comment-txt-area"
-          placeholder="Añade un comentario..."
-          autoResize
-          rows="1"
-          @focus="showSendComment = true"
-        />
-        <div v-if="showSendComment" class="send-comment-container">
-          <button class="cancel-comment" @click="cancelComment">
-            Cancelar
-          </button>
-          <button
-            class="send-comment"
-            :disabled="!canSend"
-            @click="sendComment"
-          >
-            Enviar
-          </button>
+        <div class="send-comment-container">
+          <div class="label-comment">Responder</div>
+
+          <!-- TODO: Redireccionar (o similar) al intentar comentar sin estar logeado. -->
+          <Textarea
+            v-model="comment"
+            class="add-comment-txt-area"
+            placeholder="Añade una respuesta..."
+            autoResize
+            rows="1"
+            @focus="showSendComment = true"
+          />
+
+          <div v-if="showSendComment" class="send-comment-buttons-container">
+            <button class="cancel-comment" @click="cancelComment">
+              Cancelar
+            </button>
+            <button
+              class="send-comment"
+              :disabled="!canSend"
+              @click="sendComment"
+            >
+              Enviar
+            </button>
+          </div>
+          <div v-else class="comment-space"></div>
+          <div class="blur"></div>
         </div>
-        <div v-else class="comment-space"></div>
-        <div class="title-comments">Comentarios</div>
         <div
           v-for="(cmt, index) in fetchCommentsState.data"
           :key="index"
@@ -93,7 +98,6 @@
 <script setup>
 import { useSubjectStore } from "~/store/subject.js";
 import { useCommentStore } from "~/store/comment.js";
-import Signature from "~/components/Post/Signature.vue";
 
 // Acceso al store
 const subjectStore = useSubjectStore();
@@ -159,7 +163,7 @@ textarea:focus {
 }
 .post {
   margin: auto;
-  padding: 7px 12px;
+  padding: 30px 20px 40px 20px;
   border: 2px solid $color-dark;
   border-radius: 5px;
 }
@@ -209,24 +213,43 @@ textarea:focus {
   margin-bottom: 30px;
 }
 .comments-section {
+  position: relative;
   width: 100%;
 }
+.send-comment-container {
+  position: sticky;
+  top: 30px;
+  margin-bottom: 50px;
+  background-color: $color-background;
+  z-index: 10;
+}
+.blur {
+  height: 50px; /* Altura del efecto de desvanecimiento */
+  width: 100%;
+  background-image: linear-gradient(
+    to bottom,
+    $color-background,
+    rgba($color-background, 0)
+  );
+  position: absolute;
+  left: 0;
+}
 .add-comment-txt-area {
-  width: 90%;
-  margin-top: 4rem;
+  width: 95%;
+  margin-top: 25px;
   border: none;
   border-bottom: 1px solid $color-dark;
   border-radius: 0;
   background-color: $color-background;
 }
-.send-comment-container {
+.send-comment-buttons-container {
   display: flex;
   justify-content: flex-end;
-  padding: 5px 0;
+  padding: 5px 0 10px 0;
   min-height: 40px;
 }
 .send-comment {
-  margin-right: 10%;
+  margin-right: 5%;
   padding: 5px 14px;
   background-color: $color-primary;
   color: white;
@@ -249,17 +272,17 @@ textarea:focus {
   */
 }
 .comment-space {
-  min-height: 45px;
+  min-height: 49px;
 }
-.title-comments {
-  margin-top: 30px;
-  font-size: 150%;
+.label-comment {
+  padding-top: 40px;
+  font-size: 140%;
 }
 .comment-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 .comment-signature {
   position: absolute;
@@ -281,11 +304,11 @@ textarea:focus {
   margin-right: 10px;
 }
 .c-sign-name {
-  font-size: 80%;
+  font-size: 90%;
   font-weight: bold;
 }
 .comment {
-  font-size: 90%;
+  font-size: 100%;
   margin: 37px 0 0 45px;
 }
 </style>
