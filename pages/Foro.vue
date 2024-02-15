@@ -163,7 +163,7 @@ textarea:focus {
 }
 .post {
   margin: auto;
-  padding: 30px 20px 40px 20px;
+  padding: 20px 20px 35px 20px;
   border: 2px solid $color-dark;
   border-radius: 5px;
 }
