@@ -335,7 +335,7 @@ const iconClass = computed(() => {
   return "";
 });
 
-const validationMsg = computed(() => "Este nombre no está disponible");
+const validationMsg = computed(() => "Este nombre no está disponible"); // TODO: Terminar esto.
 
 // Manejo conjunto de estados.
 const loading = computed(() => {

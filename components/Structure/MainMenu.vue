@@ -7,7 +7,7 @@
             <font-awesome-icon icon="fa fa-home" aria-hidden="true" /> INICIO
           </div>
         </nuxt-link>
-        <nuxt-link to="/Explorar" class="option">
+        <nuxt-link to="/Buscar" class="option">
           <div>
             <font-awesome-icon icon="fa fa-search" aria-hidden="true" />
             BUSCAR
