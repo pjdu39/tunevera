@@ -71,7 +71,6 @@ const props = defineProps({
   border: solid 2px $color-dark;
   border-radius: 5px;
   overflow: hidden;
-  margin-bottom: 3rem;
 }
 .img-wrapper {
   position: relative;

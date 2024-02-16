@@ -1,27 +1,23 @@
 <template>
   <NuxtLink class="discussion-post" :to="`/foro?id=${postData.id}`">
-    <div class="">
-      <div class="post-info">
-        <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
-          por <b>{{ postData.userName }}</b>
-        </NuxtLink>
-        <h4 class="title">{{ postData.title }}</h4>
-        <div class="description">{{ postData.description }}</div>
-        <div class="bottom-info">
-          <div class="interactions">
-            <div class="interaction-container">
-              <div class="interaction-icon">
-                <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
-              </div>
-              <div class="num-likes">{{ postData.likes }}</div>
-            </div>
-            <div class="interaction-container">
-              <div class="interaction-icon">
-                <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
-              </div>
-              <!--<div class="num-comments">{{ postData.comentarios.length }}</div>-->
-            </div>
+    <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
+      por <b>{{ postData.userName }}</b>
+    </NuxtLink>
+    <h4 class="title">{{ postData.title }}</h4>
+    <div class="description">{{ postData.description }}</div>
+    <div class="bottom-info">
+      <div class="interactions">
+        <div class="interaction-container">
+          <div class="interaction-icon">
+            <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
           </div>
+          <div class="num-likes">{{ postData.likes }}</div>
+        </div>
+        <div class="interaction-container">
+          <div class="interaction-icon">
+            <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
+          </div>
+          <!--<div class="num-comments">{{ postData.comentarios.length }}</div>-->
         </div>
       </div>
     </div>
@@ -37,17 +33,12 @@ const props = defineProps({
   <style scoped lang="scss">
 .discussion-post {
   display: flex;
+  flex-direction: column;
   position: relative;
   height: auto;
   border: solid 2px $color-dark;
   border-radius: 5px;
   overflow: hidden;
-  margin-bottom: 3rem;
-}
-.post-info {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
   padding: 0.5rem 1rem;
 }
 .signature {
@@ -64,7 +55,7 @@ const props = defineProps({
 }
 .description {
   flex-grow: 20;
-  margin-bottom: 1rem;
+  margin: 30px 0;
 }
 .bottom-info {
   flex-grow: 0;

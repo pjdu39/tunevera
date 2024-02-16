@@ -13,7 +13,12 @@
       class="fa-pulse fa-lg"
       aria-hidden="true"
     />
-    <div v-else-if="searchUsersState.loading === 'loaded'" v-for="(user, index) in users" :key="index" class="results-container">
+    <div
+      v-else-if="searchUsersState.loading === 'loaded'"
+      v-for="(user, index) in users"
+      :key="index"
+      class="results-container"
+    >
       <NuxtLink class="result" :to="`/perfil?id=${user.id}`">
         <div class="result-img-wrapper">
           <NuxtImg :src="user.pictureUrl" class="image-fit" />
@@ -87,7 +92,7 @@ input:disabled {
 }
 
 .component {
-  height: 40rem; // TODO: Borrar, es provicional.
+  height: auto;
 }
 .search-input {
   display: block;

@@ -160,7 +160,6 @@ const anchoActual = computed(() => anchoDiv.value);
   border-radius: 5px;
   overflow: hidden;
   padding: 0.5rem 1rem;
-  margin-bottom: 3rem;
 }
 .signature {
   flex-grow: 1;

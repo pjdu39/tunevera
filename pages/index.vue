@@ -1,11 +1,20 @@
 <template>
   <div class="board-container">
     <div class="" v-for="(element, index) in elements" :key="index">
-      <RecipePost v-if="element.type === 'Receta'" :post-data="element" />
-      <PollPost v-if="element.type === 'Encuesta'" :post-data="element" />
+      <RecipePost
+        v-if="element.type === 'Receta'"
+        :post-data="element"
+        class="post"
+      />
+      <PollPost
+        v-if="element.type === 'Encuesta'"
+        :post-data="element"
+        class="post"
+      />
       <DiscussionPost
         v-if="element.type === 'Discusion'"
         :post-data="element"
+        class="post"
       />
     </div>
     <div ref="observerElement"></div>
@@ -31,11 +40,11 @@ const { loading, error } = boardStore;
 // Función para cargar más elementos
 const loadMoreElements = async () => {
   page.value += 1;
-  
+
   await boardStore.fetchBoardElements(5, page.value);
 
   if (boardStore.loading === "loaded" && boardStore.error === null) {
-    elements.value = [...elements.value, ...boardStore.data]
+    elements.value = [...elements.value, ...boardStore.data];
   }
 };
 
@@ -81,6 +90,9 @@ onUnmounted(() => {
 .board-container {
   margin: auto;
   width: 44rem;
+}
+.post {
+  margin-bottom: 20px;
 }
 
 @media (max-width: 800px) {
