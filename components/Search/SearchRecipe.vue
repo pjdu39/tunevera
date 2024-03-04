@@ -5,7 +5,7 @@
         class="main-search-input"
         v-model="filter"
         type="text"
-        placeholder="Buscar usuario..."
+        placeholder="Buscar receta..."
         @input="searchUser"
       />
       <button class="vegan-button">Vegano</button>

@@ -166,7 +166,7 @@ const save = async () => {
     if (nickname.value) body.nickname = nickname.value;
     if (birthDate.value) body.birthDate = birthDate.value;
     if (description.value) body.description = description.value;
-    // if (description.value) body.description = description.value;
+    if (picture.value) body.pictureUrl = picture.value;
 
     profileStore.editProfile(body);
   } else {
@@ -175,7 +175,6 @@ const save = async () => {
       email: user.value.email,
       birthDate: birthDate.value,
       description: description.value,
-      /* location: location.value, */
       pictureUrl: uploadState.value.data ?? user.value.picture,
     };
 
