@@ -105,9 +105,7 @@
             :key="index"
           >
             -
-            {{
-              ingredient.amount + " " + ingredient.unit + " " + ingredient.text
-            }}
+            {{ semanticTransformation(ingredient) }}
           </div>
         </div>
         <div class="steps-container">
@@ -211,6 +209,50 @@ const cumputedLikeClass = computed(() => {
     return like.value ? "liked" : "unliked";
   }
 });
+
+// Manejo semántico de singluar/plural, etc.
+const semanticTransformation = (ingredient) => {
+  const singular = ingredient.text.singular;
+  const plural = ingredient.text.plural ?? ingredient.text.singular;
+
+  const singularUnit = !ingredient.unit ? null : ingredient.unit.singular;
+  // const pluralUnit = !ingredient.unit ? null : ingredient.unit.plural ?? ingredient.unit.singular;
+  const abbreviationUnit = !ingredient.unit
+    ? null
+    : ingredient.unit.abbreviation ??
+      ingredient.unit.plural ??
+      ingredient.unit.singular;
+
+  let semanticIngredient;
+  let semanticUnit;
+
+  // Ingrediente
+  if (singularUnit === "al gusto") {
+    semanticIngredient = plural;
+  } else if (ingredient.amount > 1) {
+    semanticIngredient = plural;
+  } else {
+    semanticIngredient = singular;
+  }
+
+  // Unidad
+  if (singularUnit === "al gusto" || singularUnit === "unidad") {
+    semanticUnit = "";
+  } else {
+    semanticUnit = abbreviationUnit;
+  }
+
+  // Componer la oración
+  // const result1 = `${ingredient.amount} ${semanticUnit} ${!semanticUnit ? '' : 'de'} ${semanticIngredient}`;
+  
+  let result = '';
+
+  if(ingredient.amount) result = `${ingredient.amount}`
+  if (ingredient.amount && semanticUnit) result += ` ${semanticUnit} de`
+  result += ` ${semanticIngredient}`
+
+  return result;
+};
 
 // Manejo de comentarios
 const comment = ref(null);
