@@ -243,13 +243,13 @@ const semanticTransformation = (ingredient) => {
   }
 
   // Componer la oración
-  // const result1 = `${ingredient.amount} ${semanticUnit} ${!semanticUnit ? '' : 'de'} ${semanticIngredient}`;
-  
   let result = '';
 
-  if(ingredient.amount) result = `${ingredient.amount}`
+  if (ingredient.amount) result = `${ingredient.amount}`
   if (ingredient.amount && semanticUnit) result += ` ${semanticUnit} de`
   result += ` ${semanticIngredient}`
+
+  if (singularUnit === "al gusto") result += ` ${singularUnit}`
 
   return result;
 };
