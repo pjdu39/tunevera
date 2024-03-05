@@ -345,13 +345,10 @@ const handleExit = () => {
   padding: 0;
 }
 
+/* Esto está ahora en las clases globales
 :deep(ul.p-tabview-nav > li.p-tabview-ink-bar) {
   display: none;
-}
-
-// display: block; en los li
-
-// place-content: center; en el contenido del la pestaña en sí, es decir, en el a dentro del li
+} */
 
 
 .state-container {

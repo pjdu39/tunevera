@@ -45,6 +45,11 @@ input[type="number"] {
 
 
 // Sobreescribir estilo de primevue
+
+ul.p-tabview-nav > li.p-tabview-ink-bar {
+  display: none !important;
+}
+
 .p-tabview-nav-link {
   font-size: 120%;
   background-color: transparent;
@@ -57,6 +62,11 @@ input[type="number"] {
   border-right: 1px solid grey;
   border-radius: 0;
 }
+
+ul.p-tabview-nav > li.p-tabview-header:nth-last-child(2) .p-tabview-nav-link { // Acceso al penúltimo elemento porque primevue genera uno adicional internamente.
+  border: none !important;
+}
+
 .p-tabview-title {
 }
 .p-tabview {
