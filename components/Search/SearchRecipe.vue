@@ -31,7 +31,7 @@
       </button>
     </div>
   </div>
-  <button class="advanced-options-dropdown">
+  <button class="advanced-options-dropdown" @click="clickAdvanced()">
     <div>Avanzado</div>
     <font-awesome-icon
       icon="fa fa-angle-down"
@@ -39,7 +39,7 @@
       aria-hidden="true"
     />
   </button>
-  <div class="advanced-options-container">
+  <div v-if="showAdvanced" class="advanced-options-container">
     <TabView content-class="mt-3" class="search-tool-container">
       <TabPanel header="INGREDIENTES">
         <input
@@ -82,8 +82,12 @@
       </div>
     </div>
   </div>
+  <div class="sugested-filters-section">
+    <button class="sugested-filter">Últimos 30 días</button>
+    <button class="sugested-filter">Más votados</button>
+    <button class="sugested-filter">Estrellas Michelin</button>
+  </div>
   <div class="results-container">
-    <div class="sugested-filters"></div>
     <div class="grid-results">
       <div v-for="(recipe, index) in recipes" :key="index" class="p-recipe">
         <NuxtLink class="recipe-post" :to="`/receta?id=${recipe.id}`">
@@ -123,6 +127,7 @@ const recipes = [
   },
 ];
 
+// Filtros veggie
 const vegan = ref(false);
 const vegetarian = ref(false);
 
@@ -136,6 +141,10 @@ const checkVegetarian = () => {
   vegetarian.value = !vegetarian.value;
   vegan.value = false;
 };
+
+// Opciones avanzadas
+const showAdvanced = ref(false);
+const clickAdvanced = () => (showAdvanced.value = !showAdvanced.value);
 </script>
 
 <style lang="scss" scoped>
@@ -242,9 +251,20 @@ input:disabled {
 .results-container {
   height: auto;
   width: 100%;
-  margin-top: 30px;
 }
-.sugested-filters {
+.sugested-filters-section {
+  display: flex;
+  margin-top: 45px;
+  margin-bottom: 8px;
+  font-size: 90%;
+}
+.sugested-filter {
+  margin: 0 40px 0 0;
+  background: transparent;
+  border: none;
+}
+.sugested-filter:hover {
+  text-decoration: underline;
 }
 .grid-results {
   display: grid;
