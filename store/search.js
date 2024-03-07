@@ -12,6 +12,11 @@ export const useSearchStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null
+        },
+        getIngredientsState: {
+            data: null,
+            loading: 'waiting',
+            error: null
         }
     }),
     actions: {
@@ -36,6 +41,17 @@ export const useSearchStore = defineStore({
         fetchUsersError(payload) {
             this.searchUsersState.error = payload;
         },
+
+        // Sugerencias
+        fetchIngredientsData(payload) {
+            this.getIngredientsState.data = payload;
+        },
+        fetchIngredientsLoading(payload) {
+            this.getIngredientsState.loading = payload;
+        },
+        fetchIngredientsError(payload) {
+            this.getIngredientsState.error = payload;
+        },
         
         // Recipes
         async fetchRecipes(text, veggie, ingredients, tags, customFilters) {
@@ -56,8 +72,6 @@ export const useSearchStore = defineStore({
                 }
 
                 const apiUrl = buildApiUrl('SearchRecipes', { text, veggie, ingredients, tags, customFilters });
-
-                console.log(apiUrl)
 
                 const data = await $fetchApi(apiUrl);
 
@@ -81,7 +95,7 @@ export const useSearchStore = defineStore({
             const { $fetchApi } = useNuxtApp();
             this.fetchUsersLoading('loading');
             try {
-                const data = !filter ? await $fetchApi('SearchUsers') : await $fetchApi(`SearchUsers?filter=${ filter }`);
+                const data = await $fetchApi(`SearchUsers${filter ? `?filter=${encodeURIComponent(filter)}` : ''}`);
 
                 this.fetchUsersData(data);
                 this.fetchUsersLoading('loaded');
@@ -96,6 +110,28 @@ export const useSearchStore = defineStore({
 
         setFetchUsersLoading() {
             this.fetchUsersLoading('loading');
-        }
+        },
+
+        // Sugerencias
+        async fetchIngredients(num, filter) {
+            const { $fetchApi } = useNuxtApp();
+            this.fetchIngredientsLoading('loading');
+            try {
+                const data = await $fetchApi(`GetIngredients?num=${encodeURIComponent(num)}${filter ? `&filter=${encodeURIComponent(filter)}` : ''}`);
+
+                this.fetchIngredientsData(data);
+                this.fetchIngredientsLoading('loaded');
+                this.fetchIngredientsError(null);
+            }
+            catch(error) {
+                this.fetchIngredientsData(null);
+                this.fetchIngredientsLoading('error');
+                this.fetchIngredientsError(error.message);
+            }
+        },
+
+        setFetchIngredientsLoading() {
+            this.fetchUsersLoading('loading');
+        },
     }
 });

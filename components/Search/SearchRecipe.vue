@@ -44,13 +44,34 @@
       <TabPanel header="INGREDIENTES">
         <input
           class="advanced-search-input"
+          v-model="ingredientText"
           type="text"
           placeholder="Buscar por ingredientes..."
+          @input="getIngredients"
         />
-        <div class="sugestions-container">
-          <div class="badge">Ternera</div>
-          <div class="badge">Pollo</div>
-          <div class="badge">Apio</div>
+        <div
+          v-if="getIngredientsState.loading === 'loading'"
+          class="sugestions-container"
+        >
+          Cargando...
+        </div>
+        <div
+          v-else-if="getIngredientsState.loading === 'loaded'"
+          class="sugestions-container"
+        >
+          <button
+            v-for="(ingredient, index) in getIngredientsState.data"
+            :key="index"
+            class="myBadge"
+          >
+            {{ ingredient.text }}
+          </button>
+        </div>
+        <div
+          v-else-if="getIngredientsState.loading === 'error'"
+          class="sugestions-container"
+        >
+          Cargando...
         </div>
       </TabPanel>
       <TabPanel header="TAGS">
@@ -60,8 +81,8 @@
           placeholder="Buscar por etiquetas..."
         />
         <div class="sugestions-container">
-          <div class="badge">Healthy</div>
-          <div class="badge">Navidad</div>
+          <div class="myBadge">Healthy</div>
+          <div class="myBadge">Navidad</div>
         </div>
       </TabPanel>
     </TabView>
@@ -144,7 +165,11 @@ onMounted(() => {
 
 // Parámetros
 const text = ref("");
-const veggie = ref(null);
+const veggie = computed(() => {
+  if (vegan.value) return "V";
+  else if (vegetarian.value) return "T";
+  else return null;
+});
 const ingredients = ref([]);
 const tags = ref([]);
 const customFilters = ref(null);
@@ -157,31 +182,13 @@ const checked = (item) => (item ? " vegan-button--selected" : "");
 
 const checkVegan = () => {
   vegetarian.value = false;
-
-  if (vegan.value) {
-    veggie.value = null;
-
-    vegan.value = false;
-  } else {
-    veggie.value = "V";
-
-    vegan.value = true;
-  }
+  vegan.value = !vegan.value;
 
   fetchRecipes();
 };
 const checkVegetarian = () => {
   vegan.value = false;
-
-  if (vegetarian.value) {
-    veggie.value = null;
-
-    vegetarian.value = false;
-  } else {
-    veggie.value = "T";
-
-    vegetarian.value = true;
-  }
+  vegetarian.value = !vegetarian.value;
 
   fetchRecipes();
 };
@@ -189,6 +196,21 @@ const checkVegetarian = () => {
 // Opciones avanzadas
 const showAdvanced = ref(false);
 const clickAdvanced = () => (showAdvanced.value = !showAdvanced.value);
+
+// Buscar ingredientes
+const getIngredientsState = computed(() => store.getIngredientsState);
+
+let inputTimerIng = null;
+
+const getIngredients = () => {
+  clearTimeout(inputTimerIng);
+  store.setFetchIngredientsLoading();
+  inputTimerIng = setTimeout(() => {
+    store.fetchIngredients(5, ingredientText.value);
+  }, 500);
+};
+
+const ingredientText = ref(null);
 </script>
 
 <style lang="scss" scoped>
@@ -268,13 +290,19 @@ input:disabled {
 .sugestions-container {
   padding: 10px 0;
 }
-.badge {
+.myBadge {
   padding: 2px 7px 4px 7px;
   margin-right: 7px;
-  line-height: 100%;
+  font-size: 90%;
+  font-weight: 600;
+  line-height: 110%;
+  border: none;
   border-radius: 5px;
   color: white;
   background-color: $color-primary;
+}
+.myBadge:hover {
+  text-decoration: underline;
 }
 .applied-filters-container {
   display: flex;
