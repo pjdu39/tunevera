@@ -51,7 +51,7 @@ const searchUser = (event) => {
     filter.value = newValue;
 
     clearTimeout(inputTimer);
-    store.setFetchUsersLoading("loading");
+    store.setFetchUsersLoading();
     inputTimer = setTimeout(() => {
       store.fetchUsers(filter.value);
     }, 500);

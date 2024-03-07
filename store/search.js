@@ -16,15 +16,15 @@ export const useSearchStore = defineStore({
     }),
     actions: {
         // Recipes
-        /* fetchCommentsData(payload) {
-            this.fetchCommentsState.data = payload;
+        fetchRecipesData(payload) {
+            this.searchRecipesState.data = payload;
         },
-        fetchCommentsLoading(payload) {
-            this.fetchCommentsState.loading = payload;
+        fetchRecipesLoading(payload) {
+            this.searchRecipesState.loading = payload;
         },
-        fetchCommentsError(payload) {
-            this.fetchCommentsState.error = payload;
-        }, */
+        fetchRecipesError(payload) {
+            this.searchRecipesState.error = payload;
+        },
 
         // Users
         fetchUsersData(payload) {
@@ -38,24 +38,43 @@ export const useSearchStore = defineStore({
         },
         
         // Recipes
-        /*
-        async fetchComments(idPost, numElements) {
+        async fetchRecipes(text, veggie, ingredients, tags, customFilters) {
             const { $fetchApi } = useNuxtApp();
-            this.fetchCommentsLoading('loading');
+            this.fetchRecipesLoading('loading');
+            
             try {
-                const data = await $fetchApi(`GetComments?IdPost=${ idPost }&NumElements=${ numElements }`);
+                const buildApiUrl = (base, params) => {
+                    const query = Object.keys(params)
+                      .filter(key => params[key] !== undefined && params[key] !== null && params[key] !== '' && (Array.isArray(params[key]) ? params[key].length : true)) // Filtra parámetros vacíos, undefined o con arrays vacíos
+                      .map(key => {
+                        const value = Array.isArray(params[key]) ? params[key].join(',') : params[key];
+                        return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+                      })
+                      .join('&');
+                  
+                    return `${base}?${query}`;
+                }
 
-                this.fetchCommentsData(data);
-                this.fetchCommentsLoading('loaded');
-                this.fetchCommentsError(null);
+                const apiUrl = buildApiUrl('SearchRecipes', { text, veggie, ingredients, tags, customFilters });
+
+                console.log(apiUrl)
+
+                const data = await $fetchApi(apiUrl);
+
+                this.fetchRecipesData(data);
+                this.fetchRecipesLoading('loaded');
+                this.fetchRecipesError(null);
             }
             catch(error) {
-                this.fetchCommentsData(null);
-                this.fetchCommentsLoading('error');
-                this.fetchCommentsError(error.message);
+                this.fetchRecipesData(null);
+                this.fetchRecipesLoading('error');
+                this.fetchRecipesError(error.message);
             }
         },
-        */
+
+        setFetchRecipesLoading() {
+            this.fetchRecipesLoading('loading');
+        },
 
         // Users
         async fetchUsers(filter) {

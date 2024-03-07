@@ -3,10 +3,10 @@
     <div class="basic-options-container">
       <input
         class="main-search-input"
-        v-model="filter"
+        v-model="text"
         type="text"
         placeholder="Buscar receta..."
-        @input="searchUser"
+        @input="searchRecipes"
       />
       <button :class="'vegan-button' + checked(vegan)" @click="checkVegan()">
         <div>Vegano</div>
@@ -88,44 +88,66 @@
     <button class="sugested-filter">Estrellas Michelin</button>
   </div>
   <div class="results-container">
-    <div class="grid-results">
+    <div v-if="searchRecipesState.loading === 'loading'" class="grid-results">
+      Cargando...
+    </div>
+    <div
+      v-else-if="searchRecipesState.loading === 'loaded'"
+      class="grid-results"
+    >
       <div v-for="(recipe, index) in recipes" :key="index" class="p-recipe">
         <NuxtLink class="recipe-post" :to="`/receta?id=${recipe.id}`">
           <NuxtImg :src="recipe.pictureUrl" class="image" />
         </NuxtLink>
       </div>
     </div>
+    <div
+      v-else-if="searchRecipesState.loading === 'error'"
+      class="grid-results"
+    >
+      {{ searchRecipesState.error }}
+    </div>
   </div>
 </template>
 
 <script setup>
-const recipes = [
-  {
-    id: 1,
-    pictureUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHrrGhsBvHnCVH_Y3qzlOniw-OFlUObPLZcg&usqp=CAU",
-  },
-  {
-    id: 2,
-    pictureUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHrrGhsBvHnCVH_Y3qzlOniw-OFlUObPLZcg&usqp=CAU",
-  },
-  {
-    id: 3,
-    pictureUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHrrGhsBvHnCVH_Y3qzlOniw-OFlUObPLZcg&usqp=CAU",
-  },
-  {
-    id: 4,
-    pictureUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHrrGhsBvHnCVH_Y3qzlOniw-OFlUObPLZcg&usqp=CAU",
-  },
-  {
-    id: 5,
-    pictureUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHrrGhsBvHnCVH_Y3qzlOniw-OFlUObPLZcg&usqp=CAU",
-  },
-];
+import { useSearchStore } from "~/store/search.js";
+
+// Acceso a la Store
+const store = useSearchStore();
+
+const searchRecipesState = computed(() => store.searchRecipesState);
+const recipes = computed(() => searchRecipesState.value.data);
+
+const fetchRecipes = () =>
+  store.fetchRecipes(
+    text.value,
+    veggie.value,
+    ingredients.value,
+    tags.value,
+    customFilters.value
+  );
+
+let inputTimer = null;
+
+const searchRecipes = () => {
+  clearTimeout(inputTimer);
+  store.setFetchRecipesLoading();
+  inputTimer = setTimeout(() => {
+    fetchRecipes();
+  }, 500);
+};
+
+onMounted(() => {
+  fetchRecipes();
+});
+
+// Parámetros
+const text = ref("");
+const veggie = ref(null);
+const ingredients = ref([]);
+const tags = ref([]);
+const customFilters = ref(null);
 
 // Filtros veggie
 const vegan = ref(false);
@@ -134,12 +156,34 @@ const vegetarian = ref(false);
 const checked = (item) => (item ? " vegan-button--selected" : "");
 
 const checkVegan = () => {
-  vegan.value = !vegan.value;
   vegetarian.value = false;
+
+  if (vegan.value) {
+    veggie.value = null;
+
+    vegan.value = false;
+  } else {
+    veggie.value = "V";
+
+    vegan.value = true;
+  }
+
+  fetchRecipes();
 };
 const checkVegetarian = () => {
-  vegetarian.value = !vegetarian.value;
   vegan.value = false;
+
+  if (vegetarian.value) {
+    veggie.value = null;
+
+    vegetarian.value = false;
+  } else {
+    veggie.value = "T";
+
+    vegetarian.value = true;
+  }
+
+  fetchRecipes();
 };
 
 // Opciones avanzadas
@@ -195,7 +239,7 @@ input:disabled {
   // text-decoration: underline;
 }
 .check-icon {
-  margin: 3px 0 0 6px;
+  margin: 4px 0 0 6px;
 }
 .advanced-options-dropdown {
   display: flex;
