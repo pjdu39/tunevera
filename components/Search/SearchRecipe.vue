@@ -63,12 +63,13 @@
             v-for="(ingredient, index) in getIngredientsState.data"
             :key="index"
             class="myBadge"
+            @click="addIngredientFilter(ingredient)"
           >
             {{ ingredient.text }}
           </button>
         </div>
         <div
-          v-else-if="getIngredientsState.loading === 'error'"
+          v-else-if="getTagsState.loading === 'error'"
           class="sugestions-container"
         >
           Cargando...
@@ -77,29 +78,46 @@
       <TabPanel header="TAGS">
         <input
           class="advanced-search-input"
+          v-model="tagText"
           type="text"
           placeholder="Buscar por etiquetas..."
+          @input="getTags"
         />
-        <div class="sugestions-container">
-          <div class="myBadge">Healthy</div>
-          <div class="myBadge">Navidad</div>
+        <div
+          v-if="getTagsState.loading === 'loading'"
+          class="sugestions-container"
+        >
+          Cargando...
+        </div>
+        <div
+          v-else-if="getTagsState.loading === 'loaded'"
+          class="sugestions-container"
+        >
+          <button
+            v-for="(tag, index) in getTagsState.data"
+            :key="index"
+            class="myBadge"
+            @click="addTagFilter(tag)"
+          >
+            {{ tag.text }}
+          </button>
+        </div>
+        <div
+          v-else-if="getTagsState.loading === 'error'"
+          class="sugestions-container"
+        >
+          Cargando...
         </div>
       </TabPanel>
     </TabView>
     <div class="applied-filters-container">
       <div class="ingredients-filter">
-        <div>- Aguacate</div>
-        <div>- Harina</div>
-        <div>- Pan rallado</div>
-        <div>- Arroz</div>
-        <div>- Aceite de oliva virgen extra de la primera presión</div>
-        <div>- Agua</div>
-        <div>- Pepinillos</div>
+        <div v-for="(ingredient, index) in ingredients" :key="index">
+          - {{ ingredient.text }}
+        </div>
       </div>
       <div class="tags-filter">
-        <div>- Cena</div>
-        <div>- Rapido</div>
-        <div>- PocosIngredientes</div>
+        <div v-for="(tag, index) in tags" :key="index">- {{ tag.text }}</div>
       </div>
     </div>
   </div>
@@ -144,8 +162,8 @@ const fetchRecipes = () =>
   store.fetchRecipes(
     text.value,
     veggie.value,
-    ingredients.value,
-    tags.value,
+    ingredients.value.map((x) => x.value),
+    tags.value.map((x) => x.value),
     customFilters.value
   );
 
@@ -202,6 +220,8 @@ const getIngredientsState = computed(() => store.getIngredientsState);
 
 let inputTimerIng = null;
 
+const ingredientText = ref(null);
+
 const getIngredients = () => {
   clearTimeout(inputTimerIng);
   store.setFetchIngredientsLoading();
@@ -210,7 +230,30 @@ const getIngredients = () => {
   }, 500);
 };
 
-const ingredientText = ref(null);
+const addIngredientFilter = (ingredient) => {
+  ingredients.value.push(ingredient);
+  searchRecipes();
+};
+
+// Buscar tag
+const getTagsState = computed(() => store.getTagsState);
+
+let inputTimerTag = null;
+
+const tagText = ref(null);
+
+const getTags = () => {
+  clearTimeout(inputTimerTag);
+  store.setFetchTagsLoading();
+  inputTimerTag = setTimeout(() => {
+    store.fetchTags(5, tagText.value);
+  }, 500);
+};
+
+const addTagFilter = (tag) => {
+  tags.value.push(tag);
+  searchRecipes();
+};
 </script>
 
 <style lang="scss" scoped>

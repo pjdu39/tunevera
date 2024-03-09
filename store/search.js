@@ -17,6 +17,11 @@ export const useSearchStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null
+        },
+        getTagsState: {
+            data: null,
+            loading: 'waiting',
+            error: null
         }
     }),
     actions: {
@@ -53,6 +58,16 @@ export const useSearchStore = defineStore({
             this.getIngredientsState.error = payload;
         },
         
+        fetchTagsData(payload) {
+            this.getTagsState.data = payload;
+        },
+        fetchTagsLoading(payload) {
+            this.getTagsState.loading = payload;
+        },
+        fetchTagsError(payload) {
+            this.getTagsState.error = payload;
+        },
+        
         // Recipes
         async fetchRecipes(text, veggie, ingredients, tags, customFilters) {
             const { $fetchApi } = useNuxtApp();
@@ -60,14 +75,24 @@ export const useSearchStore = defineStore({
             
             try {
                 const buildApiUrl = (base, params) => {
-                    const query = Object.keys(params)
-                      .filter(key => params[key] !== undefined && params[key] !== null && params[key] !== '' && (Array.isArray(params[key]) ? params[key].length : true)) // Filtra parámetros vacíos, undefined o con arrays vacíos
-                      .map(key => {
-                        const value = Array.isArray(params[key]) ? params[key].join(',') : params[key];
-                        return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-                      })
-                      .join('&');
-                  
+                    let queryParts = [];
+                    
+                    Object.keys(params).forEach(key => {
+                        const value = params[key];
+                        if (value !== undefined && value !== null && value !== '') {
+                        if (Array.isArray(value)) {
+                            // Para cada valor en el array, añade key=value al array queryParts
+                            value.forEach(item => {
+                            queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(item)}`);
+                            });
+                        } else {
+                            // Para valores no array, solo añade key=value al array queryParts
+                            queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+                        }
+                        }
+                    });
+
+                    const query = queryParts.join('&');
                     return `${base}?${query}`;
                 }
 
@@ -131,7 +156,28 @@ export const useSearchStore = defineStore({
         },
 
         setFetchIngredientsLoading() {
-            this.fetchUsersLoading('loading');
+            this.fetchIngredientsLoading('loading');
+        },
+        
+        async fetchTags(num, filter) {
+            const { $fetchApi } = useNuxtApp();
+            this.fetchTagsLoading('loading');
+            try {
+                const data = await $fetchApi(`GetTags?num=${encodeURIComponent(num)}${filter ? `&filter=${encodeURIComponent(filter)}` : ''}`);
+
+                this.fetchTagsData(data);
+                this.fetchTagsLoading('loaded');
+                this.fetchTagsError(null);
+            }
+            catch(error) {
+                this.fetchTagsData(null);
+                this.fetchTagsLoading('error');
+                this.fetchTagsError(error.message);
+            }
+        },
+
+        setFetchTagsLoading() {
+            this.fetchTagsLoading('loading');
         },
     }
 });
