@@ -112,19 +112,32 @@
     </TabView>
     <div class="applied-filters-container">
       <div class="ingredients-filter">
-        <div v-for="(ingredient, index) in ingredients" :key="index">
+        <button
+          v-for="(ingredient, index) in ingredients"
+          :key="index"
+          class="filter-element"
+          @click="dropIngredient(ingredient)"
+        >
           - {{ ingredient.text }}
-        </div>
+        </button>
       </div>
       <div class="tags-filter">
-        <div v-for="(tag, index) in tags" :key="index">- {{ tag.text }}</div>
+        <button v-for="(tag, index) in tags" :key="index">
+          - {{ tag.text }}
+        </button>
       </div>
     </div>
   </div>
   <div class="sugested-filters-section">
-    <button class="sugested-filter">Últimos 30 días</button>
-    <button class="sugested-filter">Más votados</button>
-    <button class="sugested-filter">Estrellas Michelin</button>
+    <button class="sugested-filter" @click="clickCustom('L')">
+      Últimos 30 días
+    </button>
+    <button class="sugested-filter" @click="clickCustom('V')">
+      Más votados
+    </button>
+    <button class="sugested-filter" @click="clickCustom('M')">
+      Estrellas Michelin
+    </button>
   </div>
   <div class="results-container">
     <div v-if="searchRecipesState.loading === 'loading'" class="grid-results">
@@ -235,6 +248,11 @@ const addIngredientFilter = (ingredient) => {
   searchRecipes();
 };
 
+const dropIngredient = (ingredient) => {
+  ingredients.value.splice(ingredient, 1);
+  searchRecipes();
+};
+
 // Buscar tag
 const getTagsState = computed(() => store.getTagsState);
 
@@ -253,6 +271,12 @@ const getTags = () => {
 const addTagFilter = (tag) => {
   tags.value.push(tag);
   searchRecipes();
+};
+
+// Filtros persnalizados
+const clickCustom = (value) => {
+  customFilters.value = value;
+  fetchRecipes();
 };
 </script>
 
@@ -356,6 +380,12 @@ input:disabled {
   width: 50%;
   border-left: 1px solid $color-dark;
   padding: 0 5px 0 10px;
+}
+.filter-element {
+  width: 100%;
+  text-align: start;
+  border: none;
+  background-color: transparent;
 }
 .tags-filter {
   height: auto;
