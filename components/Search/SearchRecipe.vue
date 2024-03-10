@@ -122,7 +122,12 @@
         </button>
       </div>
       <div class="tags-filter">
-        <button v-for="(tag, index) in tags" :key="index">
+        <button
+          v-for="(tag, index) in tags"
+          :key="index"
+          class="filter-element"
+          @click="dropTag(tag)"
+        >
           - {{ tag.text }}
         </button>
       </div>
@@ -273,6 +278,11 @@ const addTagFilter = (tag) => {
   searchRecipes();
 };
 
+const dropTag = (tag) => {
+  tags.value.splice(tag, 1);
+  searchRecipes();
+};
+
 // Filtros persnalizados
 const clickCustom = (value) => {
   customFilters.value = value;
@@ -349,10 +359,10 @@ input:disabled {
   font-size: 80%;
 }
 .search-tool-container {
-  width: 50%;
+  width: 45%;
 }
 .advanced-search-input {
-  width: calc(100% - 90px);
+  width: calc(100% - 30px);
 }
 .sugestions-container {
   padding: 10px 0;
@@ -373,11 +383,12 @@ input:disabled {
 }
 .applied-filters-container {
   display: flex;
-  width: 50%;
+  width: 55%;
 }
 .ingredients-filter {
   height: auto;
   width: 50%;
+  height: min-content;
   border-left: 1px solid $color-dark;
   padding: 0 5px 0 10px;
 }
@@ -390,6 +401,7 @@ input:disabled {
 .tags-filter {
   height: auto;
   width: 50%;
+  height: min-content;
   border-left: 1px solid $color-dark;
   padding: 0 5px 0 10px;
 }
