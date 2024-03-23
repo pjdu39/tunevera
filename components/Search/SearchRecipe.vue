@@ -53,7 +53,11 @@
           v-if="getIngredientsState.loading === 'loading'"
           class="sugestions-container"
         >
-          Cargando...
+          <font-awesome-icon
+            icon="fa fa-circle-notch"
+            class="fa-spin fa-lg board-loading-icon"
+            aria-hidden="true"
+          />
         </div>
         <div
           v-else-if="getIngredientsState.loading === 'loaded'"
@@ -69,10 +73,10 @@
           </button>
         </div>
         <div
-          v-else-if="getTagsState.loading === 'error'"
+          v-else-if="getIngredientsState.loading === 'error'"
           class="sugestions-container"
         >
-          Cargando...
+          {{ getIngredientsState.error }}
         </div>
       </TabPanel>
       <TabPanel header="TAGS">
@@ -87,7 +91,11 @@
           v-if="getTagsState.loading === 'loading'"
           class="sugestions-container"
         >
-          Cargando...
+          <font-awesome-icon
+            icon="fa fa-circle-notch"
+            class="fa-spin fa-lg board-loading-icon"
+            aria-hidden="true"
+          />
         </div>
         <div
           v-else-if="getTagsState.loading === 'loaded'"
@@ -106,7 +114,7 @@
           v-else-if="getTagsState.loading === 'error'"
           class="sugestions-container"
         >
-          Cargando...
+          {{ getTagsState.error }}
         </div>
       </TabPanel>
     </TabView>
@@ -153,7 +161,7 @@
       <div class="icon-container">
         <font-awesome-icon
           icon="fa fa-circle-notch"
-          class="fa-spin fa-lg board-loading-icon"
+          class="fa-spin fa-lg"
           aria-hidden="true"
         />
       </div>
@@ -382,6 +390,7 @@ input:disabled {
 }
 .advanced-options-container {
   display: flex;
+  min-height: 134px;
   margin-top: 20px;
   font-size: 80%;
 }
@@ -503,9 +512,10 @@ input:disabled {
   height: 200px;
   width: 100%;
   font-size: 200%;
-  color: $color-soft-grey;
+  color: $color-primary;
 }
 .board-loading-icon {
+  color: $color-soft-grey;
 }
 .p-recipe {
   position: relative;
