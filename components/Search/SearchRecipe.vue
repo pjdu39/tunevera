@@ -112,24 +112,28 @@
     </TabView>
     <div class="applied-filters-container">
       <div class="ingredients-filter">
-        <button
+        <div
           v-for="(ingredient, index) in ingredients"
           :key="index"
           class="filter-element"
-          @click="dropIngredient(index)"
         >
-          - {{ ingredient.text }}
-        </button>
+          <div class="filter-element-text">{{ ingredient.text }}</div>
+          <button class="btn btn--delete" @click="dropIngredient(index)">
+            <span class="span--btn-delete">
+              <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
+            </span>
+          </button>
+        </div>
       </div>
       <div class="tags-filter">
-        <button
-          v-for="(tag, index) in tags"
-          :key="index"
-          class="filter-element"
-          @click="dropTag(index)"
-        >
-          - {{ tag.text }}
-        </button>
+        <div v-for="(tag, index) in tags" :key="index" class="filter-element">
+          <div class="filter-element-text">{{ tag.text }}</div>
+          <button class="btn btn--delete" @click="dropTag(index)">
+            <span class="span--btn-delete">
+              <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -145,8 +149,14 @@
     </button>
   </div>
   <div class="results-container">
-    <div v-if="searchRecipesState.loading === 'loading'" class="grid-results">
-      Cargando...
+    <div v-if="searchRecipesState.loading === 'loading'">
+      <div class="icon-container">
+        <font-awesome-icon
+          icon="fa fa-circle-notch"
+          class="fa-spin fa-lg board-loading-icon"
+          aria-hidden="true"
+        />
+      </div>
     </div>
     <div
       v-else-if="searchRecipesState.loading === 'loaded'"
@@ -407,12 +417,50 @@ input:disabled {
   width: 50%;
   height: min-content;
   border-left: 1px solid $color-dark;
-  padding: 0 5px 0 10px;
+  padding: 0 5px 0 5px;
 }
 .filter-element {
+  display: flex;
   width: 100%;
+  padding: 0 5px 2px 10px;
+  margin-bottom: 4px;
   text-align: start;
   border: none;
+  border-radius: 20px;
+  background-color: transparent;
+  line-height: 19px;
+}
+.filter-element > *:last-child {
+  margin-left: auto;
+}
+.filter-element:hover {
+  background-color: rgb(238, 235, 221);
+}
+.filter-elemet-text {
+  display: inline;
+}
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-primary;
+  border-radius: 200px;
+  color: white;
+  padding: 0;
+}
+.btn:disabled {
+  background-color: $color-soft-grey;
+}
+.span--btn-delete {
+  transform: translateY(-2%);
+}
+.btn--delete {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  font-size: 110%;
+  font-weight: bold;
+  color: #df6666;
   background-color: transparent;
 }
 .tags-filter {
@@ -446,6 +494,18 @@ input:disabled {
   /* grid-auto-rows: 1fr; /* Altura de fila como una fracción del contenedor */
   gap: 3px;
   min-height: 15rem;
+}
+.icon-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  height: 200px;
+  width: 100%;
+  font-size: 200%;
+  color: $color-soft-grey;
+}
+.board-loading-icon {
 }
 .p-recipe {
   position: relative;
