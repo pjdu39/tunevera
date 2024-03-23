@@ -124,6 +124,7 @@
           v-for="(ingredient, index) in ingredients"
           :key="index"
           class="filter-element"
+          :class="{ 'animate-highlight': animatingIngredientIndex === index }"
         >
           <div class="filter-element-text">{{ ingredient.text }}</div>
           <button class="btn btn--delete" @click="dropIngredient(index)">
@@ -134,7 +135,12 @@
         </div>
       </div>
       <div class="tags-filter">
-        <div v-for="(tag, index) in tags" :key="index" class="filter-element">
+        <div
+          v-for="(tag, index) in tags"
+          :key="index"
+          class="filter-element"
+          :class="{ 'animate-highlight': animatingTagIndex === index }"
+        >
           <div class="filter-element-text">{{ tag.text }}</div>
           <button class="btn btn--delete" @click="dropTag(index)">
             <span class="span--btn-delete">
@@ -277,13 +283,34 @@ const getIngredients = () => {
 };
 
 const addIngredientFilter = (ingredient) => {
-  ingredients.value.push(ingredient);
-  searchRecipes();
+  const isIngredientPresent = ingredients.value.some(
+    (item) => item.text === ingredient.text
+  );
+
+  if (!isIngredientPresent) {
+    ingredients.value.push(ingredient);
+    searchRecipes();
+  } else triggerIngredientAnimation(ingredient);
 };
 
 const dropIngredient = (index) => {
   ingredients.value.splice(index, 1);
   searchRecipes();
+};
+
+const animatingIngredientIndex = ref(-1); // Inicialmente, ningún elemento está siendo animado
+
+const triggerIngredientAnimation = (ingredient) => {
+  const index = ingredients.value.findIndex(
+    (item) => item.text === ingredient.text
+  );
+  if (index !== -1) {
+    animatingIngredientIndex.value = index;
+    // Inicia la animación añadiendo una clase mediante v-bind:class
+    setTimeout(() => {
+      animatingIngredientIndex.value = -1; // Resetea después de la animación
+    }, 1000);
+  }
 };
 
 // Buscar tag
@@ -309,13 +336,30 @@ const getTags = () => {
 };
 
 const addTagFilter = (tag) => {
-  tags.value.push(tag);
-  searchRecipes();
+  const isTagPresent = tags.value.some((item) => item.text === tag.text);
+
+  if (!isTagPresent) {
+    tags.value.push(tag);
+    searchRecipes();
+  } else triggerTagAnimation(tag);
 };
 
 const dropTag = (index) => {
   tags.value.splice(index, 1);
   searchRecipes();
+};
+
+const animatingTagIndex = ref(-1); // Inicialmente, ningún elemento está siendo animado
+
+const triggerTagAnimation = (tag) => {
+  const index = tags.value.findIndex((item) => item.text === tag.text);
+  if (index !== -1) {
+    animatingTagIndex.value = index;
+    // Inicia la animación añadiendo una clase mediante v-bind:class
+    setTimeout(() => {
+      animatingTagIndex.value = -1; // Resetea después de la animación
+    }, 1000);
+  }
 };
 
 // Filtros persnalizados
@@ -444,6 +488,18 @@ input:disabled {
 }
 .filter-element:hover {
   background-color: rgb(238, 235, 221);
+}
+@keyframes highlight {
+  from {
+    background-color: $color-soft-grey;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+.animate-highlight {
+  animation: highlight 1s ease-out;
 }
 .filter-elemet-text {
   display: inline;
