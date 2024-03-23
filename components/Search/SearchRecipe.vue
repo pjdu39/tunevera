@@ -34,7 +34,7 @@
   <button class="advanced-options-dropdown" @click="clickAdvanced()">
     <div>Avanzado</div>
     <font-awesome-icon
-      icon="fa fa-angle-down"
+      :icon="'fa ' + angleIcon"
       class="dropdown-icon"
       aria-hidden="true"
     />
@@ -231,7 +231,11 @@ const checkVegetarian = () => {
 
 // Opciones avanzadas
 const showAdvanced = ref(false);
-const clickAdvanced = () => (showAdvanced.value = !showAdvanced.value);
+const angleIcon = ref("fa-angle-up");
+const clickAdvanced = () => {
+  showAdvanced.value = !showAdvanced.value;
+  angleIcon.value = showAdvanced.value ? "fa-angle-down" : "fa-angle-up";
+};
 
 // Buscar ingredientes
 const getIngredientsState = computed(() => store.getIngredientsState);
@@ -241,6 +245,11 @@ let inputTimerIng = null;
 const ingredientText = ref(null);
 
 const getIngredients = () => {
+  if (!ingredientText.value) {
+    store.clearIngredients()
+    return
+  }
+
   clearTimeout(inputTimerIng);
   store.setFetchIngredientsLoading();
   inputTimerIng = setTimeout(() => {

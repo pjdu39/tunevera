@@ -158,6 +158,12 @@ export const useSearchStore = defineStore({
         setFetchIngredientsLoading() {
             this.fetchIngredientsLoading('loading');
         },
+
+        clearIngredients() {
+            this.fetchIngredientsData(null);
+            this.fetchIngredientsLoading('waiting');
+            this.fetchIngredientsError(null);
+        },
         
         async fetchTags(num, filter) {
             const { $fetchApi } = useNuxtApp();
