@@ -185,5 +185,11 @@ export const useSearchStore = defineStore({
         setFetchTagsLoading() {
             this.fetchTagsLoading('loading');
         },
+
+        clearTags() {
+            this.fetchTagsData(null);
+            this.fetchTagsLoading('waiting');
+            this.fetchTagsError(null);
+        },
     }
 });

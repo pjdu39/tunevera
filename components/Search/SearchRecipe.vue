@@ -116,7 +116,7 @@
           v-for="(ingredient, index) in ingredients"
           :key="index"
           class="filter-element"
-          @click="dropIngredient(ingredient)"
+          @click="dropIngredient(index)"
         >
           - {{ ingredient.text }}
         </button>
@@ -126,7 +126,7 @@
           v-for="(tag, index) in tags"
           :key="index"
           class="filter-element"
-          @click="dropTag(tag)"
+          @click="dropTag(index)"
         >
           - {{ tag.text }}
         </button>
@@ -245,12 +245,13 @@ let inputTimerIng = null;
 const ingredientText = ref(null);
 
 const getIngredients = () => {
+  clearTimeout(inputTimerIng);
+
   if (!ingredientText.value) {
-    store.clearIngredients()
-    return
+    store.clearIngredients();
+    return;
   }
 
-  clearTimeout(inputTimerIng);
   store.setFetchIngredientsLoading();
   inputTimerIng = setTimeout(() => {
     store.fetchIngredients(5, ingredientText.value);
@@ -262,8 +263,8 @@ const addIngredientFilter = (ingredient) => {
   searchRecipes();
 };
 
-const dropIngredient = (ingredient) => {
-  ingredients.value.splice(ingredient, 1);
+const dropIngredient = (index) => {
+  ingredients.value.splice(index, 1);
   searchRecipes();
 };
 
@@ -276,6 +277,13 @@ const tagText = ref(null);
 
 const getTags = () => {
   clearTimeout(inputTimerTag);
+
+  if (!tagText.value) {
+    console.log(tagText.value);
+    store.clearTags();
+    return;
+  }
+
   store.setFetchTagsLoading();
   inputTimerTag = setTimeout(() => {
     store.fetchTags(5, tagText.value);
@@ -287,8 +295,8 @@ const addTagFilter = (tag) => {
   searchRecipes();
 };
 
-const dropTag = (tag) => {
-  tags.value.splice(tag, 1);
+const dropTag = (index) => {
+  tags.value.splice(index, 1);
   searchRecipes();
 };
 
