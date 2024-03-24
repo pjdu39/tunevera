@@ -31,14 +31,19 @@
       </button>
     </div>
   </div>
-  <button class="advanced-options-dropdown" @click="clickAdvanced()">
-    <div>Avanzado</div>
-    <font-awesome-icon
-      :icon="'fa ' + angleIcon"
-      class="dropdown-icon"
-      aria-hidden="true"
-    />
-  </button>
+  <div class="flex">
+    <button class="advanced-options-dropdown" @click="clickAdvanced()">
+      <div>Avanzado</div>
+      <font-awesome-icon
+        :icon="'fa ' + angleIcon"
+        class="dropdown-icon"
+        aria-hidden="true"
+      />
+    </button>
+    <div v-if="numFilters && !showAdvanced" class="filters-applied-count">
+      {{ numFilters }}
+    </div>
+  </div>
   <div v-if="showAdvanced" class="advanced-options-container">
     <TabView content-class="mt-3" class="search-tool-container">
       <TabPanel header="INGREDIENTES">
@@ -261,6 +266,10 @@ const clickAdvanced = () => {
   angleIcon.value = showAdvanced.value ? "fa-angle-down" : "fa-angle-up";
 };
 
+const numFilters = computed(() => {
+  return ingredients.value.length + tags.value.length;
+});
+
 // Buscar ingredientes
 const getIngredientsState = computed(() => store.getIngredientsState);
 
@@ -428,6 +437,18 @@ input:disabled {
   border-radius: 9px;
   line-height: 16px;
   font-size: 90%;
+}
+.filters-applied-count {
+  padding: 0 5px;
+  margin-left: 5px;
+  min-width: 19px;
+  background-color: $color-red;
+  color: white;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 18px;
+  font-size: 75%;
+  font-weight: bold;
 }
 .dropdown-icon {
   margin: 3px 0 0 6px;
