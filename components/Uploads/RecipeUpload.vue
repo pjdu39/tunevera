@@ -1,11 +1,17 @@
 <template>
+  <div v-if="isModalOpen">
+    <ImageCropper
+      :selectedImage="selectedImage"
+      @cropComplete="handleCropComplete"
+    />
+  </div>
   <div class="section section--top">
     <div class="img-container">
       <div class="wrapper-img">
         <NuxtImg
           v-if="uploadState.loading === 'waiting'"
           class="image-fit image-empty"
-          src="https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image.png"
+          src="https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image-cropped.png"
         />
         <!-- https://www.svgrepo.com/show/4029/picture.svg -->
         <div
@@ -31,10 +37,18 @@
           <div>{{ uploadState.error }}</div>
         </div>
       </div>
-      <label class="btn btn--add-img">
-        <input type="file" @change="handleFileUpload" />
+      <div class="btn btn--add-img" @click="triggerFileInput">
         <span class="span--add-img">+</span>
-      </label>
+      </div>
+
+      <!-- Input de archivo oculto -->
+      <input
+        type="file"
+        ref="fileInput"
+        @change="handleImageSelect"
+        accept="image/*"
+        style="display: none"
+      />
     </div>
     <div class="right-container">
       <div class="title-box">
@@ -308,6 +322,45 @@ const directives = { clickOutside: vClickOutside.directive };
 const uploadsStore = useUploadsStore();
 const getUnitsState = computed(() => uploadsStore.getUnitsState);
 
+// Recorte de imágenes
+const fileInput = ref(null);
+const isModalOpen = ref(false);
+const selectedImage = ref("");
+let originalFileExtension = "";
+
+// Disparar el input de archivo oculto
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+const handleImageSelect = (event) => {
+  const file = event.target.files[0];
+  if (!file) {
+    console.log("No se seleccionó ningún archivo");
+    return;
+  }
+
+  // Extraer y almacenar la extensión del archivo original
+  originalFileExtension = getFileExtension(file.name);
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    selectedImage.value = e.target.result; // Guarda la imagen seleccionada para pasarla al modal
+    isModalOpen.value = true; // Abre el modal para el recorte
+    // Importante: resetear el input para evitar el problema de abrirlo dos veces
+    event.target.value = "";
+  };
+  reader.readAsDataURL(file);
+};
+
+const handleCropComplete = async (croppedBlob) => {
+  // Cierra el modal y resetea el estado
+  isModalOpen.value = false;
+  // selectedImage.value = null;
+  // Aquí llamas a handleFileUpload con el blob recortado
+  await handleFileUpload(croppedBlob, originalFileExtension);
+};
+
 // Manejo para subida de imágenes
 //const img = ref(null);
 const blobStore = useBlobStore();
@@ -321,20 +374,12 @@ const getFileExtension = (filename) => {
     .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
     .toLowerCase();
 };
-const handleFileUpload = async (event) => {
-  const originalFile = event.target.files[0];
-  if (!originalFile) {
-    console.log("No se seleccionó ningún archivo");
-    return;
-  }
+const handleFileUpload = async (blob, extension) => {
+  const newFileName = `r-${createUUID()}.${extension}`;
 
-  const newFileName = `r-${createUUID()}.${getFileExtension(
-    originalFile.name
-  )}`;
-
-  const newFile = new File([originalFile], newFileName, {
-    type: originalFile.type,
-    lastModified: originalFile.lastModified,
+  const newFile = new File([blob], newFileName, {
+    type: blob.type,
+    lastModified: new Date(),
   });
 
   await blobStore.uploadFileAndGetUrl(newFile);
@@ -753,20 +798,16 @@ select:focus {
   overflow: hidden;
   border: 1px solid $color-dark;
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .image-fit {
-  /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper, no la clase de la imagen en sí. */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /*
-  top: 0;
-  left: 0;
+  /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper (de dimensiones por ejemplo), no la clase de la imagen en sí. */
+
   width: 100%;
   height: 100%;
-  */
-  object-fit: cover;
+  object-fit: contain;
 }
 .image-empty {
   width: 600px;
