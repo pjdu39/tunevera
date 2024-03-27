@@ -1,9 +1,11 @@
 <template>
-  <div v-if="isModalOpen">
-    <ImageCropper
-      :selectedImage="selectedImage"
-      @cropComplete="handleCropComplete"
-    />
+  <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+    <div class="my-cropper-modal">
+      <ImageCropper
+        :selectedImage="selectedImage"
+        @cropComplete="handleCropComplete"
+      />
+    </div>
   </div>
   <div class="section section--top">
     <div class="img-container">
@@ -327,6 +329,10 @@ const fileInput = ref(null);
 const isModalOpen = ref(false);
 const selectedImage = ref("");
 let originalFileExtension = "";
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
 
 // Disparar el input de archivo oculto
 const triggerFileInput = () => {
@@ -779,6 +785,36 @@ select:focus {
   border-bottom: 2px solid $color-dark;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 60;
+}
+
+.my-cropper-modal {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: $color-background;
+  padding: 5px 20px 18px 20px;
+  border-radius: 10px;
+  /* Ajusta el tamaño según necesites */
+  width: auto;
+  height: auto;
+  max-height: 800px;
+  overflow-y: auto;
+  position: relative;
+  z-index: 61;
+}
+
 .section {
   margin-bottom: 40px;
 }
@@ -805,8 +841,8 @@ select:focus {
 .image-fit {
   /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper (de dimensiones por ejemplo), no la clase de la imagen en sí. */
 
-  width: 100%;
-  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   object-fit: contain;
 }
 .image-empty {
