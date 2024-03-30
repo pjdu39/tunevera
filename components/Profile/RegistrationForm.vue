@@ -1,4 +1,12 @@
 <template>
+  <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+    <div class="my-cropper-modal">
+      <ImageCropper
+        :selectedImage="selectedImage"
+        @cropComplete="handleCropComplete"
+      />
+    </div>
+  </div>
   <div v-if="loading === 'waiting'" class="container">
     <div class="section section--top">
       <div class="img-container">
@@ -12,11 +20,18 @@
             />
           </div>
         </div>
-        <label class="btn btn--add-img">
-          <input type="file" @change="handleFileUpload" />
+        <div class="btn btn--add-img" @click="triggerFileInput">
           <span class="span--add-img">+</span>
-        </label>
-      </div>
+        </div>
+        <!-- Input de archivo oculto -->
+        <input
+          type="file"
+          ref="fileInput"
+          @change="handleImageSelect"
+          accept="image/*"
+          style="display: none"
+        />
+        </div>
       <div>
         <button class="button cancel-btn" @click="cancel">Cancelar</button>
         <button class="button" :disabled="!validForm" @click="save">
@@ -141,6 +156,8 @@ const editProfileState = computed(() => profileStore.editProfileState);
 const nickname = ref(null);
 const description = ref(null);
 const picture = computed(() => {
+  if (croppedImage.value) return croppedImage.value;
+
   if (uploadState.value.loading === "loading") return null;
   if (uploadState.value.loading === "loaded") {
     const timestamp = new Date().getTime();
@@ -153,6 +170,17 @@ const picture = computed(() => {
 });
 const save = async () => {
   if (!validForm) return;
+
+  if (croppedImage.value) {
+    await handleFileUpload();
+    
+    // Limpia el estado de la imagen recortada después de subirla
+    croppedImage.value = null;
+    croppedImageExtension.value = "";
+  }
+
+  // TODO. Hacer pruebas para ver si esto es necesario
+  await wait(() => uploadState.value.data);
 
   patchAuth0User();
 
@@ -264,7 +292,54 @@ const validInput = (value) => {
   return patron.test(value);
 };
 
+// Recorte de imágenes
+const fileInput = ref(null);
+const isModalOpen = ref(false);
+const selectedImage = ref("");
+let originalFileExtension = "";
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
+
+// Disparar el input de archivo oculto
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+const handleImageSelect = (event) => {
+  const file = event.target.files[0];
+  if (!file) {
+    console.log("No se seleccionó ningún archivo");
+    return;
+  }
+
+  // Extraer y almacenar la extensión del archivo original
+  originalFileExtension = getFileExtension(file.name);
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    selectedImage.value = e.target.result; // Guarda la imagen seleccionada para pasarla al modal
+    isModalOpen.value = true; // Abre el modal para el recorte
+    // Importante: resetear el input para evitar el problema de abrirlo dos veces
+    event.target.value = "";
+  };
+  reader.readAsDataURL(file);
+};
+
+const croppedImageBlob = ref(null); // Almacena el Blob de la imagen recortada
+
+const handleCropComplete = (croppedBlob) => {
+  isModalOpen.value = false;
+  croppedImageBlob.value = croppedBlob; // Almacena el Blob directamente
+  croppedImage.value = URL.createObjectURL(croppedBlob); // Para visualización
+  croppedImageExtension.value = originalFileExtension;
+};
+
 // Manejo para subida de imágenes
+const croppedImage = ref(null); // Guarda el Blob de la imagen ya recortada
+const croppedImageExtension = ref("");
+
 const blobStore = useBlobStore();
 const uploadState = computed(() => blobStore.uploadState);
 const getFileExtension = (filename) => {
@@ -272,29 +347,17 @@ const getFileExtension = (filename) => {
     .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
     .toLowerCase();
 };
-const imageUpdateIndicator = ref(0); // Esto es para solicitar la imagen de nuevo al servidor, ya que su url no cambia.
-const handleFileUpload = async (event) => {
-  const originalFile = event.target.files[0];
-  if (!originalFile) {
-    console.error("No se seleccionó ningún archivo");
-    return;
-  }
+const handleFileUpload = async () => {
+  if (!croppedImageBlob.value) return;
 
-  const newFileName = `u-${user.value.sub}.${getFileExtension(
-    originalFile.name
-  )}`;
-
-  const newFile = new File([originalFile], newFileName, {
-    type: originalFile.type,
-    lastModified: originalFile.lastModified,
+  const newFileName = `u-${user.value.sub}.${croppedImageExtension.value}`;
+  const newFile = new File([croppedImageBlob.value], newFileName, {
+    type: croppedImageBlob.value.type,
+    lastModified: new Date(),
   });
 
   await blobStore.uploadFileAndGetUrl(newFile);
-
-  event.target.value = "";
-
-  // Actualiza el indicador después de subir el archivo
-  imageUpdateIndicator.value = new Date().getTime();
+  croppedImageBlob.value = null; // Limpia el blob después de la subida
 };
 
 const check = computed(() => {
@@ -352,6 +415,8 @@ const apiError = computed(() =>
 const emit = defineEmits(["exit"]);
 
 const cancel = () => {
+  croppedImage.value = null;
+  croppedImageExtension.value = "";
   emit("exit");
 };
 
@@ -465,6 +530,35 @@ select:focus {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   border-bottom: 2px solid $color-dark;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 60;
+}
+.my-cropper-modal {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: $color-background;
+  padding: 5px 20px 18px 20px;
+  border-radius: 10px;
+  /* Ajusta el tamaño según necesites */
+  width: auto;
+  height: auto;
+  max-height: 800px;
+  overflow-y: auto;
+  position: relative;
+  z-index: 61;
 }
 
 .state-container {

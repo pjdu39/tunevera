@@ -52,14 +52,19 @@ watch(
 const cropImage = () => {
   if (!cropper) return;
 
-  cropper.getCroppedCanvas().toBlob((blob) => {
+  // Opción para asegurar que el canvas tenga un fondo transparente
+  const canvasOptions = {
+    fillColor: 'transparent'
+  };
+
+  cropper.getCroppedCanvas(canvasOptions).toBlob((blob) => {
     emits("cropComplete", blob);
     // Limpieza después de recortar
     if (cropper) {
       cropper.destroy();
       cropper = null;
     }
-  }, "image/jpeg");
+  }, "image/png");
 };
 </script>
   

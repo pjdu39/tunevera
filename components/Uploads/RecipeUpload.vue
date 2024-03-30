@@ -42,7 +42,6 @@
       <div class="btn btn--add-img" @click="triggerFileInput">
         <span class="span--add-img">+</span>
       </div>
-
       <!-- Input de archivo oculto -->
       <input
         type="file"
@@ -389,8 +388,6 @@ const handleFileUpload = async (blob, extension) => {
   });
 
   await blobStore.uploadFileAndGetUrl(newFile);
-
-  event.target.value = "";
 };
 
 // Data
@@ -797,7 +794,6 @@ select:focus {
   align-items: center;
   z-index: 60;
 }
-
 .my-cropper-modal {
   top: 0;
   bottom: 0;
