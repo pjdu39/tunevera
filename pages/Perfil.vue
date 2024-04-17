@@ -68,7 +68,7 @@
               />
             </button>
             <div class="options-container">
-              <button class="options-btn" @click="clickShowOptions">
+              <button class="options-btn" @click="clickShowOptions" v-click-outside="clickOutside">
                 <font-awesome-icon
                   icon="fa fa-ellipsis-vertical"
                   class="fa-lg"
@@ -183,6 +183,13 @@ const handleExit = () => {
 
   if (!isSignedUp.value) logoutAndRedirectToLogin();
   else if (isEditing.value) isEditing.value = false;
+};
+
+// Click outside
+const clickOutside = () => {
+  if (showOptions.value) showOptions.value = false;
+
+  // Ir añadir todos los elementos que deban cerrarse al clickar fuera de ellos.
 };
 </script>
 

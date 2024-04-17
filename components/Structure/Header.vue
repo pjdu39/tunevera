@@ -2,39 +2,28 @@
   <div class="header">
     <div class="secondary-options-banner">
       <BButton
-        v-click-outside="onClickOutside"
         class="secondary-options-button"
         @click="opcionesGear = !opcionesGear"
+        v-click-outside="clickOutside"
       >
         <font-awesome-icon icon="fa fa-cog" aria-hidden="true" />
       </BButton>
       <div v-if="opcionesGear" class="gear-options-container">
-        <nuxt-link to="/Explorar" class="gear-option"> General </nuxt-link>
-        <nuxt-link to="/Explorar" class="gear-option"> Perfil </nuxt-link>
-        <nuxt-link to="/Explorar" class="gear-option"> Contáctanos </nuxt-link>
+        <nuxt-link to="/Buscar" class="gear-option"> General </nuxt-link>
+        <nuxt-link to="/Buscar" class="gear-option"> Perfil </nuxt-link>
+        <nuxt-link to="/Buscar" class="gear-option"> Contáctanos </nuxt-link>
       </div>
     </div>
     <NuxtImg src="/img/cookbook-logo-recorte.png" class="logo" />
   </div>
 </template>
 
-<script>
-import vClickOutside from "v-click-outside";
+<script setup>
+const opcionesGear = ref(false)
 
-export default {
-  directives: {
-    clickOutside: vClickOutside.directive,
-  },
-  data() {
-    return {
-      opcionesGear: false,
-    };
-  },
-  methods: {
-    onClickOutside(event) {
-      this.opcionesGear = false;
-    },
-  },
+// Click outside
+const clickOutside = () => {
+  if (opcionesGear.value) opcionesGear.value = false;
 };
 </script>
 

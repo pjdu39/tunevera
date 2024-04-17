@@ -4,7 +4,7 @@
       <div class="question-container">
         <div class="title-box">
           <div class="label label--title">Pregunta</div>
-          <input v-model="postPollData.title" />
+          <input v-model="postPollData.title" :maxlength="titleMaxLenght" />
         </div>
       </div>
     </div>
@@ -21,6 +21,7 @@
             class="option-input"
             placeholder="Añadir opción"
             v-model="postPollData.options[index]"
+            :maxlength="optionTextMaxLenght"
             trim
           />
         </div>
@@ -33,6 +34,7 @@
           class="btn btn--add-option"
           @click="addOption"
           :disabled="!canAddOption"
+          :hidden="maxOptionsReched"
         >
           <font-awesome-icon
             icon="fa fa-plus"
@@ -43,116 +45,35 @@
       </div>
     </div>
     <div>
-      <button class="" @click="uploadPoll" :disabled="!formCompleted">
-        <span class="">Subir</span>
+      <button
+        class="btn btn--publicar"
+        @click="uploadPoll"
+        :disabled="!validPoll"
+      >
+        <span>Publicar</span>
+        <font-awesome-icon
+          v-if="newPollState.loading === 'loading'"
+          icon="fa fa-spinner"
+          class="fa-pulse fa-lg"
+          aria-hidden="true"
+        />
       </button>
     </div>
   </div>
-
-  <!-------------------------------------------------------------------------------------------->
-
-  <!--
-  <div v-if="newPollState.loading === 'waiting'">
-    <div class="section">
-      <h5>Pregunta</h5>
-      <b-row>
-        <b-col class="col-md-11">
-          <BFormGroup
-            id="fieldset-title"
-            class="input-container title-container"
-            label-for="input-title"
-          >
-            <BFormInput
-              id="input-title"
-              class="input input-title"
-              placeholder="¿Qué quieres preguntar?"
-              v-model="postPollData.title"
-              trim
-            ></BFormInput>
-          </BFormGroup>
-        </b-col>
-      </b-row>
-    </div>
-    <div class="section">
-      <h6>Opciones</h6>
-      <div>
-        <BListGroupItem
-          class="input-container"
-          v-for="(option, index) in postPollData.options"
-          :key="index"
-        >
-          <b-row>
-            <b-col class="col-md-11">
-              <BFormGroup
-                id="fieldset-literal"
-                class=""
-                label-for="input-literal"
-              >
-                <BFormInput
-                  id="input-literal"
-                  class="input input-literal"
-                  placeholder="Escribir opción..."
-                  v-model="postPollData.options[index]"
-                  trim
-                ></BFormInput>
-              </BFormGroup>
-            </b-col>
-            <b-col class="col-md-1">
-              <button
-                class="base-btn base-btn--quitar"
-                @click="EliminaRespuesta(option)"
-              >
-                <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
-              </button>
-            </b-col>
-          </b-row>
-        </BListGroupItem>
-      </div>
-      <div>
-        <button
-          class="base-btn base-btn--anadir"
-          @click="OtraRespuesta()"
-          :disabled="!PuedeAnadirRespuesta"
-        >
-          <font-awesome-icon
-            icon="fa fa-plus"
-            class="fa-lg"
-            aria-hidden="true"
-          />
-        </button>
-      </div>
-    </div>
-    <div class="section-end">
-      <b-row>
-        <b-col class="col-md-6">
-          <button class="base-btn base-btn--aceptar" @click="Atras()">
-            Atrás
-          </button>
-        </b-col>
-        <b-col class="col-md-6">
-          <button class="base-btn base-btn--aceptar" @click="Aceptar()">
-            Aceptar
-          </button>
-        </b-col>
-      </b-row>
-    </div>
+  <div v-if="newPollState.loading === 'error'">
+    <div>Mostrar este mensaje a Pablo.</div>
+    <div>Ups, parece que algo falló. {{ newPollState.error }}</div>
   </div>
-  -->
-
-  <div v-else-if="newPollState.loading === 'loading'" class="spinner">
-    <font-awesome-icon
-      icon="fa fa-spinner"
-      class="fa-pulse fa-lg"
-      aria-hidden="true"
-    />
-  </div>
-  <div v-else-if="newPollState.loading === 'loaded'">Encuesta publicada.</div>
-  <div v-else-if="newPollState.loading === 'error'">Error</div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 import { useUploadsStore } from "~/store/uploads.js";
+
+// Constantes
+const titleMaxLenght = 60;
+const optionTextMaxLenght = 60;
+const maxOptions = 4;
 
 // Definiendo las propiedades reactivas
 const postPollData = ref({
@@ -167,7 +88,14 @@ const store = useUploadsStore();
 const newPollState = computed(() => store.newPollState);
 
 // Manejo de formmulario
+const maxOptionsReched = computed(() => {
+  if (postPollData.value.options.length >= maxOptions)
+    return true
+
+  return false
+})
 const canAddOption = computed(() => {
+  if (maxOptionsReched.value) return
   return postPollData.value.options.every((x) => x);
 });
 const addOption = () => {
@@ -176,23 +104,14 @@ const addOption = () => {
   }
 };
 const deleteOption = (index) => {
+  if (postPollData.value.options.length === 1) {
+    postPollData.value.options[0] = ''
+    return
+  }
   postPollData.value.options.splice(index, 1);
 };
 
 // Subir encuesta
-const titleCompleted = computed(() =>
-  postPollData.value.title ? true : false
-);
-const optionsCompleted = computed(() =>
-  postPollData.value.options.filter((x) => x).length >= 2 ? true : false
-);
-const formCompleted = computed(() => {
-  if (titleCompleted.value && optionsCompleted.value) {
-    return true;
-  }
-
-  return false;
-});
 const cleanEmptyForms = () => {
   if (!canAddOption.value) {
     if (postPollData.value.options.length > 1) {
@@ -206,10 +125,59 @@ const cleanEmptyForms = () => {
 const uploadPoll = () => {
   cleanEmptyForms();
 
-  if (!formCompleted) return;
+  if (!validPoll) return;
 
   store.postPoll(postPollData.value);
 };
+// Redirección tras guardar
+const router = useRouter();
+watch(
+  () => newPollState.value.loading,
+  (newValue) => {
+    console.log(newValue);
+    if (newValue === "loaded") {
+      console.log(newPollState.value.data);
+      router.push(`/`);
+    }
+  }
+);
+
+// Validaciones
+const validTitle = computed(() => {
+  if (
+    postPollData.value.title &&
+    postPollData.value.title.length <= titleMaxLenght
+  )
+    return true;
+
+  return false
+});
+const validNumOptions = computed(() =>  {
+  if (
+    postPollData.value.options.length >= 2 &&
+    postPollData.value.options.length <= maxOptions
+  )
+    return true
+
+  return false
+});
+const validOptions = computed(() =>  {
+  if (
+    !postPollData.value.options.some(x => !x || x.trim() === '') &&
+    !postPollData.value.options.some(x => x.length >= optionTextMaxLenght)
+  )
+    return true
+
+  return false
+});
+const validPoll = computed(() => {
+  if (
+    validTitle.value &&
+    validNumOptions.value &&
+    validOptions.value
+  )
+    return true
+});
 </script>
 
 <style scoped lang="scss">
@@ -293,6 +261,9 @@ select:focus {
   border-radius: 50%;
   color: white;
   padding: 0;
+}
+.btn:disabled {
+  background-color: $color-soft-grey;
 }
 .btn--delete {
   width: 30px;
@@ -387,5 +358,11 @@ input[type="file"] {
 .spinner {
   text-align: center;
   font-size: 180%;
+}
+.btn--publicar {
+  display: flex;
+  gap: 10px;
+  padding: 1px 8px 2px 8px;
+  border-radius: 6px;
 }
 </style>

@@ -82,7 +82,6 @@
                 min="0"
                 :max="maxTime"
                 autocomplete="off"
-                v-click-outside="roundTime"
                 @input="validateTime"
                 @keydown="preventNonNumeric"
               />
@@ -270,22 +269,6 @@
     <div>Mostrar este mensaje a Pablo.</div>
     <div>Ups, parece que algo falló. {{ newRecipeState.error }}</div>
   </div>
-  <!--
-  <div v-else-if="newRecipeState.loading === 'loading'" class="spinner">
-    <font-awesome-icon
-      icon="fa fa-spinner"
-      class="fa-pulse fa-lg"
-      aria-hidden="true"
-    />
-  </div>
-  <div v-else-if="newRecipeState.loading === 'loaded'">
-    Wow! Eso tiene buena pinta! Se ha añadido a tus recetas
-  </div>
-  <div v-else-if="newRecipeState.loading === 'error'">
-    Ups, parece que algo falló. {{ newRecipeState.error }}
-    <button>Reintentar</button>
-  </div>
-  -->
 </template>
 
 <script setup>
@@ -293,7 +276,6 @@ import { ref, computed } from "vue";
 import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
 import { v4 as uuidv4 } from "uuid";
-import vClickOutside from "v-click-outside";
 
 const { guard } = useAuth();
 
@@ -308,16 +290,12 @@ const maxAmount = 9999.99;
 const stepMaxLenght = 450;
 
 // Protección de ruta con login
-const route = useRoute();
+const route = useRoute(); /* TODO: Importante, mover este guard a la pçagina en lugar de dejarlo en el componente. */
 
 onMounted(async () => {
   await guard(route.path);
   uploadsStore.fetchUnits();
 });
-
-// Nombres y directivas
-const name = "RecipeUpload";
-const directives = { clickOutside: vClickOutside.directive };
 
 // Init computed properties.
 const uploadsStore = useUploadsStore();
@@ -484,6 +462,10 @@ const convertTimeToInt = () => {
   postRecipeData.value.time = parseInt(postRecipeData.value.time);
 };
 const roundTime = () => {
+
+  /* De momento no llamo esto en ningún sitio. La idea era redondear a múltiplos de 5 siempre que se clicke fuera del input,
+    pero por ahora voy a permitir que el usuario ponga el tiempo exacto que quiera. v-click-outside="roundTime"*/
+
   convertTimeToInt();
 
   if (postRecipeData.value.time < 0) postRecipeData.value.time = 0;
@@ -631,7 +613,6 @@ const validServings = computed(() =>
     : false
 );
 const validPictureUrl = computed(() =>
-  // TODO: Cuando se le asignen nombres a la imagen, comprobar que el nombre es correcto y coincide con el id de la pulicación
   uploadState.value.data ? true : false
 );
 const validRecipeIngredients = computed(() => {
@@ -706,9 +687,7 @@ const router = useRouter();
 watch(
   () => newRecipeState.value.loading,
   (newValue) => {
-    console.log(newValue);
     if (newValue === "loaded") {
-      console.log(newRecipeState.value.data);
       router.push(`/receta?id=${newRecipeState.value.data}`);
     }
   }
@@ -718,12 +697,6 @@ watch(
 onUnmounted(() => {
   blobStore.flush();
 });
-
-// Cosas del "clickoutside"
-const onClickOutside = (event) => {
-  console.log("im clicking outside!");
-  showDropdown.value = false;
-};
 </script>
 
 <style scoped lang="scss">

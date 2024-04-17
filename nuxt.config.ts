@@ -68,7 +68,8 @@ const config: NuxtConfig = {
   plugins: [
     "~/plugins/auth0.js",
     "~/plugins/fontawesome.js",
-    "~/plugins/fetch-api.js"
+    "~/plugins/fetch-api.js",
+    "~/plugins/v-click-outside.js"
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
