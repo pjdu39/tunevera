@@ -1,110 +1,53 @@
 <template>
-  <div v-if="newDiscussionState.loading === 'waiting'">
-    <div class="section">
-      <div class="title-container">
-        <div class="label label--title">Tema</div>
-        <input
-          class="title-input"
-          placeholder="¿Sobre qué quieres hablar?"
-          v-model="postDiscussionData.title"
-          trim
-        />
-      </div>
-    </div>
-    <div class="section">
-      <div class="description-container">
-        <div class="label label--title">Cuerpo</div>
-        <input
-          class="description-input"
-          placeholder="Cuerpo de texto (opcional)"
-          v-model="postDiscussionData.description"
-          trim
-        />
-      </div>
-    </div>
-    <div>
-      <button class="" @click="uploadDiscussion" :disabled="!formCompleted">
-        <span class="">Subir</span>
-      </button>
+  <div class="section">
+    <div class="title-container">
+      <div class="label label--title">Tema</div>
+      <input
+        class="title-input"
+        placeholder="¿Sobre qué quieres hablar?"
+        v-model="postDiscussionData.title"
+        :maxlength="titleMaxLenght"
+        trim
+      />
     </div>
   </div>
-
-  <!-- TODO: Borrar. Legacy -->
-  <!--
-  <div v-if="newDiscussionState.loading === 'waiting'">
-    <div class="section">
-      <h5>Tema</h5>
-      <b-row>
-        <b-col class="col-md-11">
-          <BFormGroup
-            id="fieldset-title"
-            class="input-container title-container"
-            label-for="input-title"
-          >
-            <BFormInput
-              id="input-title"
-              class="input input-title"
-              placeholder="¿Sobre qué quieres hablar?"
-              v-model="postDiscussionData.title"
-              trim
-            ></BFormInput>
-          </BFormGroup>
-        </b-col>
-      </b-row>
-    </div>
-    <div class="section">
-      <h6>Cuerpo</h6>
-      <b-row>
-        <b-col class="col-md-11">
-          <BFormGroup
-            id="fieldset-cuerpo"
-            class="form-group-cuerpo"
-            label-for="input-cuerpo"
-          >
-            <BFormTextarea
-              id="input-cuerpo"
-              class="input textarea-cuerpo"
-              placeholder="Cuerpo de texto (opcional)"
-              v-model="postDiscussionData.description"
-              trim
-            ></BFormTextarea>
-          </BFormGroup>
-        </b-col>
-      </b-row>
-    </div>
-    <div class="section-end">
-      <b-row>
-        <b-col class="col-md-6">
-          <button class="base-btn base-btn--aceptar" @click="Atras()">
-            Atrás
-          </button>
-        </b-col>
-        <b-col class="col-md-6">
-          <button class="base-btn base-btn--aceptar" @click="Aceptar()">
-            Aceptar
-          </button>
-        </b-col>
-      </b-row>
+  <div class="section">
+    <div class="description-container">
+      <div class="label label--title">Cuerpo</div>
+      <input
+        class="description-input"
+        placeholder="Cuerpo de texto (opcional)"
+        v-model="postDiscussionData.description"
+        :maxlength="descriptionMaxLenght"
+        trim
+      />
     </div>
   </div>
--->
-
-  <div v-else-if="newDiscussionState.loading === 'loading'" class="spinner">
-    <font-awesome-icon
-      icon="fa fa-spinner"
-      class="fa-pulse fa-lg"
-      aria-hidden="true"
-    />
+  <div>
+    <button
+      class="btn btn--publicar"
+      @click="uploadDiscussion"
+      :disabled="!validDiscussion"
+    >
+      <span>Publicar</span>
+      <font-awesome-icon
+        v-if="newDiscussionState.loading === 'loading'"
+        icon="fa fa-spinner"
+        class="fa-pulse fa-lg"
+        aria-hidden="true"
+      />
+    </button>
   </div>
-  <div v-else-if="newDiscussionState.loading === 'loaded'">
-    Artículo publicado con éxito.
-  </div>
-  <div v-else-if="newDiscussionState.loading === 'error'">Error</div>
+  <div v-if="newDiscussionState.loading === 'error'">Error</div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useUploadsStore } from "~/store/uploads";
+
+// Constantes
+const titleMaxLenght = 60;
+const descriptionMaxLenght = 520;
 
 // Definición de la propiedad reactiva para los datos de la discusión
 const postDiscussionData = ref({
@@ -119,24 +62,46 @@ const store = useUploadsStore();
 const newDiscussionState = computed(() => store.newDiscussionState);
 
 // Subir discusión
-const titleCompleted = computed(() =>
-  postDiscussionData.value.title ? true : false
-);
-const descriptionCompleted = computed(() =>
-  postDiscussionData.value.description ? true : false
-);
-const formCompleted = computed(() => {
-  if (titleCompleted.value && descriptionCompleted.value) {
-    return true;
-  }
-
-  return false;
-});
 const uploadDiscussion = () => {
-  if (!formCompleted) return;
+  if (!validDiscussion) return;
 
   store.postDiscussion(postDiscussionData.value);
 };
+// Redirección tras guardar
+const router = useRouter();
+watch(
+  () => newDiscussionState.value.loading,
+  (newValue) => {
+    if (newValue === "loaded") {
+      router.push(`/`);
+    }
+  }
+);
+
+// Validaciones
+const validTitle = computed(() => {
+  if (
+    postDiscussionData.value.title &&
+    postDiscussionData.value.title.length <= titleMaxLenght
+  )
+    return true;
+
+  return false;
+});
+const validDescription = computed(() => {
+  if (
+    postDiscussionData.value.title.length <= descriptionMaxLenght
+  )
+    return true;
+
+  return false;
+});
+const validDiscussion = computed(() => {
+  if (validTitle.value && validDescription)
+    return true;
+
+    return false
+});
 </script>
 
 <style scoped lang="scss">
@@ -192,7 +157,7 @@ select:focus {
   margin-bottom: 40px;
 }
 .title-container {
-  width: 50%
+  width: 50%;
 }
 .label {
   font-size: 130%;
@@ -207,56 +172,22 @@ select:focus {
 }
 .description-input {
 }
-
-/* TODO: Borrar. Legacy -------------------------------------------------------------------- */
-.input {
-  border: none;
-  background-color: #f2f4f5;
-  border-radius: 0.7rem;
-  box-shadow: 2px 2px 3px 1px #55555525 inset,
-    -1.3px -1.3px 9px 2px rgb(255, 255, 255) inset;
-}
-.input-title {
-  font-size: 110%;
-}
-.base-btn {
-  padding: 0.4rem 0.5rem 0.4rem 0.4rem;
-  margin-right: 0rem;
-  margin-bottom: 1rem;
-
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: $color-primary;
-  /* TODO: Invertir los inset tratando de conseguir el mismo resultado. Con los inset simulando los bordes queda fatal al pulsar los botones */
-  box-shadow: 1px 1px 6px -3px #575757, -1px -1px 1px 0.5px #70340071 inset,
-    -1px -1px 6px 1.5px rgb(255, 255, 255),
-    0.4px 0.4px 1px 0.5px rgb(255, 216, 165) inset;
-  color: #eaedee;
-  border-radius: 0.9rem;
-  border-style: none;
+  border-radius: 50%;
+  color: white;
+  padding: 0;
 }
-.base-btn:hover {
-  color: #ffffff;
+.btn:disabled {
+  background-color: $color-soft-grey;
 }
-.base-btn:active {
-  color: #ffffff;
-  box-shadow: -1px -1px 6px -3px #575757, 1px 1px 1px 0.5px #70340041 inset,
-    1px 1px 6px 1.5px rgb(255, 255, 255),
-    -0.4px -0.4px 1px 0.5px rgb(255, 216, 165) inset;
-}
-.base-btn--aceptar {
-  margin-top: 4rem;
-  width: 100%;
-}
-input[type="file"] {
-  display: none;
-}
-.textarea::-webkit-scrollbar {
-  display: none;
-}
-.textarea-cuerpo {
-  height: 7rem;
-}
-.spinner {
-  text-align: center;
-  font-size: 180%;
+.btn--publicar {
+  display: flex;
+  gap: 10px;
+  padding: 1px 8px 2px 8px;
+  border-radius: 6px;
 }
 </style>
