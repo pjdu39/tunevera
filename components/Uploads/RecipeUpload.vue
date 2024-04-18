@@ -277,8 +277,6 @@ import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
 import { v4 as uuidv4 } from "uuid";
 
-const { guard } = useAuth();
-
 // Constantes
 const titleMaxLenght = 60;
 const descriptionMaxLenght = 450;
@@ -289,11 +287,7 @@ const ingredientMaxLenght = 70; // Ampliable hasta 100.
 const maxAmount = 9999.99;
 const stepMaxLenght = 450;
 
-// Protección de ruta con login
-const route = useRoute(); /* TODO: Importante, mover este guard a la pçagina en lugar de dejarlo en el componente. */
-
 onMounted(async () => {
-  await guard(route.path);
   uploadsStore.fetchUnits();
 });
 

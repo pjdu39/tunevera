@@ -22,12 +22,7 @@ import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import { useAuth } from '~/composables/useAuth';
 
-/*
-definePageMeta({
-  middleware: "auth",
-});
-*/
-
+// Protección de ruta con login
 const { guard } = useAuth();
 const route = useRoute();
 
