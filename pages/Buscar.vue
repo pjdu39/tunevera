@@ -21,4 +21,16 @@ import SearchUsers from '~/components/Search/SearchUsers.vue';
   margin: auto;
   width: 53rem;
 }
+
+/* Aumentar la especificidad para el ul */
+:deep(ul.p-tabview-nav) {
+  padding: 0;
+  font-family: $font-headers;
+}
+/* Aumentar la especificidad para el contenido */
+:deep(.p-tabview-panels) {
+  padding: 0 20px;
+  margin: 0;
+  font-family: $font-primary;
+}
 </style>

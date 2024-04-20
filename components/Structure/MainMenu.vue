@@ -42,6 +42,7 @@
   background-color: $color-background;
   width: 100vw;
   z-index: 50;
+  font-family: $font-headers;
 }
 .navbar-main-container {
   height: $header-main-bar-height;

@@ -635,6 +635,7 @@ select:focus {
 .label {
   font-weight: 600;
   font-size: 110%;
+  font-family: $font-headers;
 }
 .name-input-container {
   display: flex;

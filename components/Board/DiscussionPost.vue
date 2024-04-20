@@ -52,6 +52,7 @@ const props = defineProps({
 }
 .title {
   flex-grow: 0;
+  font-family: $font-headers;
 }
 .description {
   flex-grow: 20;

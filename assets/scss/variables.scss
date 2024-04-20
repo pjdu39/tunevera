@@ -6,8 +6,64 @@ $color-vegan: rgb(178, 241, 142);
 $color-soft-grey: rgb(204, 204, 204);
 $color-red: #df6666;
 
-//Layout
+// Layout
 $header-top-bar-height: 1.5rem;
 $header-logo-height: 10rem;
 $header-main-bar-height: 2rem;
-$header-height: $header-top-bar-height + $header-logo-height + $header-main-bar-height // TODO: Obsoleto, comprobar si se usa y borrarlo
+
+// Fuentes
+$font-primary: 'Space Mono', monospace;
+$font-headers: 'Roboto Condensed', sans-serif;
+
+  // font-family: 'Rockwell', serif;
+
+  // font-family: 'Arial', sans-serif;
+
+  // font-family: 'Tahoma', sans-serif;
+
+  // font-family: 'Georgia', serif;
+
+  // font-family: 'Courier', monospace;
+
+  // font-family: 'Helvetica', sans-serif;
+
+  // font-family: 'Cambria', serif;
+ 
+  // font-family: 'Impact', sans-serif; /* encabezados */
+
+  // font-family: 'Anton', sans-serif; /* encabezados, puede que demasiado fuerte */
+
+  // font-family: 'Roboto Condensed', sans-serif; /* encabezados, esta es la que más me gusta de momento.*/
+
+  // font-family: 'Oswald', sans-serif; /* encabezados, esta me gusta mucho */
+
+  // font-family: 'Bebas Neue', sans-serif; /* encabezados, muy condensada, puede que demasiado */
+
+  // font-family: 'Arial Black', sans-serif; /* encabezados (demasiado separadas...)*/
+
+  // font-family: 'Trebuchet MS', sans-serif; /* textos */
+
+  // font-family: 'Roboto', sans-serif; /* textos */
+
+  // font-family: 'Open Sans', sans-serif; /* textos */
+  
+  // font-family: 'Noto Sans', sans-serif; /* textos */
+
+
+  // font-family: 'Andale Mono', monospace; /* textos */
+
+  // font-family: 'Roboto Mono', monospace; /* textos */
+
+  // font-family: 'Source Code Pro', monospace;  /* textos, buen candidato */
+
+  // font-family: 'Fira Mono', monospace; /* textos */
+
+  // font-family: 'Courier Prime', monospace; /* textos */
+
+  // font-family: 'Space Mono', monospace; /* textos, buen candidato */
+
+  // font-family: 'JetBrains Mono', monospace; /* textos */
+
+  // font-family: 'VT323', monospace; /* textos */
+
+  // font-family: 'Inconsolata', monospace; /* textos */

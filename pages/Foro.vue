@@ -208,9 +208,9 @@ textarea:focus {
   object-fit: cover;
 }
 .title {
-  font-size: 120%;
-  font-style: italic;
   margin-bottom: 30px;
+  font-size: 140%;
+  font-family: $font-headers;
 }
 .comments-section {
   position: relative;
@@ -277,6 +277,7 @@ textarea:focus {
 .label-comment {
   padding-top: 40px;
   font-size: 140%;
+  font-family: $font-headers;
 }
 .comment-container {
   position: relative;

@@ -105,6 +105,7 @@ const props = defineProps({
 }
 .title {
   flex-grow: 0;
+  font-family: $font-headers;
 }
 .general-info-bottom {
   display: flex;

@@ -173,6 +173,7 @@ const anchoActual = computed(() => anchoDiv.value);
 .title {
   flex-grow: 0;
   margin-bottom: 1rem;
+  font-family: $font-headers;
 }
 .post-body {
   flex-grow: 20;

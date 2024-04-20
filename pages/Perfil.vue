@@ -234,6 +234,7 @@ const clickOutside = () => {
   justify-content: space-evenly;
   height: 100%;
   flex-grow: 1;
+  font-family: $font-headers;
 }
 .summary-item {
   height: 100%;
@@ -330,6 +331,7 @@ const clickOutside = () => {
 /* Aumentar la especificidad para el ul */
 :deep(ul.p-tabview-nav) {
   padding: 0;
+  font-family: $font-headers;
 }
 
 /* Aumentar la especificidad para los li */
@@ -350,6 +352,7 @@ const clickOutside = () => {
 /* Aumentar la especificidad para el contenido */
 :deep(.p-tabview-panels) {
   padding: 0;
+  font-family: $font-primary;
 }
 
 /* Esto está ahora en las clases globales

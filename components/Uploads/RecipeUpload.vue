@@ -40,7 +40,11 @@
         </div>
       </div>
       <div class="btn btn--add-img" @click="triggerFileInput">
-        <span class="span--add-img">+</span>
+        <font-awesome-icon
+                  icon="fa-solid fa-plus"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
       </div>
       <!-- Input de archivo oculto -->
       <input
@@ -72,7 +76,11 @@
             </div>
             <div class="interactive-input-box-bottom">
               <button class="btn btn--i-btn" @click="sumTime(-5)">
-                <span class="span--i-btn">-</span>
+                <font-awesome-icon
+                  icon="fa-solid fa-minus"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
               </button>
               <input
                 type="number"
@@ -87,7 +95,11 @@
               />
               <!-- TODO: Bug. Pasos para reproducirlo: poner números en el input, seleccionarlo todo, pulsar cualquier letra (salvo la "e") -->
               <button class="btn btn--i-btn" @click="sumTime(5)">
-                <span class="span--i-btn">+</span>
+                <font-awesome-icon
+                  icon="fa-solid fa-plus"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
               </button>
             </div>
           </div>
@@ -103,7 +115,11 @@
             </div>
             <div class="interactive-input-box-bottom">
               <button class="btn btn--i-btn" @click="sumServing(-1)">
-                <span class="span--i-btn">-</span>
+                <font-awesome-icon
+                  icon="fa-solid fa-minus"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
               </button>
               <input
                 type="number"
@@ -117,7 +133,11 @@
                 @keydown="preventNonNumeric"
               />
               <button class="btn btn--i-btn" @click="sumServing(1)">
-                <span class="span--i-btn">+</span>
+                <font-awesome-icon
+                  icon="fa-solid fa-plus"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
               </button>
             </div>
           </div>
@@ -144,7 +164,11 @@
           :disabled="!canAddTag"
           @click="addTag(tag)"
         >
-          <span class="span--add-tag-btn">+</span>
+        <font-awesome-icon
+                  icon="fa-solid fa-plus"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
         </button>
       </div>
     </div>
@@ -216,7 +240,11 @@
       @click="addIngredient()"
       :disabled="!canAddIngredient"
     >
-      <span class="span--i-btn">+</span>
+    <font-awesome-icon
+                  icon="fa-solid fa-plus"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
     </button>
   </div>
   <div class="section section--steps">
@@ -246,7 +274,11 @@
     </div>
     <div>
       <button class="btn btn--i-btn" @click="addStep()" :disabled="!canAddStep">
-        <span class="span--i-btn">+</span>
+        <font-awesome-icon
+                  icon="fa-solid fa-plus"
+                  class="fa-lg"
+                  aria-hidden="true"
+                />
       </button>
     </div>
   </div>
@@ -456,7 +488,6 @@ const convertTimeToInt = () => {
   postRecipeData.value.time = parseInt(postRecipeData.value.time);
 };
 const roundTime = () => {
-
   /* De momento no llamo esto en ningún sitio. La idea era redondear a múltiplos de 5 siempre que se clicke fuera del input,
     pero por ahora voy a permitir que el usuario ponga el tiempo exacto que quiera. v-click-outside="roundTime"*/
 
@@ -606,9 +637,7 @@ const validServings = computed(() =>
     ? true
     : false
 );
-const validPictureUrl = computed(() =>
-  uploadState.value.data ? true : false
-);
+const validPictureUrl = computed(() => (uploadState.value.data ? true : false));
 const validRecipeIngredients = computed(() => {
   if (postRecipeData.value.recipeIngredients.length === 0) return false;
   if (
@@ -824,9 +853,12 @@ select:focus {
 .btn:disabled {
   background-color: $color-soft-grey;
 }
+/*
+Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
 .span--add-img {
   transform: translateY(-13%);
 }
+*/
 .btn--add-img {
   position: absolute;
   right: 0;
@@ -834,7 +866,7 @@ select:focus {
   width: 50px;
   height: 50px;
   line-height: 50px; /* Ajusta a la altura del botón. Depende del transform del span para que el texto lo aplique. */
-  font-size: 300%;
+  font-size: 180%;
   font-weight: bold;
 }
 .right-container {
@@ -849,6 +881,7 @@ select:focus {
 }
 .label {
   font-size: 130%;
+  font-family: $font-headers;
 }
 .label--title {
   font-size: 150%;
@@ -864,14 +897,16 @@ select:focus {
 .input--tag {
   max-width: 350px;
 }
+/*
 .span--add-tag-btn {
   transform: translateY(-16%);
 }
+*/
 .btn--add-tag {
   width: 30px;
   height: 30px;
   line-height: 20px; /* Ajusta a la altura del botón. Depende del transform del span para que el texto lo aplique. */
-  font-size: 150%;
+  font-size: 100%;
   font-weight: bold;
 }
 .selected-tags-container {
@@ -915,14 +950,16 @@ select:focus {
 .interactive-input-box-bottom {
   display: flex;
 }
+/*
 .span--i-btn {
-  transform: translateY(-16%);
+  transform: translateY(-13%);
 }
+*/
 .btn--i-btn {
   width: 30px;
   height: 30px;
   line-height: 20px; /* Ajusta a la altura del botón. Depende del transform del span para que el texto lo aplique. */
-  font-size: 150%;
+  font-size: 90%;
   font-weight: bold;
 }
 .interactive-input {

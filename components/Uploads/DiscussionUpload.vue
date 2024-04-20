@@ -161,6 +161,7 @@ select:focus {
 }
 .label {
   font-size: 130%;
+  font-family: $font-headers;
 }
 .label--title {
   font-size: 150%;

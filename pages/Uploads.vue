@@ -1,6 +1,6 @@
 <template>
   <div class="uploads">
-    <TabView content-class="mt-3" class="">
+    <TabView content-class="mt-3">
       <TabPanel header="RECETA">
         <RecipeUpload />
       </TabPanel>
@@ -38,6 +38,16 @@ onMounted(() => {
   width: 55rem;
   border: 3px solid $color-dark;
   border-radius: 5px;
+}
+
+/* Aumentar la especificidad para el ul */
+:deep(ul.p-tabview-nav) {
+  padding: 0;
+  font-family: $font-headers;
+}
+/* Aumentar la especificidad para el contenido */
+:deep(.p-tabview-panels) {
+  font-family: $font-primary;
 }
 
 @media (max-width: 1100px) {

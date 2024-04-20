@@ -628,5 +628,6 @@ input:disabled {
 :deep(.p-tabview-panels) {
   padding: 0 20px;
   margin: 0;
+  font-family: $font-primary;
 }
 </style>

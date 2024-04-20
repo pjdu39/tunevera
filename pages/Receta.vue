@@ -354,6 +354,7 @@ textarea:focus {
 .recipe-title {
   max-width: 380px;
   font-size: 210%;
+  font-family: $font-headers;
 }
 .signature-container {
   position: relative;
@@ -433,7 +434,7 @@ textarea:focus {
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
-  width: 10%;
+  width: 15%;
 }
 .icon-info-container {
   margin-top: 5px;
@@ -471,7 +472,7 @@ textarea:focus {
   margin-bottom: 1rem;
   font-size: 150%;
   text-decoration: underline;
-  /* border-bottom: 2px solid $color-dark; */
+  font-family: $font-headers;
 }
 .ingredient {
   margin-left: 5px;
@@ -530,6 +531,7 @@ textarea:focus {
 .title-comments {
   margin-top: 30px;
   font-size: 150%;
+  font-family: $font-headers;
 }
 .comment-container {
   position: relative;
