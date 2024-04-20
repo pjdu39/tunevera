@@ -234,7 +234,7 @@ const clickOutside = () => {
   justify-content: space-evenly;
   height: 100%;
   flex-grow: 1;
-  font-family: $font-headers;
+  // font-family: $font-headers;
 }
 .summary-item {
   height: 100%;
