@@ -238,7 +238,7 @@ const clickOutside = () => {
 }
 .summary-item {
   height: 100%;
-  width: 5rem;
+  width: auto;
   text-align: center;
 }
 .s-i-num {
