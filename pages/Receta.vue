@@ -88,13 +88,13 @@
         </div>
       </div>
       <div class="tags-section">
-        <div
-          class="badge--tag"
-          v-for="(tag, index) in recipeData.tags"
-          :key="index"
-        >
-            <!-- Convertimos el objeto etiqueta a una cadena JSON y lo codificamos para URL -->
-            <nuxt-link :to="`/buscar?tag=${encodeURIComponent(JSON.stringify(tag))}`">{{ tag.text }}</nuxt-link>
+        <div v-for="(tag, index) in recipeData.tags" :key="index">
+          <!-- Convertimos el objeto etiqueta a una cadena JSON y lo codificamos para URL -->
+          <nuxt-link
+            :to="`/buscar?tag=${encodeURIComponent(JSON.stringify(tag))}`"
+            class="badge--tag"
+            >#{{ tag.text }}</nuxt-link
+          >
         </div>
       </div>
       <div class="middle-section">
@@ -244,13 +244,13 @@ const semanticTransformation = (ingredient) => {
   }
 
   // Componer la oración
-  let result = '';
+  let result = "";
 
-  if (ingredient.amount) result = `${ingredient.amount}`
-  if (ingredient.amount && semanticUnit) result += ` ${semanticUnit} de`
-  result += ` ${semanticIngredient}`
+  if (ingredient.amount) result = `${ingredient.amount}`;
+  if (ingredient.amount && semanticUnit) result += ` ${semanticUnit} de`;
+  result += ` ${semanticIngredient}`;
 
-  if (singularUnit === "al gusto") result += ` ${singularUnit}`
+  if (singularUnit === "al gusto") result += ` ${singularUnit}`;
 
   return result;
 };
