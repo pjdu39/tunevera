@@ -2,7 +2,7 @@
   <div class="page-container">
     <TabView content-class="mt-3" class="">
       <TabPanel header="RECETAS">
-        <SearchRecipe />
+        <SearchRecipe :tag="tag" />
       </TabPanel>
       <TabPanel header="PERSONAS">
         <SearchUsers />
@@ -14,6 +14,11 @@
 <script setup>
 import SearchRecipe from '~/components/Search/SearchRecipe.vue';
 import SearchUsers from '~/components/Search/SearchUsers.vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const tagEncoded = route.query.tag;
+const tag = tagEncoded ? JSON.parse(decodeURIComponent(tagEncoded)) : null;
 </script>
 
 <style scoped lang="scss">

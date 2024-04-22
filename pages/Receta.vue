@@ -90,10 +90,11 @@
       <div class="tags-section">
         <div
           class="badge--tag"
-          v-for="(item, index) in recipeData.tags"
+          v-for="(tag, index) in recipeData.tags"
           :key="index"
         >
-          #{{ item }}
+            <!-- Convertimos el objeto etiqueta a una cadena JSON y lo codificamos para URL -->
+            <nuxt-link :to="`/buscar?tag=${encodeURIComponent(JSON.stringify(tag))}`">{{ tag.text }}</nuxt-link>
         </div>
       </div>
       <div class="middle-section">
@@ -457,6 +458,12 @@ textarea:focus {
   border-radius: 5px;
   color: white;
   background-color: $color-primary;
+  transition: font-size 0.15s ease;
+}
+.badge--tag:hover {
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 110%;
 }
 .middle-section {
   display: flex;

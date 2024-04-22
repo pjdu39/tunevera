@@ -45,7 +45,7 @@
     </div>
   </div>
   <div v-if="showAdvanced" class="advanced-options-container">
-    <TabView content-class="mt-3" class="search-tool-container">
+    <TabView :activeIndex="activeTab" content-class="mt-3" class="search-tool-container">
       <TabPanel header="INGREDIENTES">
         <input
           class="advanced-search-input"
@@ -199,6 +199,10 @@
 <script setup>
 import { useSearchStore } from "~/store/search.js";
 
+const props = defineProps({
+  tag: Object
+});
+
 // Acceso a la Store
 const store = useSearchStore();
 
@@ -224,9 +228,19 @@ const searchRecipes = () => {
   }, 500);
 };
 
+const activeTab = ref(0);
+
 onMounted(() => {
+  if (props.tag && store) {
+    showAdvanced.value = true
+    activeTab.value = 1;
+
+    tags.value.push(props.tag);
+  }
+
   fetchRecipes();
 });
+
 
 // Parámetros
 const text = ref("");
@@ -333,7 +347,6 @@ const getTags = () => {
   clearTimeout(inputTimerTag);
 
   if (!tagText.value) {
-    console.log(tagText.value);
     store.clearTags();
     return;
   }
@@ -376,6 +389,7 @@ const clickCustom = (value) => {
   customFilters.value = value;
   fetchRecipes();
 };
+
 </script>
 
 <style lang="scss" scoped>
