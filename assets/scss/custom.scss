@@ -113,3 +113,8 @@ ul.p-tabview-nav > li.p-tabview-header:nth-last-child(2) .p-tabview-nav-link { /
   color: $color-dark;
   text-decoration: underline;
 }
+
+.p-skeleton {
+  background-color: $color-skeleton;
+  border-radius: 4px;
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div
-      v-if="profileLoading === 'waiting' || profileLoading === 'loading'"
+      v-if="profileLoading === 'waiting' || profileLoading === 'loaded'"
       class="skeleton-container"
     >
       <div class="top">
@@ -98,14 +98,14 @@
         <div>{{ profileError }}</div>
       </div>
     </div>
-    <div v-else-if="profileLoading === 'loaded' && showForm">
+    <div v-else-if="profileLoading === 'loading' && showForm">
       <RegistrationForm
         :is-editing="isEditing"
         :profile-info="isEditing ? profile : null"
         @exit="handleExit"
       />
     </div>
-    <div v-else-if="profileLoading === 'loaded' && !showForm">
+    <div v-else-if="profileLoading === 'loading' && !showForm">
       <div class="top">
         <div class="profile-info">
           <div class="info-summary-section">
