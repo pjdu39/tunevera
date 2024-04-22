@@ -2,16 +2,96 @@
   <div class="profile">
     <div
       v-if="profileLoading === 'waiting' || profileLoading === 'loading'"
-      class="top"
+      class="skeleton-container"
     >
-      <div class="state-container">
-        <font-awesome-icon
-          icon="fa fa-spinner"
-          class="fa-pulse fa-lg loading"
-          aria-hidden="true"
-        />
+      <div class="top">
+        <div class="profile-info">
+          <div class="info-summary-section">
+            <div class="picture-cotainer">
+              <div class="picture-wrapper">
+                <Skeleton
+                  class="mb-2"
+                  height="12rem"
+                  borderRadius="16px"
+                ></Skeleton>
+              </div>
+            </div>
+            <div class="info-summary">
+              <div class="summary-item">
+                <div class="s-i-num" style="display: inline-block">
+                  <Skeleton
+                    height="2rem"
+                    width="2rem"
+                    class="mb-2"
+                    style="margin: 0 !important"
+                  ></Skeleton>
+                </div>
+                <div class="s-i-text">
+                  <Skeleton height="1rem" width="6rem" class="mb-2"></Skeleton>
+                </div>
+              </div>
+              <div class="summary-item">
+                <div class="s-i-num" style="display: inline-block">
+                  <Skeleton
+                    height="2rem"
+                    width="2rem"
+                    class="mb-2"
+                    style="margin: 0 !important"
+                  ></Skeleton>
+                </div>
+                <div class="s-i-text">
+                  <Skeleton height="1rem" width="6rem" class="mb-2"></Skeleton>
+                </div>
+              </div>
+              <div class="summary-item">
+                <div class="s-i-num" style="display: inline-block">
+                  <Skeleton
+                    height="2rem"
+                    width="2rem"
+                    class="mb-2"
+                    style="margin: 0 !important"
+                  ></Skeleton>
+                </div>
+                <div class="s-i-text">
+                  <Skeleton height="1rem" width="6rem" class="mb-2"></Skeleton>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="info-detail">
+            <Skeleton
+              height="1rem"
+              width="7rem"
+              class="mb-2"
+              style="margin-top: 10px"
+            ></Skeleton>
+            <Skeleton
+              height="2rem"
+              width="15rem"
+              class="mb-2"
+              style="margin-top: 10px"
+            ></Skeleton>
+          </div>
+        </div>
+      </div>
+      <div class="tab-skeleton" style="margin-top: 10px">
+        <div>
+          <Skeleton height="2rem" width="7rem" class="mb-2"></Skeleton>
+        </div>
+        <div>
+          <Skeleton height="2rem" width="7rem" class="mb-2"></Skeleton>
+        </div>
+        <div>
+          <Skeleton height="2rem" width="7rem" class="mb-2"></Skeleton>
+        </div>
+      </div>
+      <div class="grid-skeleton">
+        <div v-for="item in 9" :key="item" class="grid-skeleton-item">
+          <Skeleton height="100%" width="100%" class="mb-2" style="margin: 0 !important"></Skeleton>
+        </div>
       </div>
     </div>
+
     <div v-else-if="profileLoading === 'error'" class="top">
       <div class="state-container">
         <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
@@ -68,7 +148,11 @@
               />
             </button>
             <div class="options-container">
-              <button class="options-btn" @click="clickShowOptions" v-click-outside="clickOutside">
+              <button
+                class="options-btn"
+                @click="clickShowOptions"
+                v-click-outside="clickOutside"
+              >
                 <font-awesome-icon
                   icon="fa fa-ellipsis-vertical"
                   class="fa-lg"
@@ -360,7 +444,6 @@ const clickOutside = () => {
   display: none;
 } */
 
-
 .state-container {
   display: flex;
   flex-direction: column;
@@ -372,6 +455,19 @@ const clickOutside = () => {
   overflow-wrap: anywhere;
 }
 .loading {
+}
+.tab-skeleton {
+  display: flex;
+  justify-content: space-around;
+}
+.grid-skeleton {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  min-height: 15rem;
+}
+.grid-skeleton-item {
+  aspect-ratio: 1/1;
 }
 .error {
   // TODO: Considerar mover a clases globales
