@@ -1,7 +1,7 @@
 <template>
   <div class="poll-post">
     <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
-      por <b>{{ postData.userName }}</b>
+      <b>@{{ postData.userName }}</b>
     </NuxtLink>
     <h4 class="title">{{ postData.title }}</h4>
     <div class="post-body">
@@ -172,6 +172,7 @@ const anchoActual = computed(() => anchoDiv.value);
 }
 .title {
   flex-grow: 0;
+  max-width: 80%;
   margin-bottom: 1rem;
   font-family: $font-headers;
 }

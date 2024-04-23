@@ -163,7 +163,7 @@ onUnmounted(() => {
   padding: 10px 17px 12px 17px;
 }
 .skeleton-signature {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   text-align: end;
   margin-left: auto;
 }
@@ -193,7 +193,7 @@ onUnmounted(() => {
 @media (max-width: 800px) {
   .board-container {
     margin: auto;
-    width: 80%;
+    width: 98%;
   }
 }
 </style>

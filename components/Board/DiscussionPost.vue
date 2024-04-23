@@ -1,7 +1,7 @@
 <template>
   <NuxtLink class="discussion-post" :to="`/foro?id=${postData.id}`">
     <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
-      por <b>{{ postData.userName }}</b>
+      <b>@{{ postData.userName }}</b>
     </NuxtLink>
     <h4 class="title">{{ postData.title }}</h4>
     <div class="description">{{ postData.description }}</div>
@@ -45,6 +45,7 @@ const props = defineProps({
   flex-grow: 1;
   text-align: end;
   margin-left: auto;
+  margin-bottom: 12px;
   font-style: italic;
 }
 .signature:hover {

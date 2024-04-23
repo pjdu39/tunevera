@@ -11,7 +11,7 @@
     </div>
     <div class="post-info">
       <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
-        por <b>{{ postData.userName }}</b>
+        <b>@{{ postData.userName }}</b>
       </NuxtLink>
       <h4 class="title">{{ postData.title }}</h4>
       <div class="general-info-bottom">
@@ -37,21 +37,19 @@
         </div>
         <div class="general-info-right">
           <div class="icon-info-container">
-                {{ postData.servings }}'
-                <font-awesome-icon
-                  icon="fa fa-utensils"
-                  class="icon-info"
-                  aria-hidden="true"
-                />
-              </div>
-              <div class="icon-info-container">
-                {{ postData.time }}'
-                <font-awesome-icon
-                  icon="fa fa-clock"
-                  class="icon-info"
-                  aria-hidden="true"
-                />
-              </div>
+            {{ postData.servings }}'<font-awesome-icon
+              icon="fa fa-utensils"
+              class="icon-info"
+              aria-hidden="true"
+            />
+          </div>
+          <div class="icon-info-container">
+            {{ postData.time }}'<font-awesome-icon
+              icon="fa fa-clock"
+              class="icon-info"
+              aria-hidden="true"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -96,7 +94,7 @@ const props = defineProps({
 }
 .signature {
   /* flex-grow: 1; */
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   text-align: end;
   margin-left: auto;
   font-style: italic;
@@ -134,7 +132,7 @@ const props = defineProps({
     rgba($color-background, 0)
   );
   position: absolute;
-  bottom: 38px;
+  bottom: 36px;
 }
 .bottom-info {
   flex-grow: 0;
@@ -171,5 +169,46 @@ const props = defineProps({
 }
 .icon-info {
   aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 800px) {
+  .recipe-post {
+    height: 196px;
+  }
+  .post-info {
+    font-size: 90%;
+    padding: 4px 10px 7px 10px;
+  }
+  .signature {
+    margin-bottom: 7px;
+    // display: none;
+  }
+  .general-info-bottom {
+    margin-top: 3px;
+  }
+  .general-info-left {
+    width: 70%;
+  }
+  .description {
+    max-height: 85px;
+    font-size: 85%;
+  }
+  .blur {
+    height: 37px; /* Altura del efecto de desvanecimiento */
+    bottom: 30px;
+  }
+  .interaction-container {
+    margin: 0 15px 0 0;
+  }
+  .interaction-icon {
+    margin: 0 3px;
+  }
+  .general-info-right {
+    width: 30%;
+    font-size: 95%;
+  }
+  .icon-info-container {
+    margin-top: 10px;
+  }
 }
 </style>
