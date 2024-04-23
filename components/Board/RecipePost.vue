@@ -17,6 +17,7 @@
       <div class="general-info-bottom">
         <div class="general-info-left">
           <div class="description">{{ postData.description }}</div>
+          <div class="blur"></div>
           <div class="bottom-info">
             <div class="interactions">
               <div class="interaction-container">
@@ -67,7 +68,7 @@ const props = defineProps({
 .recipe-post {
   display: flex;
   position: relative;
-  height: auto;
+  height: 22rem;
   border: solid 2px $color-dark;
   border-radius: 5px;
   overflow: hidden;
@@ -114,12 +115,26 @@ const props = defineProps({
   margin-top: 1rem;
 }
 .general-info-left {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 80%;
 }
 .description {
+  max-height: 202px;
+  overflow: hidden;
+}
+.blur {
+  height: 70px; /* Altura del efecto de desvanecimiento */
+  width: 100%;
+  background-image: linear-gradient(
+    to top,
+    $color-background,
+    rgba($color-background, 0)
+  );
+  position: absolute;
+  bottom: 38px;
 }
 .bottom-info {
   flex-grow: 0;
