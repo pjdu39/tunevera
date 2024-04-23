@@ -16,8 +16,13 @@
       <h4 class="title">{{ postData.title }}</h4>
       <div class="general-info-bottom">
         <div class="general-info-left">
-          <div class="description">{{ postData.description }}</div>
-          <div class="blur"></div>
+          <div class="description-container">
+            <div class="description">{{ postData.description }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="blur"></div>
+      <div class="bottom-info-container">
           <div class="bottom-info">
             <div class="interactions">
               <div class="interaction-container">
@@ -35,7 +40,7 @@
             </div>
           </div>
         </div>
-        <div class="general-info-right">
+      <div class="general-info-right">
           <div class="icon-info-container">
             {{ postData.servings }}'<font-awesome-icon
               icon="fa fa-utensils"
@@ -51,7 +56,6 @@
             />
           </div>
         </div>
-      </div>
     </div>
   </NuxtLink>
 </template>
@@ -87,6 +91,7 @@ const props = defineProps({
   object-fit: cover;
 }
 .post-info {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 50%;
@@ -120,23 +125,30 @@ const props = defineProps({
   width: 80%;
 }
 .description {
-  max-height: 202px;
   overflow: hidden;
 }
 .blur {
   height: 70px; /* Altura del efecto de desvanecimiento */
-  width: 100%;
+  width: 80%;
   background-image: linear-gradient(
     to top,
     $color-background,
     rgba($color-background, 0)
   );
   position: absolute;
-  bottom: 36px;
+  bottom: 58px;
+}
+.bottom-info-container {
+  position: absolute;
+  bottom: 0;
+  height: 58px;
+  width: 100%;
+  background-color: $color-background;
 }
 .bottom-info {
-  flex-grow: 0;
   display: flex;
+  flex-grow: 0;
+  margin-top: 30px;
   align-items: center; // Alineación vertical. Solo disponible en clases flex.
   justify-content: space-between;
 }
@@ -157,6 +169,10 @@ const props = defineProps({
   font-size: small;
 }
 .general-info-right {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 7px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -173,32 +189,53 @@ const props = defineProps({
 
 @media (max-width: 800px) {
   .recipe-post {
-    height: 196px;
+    height: 100%;
+    aspect-ratio: 2/1;
+    max-height: 14rem;
   }
   .post-info {
-    font-size: 90%;
+    font-size: 85%;
     padding: 4px 10px 7px 10px;
   }
   .signature {
     margin-bottom: 7px;
     // display: none;
   }
+  .title {
+    font-size: 145%;
+  }
+  .bottom-info-container {
+    height: 30px;
+    margin-bottom: 0px;
+    width: 100%;
+    background-color: $color-background;
+  }
+  .bottom-info {
+    margin-top: 7px;
+  }
   .general-info-bottom {
-    margin-top: 3px;
+    margin-top: 1px;
   }
   .general-info-left {
     width: 70%;
   }
+  .description-container {
+  }
   .description {
-    max-height: 85px;
     font-size: 85%;
+    z-index: 5;
+    overflow: hidden;
   }
   .blur {
-    height: 37px; /* Altura del efecto de desvanecimiento */
+    height: 45px; /* Altura del efecto de desvanecimiento */
     bottom: 30px;
+    width: 70%;
+    z-index: 6;
   }
   .interaction-container {
+    background-color: $color-background;
     margin: 0 15px 0 0;
+    z-index: 7;
   }
   .interaction-icon {
     margin: 0 3px;
