@@ -61,5 +61,14 @@ onMounted(() => {
     margin: auto;
     width: 95%;
   }
+  
+  // Ajuste manual del padding del primer elemento para alinear el menú a la izquierda.
+  :deep(ul.p-tabview-nav > li.p-tabview-header:first-child .p-tabview-nav-link) {
+    padding-left: 0 !important;
+  }
+  /* Aumentar la especificidad para el contenido */
+  :deep(.p-tabview-panels) {
+    padding: 0;
+  }
 }
 </style>

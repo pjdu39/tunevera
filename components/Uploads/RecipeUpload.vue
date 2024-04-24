@@ -1051,6 +1051,24 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
   .title-box {
     margin-bottom: 40px;
   }
+  .ingredient-space {
+    width: 40%;
+  }
+  .amount-space {
+    width: 30%;
+  }
+  .units-space {
+    width: 30%;
+  }
+  .ingredient-input-wrapper {
+    width: 40%;
+  }
+  .amount-input-wrapper {
+    width: 30%;
+  }
+  .units-input-wrapper {
+    width: 30%;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1068,6 +1086,17 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
   .wrapper-img {
     width: calc(100% - 25px);
     height: calc(100% - 25px);
+  }
+  .interactive-inputs-container {
+    justify-content: space-around;
+    align-items: center;
+    gap: 25px;
+  }
+  .container-fraction {
+    width: auto;
+  }
+  .delete-button-wrapper {
+    display: none; // TODO: Sustituír esto por un comportamiento móvil de deslizar para borrar.
   }
 }
 
