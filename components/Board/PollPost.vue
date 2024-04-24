@@ -283,7 +283,7 @@ const anchoActual = computed(() => anchoDiv.value);
   border-radius: 5px;
 }
 .option-button-text {
-  height: 22px;
+  padding: 0 5px;
   font-size: 85%;
 }
 
@@ -296,4 +296,14 @@ const anchoActual = computed(() => anchoDiv.value);
   font-size: 85%;
   z-index: 15;
 }
+
+@media (max-width: 800px) {
+  .poll-options-container {
+    width: 100%;
+  }
+  .aspect-ratio-wrapper {
+    display: none;
+  }
+}
+
 </style>

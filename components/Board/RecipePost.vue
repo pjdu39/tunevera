@@ -194,10 +194,11 @@ const props = defineProps({
     max-height: 14rem;
   }
   .post-info {
-    font-size: 85%;
+    font-size: 90%;
     padding: 4px 10px 7px 10px;
   }
   .signature {
+    font-size: 90%;
     margin-bottom: 7px;
     // display: none;
   }

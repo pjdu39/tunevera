@@ -4,24 +4,24 @@
       <div class="main-navbar">
         <nuxt-link to="/" class="option">
           <div>
-            <font-awesome-icon icon="fa fa-home" aria-hidden="true" /> INICIO
+            <font-awesome-icon icon="fa fa-home" aria-hidden="true" />
           </div>
         </nuxt-link>
         <nuxt-link to="/Buscar" class="option">
           <div>
             <font-awesome-icon icon="fa fa-search" aria-hidden="true" />
-            BUSCAR
+          
           </div>
         </nuxt-link>
         <nuxt-link to="/Uploads" class="option">
           <div>
             <font-awesome-icon icon="fa fa-cloud-upload" aria-hidden="true" />
-            CREAR
+          
           </div>
         </nuxt-link>
         <nuxt-link to="/Perfil" class="option">
           <div>
-            <font-awesome-icon icon="fa fa-user" aria-hidden="true" /> PERFIL
+            <font-awesome-icon icon="fa fa-user" aria-hidden="true" />
           </div>
         </nuxt-link>
       </div>
@@ -91,6 +91,11 @@
 @media (min-width: 900px) {
   .navbar-main-container {
     width: 50rem;
+  }
+}
+@media (max-width: 800px) {
+  .navbar-main-container {
+    width: 98%;
   }
 }
 </style>

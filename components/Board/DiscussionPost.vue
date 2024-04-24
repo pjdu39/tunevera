@@ -81,4 +81,19 @@ const props = defineProps({
 .num-likes {
   font-size: small;
 }
+
+@media (max-width: 800px) {
+  .discussion-post {
+    font-size: 90%;
+  }
+  .signature {
+    font-size: 90%;
+  }
+  .title {
+    font-size: 145%;
+  }
+  .description {
+    font-size: 90%;
+  }
+}
 </style>
