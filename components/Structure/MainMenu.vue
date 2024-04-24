@@ -4,24 +4,22 @@
       <div class="main-navbar">
         <nuxt-link to="/" class="option">
           <div>
-            <font-awesome-icon icon="fa fa-home" aria-hidden="true" />
+            <font-awesome-icon icon="fa fa-home" class="menu-icon" aria-hidden="true" /> INICIO
           </div>
         </nuxt-link>
         <nuxt-link to="/Buscar" class="option">
           <div>
-            <font-awesome-icon icon="fa fa-search" aria-hidden="true" />
-          
+            <font-awesome-icon icon="fa fa-search" class="menu-icon" aria-hidden="true" /> BUSCAR
           </div>
         </nuxt-link>
         <nuxt-link to="/Uploads" class="option">
           <div>
-            <font-awesome-icon icon="fa fa-cloud-upload" aria-hidden="true" />
-          
+            <font-awesome-icon icon="fa fa-cloud-upload" class="menu-icon" aria-hidden="true" /> CREAR
           </div>
         </nuxt-link>
         <nuxt-link to="/Perfil" class="option">
           <div>
-            <font-awesome-icon icon="fa fa-user" aria-hidden="true" />
+            <font-awesome-icon icon="fa fa-user" class="menu-icon" aria-hidden="true" /> PERFIL
           </div>
         </nuxt-link>
       </div>
@@ -79,13 +77,13 @@
 }
 .option:active {
   color: #f6fafb;
-  box-shadow: 3px 3px 8px -2.5px #703400e8 inset,
-    -1.5px -1.5px 6px 1px rgb(248, 248, 248, 0.6) inset;
 }
 .nuxt-link-exact-active {
   color: $color-dark;
-  box-shadow: 3px 3px 5px -3px #703400e8 inset,
-    -1.5px -1.5px 3px 1px rgb(248, 248, 248, 0.3) inset;
+}
+.menu-icon {
+  display: inline-block;
+  margin-bottom: 2px;
 }
 
 @media (min-width: 900px) {
@@ -96,6 +94,10 @@
 @media (max-width: 800px) {
   .navbar-main-container {
     width: 98%;
+    letter-spacing: 2px;
+  }
+  .menu-icon {
+    display: none;
   }
 }
 </style>

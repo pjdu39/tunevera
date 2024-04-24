@@ -1061,9 +1061,13 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
     width: 95%;
   }
   .img-container {
-    width: auto;
+    width: 100%;
     height: auto;
     aspect-ratio: 1/1;
+  }
+  .wrapper-img {
+    width: calc(100% - 25px);
+    height: calc(100% - 25px);
   }
 }
 
