@@ -3,7 +3,9 @@
     <div class="question-container">
       <div class="title-box">
         <div class="label label--title">Pregunta</div>
-        <input v-model="postPollData.title" :maxlength="titleMaxLenght" />
+        <div class="input-wrapper">
+          <input v-model="postPollData.title" :maxlength="titleMaxLenght" />
+        </div>
       </div>
     </div>
   </div>
@@ -14,8 +16,7 @@
       v-for="(option, index) in postPollData.options"
       :key="index"
     >
-      <div class="option-input-wrapper">
-        <!-- TODO: Poner un límite bajo de caracteres -->
+      <div class="input-wrapper option-input-wrapper">
         <input
           class="option-input"
           placeholder="Añadir opción"
@@ -224,6 +225,9 @@ select:focus {
 .label--title {
   font-size: 150%;
 }
+.input-wrapper {
+  height: 43px;
+}
 .options {
   display: flex;
   align-items: center;
@@ -270,6 +274,37 @@ select:focus {
   gap: 10px;
   padding: 1px 8px 2px 8px;
   border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  input {
+    width: 100%;
+    font-size: 80%;
+  }
+  .question-container {
+    width: calc(100% - 25px - 1rem);
+  }
+  .label {
+    font-size: 105%;
+  }
+  .option-input-wrapper {
+    width: 100%;
+  }
+  .option-input {
+    width: calc(100% - 1rem);
+  }
+  .delete-button-wrapper {
+    // display: none; // TODO: Sustituír esto por un comportamiento móvil de deslizar para borrar.
+    position: absolute;
+    right: 0;
+    width: 12%;
+  }
+  .btn--delete {
+    width: 25px;
+    height: 25px;
+    line-height: 0;
+    font-size: 95%;
+  }
 }
 
 /* TODO: BOrrar. Legacy ------------------------------------------------------------------------------------------ */

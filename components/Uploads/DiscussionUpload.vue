@@ -2,25 +2,29 @@
   <div class="section">
     <div class="title-container">
       <div class="label label--title">Tema</div>
-      <input
-        class="title-input"
-        placeholder="¿Sobre qué quieres hablar?"
-        v-model="postDiscussionData.title"
-        :maxlength="titleMaxLenght"
-        trim
-      />
+      <div class="option-input-wrapper">
+        <input
+          class="title-input"
+          placeholder="¿Sobre qué quieres hablar?"
+          v-model="postDiscussionData.title"
+          :maxlength="titleMaxLenght"
+          trim
+        />
+      </div>
     </div>
   </div>
   <div class="section">
     <div class="description-container">
       <div class="label label--title">Cuerpo</div>
-      <input
-        class="description-input"
-        placeholder="Cuerpo de texto (opcional)"
-        v-model="postDiscussionData.description"
-        :maxlength="descriptionMaxLenght"
-        trim
-      />
+      <div class="option-input-wrapper">
+        <input
+          class="description-input"
+          placeholder="Cuerpo de texto (opcional)"
+          v-model="postDiscussionData.description"
+          :maxlength="descriptionMaxLenght"
+          trim
+        />
+      </div>
     </div>
   </div>
   <div>
@@ -166,6 +170,9 @@ select:focus {
 .label--title {
   font-size: 150%;
 }
+.option-input-wrapper {
+  height: 35px;
+}
 .title-input {
 }
 .description-container {
@@ -190,5 +197,24 @@ select:focus {
   gap: 10px;
   padding: 1px 8px 2px 8px;
   border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  input {
+    width: 100%;
+    font-size: 80%;
+  }
+  .title-container {
+    width: 95%;
+  }
+  .label {
+    font-size: 105%;
+  }
+  .option-input-wrapper {
+    height: 25px;
+  }
+  .description-container {
+    width: 95%;
+  }
 }
 </style>
