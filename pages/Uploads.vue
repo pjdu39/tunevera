@@ -60,6 +60,7 @@ onMounted(() => {
   .uploads {
     margin: auto;
     width: 95%;
+    border: none;
   }
   
   // Ajuste manual del padding del primer elemento para alinear el menú a la izquierda.

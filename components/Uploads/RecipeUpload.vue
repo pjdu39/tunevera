@@ -41,10 +41,10 @@
       </div>
       <div class="btn btn--add-img" @click="triggerFileInput">
         <font-awesome-icon
-                  icon="fa-solid fa-plus"
-                  class="fa-lg"
-                  aria-hidden="true"
-                />
+          icon="fa-solid fa-plus"
+          class="fa-lg"
+          aria-hidden="true"
+        />
       </div>
       <!-- Input de archivo oculto -->
       <input
@@ -164,11 +164,11 @@
           :disabled="!canAddTag"
           @click="addTag(tag)"
         >
-        <font-awesome-icon
-                  icon="fa-solid fa-plus"
-                  class="fa-lg"
-                  aria-hidden="true"
-                />
+          <font-awesome-icon
+            icon="fa-solid fa-plus"
+            class="fa-lg"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>
@@ -240,11 +240,11 @@
       @click="addIngredient()"
       :disabled="!canAddIngredient"
     >
-    <font-awesome-icon
-                  icon="fa-solid fa-plus"
-                  class="fa-lg"
-                  aria-hidden="true"
-                />
+      <font-awesome-icon
+        icon="fa-solid fa-plus"
+        class="fa-lg"
+        aria-hidden="true"
+      />
     </button>
   </div>
   <div class="section section--steps">
@@ -275,10 +275,10 @@
     <div>
       <button class="btn btn--i-btn" @click="addStep()" :disabled="!canAddStep">
         <font-awesome-icon
-                  icon="fa-solid fa-plus"
-                  class="fa-lg"
-                  aria-hidden="true"
-                />
+          icon="fa-solid fa-plus"
+          class="fa-lg"
+          aria-hidden="true"
+        />
       </button>
     </div>
   </div>
@@ -747,7 +747,8 @@ input[type="file"] {
 }
 textarea {
   width: calc(100% - 80px);
-  margin-top: 5px;
+  margin-top: 15px;
+  padding: 2px 0 3px 0;
   border: none;
   border-bottom: 1px solid $color-dark;
   border-radius: 0;
@@ -1055,28 +1056,33 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
     width: 40%;
   }
   .amount-space {
-    width: 30%;
+    width: 21%;
   }
   .units-space {
-    width: 30%;
+    width: 32%;
   }
   .ingredient-input-wrapper {
     width: 40%;
   }
   .amount-input-wrapper {
-    width: 30%;
+    width: 21%;
   }
   .units-input-wrapper {
-    width: 30%;
+    width: 32%;
   }
 }
 
 @media (max-width: 600px) {
   input {
     width: 95%;
+    font-size: 80%;
   }
   textarea {
     width: 95%;
+    font-size: 80%;
+  }
+  select {
+    font-size: 80%;
   }
   .img-container {
     width: 100%;
@@ -1087,6 +1093,9 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
     width: calc(100% - 25px);
     height: calc(100% - 25px);
   }
+  .input--title {
+    font-size: 110%;
+  }
   .interactive-inputs-container {
     justify-content: space-around;
     align-items: center;
@@ -1095,8 +1104,34 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
   .container-fraction {
     width: auto;
   }
+  .label {
+    font-size: 105%;
+  }
+  .shorted-input {
+    width: calc(100% - 1rem);
+  }
+  .form-select {
+    // --bs-form-select-bg-img: none;
+    background-position: right 0px center; /* Ajusta el valor '10px' para desplazar horizontalmente */
+    background-size: 10px; /* Esto controla el tamaño de la flechita */
+    padding: 0 15px 3px 0;
+    margin-top: 15px;
+  }
   .delete-button-wrapper {
-    display: none; // TODO: Sustituír esto por un comportamiento móvil de deslizar para borrar.
+    // display: none; // TODO: Sustituír esto por un comportamiento móvil de deslizar para borrar.
+    position: absolute;
+    right: 0;
+    width: 12%;
+  }
+  .btn--delete {
+    width: 25px;
+    height: 25px;
+    line-height: 0;
+    font-size: 95%;
+  }
+  .step-textarea-wrapper {
+    flex-grow: 0;
+    width: calc(100% - 1rem);
   }
 }
 
