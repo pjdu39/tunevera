@@ -911,15 +911,16 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
   font-weight: bold;
 }
 .selected-tags-container {
-  display: flex;
-  gap: 10px;
+  // display: flex;
+  // gap: 10px;
   margin-top: 15px;
 }
 .badge--tag {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 2px 7px 4px 7px;
+  margin: 0 8px 4px 0;
   line-height: 100%;
   border-radius: 5px;
   color: white;
@@ -1109,6 +1110,9 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
   }
   .shorted-input {
     width: calc(100% - 1rem);
+  }
+  .selected-tags-container {
+    font-size: 80%;
   }
   .form-select {
     // --bs-form-select-bg-img: none;
