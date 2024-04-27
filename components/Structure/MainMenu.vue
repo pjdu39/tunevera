@@ -65,7 +65,6 @@
   height: $header-main-bar-height;
   width: 10rem;
   flex: 0;
-  font-size: 100%;
   background-color: $color-primary;
   color: $color-background;
   font-weight: bold;
@@ -92,6 +91,9 @@
   }
 }
 @media (max-width: 800px) {
+  .menu {
+    font-size: 110%;
+  }
   .navbar-main-container {
     width: 98%;
     letter-spacing: 2px;

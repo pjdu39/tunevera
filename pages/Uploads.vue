@@ -7,7 +7,7 @@
       <TabPanel header="ENCUESTA">
         <PollUpload />
       </TabPanel>
-      <TabPanel header="ARTICULO">
+      <TabPanel header="TEMA">
         <DiscussionUpload />
       </TabPanel>
     </TabView>

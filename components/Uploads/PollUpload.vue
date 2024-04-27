@@ -4,7 +4,7 @@
       <div class="title-box">
         <div class="label label--title">Pregunta</div>
         <div class="input-wrapper">
-          <input v-model="postPollData.title" :maxlength="titleMaxLenght" />
+          <input v-model="postPollData.title" placeholder="¿Qué quieres preguntar?" :maxlength="titleMaxLenght" />
         </div>
       </div>
     </div>

@@ -312,4 +312,18 @@ textarea:focus {
   font-size: 100%;
   margin: 37px 0 0 45px;
 }
+
+@media (max-width: 600px) {
+  .container {
+    width: 98%;
+    font-size: 82%;
+    padding: 0;
+  }
+  .title {
+    // font-size: 140%;
+  }
+  .comments-section {
+    padding: 0 15px;
+  }
+}
 </style>
