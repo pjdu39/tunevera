@@ -162,7 +162,7 @@ onUnmounted(() => {
 .main-button-container {
   min-width: 160px;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .follow-box {
   display: flex;
