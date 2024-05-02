@@ -1,97 +1,8 @@
 <template>
   <div class="profile">
-    <div
+    <ProfileSkeleton
       v-if="profileLoading === 'waiting' || profileLoading === 'loading'"
-      class="skeleton-container"
-    >
-      <div class="top">
-        <div class="profile-info">
-          <div class="info-summary-section">
-            <div class="picture-cotainer">
-              <div class="picture-wrapper">
-                <Skeleton
-                  class="mb-2"
-                  height="12rem"
-                  borderRadius="16px"
-                ></Skeleton>
-              </div>
-            </div>
-            <div class="info-summary">
-              <div class="summary-item">
-                <div class="s-i-num" style="display: inline-block">
-                  <Skeleton
-                    height="2rem"
-                    width="2rem"
-                    class="mb-2"
-                    style="margin: 0 !important"
-                  ></Skeleton>
-                </div>
-                <div class="s-i-text">
-                  <Skeleton height="1rem" width="6rem" class="mb-2"></Skeleton>
-                </div>
-              </div>
-              <div class="summary-item">
-                <div class="s-i-num" style="display: inline-block">
-                  <Skeleton
-                    height="2rem"
-                    width="2rem"
-                    class="mb-2"
-                    style="margin: 0 !important"
-                  ></Skeleton>
-                </div>
-                <div class="s-i-text">
-                  <Skeleton height="1rem" width="6rem" class="mb-2"></Skeleton>
-                </div>
-              </div>
-              <div class="summary-item">
-                <div class="s-i-num" style="display: inline-block">
-                  <Skeleton
-                    height="2rem"
-                    width="2rem"
-                    class="mb-2"
-                    style="margin: 0 !important"
-                  ></Skeleton>
-                </div>
-                <div class="s-i-text">
-                  <Skeleton height="1rem" width="6rem" class="mb-2"></Skeleton>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="info-detail">
-            <Skeleton
-              height="1rem"
-              width="7rem"
-              class="mb-2"
-              style="margin-top: 10px"
-            ></Skeleton>
-            <Skeleton
-              height="2rem"
-              width="15rem"
-              class="mb-2"
-              style="margin-top: 10px"
-            ></Skeleton>
-          </div>
-        </div>
-      </div>
-      <div class="tab-skeleton" style="margin-top: 10px">
-        <div>
-          <Skeleton height="2rem" width="7rem" class="mb-2"></Skeleton>
-        </div>
-        <div>
-          <Skeleton height="2rem" width="7rem" class="mb-2"></Skeleton>
-        </div>
-        <div>
-          <Skeleton height="2rem" width="7rem" class="mb-2"></Skeleton>
-        </div>
-      </div>
-      <div class="grid-skeleton">
-        <div v-for="item in 9" :key="item" class="grid-skeleton-item">
-          <Skeleton height="100%" width="100%" class="mb-2" style="margin: 0 !important"></Skeleton>
-        </div>
-      </div>
-    </div>
-
+    />
     <div v-else-if="profileLoading === 'error'" class="top">
       <div class="state-container">
         <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
@@ -109,14 +20,17 @@
       <div class="top">
         <div class="profile-info">
           <div class="info-summary-section">
-            <div class="picture-cotainer">
-              <div class="picture-wrapper">
-                <NuxtImg
-                  v-if="profile.pictureUrl"
-                  class="profile-picture"
-                  :src="profile.pictureUrl"
-                />
+            <div class="main-info-container">
+              <div class="picture-cotainer">
+                <div class="picture-wrapper">
+                  <NuxtImg
+                    v-if="profile.pictureUrl"
+                    class="profile-picture"
+                    :src="profile.pictureUrl"
+                  />
+                </div>
               </div>
+              <div class="user-name">{{ profile.name }}</div>
             </div>
             <div class="info-summary">
               <div class="summary-item">
@@ -132,62 +46,64 @@
                 <div class="s-i-text">Siguiendo</div>
               </div>
             </div>
-          </div>
-          <div class="info-detail">
-            <div class="i-d-name">{{ profile.name }}</div>
-            <div class="i-d-description">{{ profile.description }}</div>
-          </div>
-        </div>
-        <div v-if="selfProfile">
-          <div class="own-notifications-container">
-            <button class="own-notifications" @click="console.log(id)">
-              <font-awesome-icon
-                icon="fa fa-bell"
-                class="fa-lg"
-                aria-hidden="true"
-              />
-            </button>
-            <div class="options-container">
-              <button
-                class="options-btn"
-                @click="clickShowOptions"
-                v-click-outside="clickOutside"
-              >
-                <font-awesome-icon
-                  icon="fa fa-ellipsis-vertical"
-                  class="fa-lg"
-                  aria-hidden="true"
-                />
-              </button>
-              <div class="dropdown-options-container" :hidden="!showOptions">
-                <div class="dropdown-wrapper">
-                  <button class="option" @click="isEditing = true">
-                    <div class="option-icon-wrapper">
-                      <font-awesome-icon
-                        icon="fa fa-pencil"
-                        class="fa-lg"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div>Editar perfil</div>
+            <div v-if="selfProfile">
+              <div class="own-notifications-container">
+                <button class="own-notifications" @click="console.log(id)">
+                  <font-awesome-icon
+                    icon="fa fa-bell"
+                    class="fa-lg"
+                    aria-hidden="true"
+                  />
+                </button>
+                <div class="options-container">
+                  <button
+                    class="options-btn"
+                    @click="clickShowOptions"
+                    v-click-outside="clickOutside"
+                  >
+                    <font-awesome-icon
+                      icon="fa fa-ellipsis-vertical"
+                      class="fa-lg"
+                      aria-hidden="true"
+                    />
                   </button>
-                  <button class="option" @click="doLogout">
-                    <div class="option-icon-wrapper">
-                      <font-awesome-icon
-                        icon="fa fa-power-off"
-                        class="fa-lg"
-                        aria-hidden="true"
-                      />
+                  <div
+                    class="dropdown-options-container"
+                    :hidden="!showOptions"
+                  >
+                    <div class="dropdown-wrapper">
+                      <button class="option" @click="isEditing = true">
+                        <div class="option-icon-wrapper">
+                          <font-awesome-icon
+                            icon="fa fa-pencil"
+                            class="fa-lg"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div>Editar perfil</div>
+                      </button>
+                      <button class="option" @click="doLogout">
+                        <div class="option-icon-wrapper">
+                          <font-awesome-icon
+                            icon="fa fa-power-off"
+                            class="fa-lg"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div>Cerrar sesión</div>
+                      </button>
                     </div>
-                    <div>Cerrar sesión</div>
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>
+            <div v-else-if="!selfProfile" class="follow-container">
+              <FollowButton :data="followButtonData" />
+            </div>
           </div>
         </div>
-        <div v-else-if="!selfProfile" class="follow-container">
-          <FollowButton :data="followButtonData" />
+        <div class="info-detail">
+          <div class="i-d-description">{{ profile.description }}</div>
         </div>
       </div>
       <TabView content-class="mt-3" class="profile-tab">
@@ -211,6 +127,7 @@ import ProfilePolls from "~/components/Profile/ProfilePolls.vue";
 import ProfileDiscussion from "~/components/Profile/ProfileDiscussion.vue";
 import RegistrationForm from "~/components/Profile/RegistrationForm.vue";
 import FollowButton from "~/components/Profile/FollowButton.vue";
+import ProfileSkeleton from "~/components/Skeletons/Profile/ProfileSkeleton.vue";
 import { useProfileStore } from "~/store/profile.js";
 import { useAuth } from "~/composables/useAuth";
 
@@ -280,24 +197,29 @@ const clickOutside = () => {
 <style scoped lang="scss">
 .profile {
   margin: auto;
-  width: 44rem;
+  width: 46rem;
   background-color: $color-background;
   border-radius: 5px;
 }
 .top {
   display: flex;
-  height: 12rem; // Provisional
+  flex-direction: column;
 }
 .profile-info {
-  width: 90%;
+  width: 100%;
+  height: 9rem;
 }
 .info-summary-section {
   display: flex;
-  height: 50%;
+  height: 7rem;
+}
+.main-info-container {
+  width: 9rem;
 }
 .picture-cotainer {
   height: 100%;
   aspect-ratio: 1/1;
+  margin-bottom: 10px;
 }
 .picture-wrapper {
   position: relative;
@@ -312,6 +234,9 @@ const clickOutside = () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.user-name {
+  font-weight: bold;
 }
 .info-summary {
   display: flex;
@@ -333,12 +258,8 @@ const clickOutside = () => {
   font-size: 90%;
 }
 .info-detail {
-  height: 50%;
+  padding: 10px 0 20px 0;
   font-size: 90%;
-}
-.i-d-name {
-  font-weight: bold;
-  margin: 5px 0;
 }
 .i-d-description {
 }
@@ -346,6 +267,7 @@ const clickOutside = () => {
   display: flex;
   justify-content: flex-end;
   margin-top: 8px;
+  min-width: 160px;
 }
 .own-notifications {
   font-size: 140%;
@@ -408,9 +330,13 @@ const clickOutside = () => {
   display: flex;
   align-items: flex-start;
   margin-top: 8px;
+  position: relative;
+  z-index: 10;
 }
 .profile-tab {
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 /* Aumentar la especificidad para el ul */
 :deep(ul.p-tabview-nav) {
@@ -456,29 +382,71 @@ const clickOutside = () => {
 }
 .loading {
 }
-.tab-skeleton {
-  display: flex;
-  justify-content: space-around;
-}
-.grid-skeleton {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
-  min-height: 15rem;
-}
-.grid-skeleton-item {
-  aspect-ratio: 1/1;
-}
 .error {
   // TODO: Considerar mover a clases globales
   color: $color-primary;
   font-size: 200%; // Se acumula sobre el font-size: 200%; del contenedor
 }
 
-@media (max-width: 800px) {
+@media (max-width: 600px) {
   .profile {
     margin: auto;
-    width: 80%;
+    width: 100%;
+    font-size: 95%;
+  }
+  .top {
+    height: auto;
+    width: 100%;
+    padding: 0 15px;
+  }
+  .profile-info {
+    height: auto;
+  }
+  .info-summary-section {
+    height: auto;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .main-info-container {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+  }
+  .picture-cotainer {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+  }
+  .picture-wrapper {
+    aspect-ratio: 1/1;
+  }
+  .user-name {
+    display: flex;
+    justify-content: center;
+  }
+  .info-summary {
+    justify-content: space-between;
+  }
+  .summary-item {
+    width: 33%;
+  }
+  .info-detail {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 20px 0;
+  }
+  .own-notifications-container {
+    justify-content: center;
+  }
+  .follow-container {
+    justify-content: center;
+    margin-bottom: 7px;
+  }
+
+  /* Aumentar la especificidad para el ul */
+  :deep(ul.p-tabview-nav) {
+    font-size: 90%;
   }
 }
 </style>

@@ -160,11 +160,9 @@ onUnmounted(() => {
   position: relative;
 }
 .main-button-container {
-  /*
+  min-width: 160px;
   display: flex;
-  justify-content: flex-end;
-  */
-  min-width: 140px;
+  justify-content: end;
 }
 .follow-box {
   display: flex;
@@ -217,11 +215,19 @@ onUnmounted(() => {
   height: 37px;
   width: 100%;
   padding: 0 9px;
-  background-color: transparent;
+  background-color: $color-background;
   border: none;
   border-bottom: 1px solid grey;
 }
 .option:hover {
   background-color: $color-soft-grey;
 }
+
+@media (max-width: 600px) {
+  .main-button-container {
+    min-width: 0;
+  }
+}
+
+
 </style>

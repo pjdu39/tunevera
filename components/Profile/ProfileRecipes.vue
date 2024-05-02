@@ -54,8 +54,8 @@ watch(props, (newVal, oldVal) => {
 }
 .p-recipe {
   position: relative;
-  border: 1px solid black;
-  border-radius: 5px;
+  // border: 1px solid black;
+  border-radius: 3px;
   overflow: hidden;
   aspect-ratio: 1 / 1;
 }
@@ -66,5 +66,16 @@ watch(props, (newVal, oldVal) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+@media (max-width: 600px) {
+  .profile-content {
+    gap: 1px;
+    min-height: 15rem;
+  }
+  .p-recipe {
+    // border: none;
+    border-radius: 0;
+  }
 }
 </style>
