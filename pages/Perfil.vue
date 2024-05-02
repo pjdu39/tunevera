@@ -72,7 +72,7 @@
                     :hidden="!showOptions"
                   >
                     <div class="dropdown-wrapper">
-                      <button class="option" @click="isEditing = true">
+                      <button class="option" @click="isEditing = true, showOptions = false">
                         <div class="option-icon-wrapper">
                           <font-awesome-icon
                             icon="fa fa-pencil"
@@ -82,7 +82,7 @@
                         </div>
                         <div>Editar perfil</div>
                       </button>
-                      <button class="option" @click="doLogout">
+                      <button class="option" @click="doLogout, showOptions = false">
                         <div class="option-icon-wrapper">
                           <font-awesome-icon
                             icon="fa fa-power-off"
