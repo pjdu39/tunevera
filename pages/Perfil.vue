@@ -262,6 +262,7 @@ const clickOutside = () => {
   font-size: 90%;
 }
 .i-d-description {
+  // TODO: Borrar
 }
 .own-notifications-container {
   display: flex;
