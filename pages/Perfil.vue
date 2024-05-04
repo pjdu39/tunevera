@@ -80,6 +80,16 @@
                             aria-hidden="true"
                           />
                         </div>
+                        <div>Tercera opción</div>
+                      </button>
+                      <button class="option" @click="isEditing = true, showOptions = false">
+                        <div class="option-icon-wrapper">
+                          <font-awesome-icon
+                            icon="fa fa-pencil"
+                            class="fa-lg"
+                            aria-hidden="true"
+                          />
+                        </div>
                         <div>Editar perfil</div>
                       </button>
                       <button class="option" @click="doLogout, showOptions = false">
@@ -305,6 +315,7 @@ const clickOutside = () => {
 }
 .dropdown-options-container {
   position: relative;
+  z-index: 10;
 }
 .dropdown-wrapper {
   position: absolute;
@@ -320,7 +331,7 @@ const clickOutside = () => {
   white-space: nowrap;
   width: 100%;
   text-align: start;
-  background-color: transparent;
+  background-color: $color-background;
   border: none;
   border-bottom: 1px solid grey;
 }
@@ -332,7 +343,6 @@ const clickOutside = () => {
   align-items: flex-start;
   margin-top: 8px;
   position: relative;
-  z-index: 10;
 }
 .profile-tab {
   width: 100%;
