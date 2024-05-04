@@ -80,16 +80,6 @@
                             aria-hidden="true"
                           />
                         </div>
-                        <div>Tercera opción</div>
-                      </button>
-                      <button class="option" @click="isEditing = true, showOptions = false">
-                        <div class="option-icon-wrapper">
-                          <font-awesome-icon
-                            icon="fa fa-pencil"
-                            class="fa-lg"
-                            aria-hidden="true"
-                          />
-                        </div>
                         <div>Editar perfil</div>
                       </button>
                       <button class="option" @click="doLogout, showOptions = false">
