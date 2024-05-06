@@ -88,11 +88,11 @@
         </div>
       </div>
       <div class="tags-section">
-        <div v-for="(tag, index) in recipeData.tags" :key="index">
+        <div v-for="(tag, index) in recipeData.tags" :key="index" class="badge--tag">
           <!-- Convertimos el objeto etiqueta a una cadena JSON y lo codificamos para URL -->
           <nuxt-link
             :to="`/buscar?tag=${encodeURIComponent(JSON.stringify(tag))}`"
-            class="badge--tag"
+            class="tag-text"
             >#{{ tag.text }}</nuxt-link
           >
         </div>
@@ -453,6 +453,9 @@ textarea:focus {
   height: 6rem;
 }
 .badge--tag {
+
+}
+.tag-text {
   padding: 2px 7px 4px 7px;
   line-height: 100%;
   border-radius: 5px;
@@ -460,7 +463,7 @@ textarea:focus {
   background-color: $color-primary;
   transition: font-size 0.15s ease;
 }
-.badge--tag:hover {
+.tag-text:hover {
   text-decoration: underline;
   font-weight: 600;
   font-size: 110%;
@@ -572,5 +575,60 @@ textarea:focus {
 .comment {
   font-size: 90%;
   margin: 37px 0 0 45px;
+}
+
+@media(max-width:600px) {
+  .recipe {
+    width: 100%;
+    font-size: 85%;
+  }
+  .top-section {
+    position: relative;
+    display: block;
+    aspect-ratio: 1/1;
+    margin-bottom: 15px;
+  }
+  .general-info {
+    top: 0;
+    left: 0;
+    position: absolute;
+    color: white;
+    width: 100%;
+  }
+  .tags-section {
+    display: block;
+    height: auto;
+    width: 100%;
+    padding: 0 10px;
+    margin-bottom: 20px;
+  }
+  .badge--tag {
+    align-items: center;
+    background-color: $color-primary;
+    border-radius: 5px;
+    color: #fff;
+    display: inline-flex;
+    gap: 10px;
+    line-height: 100%;
+    margin: 0 8px 4px 0;
+    padding: 2px 7px 4px;
+  }
+  .tag-text {
+    padding: 0;
+  }
+  .middle-section {
+    flex-direction: column;
+    margin-top: 0;
+  }
+  .ingredients-container {
+    width: 100%;
+    border: none;
+    padding: 0 20px;
+    margin-bottom: 40px;
+  }
+  .steps-container {
+    width: 100%;
+    padding: 0 20px;
+  }
 }
 </style>
