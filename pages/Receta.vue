@@ -97,6 +97,9 @@
           >
         </div>
       </div>
+      <div class="description--mobile">
+                {{ recipeData.description }}
+              </div>
       <div class="middle-section">
         <div class="ingredients-container">
           <div class="middle-section-title">Ingredientes:</div>
@@ -408,6 +411,10 @@ textarea:focus {
   width: 90%;
 }
 .description {
+  display: block;
+}
+.description--mobile {
+  display: none;
 }
 .interaction-container {
   display: flex;
@@ -595,12 +602,65 @@ textarea:focus {
     color: white;
     width: 100%;
   }
+  .general-info-top {
+    position: absolute;
+    bottom: 40px;
+    flex-direction: column;
+  }
+  .recipe-title {
+    max-width: 280px;
+    line-height: 110%;
+    margin-bottom: 6px;
+  }
+  .signature {
+    position: static
+  }
+  .sign-img-wrapper {
+    display: none;
+  }
+  .general-info-left {
+    width: 85%;
+  }
+  .interaction-container {
+    position: absolute;
+    right: 8px;
+    top: 250px;
+    flex-direction: column;
+    font-size: 190%;
+    margin: 0;
+  }
+  .num-likes {
+    text-align: center;
+  }
+  .properties {
+    position: absolute;
+    left: 20px;
+    bottom: 1rem;
+  }
+  .badge--vegan {
+    padding: 2px 11px;
+  }
+  .general-info-right {
+    
+  }
+  .icon-info-container {
+    font-size: 120%;
+    color: white;
+  }
+  .description {
+    display: none;
+  }
+  .description--mobile {
+    display: block;
+    padding: 0 20px;
+    margin-bottom: 30px;
+  }
   .tags-section {
     display: block;
     height: auto;
     width: 100%;
     padding: 0 10px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
   .badge--tag {
     align-items: center;
@@ -615,6 +675,7 @@ textarea:focus {
   }
   .tag-text {
     padding: 0;
+    line-height: 13px;
   }
   .middle-section {
     flex-direction: column;
@@ -624,11 +685,26 @@ textarea:focus {
     width: 100%;
     border: none;
     padding: 0 20px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
   .steps-container {
     width: 100%;
     padding: 0 20px;
+  }
+  .comments-section {
+    padding: 0 15px;
+  }
+  .title-comments {
+    margin-top: 15px;
+  }
+  .c-sign-img-wrapper {
+    height: 30px;
+  }
+  .c-sign-name {
+    font-size: 90%;
+  }
+  .comment {
+    margin: 33px 0 0 35px;
   }
 }
 </style>
