@@ -23,30 +23,36 @@
       <div class="top-section">
         <div class="img-wrapper">
           <NuxtImg :src="recipeData.pictureUrl" class="image-fit" />
+          <div class="right-blur"></div>
+          <div class="bottom-blur"></div>
         </div>
         <div class="general-info">
-          <div class="general-info-top">
-            <div class="recipe-title">{{ recipeData.title }}</div>
-            <div class="signature-container">
-              <NuxtLink
-                class="signature"
-                :to="`/perfil?id=${recipeData.user.id}`"
-              >
-                <div class="signature-name">
-                  <b>@{{ recipeData.user.name }}</b>
-                </div>
-                <div class="sign-img-wrapper">
-                  <NuxtImg
-                    :src="recipeData.user.pictureUrl"
-                    class="image-fit"
-                  />
-                </div>
-              </NuxtLink>
+          <div class="general-info-top-mobile-wrapper">
+            <div class="general-info-top">
+              <div class="recipe-title">{{ recipeData.title }}</div>
+              <div class="signature-container">
+                <NuxtLink
+                  class="signature"
+                  :to="`/perfil?id=${recipeData.user.id}`"
+                >
+                  <div class="signature-name">
+                    <b>@{{ recipeData.user.name }}</b>
+                  </div>
+                  <div class="sign-img-wrapper">
+                    <NuxtImg
+                      :src="recipeData.user.pictureUrl"
+                      class="image-fit"
+                    />
+                  </div>
+                </NuxtLink>
+              </div>
             </div>
-          </div>
-          <div class="properties">
-            <!-- TODO: Poner condiciones, ahora es solo un ejemplo -->
-            <div class="badge--vegan" :hidden="veggie === ''">{{ veggie }}</div>
+            <div class="properties">
+              <!-- TODO: Poner condiciones, ahora es solo un ejemplo -->
+              <div class="badge--vegan" :hidden="veggie === ''">
+                {{ veggie }}
+              </div>
+            </div>
           </div>
           <div class="general-info-bottom">
             <div class="general-info-left">
@@ -54,15 +60,22 @@
                 {{ recipeData.description }}
               </div>
               <div class="interaction-container">
-                <button class="interaction-icon" @click="clickLike">
-                  <font-awesome-icon
-                    :icon="like ? 'fas fa-heart' : 'far fa-heart'"
-                    :class="cumputedLikeClass"
-                    aria-hidden="true"
-                  />
-                </button>
-                <div class="num-likes">
-                  {{ recipeData.likes + localLike }}
+                <div class="like">
+                  <button class="interaction-icon" @click="clickLike">
+                    <font-awesome-icon
+                      :icon="like ? 'fas fa-heart' : 'far fa-heart'"
+                      :class="cumputedLikeClass"
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div class="num-likes">
+                    {{ recipeData.likes + localLike }}
+                  </div>
+                </div>
+                <div class="share">
+                  <button class="interaction-icon" @click="console.log('Compartir')">
+                    <font-awesome-icon icon="fa fa-share" aria-hidden="true" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -88,7 +101,11 @@
         </div>
       </div>
       <div class="tags-section">
-        <div v-for="(tag, index) in recipeData.tags" :key="index" class="badge--tag">
+        <div
+          v-for="(tag, index) in recipeData.tags"
+          :key="index"
+          class="badge--tag"
+        >
           <!-- Convertimos el objeto etiqueta a una cadena JSON y lo codificamos para URL -->
           <nuxt-link
             :to="`/buscar?tag=${encodeURIComponent(JSON.stringify(tag))}`"
@@ -98,8 +115,8 @@
         </div>
       </div>
       <div class="description--mobile">
-                {{ recipeData.description }}
-              </div>
+        {{ recipeData.description }}
+      </div>
       <div class="middle-section">
         <div class="ingredients-container">
           <div class="middle-section-title">Ingredientes:</div>
@@ -351,6 +368,8 @@ textarea:focus {
   padding: 1rem;
   border-right: 1px solid $color-dark;
 }
+.general-info-top-mobile-wrapper {
+}
 .general-info-top {
   display: flex;
   height: auto;
@@ -422,6 +441,9 @@ textarea:focus {
   font-size: 140%;
   margin: 0 1rem 0 0;
 }
+.like {
+  display: flex;
+}
 .interaction-icon {
   text-align: center;
   margin: 0 5px;
@@ -436,6 +458,9 @@ textarea:focus {
 }
 .num-likes {
   font-size: 90%;
+}
+.share {
+  display: none;
 }
 .general-info-right {
   display: flex;
@@ -460,7 +485,6 @@ textarea:focus {
   height: 6rem;
 }
 .badge--tag {
-
 }
 .tag-text {
   padding: 2px 7px 4px 7px;
@@ -584,7 +608,7 @@ textarea:focus {
   margin: 37px 0 0 45px;
 }
 
-@media(max-width:600px) {
+@media (max-width: 600px) {
   .recipe {
     width: 100%;
     font-size: 85%;
@@ -595,6 +619,25 @@ textarea:focus {
     aspect-ratio: 1/1;
     margin-bottom: 15px;
   }
+  .img-wrapper {
+    width: 100%;
+  }
+  .right-blur {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 15%;
+    height: 100%; // Al 100% le resto el height de bottom-blur para no superponer dos difuminados.
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+  }
+  .bottom-blur {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 35%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+  }
   .general-info {
     top: 0;
     left: 0;
@@ -602,9 +645,13 @@ textarea:focus {
     color: white;
     width: 100%;
   }
-  .general-info-top {
+  .general-info-top-mobile-wrapper {
     position: absolute;
-    bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    bottom: 20px;
+  }
+  .general-info-top {
     flex-direction: column;
   }
   .recipe-title {
@@ -613,7 +660,7 @@ textarea:focus {
     margin-bottom: 6px;
   }
   .signature {
-    position: static
+    position: static;
   }
   .sign-img-wrapper {
     display: none;
@@ -623,25 +670,36 @@ textarea:focus {
   }
   .interaction-container {
     position: absolute;
-    right: 8px;
-    top: 250px;
+    right: 10px;
+    top: 170px;
     flex-direction: column;
-    font-size: 190%;
+    font-size: 230%;
     margin: 0;
+    gap: 20px
+  }
+  .like {
+    flex-direction: column;
+  }
+  .liked {
+    color: white !important;
   }
   .num-likes {
     text-align: center;
+    font-size: 80%;
+    line-height: 80%;
+  }
+  .share {
+    display: block;
   }
   .properties {
-    position: absolute;
-    left: 20px;
-    bottom: 1rem;
   }
   .badge--vegan {
     padding: 2px 11px;
+    margin-top: 7px;
+    background-color: #79d366;
+    font-weight: 600;
   }
   .general-info-right {
-    
   }
   .icon-info-container {
     font-size: 120%;
