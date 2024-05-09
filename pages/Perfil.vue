@@ -82,7 +82,7 @@
                         </div>
                         <div>Editar perfil</div>
                       </button>
-                      <button class="option" @click="doLogout, showOptions = false">
+                      <button class="option" @click="doLogout(), showOptions = false">
                         <div class="option-icon-wrapper">
                           <font-awesome-icon
                             icon="fa fa-power-off"
