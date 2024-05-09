@@ -295,7 +295,7 @@ useHead({
     { hid: 'og:description', property: 'og:description', content: pageDescription },
     { hid: 'og:image', property: 'og:image', content: pageImage },
     { hid: 'og:url', property: 'og:url', content: pageUrl },
-    { hid: 'og:type', property: 'og:type', content: 'website' }
+    { hid: 'og:type', property: 'og:type', content: 'website' },
 
     // Twitter Meta
     { hid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
