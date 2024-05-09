@@ -299,7 +299,7 @@ useHead({
 
     // Twitter Meta
     { hid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
-    { hid: 'twitter:title', name: 'twitter:title', content: pageTitle },
+    { hid: 'twitter:text:title', name: 'twitter:text:title', content: pageTitle },
     { hid: 'twitter:description', name: 'twitter:description', content: pageDescription },
     { hid: 'twitter:image', name: 'twitter:image', content: pageImage }
   ]
