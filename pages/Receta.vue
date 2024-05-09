@@ -211,6 +211,7 @@ const fetchComments = () => {
 };
 
 onMounted(() => {
+  fetchData();
   fetchRecipe();
   fetchComments();
 });
@@ -257,6 +258,35 @@ const cumputedLikeClass = computed(() => {
 });
 
 // Compartir la receta
+// Manejo de la URL para SSR y Client
+const { $config, ssrContext } = useNuxtApp()
+const fullUrl = computed(() => {
+  const baseUrl = process.server ? "https://cookbook-zbxb.onrender.com" : window.location.origin
+  return `${baseUrl}${route.fullPath}`
+})
+
+// Fetch data con fetch() y usarla en asyncData o directamente aquí si es posible
+const fetchData = async () => {
+  await store.fetchRecipe(id)
+}
+
+useHead({
+  title: computed(() => recipeData.value ? recipeData.value.title : 'Loading...'),
+  meta: [
+    { hid: 'description', name: 'description', content: computed(() => recipeData.value ? recipeData.value.description : 'No description available') },
+    { hid: 'og:url', property: 'og:url', content: fullUrl },
+    { hid: 'og:title', property: 'og:title', content: computed(() => recipeData.value ? recipeData.value.title : 'Loading...') },
+    { hid: 'og:description', property: 'og:description', content: computed(() => recipeData.value ? recipeData.value.description : 'No description available') },
+    { hid: 'og:image', property: 'og:image', content: computed(() => recipeData.value ? recipeData.value.imageUrl : '') }, // Asegúrate que la propiedad imageUrl existe en el objeto
+    { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+    { hid: 'twitter:url', property: 'twitter:url', content: fullUrl },
+    { hid: 'twitter:title', property: 'twitter:title', content: computed(() => recipeData.value ? recipeData.value.title : 'Loading...') },
+    { hid: 'twitter:description', property: 'twitter:description', content: computed(() => recipeData.value ? recipeData.value.description : 'No description available') },
+    { hid: 'twitter:image', property: 'twitter:image', content: computed(() => recipeData.value ? recipeData.value.imageUrl : '') }
+  ]
+});
+
+/*
 const currentUrl = ref(process.client ? window.location.href : null);
 watch(() => route.path, () => {
   // Actualiza el valor de currentUrl cada vez que cambie la ruta
@@ -308,7 +338,7 @@ useHead({
         { hid: 'twitter:description', property: 'twitter:description', content: pageDescription },
         { hid: 'twitter:image', property: 'twitter:image', content: pageImage }
       ]
-    })
+    })  */
 
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
