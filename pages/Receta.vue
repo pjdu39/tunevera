@@ -72,8 +72,11 @@
                     {{ recipeData.likes + localLike }}
                   </div>
                 </div>
-                <div class="share">
-                  <button class="interaction-icon" @click="console.log('Compartir')">
+                <div class="share" :hidden="!canShare">
+                  <button
+                    class="interaction-icon"
+                    @click="shareContent"
+                  >
                     <font-awesome-icon icon="fa fa-share" aria-hidden="true" />
                   </button>
                 </div>
@@ -199,6 +202,31 @@ const store = useRecipeStore();
 const getRecipeState = computed(() => store.getRecipeState);
 const recipeData = computed(() => getRecipeState.value.data);
 
+// Carga datos
+const route = useRoute();
+const id = route.query.id;
+
+const fetchRecipe = () => {
+  store.fetchRecipe(id);
+};
+const fetchComments = () => {
+  store.fetchComments(id, 10);
+};
+
+onMounted(() => {
+  fetchRecipe();
+  fetchComments();
+});
+
+const veggie = computed(() => {
+  if (!recipeData.value.ingredients) return "";
+
+  if (!recipeData.value.ingredients.some((x) => !x.vegan)) return "Vegano";
+  if (!recipeData.value.ingredients.some((x) => !x.vegetarian))
+    return "Vegetariano";
+  return "";
+});
+
 // Manejo de Likes
 const likeTimeout = ref(false);
 const localLike = ref(0);
@@ -230,6 +258,30 @@ const cumputedLikeClass = computed(() => {
     return like.value ? "liked" : "unliked";
   }
 });
+
+// Compartir la publicación
+const { public: config } = useRuntimeConfig();
+const currentUrl = `${config.apiUrl}${route.fullPath}`;
+
+const shareData = ref({
+      title: 'Cookbook',
+      text: 'Mira esta receta increíble en Cookbook',
+      url: currentUrl
+    });
+
+const shareContent = () => {
+    if (navigator.share) {
+      navigator.share(shareData.value)
+        .then(() => console.log('Compartido con éxito!'))
+        .catch(error => console.error('Error al compartir:', error));
+    } else {
+      console.error('Web Share API no está soportada en este navegador.');
+    }
+};
+
+const canShare = computed(() => navigator.canShare(shareData.value));
+
+
 
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
@@ -288,31 +340,6 @@ const sendComment = () => {
   store.comment(id, comment.value);
   cancelComment();
 };
-
-// Carga datos
-const route = useRoute();
-const id = route.query.id;
-
-const fetchRecipe = () => {
-  store.fetchRecipe(id);
-};
-const fetchComments = () => {
-  store.fetchComments(id, 10);
-};
-
-onMounted(() => {
-  fetchRecipe();
-  fetchComments();
-});
-
-const veggie = computed(() => {
-  if (!recipeData.value.ingredients) return "";
-
-  if (!recipeData.value.ingredients.some((x) => !x.vegan)) return "Vegano";
-  if (!recipeData.value.ingredients.some((x) => !x.vegetarian))
-    return "Vegetariano";
-  return "";
-});
 </script>
   
 <style scoped lang="scss">
@@ -675,7 +702,7 @@ textarea:focus {
     flex-direction: column;
     font-size: 230%;
     margin: 0;
-    gap: 20px
+    gap: 20px;
   }
   .like {
     flex-direction: column;

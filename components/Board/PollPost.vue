@@ -4,7 +4,7 @@
       <b>@{{ postData.userName }}</b>
     </NuxtLink>
     <h4 class="title">{{ postData.title }}</h4>
-    <div class="post-body">
+    <div class="post-info">
       <div
         v-show="!isVoted"
         ref="optionContainer"
@@ -176,7 +176,7 @@ const anchoActual = computed(() => anchoDiv.value);
   margin-bottom: 1rem;
   font-family: $font-headers;
 }
-.post-body {
+.post-info {
   flex-grow: 20;
   display: flex;
   margin-bottom: 1rem;
@@ -298,6 +298,12 @@ const anchoActual = computed(() => anchoDiv.value);
 }
 
 @media (max-width: 800px) {
+  .title {
+    font-size: 140%;
+  }
+  .signature {
+    font-size: 90%;
+  }
   .poll-options-container {
     width: 100%;
   }
