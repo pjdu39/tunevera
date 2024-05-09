@@ -211,7 +211,6 @@ const fetchComments = () => {
 };
 
 onMounted(() => {
-  fetchData();
   fetchRecipe();
   fetchComments();
 });
@@ -264,34 +263,27 @@ const fullUrl = computed(() => {
   return `${baseUrl}${route.fullPath}`
 })
 
-// Fetch data con fetch() y usarla en asyncData o directamente aquí si es posible
-const fetchData = async () => {
-  await store.fetchRecipe(id)
+const recipe = ref(null); // Variable para guardar los datos de la receta
+
+const { $fetchApi } = useNuxtApp();
+
+const fetchSSR = async () => {
+  try {
+    recipe.value = await $fetchApi(`GetRecipe?IdRecipe=${id}`);
+    console.log(recipe.value.title)
+  } catch (error) {
+    console.error('Error al cargar la receta:', error);
+    recipe.value = null; // Manejo simplificado del error, ajusta según necesites
+  }
 }
 
+onMounted(fetchSSR);
+
 // Metadatos en la cabecera para enriquecer la publicación al compartirla
-const pageTitle = computed(() => recipeData.value ? recipeData.value.title : '')
-const pageDescription = computed(() => recipeData.value ? recipeData.value.description : '')
-const pageImage = computed(() => recipeData.value ? recipeData.value.pictureUrl : '')
+const pageTitle = computed(() => recipe.value ? recipe.value.title : '')
+const pageDescription = computed(() => recipe.value ? recipe.value.description : '')
+const pageImage = computed(() => recipe.value ? recipe.value.pictureUrl : '')
 
-useServerSeoMeta({
-  title: pageTitle,
-  ogTitle: pageTitle,
-  description: pageDescription,
-  ogDescription: pageDescription,
-  ogImage: pageImage,
-  twitterCard: 'summary_large_image',
-})
-
-useSeoMeta({
-  title: pageTitle,
-  ogTitle: pageTitle,
-  description: pageDescription,
-  ogDescription: pageDescription,
-  ogImage: pageImage,
-  twitterCard: 'summary_large_image',
-})
-/*
 useHead({
       title: pageTitle,
       meta: [
@@ -314,7 +306,25 @@ useHead({
         { hid: 'twitter:image', property: 'twitter:image', content: pageImage }
       ]
     }) 
-  */
+/*
+useServerSeoMeta({
+  title: pageTitle,
+  ogTitle: pageTitle,
+  description: pageDescription,
+  ogDescription: pageDescription,
+  ogImage: pageImage,
+  twitterCard: 'summary_large_image',
+})
+
+useSeoMeta({
+  title: pageTitle,
+  ogTitle: pageTitle,
+  description: pageDescription,
+  ogDescription: pageDescription,
+  ogImage: pageImage,
+  twitterCard: 'summary_large_image',
+})
+*/
 
 // Compartir la receta
 const shareData = ref({
