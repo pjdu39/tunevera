@@ -288,22 +288,27 @@ const pageImage = computed(() => recipeData.value ? recipeData.value.pictureUrl 
 const pageUrl = currentUrl
 
 useHead({
-  title: pageTitle,
-  meta: [
-    { hid: 'description', name: 'description', content: pageDescription },
-    { hid: 'og:title', property: 'og:title', content: pageTitle },
-    { hid: 'og:description', property: 'og:description', content: pageDescription },
-    { hid: 'og:image', property: 'og:image', content: pageImage },
-    { hid: 'og:url', property: 'og:url', content: pageUrl },
-    { hid: 'og:type', property: 'og:type', content: 'website' },
+      title: pageTitle,
+      meta: [
+        // Primary Meta Tags
+        { hid: 'title', name: 'title', content: pageTitle },
+        { hid: 'description', name: 'description', content: pageDescription },
 
-    // Twitter Meta
-    { hid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
-    { hid: 'twitter:text:title', name: 'twitter:text:title', content: pageTitle },
-    { hid: 'twitter:description', name: 'twitter:description', content: pageDescription },
-    { hid: 'twitter:image', name: 'twitter:image', content: pageImage }
-  ]
-})
+        // Open Graph / Facebook Meta Tags
+        { hid: 'og:type', property: 'og:type', content: 'website' },
+        { hid: 'og:url', property: 'og:url', content: pageUrl },
+        { hid: 'og:title', property: 'og:title', content: pageTitle },
+        { hid: 'og:description', property: 'og:description', content: pageDescription },
+        { hid: 'og:image', property: 'og:image', content: pageImage },
+
+        // Twitter Meta Tags
+        { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+        { hid: 'twitter:url', property: 'twitter:url', content: pageUrl },
+        { hid: 'twitter:title', property: 'twitter:title', content: pageTitle },
+        { hid: 'twitter:description', property: 'twitter:description', content: pageDescription },
+        { hid: 'twitter:image', property: 'twitter:image', content: pageImage }
+      ]
+    })
 
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
