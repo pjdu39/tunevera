@@ -73,10 +73,7 @@
                   </div>
                 </div>
                 <div class="share" :hidden="!canShare">
-                  <button
-                    class="interaction-icon"
-                    @click="shareContent"
-                  >
+                  <button class="interaction-icon" @click="shareContent">
                     <font-awesome-icon icon="fa fa-share" aria-hidden="true" />
                   </button>
                 </div>
@@ -259,29 +256,30 @@ const cumputedLikeClass = computed(() => {
   }
 });
 
-// Compartir la publicación
-const { public: config } = useRuntimeConfig();
-const currentUrl = `${config.apiUrl}${route.fullPath}`;
-
+// Compartir la receta
+const currentUrl = ref(process.client ? window.location.href : null);
+watch(() => route.path, () => {
+  // Actualiza el valor de currentUrl cada vez que cambie la ruta
+  if (process.client) {
+    currentUrl.value = window.location.href;
+  }
+}, { immediate: true });
 const shareData = ref({
-      title: 'Cookbook',
-      text: 'Mira esta receta increíble en Cookbook',
-      url: currentUrl
+      title: "Cookbook",
+      text: "Mira esta receta en Cookbook",
+      url: currentUrl.value,
     });
-
 const shareContent = () => {
     if (navigator.share) {
-      navigator.share(shareData.value)
-        .then(() => console.log('Compartido con éxito!'))
-        .catch(error => console.error('Error al compartir:', error));
+      navigator
+        .share(shareData.value)
+        .then(() => console.log("Compartido con éxito!"))
+        .catch((error) => console.error("Error al compartir:", error));
     } else {
-      console.error('Web Share API no está soportada en este navegador.');
+      console.error("Web Share API no está soportada en este navegador.");
     }
 };
-
 const canShare = computed(() => navigator.canShare(shareData.value));
-
-
 
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
