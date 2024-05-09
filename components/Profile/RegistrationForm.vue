@@ -14,8 +14,8 @@
           <NuxtImg v-if="picture" class="image-fit" :src="picture" />
           <div v-else class="upload-state-container">
             <font-awesome-icon
-              icon="fa fa-spinner"
-              class="fa-pulse fa-lg"
+              icon="fa fa-circle-notch"
+              class="fa-spin fa-lg"
               aria-hidden="true"
             />
           </div>
@@ -31,7 +31,7 @@
           accept="image/*"
           style="display: none"
         />
-        </div>
+      </div>
       <div>
         <button class="button cancel-btn" @click="cancel">Cancelar</button>
         <button class="button" :disabled="!validForm" @click="save">
@@ -54,7 +54,7 @@
         <font-awesome-icon
           v-if="icon"
           :icon="icon"
-          :class="iconClass"
+          :class="iconClass + ' validation-state-icon'"
           aria-hidden="true"
         />
       </div>
@@ -82,7 +82,7 @@
       </div>
     </div>
     <div class="section">
-      <div class="label">Descripción</div>
+      <div class="label">Información del Perfil</div>
       <Textarea
         v-model="description"
         :maxlength="descriptionMaxLenght"
@@ -94,8 +94,8 @@
   </div>
   <div v-else-if="loading === 'loading'" class="state-container">
     <font-awesome-icon
-      icon="fa fa-spinner"
-      class="fa-pulse fa-lg"
+      icon="fa fa-circle-notch"
+      class="fa-spin fa-lg"
       aria-hidden="true"
     />
   </div>
@@ -173,7 +173,7 @@ const save = async () => {
 
   if (croppedImage.value) {
     await handleFileUpload();
-    
+
     // Limpia el estado de la imagen recortada después de subirla
     croppedImage.value = null;
     croppedImageExtension.value = "";
@@ -384,14 +384,14 @@ const check = computed(() => {
 
 const icon = computed(() => {
   if (check.value === "waiting") return null;
-  if (check.value === "loading") return "fa fa-spinner";
+  if (check.value === "loading") return "fa fa-circle-notch";
   if (check.value === "valid") return "fa-regular fa-circle-check";
   if (check.value === "invalid") return "fa-regular fa-circle-xmark";
   return null;
 });
 const iconClass = computed(() => {
   if (check.value === "waiting") return "";
-  if (check.value === "loading") return "fa-pulse fa-lg";
+  if (check.value === "loading") return "fa-spin fa-lg loading-validation";
   if (check.value === "valid") return "fa-lg valid";
   if (check.value === "invalid") return "fa-lg invalid";
   return "";
@@ -642,6 +642,12 @@ select:focus {
   align-items: flex-end;
   gap: 10px;
 }
+.validation-state-icon {
+  font-size: 160%;
+}
+.loading-validation {
+  color: $color-primary
+}
 .valid {
   color: rgb(0, 192, 0);
 }
@@ -681,5 +687,41 @@ select:focus {
 }
 .cancel-btn:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  input {
+    width: 70%;
+  }
+  textarea {
+    width: 88%;
+  }
+
+  .container {
+    border: none;
+    padding: 20px;
+  }
+  .img-container {
+    width: 140px;
+    height: 140px;
+  }
+  .button {
+    width: 100px;
+    margin: 10px 0 0 0;
+  }
+  .btn--add-img {
+    right: 11px;
+    bottom: 11px;
+    width: 35px;
+    height: 35px;
+    line-height: 10px;
+    font-size: 250%;
+  }
+  .validation-state-icon {
+    font-size: 180%;
+  }
+  .date-select {
+
+  }
 }
 </style>
