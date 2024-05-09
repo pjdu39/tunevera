@@ -203,8 +203,8 @@ const recipeData = computed(() => getRecipeState.value.data);
 const route = useRoute();
 const id = route.query.id;
 
-const fetchRecipe = () => {
-  store.fetchRecipe(id);
+const fetchRecipe = async () => {
+  await store.fetchRecipe(id);
 };
 const fetchComments = () => {
   store.fetchComments(id, 10);
@@ -257,14 +257,11 @@ const cumputedLikeClass = computed(() => {
 });
 
 // Compartir la receta
-const currentUrl = ref(process.client ? window.location.href : 'https://cookbook-zbxb.onrender.com/receta?id=6');
+const currentUrl = ref(process.client ? window.location.href : null);
 watch(() => route.path, () => {
   // Actualiza el valor de currentUrl cada vez que cambie la ruta
   if (process.client) {
     currentUrl.value = window.location.href;
-  }
-  else {
-    currentUrl.value = 'https://cookbook-zbxb.onrender.com/receta?id=6';
   }
 }, { immediate: true });
 const shareData = ref({
