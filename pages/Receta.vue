@@ -257,11 +257,14 @@ const cumputedLikeClass = computed(() => {
 });
 
 // Compartir la receta
-const currentUrl = ref(process.client ? window.location.href : null);
+const currentUrl = ref(process.client ? window.location.href : 'https://cookbook-zbxb.onrender.com/receta?id=6');
 watch(() => route.path, () => {
   // Actualiza el valor de currentUrl cada vez que cambie la ruta
   if (process.client) {
     currentUrl.value = window.location.href;
+  }
+  else {
+    currentUrl.value = 'https://cookbook-zbxb.onrender.com/receta?id=6';
   }
 }, { immediate: true });
 const shareData = ref({
