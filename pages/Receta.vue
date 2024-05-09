@@ -281,6 +281,24 @@ const shareContent = () => {
 };
 const canShare = computed(() => navigator.canShare(shareData.value));
 
+// Metadatos en la cabecera para enriquecer la publicación al compartirla
+const pageTitle = computed(() => recipeData.value ? recipeData.value.title : '')
+const pageDescription = computed(() => recipeData.value ? recipeData.value.description : '')
+const pageImage = computed(() => recipeData.value ? recipeData.value.pictureUrl : '')
+const pageUrl = currentUrl
+
+useHead({
+  title: pageTitle,
+  meta: [
+    { hid: 'description', name: 'description', content: pageDescription },
+    { hid: 'og:title', property: 'og:title', content: pageTitle },
+    { hid: 'og:description', property: 'og:description', content: pageDescription },
+    { hid: 'og:image', property: 'og:image', content: pageImage },
+    { hid: 'og:url', property: 'og:url', content: pageUrl },
+    { hid: 'og:type', property: 'og:type', content: 'website' }
+  ]
+})
+
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
   const singular = ingredient.text.singular;
