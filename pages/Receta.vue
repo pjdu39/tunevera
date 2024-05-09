@@ -257,8 +257,8 @@ const cumputedLikeClass = computed(() => {
   }
 });
 
+// COMPARTIR RECETA
 // Manejo de la URL para SSR y Client
-const { $config, ssrContext } = useNuxtApp()
 const fullUrl = computed(() => {
   const baseUrl = process.server ? "https://cookbook-zbxb.onrender.com" : window.location.origin
   return `${baseUrl}${route.fullPath}`
@@ -269,29 +269,52 @@ const fetchData = async () => {
   await store.fetchRecipe(id)
 }
 
-if (process.server) {
-  // Si estamos en el servidor, usamos fetchData en asyncData o fetch
-  await fetchData()
-} else {
-  // En el cliente, usamos onMounted para asegurar que se carguen después de montar el componente
-  onMounted(fetchData)
-}
+// Metadatos en la cabecera para enriquecer la publicación al compartirla
+const pageTitle = computed(() => recipeData.value ? recipeData.value.title : '')
+const pageDescription = computed(() => recipeData.value ? recipeData.value.description : '')
+const pageImage = computed(() => recipeData.value ? recipeData.value.pictureUrl : '')
 
+useServerSeoMeta({
+  title: pageTitle,
+  ogTitle: pageTitle,
+  description: pageDescription,
+  ogDescription: pageDescription,
+  ogImage: pageImage,
+  twitterCard: 'summary_large_image',
+})
+
+useSeoMeta({
+  title: pageTitle,
+  ogTitle: pageTitle,
+  description: pageDescription,
+  ogDescription: pageDescription,
+  ogImage: pageImage,
+  twitterCard: 'summary_large_image',
+})
+/*
 useHead({
-  title: computed(() => recipeData.value ? recipeData.value.title : 'Loading...'),
-  meta: [
-    { hid: 'description', name: 'description', content: computed(() => recipeData.value ? recipeData.value.description : 'No description available') },
-    { hid: 'og:url', property: 'og:url', content: fullUrl },
-    { hid: 'og:title', property: 'og:title', content: computed(() => recipeData.value ? recipeData.value.title : 'Loading...') },
-    { hid: 'og:description', property: 'og:description', content: computed(() => recipeData.value ? recipeData.value.description : 'No description available') },
-    { hid: 'og:image', property: 'og:image', content: computed(() => recipeData.value ? recipeData.value.imageUrl : '') }, // Asegúrate que la propiedad imageUrl existe en el objeto
-    { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-    { hid: 'twitter:url', property: 'twitter:url', content: fullUrl },
-    { hid: 'twitter:title', property: 'twitter:title', content: computed(() => recipeData.value ? recipeData.value.title : 'Loading...') },
-    { hid: 'twitter:description', property: 'twitter:description', content: computed(() => recipeData.value ? recipeData.value.description : 'No description available') },
-    { hid: 'twitter:image', property: 'twitter:image', content: computed(() => recipeData.value ? recipeData.value.imageUrl : '') }
-  ]
-});
+      title: pageTitle,
+      meta: [
+        // Primary Meta Tags
+        { hid: 'title', name: 'title', content: pageTitle },
+        { hid: 'description', name: 'description', content: pageDescription },
+
+        // Open Graph / Facebook Meta Tags
+        { hid: 'og:type', property: 'og:type', content: 'website' },
+        { hid: 'og:url', property: 'og:url', content: fullUrl },
+        { hid: 'og:title', property: 'og:title', content: pageTitle },
+        { hid: 'og:description', property: 'og:description', content: pageDescription },
+        { hid: 'og:image', property: 'og:image', content: pageImage },
+
+        // Twitter Meta Tags
+        { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+        { hid: 'twitter:url', property: 'twitter:url', content: fullUrl },
+        { hid: 'twitter:title', property: 'twitter:title', content: pageTitle },
+        { hid: 'twitter:description', property: 'twitter:description', content: pageDescription },
+        { hid: 'twitter:image', property: 'twitter:image', content: pageImage }
+      ]
+    }) 
+  */
 
 // Compartir la receta
 const shareData = ref({
@@ -309,11 +332,7 @@ const shareContent = () => {
       console.error("Web Share API no está soportada en este navegador.");
     }
 };
-const canShare = computed(() => {
-  console.log('shareContent')
-  console.log(shareData.value)
-  return navigator.canShare(shareData.value)
-});
+const canShare = computed(() => navigator.canShare(shareData.value));
 
 
 /*
