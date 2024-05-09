@@ -269,6 +269,14 @@ const fetchData = async () => {
   await store.fetchRecipe(id)
 }
 
+if (process.server) {
+  // Si estamos en el servidor, usamos fetchData en asyncData o fetch
+  await fetchData()
+} else {
+  // En el cliente, usamos onMounted para asegurar que se carguen después de montar el componente
+  onMounted(fetchData)
+}
+
 useHead({
   title: computed(() => recipeData.value ? recipeData.value.title : 'Loading...'),
   meta: [
@@ -301,7 +309,11 @@ const shareContent = () => {
       console.error("Web Share API no está soportada en este navegador.");
     }
 };
-const canShare = computed(() => navigator.canShare(shareData.value));
+const canShare = computed(() => {
+  console.log('shareContent')
+  console.log(shareData.value)
+  return navigator.canShare(shareData.value)
+});
 
 
 /*
