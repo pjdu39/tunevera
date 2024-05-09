@@ -257,7 +257,6 @@ const cumputedLikeClass = computed(() => {
   }
 });
 
-// Compartir la receta
 // Manejo de la URL para SSR y Client
 const { $config, ssrContext } = useNuxtApp()
 const fullUrl = computed(() => {
@@ -285,6 +284,25 @@ useHead({
     { hid: 'twitter:image', property: 'twitter:image', content: computed(() => recipeData.value ? recipeData.value.imageUrl : '') }
   ]
 });
+
+// Compartir la receta
+const shareData = ref({
+      title: "Cookbook",
+      text: "Mira esta receta en Cookbook",
+      url: fullUrl.value,
+    });
+const shareContent = () => {
+    if (navigator.share) {
+      navigator
+        .share(shareData.value)
+        .then(() => console.log("Compartido con éxito!"))
+        .catch((error) => console.error("Error al compartir:", error));
+    } else {
+      console.error("Web Share API no está soportada en este navegador.");
+    }
+};
+const canShare = computed(() => navigator.canShare(shareData.value));
+
 
 /*
 const currentUrl = ref(process.client ? window.location.href : null);
