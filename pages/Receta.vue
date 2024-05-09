@@ -296,6 +296,12 @@ useHead({
     { hid: 'og:image', property: 'og:image', content: pageImage },
     { hid: 'og:url', property: 'og:url', content: pageUrl },
     { hid: 'og:type', property: 'og:type', content: 'website' }
+
+    // Twitter Meta
+    { hid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
+    { hid: 'twitter:title', name: 'twitter:title', content: pageTitle },
+    { hid: 'twitter:description', name: 'twitter:description', content: pageDescription },
+    { hid: 'twitter:image', name: 'twitter:image', content: pageImage }
   ]
 })
 
