@@ -263,28 +263,18 @@ const fullUrl = computed(() => {
   return `${baseUrl}${route.fullPath}`
 })
 
-const recipe = ref(null); // Variable para guardar los datos de la receta
-
 const { $fetchApi } = useNuxtApp();
 
-const fetchSSR = async () => {
-  try {
-    recipe.value = await $fetchApi(`GetRecipe?IdRecipe=${id}`);
-    console.log(recipe.value.title)
-  } catch (error) {
-    console.error('Error al cargar la receta:', error);
-    recipe.value = null; // Manejo simplificado del error, ajusta según necesites
-  }
-}
-
-onMounted(fetchSSR);
+const { data: recipe } = await useAsyncData('recipeData', () => {
+  return $fetchApi(`GetRecipe?IdRecipe=${id}`);
+});
 
 // Metadatos en la cabecera para enriquecer la publicación al compartirla
 const pageTitle = computed(() => recipe.value ? recipe.value.title : '')
 const pageDescription = computed(() => recipe.value ? recipe.value.description : '')
 const pageImage = computed(() => recipe.value ? recipe.value.pictureUrl : '')
 
-useHead({
+useServerHeadSafe({
       title: pageTitle,
       meta: [
         // Primary Meta Tags
