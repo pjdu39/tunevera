@@ -196,6 +196,9 @@ import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentari
 
 // Acceso al store
 const store = useRecipeStore();
+fetch(async () => {
+  await recipeStore.fetchRecipe(id);
+});
 const getRecipeState = computed(() => store.getRecipeState);
 const recipeData = computed(() => getRecipeState.value.data);
 
@@ -256,12 +259,11 @@ const cumputedLikeClass = computed(() => {
   }
 });
 
-
 // SEO
-const url = useRequestURL()
-const currentUrl = url.href
+const url = useRequestURL();
+const currentUrl = url.href;
 
-await useFetch(() => store.fetchRecipe(id));
+
 
 /*
 const { $fetchApi } = useNuxtApp();
@@ -272,11 +274,15 @@ const { data: recipe } = await useAsyncData("recipeData", () => {
 */
 
 // Metadatos en la cabecera para enriquecer la publicación al compartirla
-const pageTitle = computed(() => (recipeData.value ? recipeData.value.title : ""));
-const pageDescription = computed(() =>
-recipeData.value ? recipeData.value.description : ""
+const pageTitle = computed(() =>
+  recipeData.value ? recipeData.value.title : ""
 );
-const pageImage = computed(() => (recipeData.value ? recipeData.value.pictureUrl : ""));
+const pageDescription = computed(() =>
+  recipeData.value ? recipeData.value.description : ""
+);
+const pageImage = computed(() =>
+  recipeData.value ? recipeData.value.pictureUrl : ""
+);
 
 useServerHeadSafe({
   title: pageTitle,
@@ -330,7 +336,6 @@ const shareContent = () => {
   }
 };
 const canShare = computed(() => navigator.canShare(shareData.value));
-
 
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
