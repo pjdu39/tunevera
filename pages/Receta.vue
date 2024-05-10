@@ -196,9 +196,6 @@ import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentari
 
 // Acceso al store
 const store = useRecipeStore();
-fetch(async () => {
-  await recipeStore.fetchRecipe(id);
-});
 const getRecipeState = computed(() => store.getRecipeState);
 const recipeData = computed(() => getRecipeState.value.data);
 
@@ -214,7 +211,7 @@ const fetchComments = () => {
 };
 
 onMounted(() => {
-  // fetchRecipe();
+  fetchRecipe();
   fetchComments();
 });
 
@@ -259,30 +256,25 @@ const cumputedLikeClass = computed(() => {
   }
 });
 
+
 // SEO
-const url = useRequestURL();
-const currentUrl = url.href;
+const url = useRequestURL()
+const currentUrl = url.href
 
-
-
-/*
 const { $fetchApi } = useNuxtApp();
-
+// TODO: Actualmente se hacen dos llamadas, una para los metadatos en SSR y otra para cargar la página en sí en el 
+//      onMounted(), intentar usar solo una. En caso de no poder, se puede crear un endpoint adicional más ligero
+//      para la información de los metadatos.
 const { data: recipe } = await useAsyncData("recipeData", () => {
   return $fetchApi(`GetRecipe?IdRecipe=${id}`);
 });
-*/
 
 // Metadatos en la cabecera para enriquecer la publicación al compartirla
-const pageTitle = computed(() =>
-  recipeData.value ? recipeData.value.title : ""
-);
+const pageTitle = computed(() => (recipe.value ? recipe.value.title : ""));
 const pageDescription = computed(() =>
-  recipeData.value ? recipeData.value.description : ""
+  recipe.value ? recipe.value.description : ""
 );
-const pageImage = computed(() =>
-  recipeData.value ? recipeData.value.pictureUrl : ""
-);
+const pageImage = computed(() => (recipe.value ? recipe.value.pictureUrl : ""));
 
 useServerHeadSafe({
   title: pageTitle,
@@ -336,6 +328,7 @@ const shareContent = () => {
   }
 };
 const canShare = computed(() => navigator.canShare(shareData.value));
+
 
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
