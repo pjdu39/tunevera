@@ -211,7 +211,7 @@ const fetchComments = () => {
 };
 
 onMounted(() => {
-  fetchRecipe();
+  // fetchRecipe();
   fetchComments();
 });
 
@@ -256,38 +256,29 @@ const cumputedLikeClass = computed(() => {
   }
 });
 
-// COMPARTIR RECETA
+
+// SEO
 const url = useRequestURL()
+const currentUrl = url.href
 
-const currentUrl = url.href     // https://example.com:3000/hello-world
-/*
-const protocol = url.protocol   // https:
-const host = url.host           // example.com:3000
-const hostname = url.hostname   // example.com
-const pathname = url.pathname   // /hello-world
-*/
- /*
-// Manejo de la URL para SSR y Client
-const fullUrl = computed(() => {
-  const baseUrl = process.server
-    ? "https://cookbook-zbxb.onrender.com"
-    : window.location.origin;
-  return `${baseUrl}${route.fullPath}`;
+await useAsyncData("recipeData", () => {
+  fetchRecipe();
 });
-*/
 
+/*
 const { $fetchApi } = useNuxtApp();
 
 const { data: recipe } = await useAsyncData("recipeData", () => {
   return $fetchApi(`GetRecipe?IdRecipe=${id}`);
 });
+*/
 
 // Metadatos en la cabecera para enriquecer la publicación al compartirla
-const pageTitle = computed(() => (recipe.value ? recipe.value.title : ""));
+const pageTitle = computed(() => (recipeData.value ? recipeData.value.title : ""));
 const pageDescription = computed(() =>
-  recipe.value ? recipe.value.description : ""
+recipeData.value ? recipeData.value.description : ""
 );
-const pageImage = computed(() => (recipe.value ? recipe.value.pictureUrl : ""));
+const pageImage = computed(() => (recipeData.value ? recipeData.value.pictureUrl : ""));
 
 useServerHeadSafe({
   title: pageTitle,
@@ -334,7 +325,7 @@ const shareContent = () => {
   if (navigator.share) {
     navigator
       .share(shareData.value)
-      .then(() => console.log("Compartido con éxito!"))
+      .then()
       .catch((error) => console.error("Error al compartir:", error));
   } else {
     console.error("Web Share API no está soportada en este navegador.");
