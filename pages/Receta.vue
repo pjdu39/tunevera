@@ -261,9 +261,9 @@ const cumputedLikeClass = computed(() => {
 const url = useRequestURL()
 const currentUrl = url.href
 
-await useAsyncData("recipeData", () => {
-  fetchRecipe();
-});
+if (process.server) {
+  await useFetch(() => store.fetchRecipe(id));
+}
 
 /*
 const { $fetchApi } = useNuxtApp();
