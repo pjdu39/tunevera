@@ -257,137 +257,91 @@ const cumputedLikeClass = computed(() => {
 });
 
 // COMPARTIR RECETA
+const url = useRequestURL()
+
+const currentUrl = url.href     // https://example.com:3000/hello-world
+/*
+const protocol = url.protocol   // https:
+const host = url.host           // example.com:3000
+const hostname = url.hostname   // example.com
+const pathname = url.pathname   // /hello-world
+*/
+ /*
 // Manejo de la URL para SSR y Client
 const fullUrl = computed(() => {
-  const baseUrl = process.server ? "https://cookbook-zbxb.onrender.com" : window.location.origin
-  return `${baseUrl}${route.fullPath}`
-})
+  const baseUrl = process.server
+    ? "https://cookbook-zbxb.onrender.com"
+    : window.location.origin;
+  return `${baseUrl}${route.fullPath}`;
+});
+*/
 
 const { $fetchApi } = useNuxtApp();
 
-const { data: recipe } = await useAsyncData('recipeData', () => {
+const { data: recipe } = await useAsyncData("recipeData", () => {
   return $fetchApi(`GetRecipe?IdRecipe=${id}`);
 });
 
 // Metadatos en la cabecera para enriquecer la publicación al compartirla
-const pageTitle = computed(() => recipe.value ? recipe.value.title : '')
-const pageDescription = computed(() => recipe.value ? recipe.value.description : '')
-const pageImage = computed(() => recipe.value ? recipe.value.pictureUrl : '')
+const pageTitle = computed(() => (recipe.value ? recipe.value.title : ""));
+const pageDescription = computed(() =>
+  recipe.value ? recipe.value.description : ""
+);
+const pageImage = computed(() => (recipe.value ? recipe.value.pictureUrl : ""));
 
 useServerHeadSafe({
-      title: pageTitle,
-      meta: [
-        // Primary Meta Tags
-        { hid: 'title', name: 'title', content: pageTitle },
-        { hid: 'description', name: 'description', content: pageDescription },
-
-        // Open Graph / Facebook Meta Tags
-        { hid: 'og:type', property: 'og:type', content: 'website' },
-        { hid: 'og:url', property: 'og:url', content: fullUrl },
-        { hid: 'og:title', property: 'og:title', content: pageTitle },
-        { hid: 'og:description', property: 'og:description', content: pageDescription },
-        { hid: 'og:image', property: 'og:image', content: pageImage },
-
-        // Twitter Meta Tags
-        { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-        { hid: 'twitter:url', property: 'twitter:url', content: fullUrl },
-        { hid: 'twitter:title', property: 'twitter:title', content: pageTitle },
-        { hid: 'twitter:description', property: 'twitter:description', content: pageDescription },
-        { hid: 'twitter:image', property: 'twitter:image', content: pageImage }
-      ]
-    }) 
-/*
-useServerSeoMeta({
   title: pageTitle,
-  ogTitle: pageTitle,
-  description: pageDescription,
-  ogDescription: pageDescription,
-  ogImage: pageImage,
-  twitterCard: 'summary_large_image',
-})
+  meta: [
+    // Primary Meta Tags
+    { hid: "title", name: "title", content: pageTitle },
+    { hid: "description", name: "description", content: pageDescription },
 
-useSeoMeta({
-  title: pageTitle,
-  ogTitle: pageTitle,
-  description: pageDescription,
-  ogDescription: pageDescription,
-  ogImage: pageImage,
-  twitterCard: 'summary_large_image',
-})
-*/
+    // Open Graph / Facebook Meta Tags
+    { hid: "og:type", property: "og:type", content: "website" },
+    { hid: "og:url", property: "og:url", content: currentUrl },
+    { hid: "og:title", property: "og:title", content: pageTitle },
+    {
+      hid: "og:description",
+      property: "og:description",
+      content: pageDescription,
+    },
+    { hid: "og:image", property: "og:image", content: pageImage },
+
+    // Twitter Meta Tags
+    {
+      hid: "twitter:card",
+      property: "twitter:card",
+      content: "summary_large_image",
+    },
+    { hid: "twitter:url", property: "twitter:url", content: currentUrl },
+    { hid: "twitter:title", property: "twitter:title", content: pageTitle },
+    {
+      hid: "twitter:description",
+      property: "twitter:description",
+      content: pageDescription,
+    },
+    { hid: "twitter:image", property: "twitter:image", content: pageImage },
+  ],
+});
 
 // Compartir la receta
 const shareData = ref({
-      title: "Cookbook",
-      text: "Mira esta receta en Cookbook",
-      url: fullUrl.value,
-    });
+  title: "Cookbook",
+  text: "Mira esta receta en Cookbook",
+  url: currentUrl,
+});
 const shareContent = () => {
-    if (navigator.share) {
-      navigator
-        .share(shareData.value)
-        .then(() => console.log("Compartido con éxito!"))
-        .catch((error) => console.error("Error al compartir:", error));
-    } else {
-      console.error("Web Share API no está soportada en este navegador.");
-    }
-};
-const canShare = computed(() => navigator.canShare(shareData.value));
-
-
-/*
-const currentUrl = ref(process.client ? window.location.href : null);
-watch(() => route.path, () => {
-  // Actualiza el valor de currentUrl cada vez que cambie la ruta
-  if (process.client) {
-    currentUrl.value = window.location.href;
+  if (navigator.share) {
+    navigator
+      .share(shareData.value)
+      .then(() => console.log("Compartido con éxito!"))
+      .catch((error) => console.error("Error al compartir:", error));
+  } else {
+    console.error("Web Share API no está soportada en este navegador.");
   }
-}, { immediate: true });
-const shareData = ref({
-      title: "Cookbook",
-      text: "Mira esta receta en Cookbook",
-      url: currentUrl.value,
-    });
-const shareContent = () => {
-    if (navigator.share) {
-      navigator
-        .share(shareData.value)
-        .then(() => console.log("Compartido con éxito!"))
-        .catch((error) => console.error("Error al compartir:", error));
-    } else {
-      console.error("Web Share API no está soportada en este navegador.");
-    }
 };
 const canShare = computed(() => navigator.canShare(shareData.value));
 
-// Metadatos en la cabecera para enriquecer la publicación al compartirla
-const pageTitle = computed(() => recipeData.value ? recipeData.value.title : '')
-const pageDescription = computed(() => recipeData.value ? recipeData.value.description : '')
-const pageImage = computed(() => recipeData.value ? recipeData.value.pictureUrl : '')
-const pageUrl = currentUrl
-
-useHead({
-      title: pageTitle,
-      meta: [
-        // Primary Meta Tags
-        { hid: 'title', name: 'title', content: pageTitle },
-        { hid: 'description', name: 'description', content: pageDescription },
-
-        // Open Graph / Facebook Meta Tags
-        { hid: 'og:type', property: 'og:type', content: 'website' },
-        { hid: 'og:url', property: 'og:url', content: pageUrl },
-        { hid: 'og:title', property: 'og:title', content: pageTitle },
-        { hid: 'og:description', property: 'og:description', content: pageDescription },
-        { hid: 'og:image', property: 'og:image', content: pageImage },
-
-        // Twitter Meta Tags
-        { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-        { hid: 'twitter:url', property: 'twitter:url', content: pageUrl },
-        { hid: 'twitter:title', property: 'twitter:title', content: pageTitle },
-        { hid: 'twitter:description', property: 'twitter:description', content: pageDescription },
-        { hid: 'twitter:image', property: 'twitter:image', content: pageImage }
-      ]
-    })  */
 
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
