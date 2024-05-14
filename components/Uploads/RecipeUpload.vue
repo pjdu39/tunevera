@@ -344,11 +344,18 @@ const handleCropComplete = async (croppedBlob) => {
 
   // selectedImage.value = null;
 
-  // Asigno el recorte a una variable para su posterior compresión (de ser necesaria)
-  // finalBlob.value = compressBlob(croppedBlob)
+  try {
+    // Tamaño de la imagen antes del redimensionamiento
+    // console.log(`Tamaño de la imagen original: ${croppedBlob.size} bytes`);
 
-  // TODO: Borrar, es provisional
-  finalBlob.value = croppedBlob
+    // Redimensionar la imagen si es necesario
+    finalBlob.value = await resizeImage(croppedBlob);
+
+    // Tamaño de la imagen después del redimensionamiento
+    // console.log(`Tamaño de la imagen redimensionada: ${finalBlob.value.size} bytes`);
+  } catch (error) {
+    console.error('Error al procesar la imagen:', error);
+  }
 };
 
 const nuxtImgSrc = computed(() => {
@@ -358,10 +365,53 @@ const nuxtImgSrc = computed(() => {
 const nuxtImgClass = computed(() => {
   if (finalBlob.value) return 'image-fit'
   else return 'image-fit image-empty'
-})
+});
+
+const resizeImage = async (file, maxWidth = 500, maxHeight = 500) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.src = e.target.result;
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        // Calcular la escala manteniendo la proporción
+        const scale = Math.min(maxWidth / width, maxHeight / height);
+        if (scale < 1) {
+          width = Math.round(width * scale);
+          height = Math.round(height * scale);
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, file.type, 1);
+      };
+
+      img.onerror = (err) => {
+        reject(err);
+      };
+    };
+
+    reader.onerror = (err) => {
+      reject(err);
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
 
 // Manejo para subida de imágenes
-//const img = ref(null);
 const blobStore = useBlobStore();
 const uploadState = computed(() => blobStore.uploadState);
 
@@ -627,7 +677,7 @@ const validServings = computed(() =>
     ? true
     : false
 );
-const validPictureUrl = computed(() => (uploadState.value.data ? true : false));
+const validPictureUrl = computed(() => (finalBlob.value ? true : false));
 const validRecipeIngredients = computed(() => {
   if (postRecipeData.value.recipeIngredients.length === 0) return false;
   if (
@@ -686,17 +736,22 @@ const cleanEmptyForms = () => {
       );
   }
 };
-const uploadRecipe = () => {
+const uploadRecipe = async () => {
   cleanEmptyForms();
 
   if (!validForm) return;
 
   // TODO: hacer aquí la subida de imagen y esperar al respuesta OK del servidor para continuar
-  // await handleFileUpload(croppedBlob, originalFileExtension);
+  await handleFileUpload(finalBlob.value, originalFileExtension);
+
+  if (uploadState.value.error) {
+    console.error('Error al subir la imagen:', uploadState.value.error);
+    return;
+  }
 
   postRecipeData.value.pictureUrl = uploadState.value.data;
 
-  uploadsStore.postRecipe(postRecipeData.value);
+  await uploadsStore.postRecipe(postRecipeData.value);
 };
 // Redirección tras guardar
 const router = useRouter();
