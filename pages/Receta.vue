@@ -265,6 +265,8 @@ const { $fetchApi } = useNuxtApp();
 // TODO: Actualmente se hacen dos llamadas, una para los metadatos en SSR y otra para cargar la página en sí en el 
 //      onMounted(), intentar usar solo una. En caso de no poder, se puede crear un endpoint adicional más ligero
 //      para la información de los metadatos.
+//      Nota * : insistir en la primera solución, debería existir una forma compacta de utilizar la misma llamada para nutrir
+//      la página con los datos de la hidratación.
 const { data: recipe } = await useAsyncData("recipeData", () => {
   return $fetchApi(`GetRecipe?IdRecipe=${id}`);
 });

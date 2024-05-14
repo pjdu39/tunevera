@@ -11,33 +11,9 @@
     <div class="img-container">
       <div class="wrapper-img">
         <NuxtImg
-          v-if="uploadState.loading === 'waiting'"
-          class="image-fit image-empty"
-          src="https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image-cropped.png"
+          :class="nuxtImgClass"
+          :src="nuxtImgSrc"
         />
-        <!-- https://www.svgrepo.com/show/4029/picture.svg -->
-        <div
-          v-else-if="uploadState.loading === 'loading'"
-          class="upload-state-container"
-        >
-          <font-awesome-icon
-            icon="fa fa-spinner"
-            class="fa-pulse fa-lg"
-            aria-hidden="true"
-          />
-        </div>
-        <NuxtImg
-          v-else-if="uploadState.loading === 'loaded'"
-          class="image-fit"
-          :src="uploadState.data"
-        />
-        <div
-          v-else-if="uploadState.loading === 'error'"
-          class="upload-state-container"
-        >
-          <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
-          <div>{{ uploadState.error }}</div>
-        </div>
       </div>
       <div class="btn btn--add-img" @click="triggerFileInput">
         <font-awesome-icon
@@ -332,6 +308,7 @@ const fileInput = ref(null);
 const isModalOpen = ref(false);
 const selectedImage = ref("");
 let originalFileExtension = "";
+const finalBlob = ref("");
 
 const closeModal = () => {
   isModalOpen.value = false;
@@ -363,12 +340,25 @@ const handleImageSelect = (event) => {
 };
 
 const handleCropComplete = async (croppedBlob) => {
-  // Cierra el modal y resetea el estado
   isModalOpen.value = false;
+
   // selectedImage.value = null;
-  // Aquí llamas a handleFileUpload con el blob recortado
-  await handleFileUpload(croppedBlob, originalFileExtension);
+
+  // Asigno el recorte a una variable para su posterior compresión (de ser necesaria)
+  // finalBlob.value = compressBlob(croppedBlob)
+
+  // TODO: Borrar, es provisional
+  finalBlob.value = croppedBlob
 };
+
+const nuxtImgSrc = computed(() => {
+  if (finalBlob.value) return URL.createObjectURL(finalBlob.value)
+  else return 'https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image-cropped.png'
+});
+const nuxtImgClass = computed(() => {
+  if (finalBlob.value) return 'image-fit'
+  else return 'image-fit image-empty'
+})
 
 // Manejo para subida de imágenes
 //const img = ref(null);
@@ -700,6 +690,9 @@ const uploadRecipe = () => {
   cleanEmptyForms();
 
   if (!validForm) return;
+
+  // TODO: hacer aquí la subida de imagen y esperar al respuesta OK del servidor para continuar
+  // await handleFileUpload(croppedBlob, originalFileExtension);
 
   postRecipeData.value.pictureUrl = uploadState.value.data;
 
