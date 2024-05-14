@@ -266,7 +266,7 @@
     >
       <span>Publicar</span>
       <font-awesome-icon
-        v-if="newRecipeState.loading === 'loading'"
+        v-if="newRecipeState.loading === 'loading' || uploadState.loading === 'loading'"
         icon="fa fa-spinner"
         class="fa-pulse fa-lg"
         aria-hidden="true"
