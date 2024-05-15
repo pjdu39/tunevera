@@ -466,6 +466,7 @@ textarea:focus {
   display: flex;
   align-items: center;
   justify-content: right;
+  top: 0;
   right: 0;
   font-style: italic;
 }
