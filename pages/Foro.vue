@@ -96,8 +96,12 @@
 </template>
 
 <script setup>
+import { useAuth } from '~/composables/useAuth';
 import { useSubjectStore } from "~/store/subject.js";
 import { useCommentStore } from "~/store/comment.js";
+
+// Proteción de acciones con login
+const { guard } = useAuth();
 
 // Acceso al store
 const subjectStore = useSubjectStore();
@@ -117,6 +121,7 @@ const cancelComment = () => {
   comment.value = null;
 };
 const sendComment = () => {
+  guard(route.path);
   commentStore.comment(id, comment.value);
   cancelComment();
 };

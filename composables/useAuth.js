@@ -1,9 +1,11 @@
 // composables/useAuth.js
 import { onMounted, ref } from 'vue';
 import { useAuth0, authGuard } from '@auth0/auth0-vue';
+import { useLoginStore } from "~/store/login.js";
 
 export function useAuth() {
   const auth0 = ref(null);
+  const store = useLoginStore();
 
   if (process.client) {
     auth0.value = useAuth0();
@@ -81,18 +83,23 @@ export function useAuth() {
   const guard = async (path) => {
     await setToken();
 
-    // Esta comprobación parece redundante, pero sirve para evitar el return que finalizaría la función al mismo tiempo que permite ejecutar 
-    //  el authGuard (de ser necesario) antes de comprobar el estado de registro de la store.
-    if (!isAuthenticated) {
+    console.log('Estoy en el guard')
+    console.log(isAuthenticated.value)
+    console.log(store.signUpCompleted)
+
+    // Esta comprobación parece redundante (ya que el propio authGuard comprueba si se está logeado), pero sirve para evitar el return que finalizaría la función,
+    //  al mismo tiempo que permite ejecutar el authGuard (de ser necesario) antes de comprobar el estado de registro de la store.
+    if (!isAuthenticated.value) {
       return authGuard(path);
     }
 
-    // Esto garantiza la protección de rutas siempre que la asignación de la store de pinia de signUpState.isSignedUp sea eficaz.
-    /*
-    if (isAuthenticated.value && store.signUpState.isSignedUp) {
+    // Si está autenticado en auth0 pero no ha completado el registro.    
+    if (isAuthenticated.value && !store.signUpCompleted) {
       // Redirecciona a Perfil, quien automáticamente debería detectar que no hay id de usuario y mostrar por tanto el formulario de registro
+      const router = useRouter();
+      router.push("/perfil");
     }
-    */
+    
 
     
   }

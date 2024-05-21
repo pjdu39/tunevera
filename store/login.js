@@ -12,7 +12,8 @@ export const useLoginStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null
-        }
+        },
+        signUpCompleted: 'waiting'
     }),
     actions: {
         // Registro en bbdd propia
@@ -35,6 +36,11 @@ export const useLoginStore = defineStore({
         },
         patchAuth0UserError(payload) {
             this.patchAuth0UserState.error = payload;
+        },
+
+        // Estado global para comprobar si el usuario ha completado el formulario de registro (no solo el login de auth0)
+        setSignUpCompleted(payload) {
+            this.signUpCompleted = payload;
         },
 
         async signUp(userData) {

@@ -48,11 +48,15 @@
 </template>
 
 <script setup>
+import { useAuth } from '~/composables/useAuth';
 import { useFollowerStore } from "~/store/follower.js";
 
 const props = defineProps({
   data: Object,
 });
+
+// Proteción de acciones con login
+const { guard } = useAuth();
 
 // Acceso a api
 const store = useFollowerStore();
@@ -62,7 +66,10 @@ const unfollowState = computed(() => store.unfollowState);
 const setNotificationsState = computed(() => store.setNotificationsState);
 const localFollowState = computed(() => store.localFollowState);
 
-const follow = () => store.follow(props.data.id.value);
+const follow = () => {
+  guard(route.path);
+  store.follow(props.data.id.value);
+}
 const unfollow = () => store.unfollow(props.data.id.value);
 const setNotifications = (notifications) =>
   store.setNotifications(props.data.id.value, notifications);

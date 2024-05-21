@@ -24,7 +24,7 @@
   </NuxtLink>
 </template>
   
-  <script setup>
+<script setup>
 const props = defineProps({
   postData: Object,
 });

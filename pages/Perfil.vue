@@ -128,6 +128,7 @@ import ProfileDiscussion from "~/components/Profile/ProfileDiscussion.vue";
 import RegistrationForm from "~/components/Profile/RegistrationForm.vue";
 import FollowButton from "~/components/Profile/FollowButton.vue";
 import ProfileSkeleton from "~/components/Skeletons/Profile/ProfileSkeleton.vue";
+import { useLoginStore } from "~/store/login.js";
 import { useProfileStore } from "~/store/profile.js";
 import { useAuth } from "~/composables/useAuth";
 
@@ -141,6 +142,9 @@ onMounted(async () => {
   await guard(route.path);
   fetchProfileData();
 });
+
+// Acceso a métodos que permiten setear el estado de completitud del formulario de registro
+const loginStore = useLoginStore();
 
 // Acceso a api
 const profileStore = useProfileStore();
@@ -172,7 +176,12 @@ const showOptions = ref(false);
 const clickShowOptions = () => (showOptions.value = !showOptions.value);
 
 // Manejo de propiedades que determinan si se debe mostrar el formulario de registro/edición o no.
-const isSignedUp = computed(() => (profile.value.id ? true : false));
+const isSignedUp = computed(() => {
+  const value = profile.value.id ? true : false
+  loginStore.setSignUpCompleted(value);
+  return value;
+});
+
 const isEditing = ref(false);
 
 const showForm = computed(() => !isSignedUp.value || isEditing.value);

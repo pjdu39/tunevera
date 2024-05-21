@@ -434,6 +434,8 @@ watch(loading, (newValue) => {
 
 // Relleno inicial de campos.
 onMounted(() => {
+  if(!props.isEditing) loginStore.setSignUpCompleted(false);
+  
   if (!props.profileInfo) return;
 
   nickname.value = props.profileInfo.name ?? null;
@@ -453,7 +455,11 @@ onMounted(() => {
 
 // Desmontaje
 onUnmounted(() => {
-  profileStore.fetchProfileInfo(props.profileInfo.id);
+  if(props.profileInfo) {
+    loginStore.setSignUpCompleted(true);
+    profileStore.fetchProfileInfo(props.profileInfo.id);
+  }
+  
   blobStore.flush();
 });
 

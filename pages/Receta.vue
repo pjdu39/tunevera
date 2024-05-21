@@ -192,7 +192,11 @@
 </template>
   
 <script setup>
+import { useAuth } from '~/composables/useAuth';
 import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
+
+// Proteción de acciones con login
+const { guard } = useAuth();
 
 // Acceso al store
 const store = useRecipeStore();
@@ -232,6 +236,8 @@ const like = computed({
   set: (value) => store.updateLikeState(value),
 });
 const clickLike = () => {
+  guard(route.path);
+
   if (!likeTimeout.value) {
     likeTimeout.value = true;
 
@@ -386,6 +392,7 @@ const cancelComment = () => {
   comment.value = null;
 };
 const sendComment = () => {
+  guard(route.path);
   store.comment(id, comment.value);
   cancelComment();
 };
