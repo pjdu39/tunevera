@@ -11,7 +11,14 @@ export function useAuth() {
 
   const login = () => {
     if (auth0.value) {
-      auth0.value.loginWithRedirect();
+      let returnToUrl = window.location.origin;
+      returnToUrl += '/perfil';
+      
+      auth0.value.loginWithRedirect({
+        authorizationParams: {
+          redirect_uri: returnToUrl
+        }
+      });
     }
   };
 
@@ -73,7 +80,21 @@ export function useAuth() {
 
   const guard = async (path) => {
     await setToken();
-    return authGuard(path);
+
+    // Esta comprobación parece redundante, pero sirve para evitar el return que finalizaría la función al mismo tiempo que permite ejecutar 
+    //  el authGuard (de ser necesario) antes de comprobar el estado de registro de la store.
+    if (!isAuthenticated) {
+      return authGuard(path);
+    }
+
+    // Esto garantiza la protección de rutas siempre que la asignación de la store de pinia de signUpState.isSignedUp sea eficaz.
+    /*
+    if (isAuthenticated.value && store.signUpState.isSignedUp) {
+      // Redirecciona a Perfil, quien automáticamente debería detectar que no hay id de usuario y mostrar por tanto el formulario de registro
+    }
+    */
+
+    
   }
 
 

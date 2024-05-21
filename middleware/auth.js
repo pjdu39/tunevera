@@ -46,6 +46,8 @@ export default defineNuxtRouteMiddleware(async () => {
 })
 */
 
+// TODO: Estoy revisando la utilidad de esto y parece obsoleto. Comprobar si se llama en algún sitio y borrarlo si no es así.
+//        Actualmente la forma de hacerlo es llamar al guard del composable que se encarga de la autenticación en el onMounted.
 import { authGuard } from "@auth0/auth0-vue";
 
 export default function (context) {

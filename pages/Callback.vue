@@ -1,8 +1,9 @@
 <template>
-  <div class="callback-container">
-    <!-- Muestra algún tipo de mensaje de carga o animación -->
-    <p>Logging you in...</p>
-  </div>
+    <div class="callback-container">
+      <p>
+        Logging you in...
+      </p>
+    </div>
 </template>
 
 <script setup>
@@ -14,15 +15,11 @@ const router = useRouter();
 const { redirectCallback } = useAuth();
 
 onMounted(async () => {
-  try {
-    // Manejar la respuesta de Auth0 y extraer el código de la URL
-    await redirectCallback();
-    // Redirigir al usuario a su destino final, como su perfil o la página de inicio
-    router.push("/perfil");
-  } catch (e) {
-    console.error(e);
-    // Manejar el error, posiblemente redirigir al usuario a una página de error
-    router.push("/error");
-  }
+    try {
+      await redirectCallback();
+      router.push("/perfil");
+    } catch (error) {
+      router.push("/");
+    }
 });
 </script>

@@ -64,7 +64,7 @@
                   <button class="interaction-icon" @click="clickLike">
                     <font-awesome-icon
                       :icon="like ? 'fas fa-heart' : 'far fa-heart'"
-                      :class="cumputedLikeClass"
+                      :class="computedLikeClass"
                       aria-hidden="true"
                     />
                   </button>
@@ -248,7 +248,7 @@ const clickLike = () => {
     }, 1000);
   }
 };
-const cumputedLikeClass = computed(() => {
+const computedLikeClass = computed(() => {
   if (likeTimeout.value) {
     return (like.value ? "fa-beat " : "") + (like.value ? "liked" : "unliked");
   } else {
