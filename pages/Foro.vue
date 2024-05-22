@@ -120,8 +120,10 @@ const cancelComment = () => {
   showSendComment.value = false;
   comment.value = null;
 };
-const sendComment = () => {
-  guard(route.path);
+const sendComment = async() => {
+  const hasAccess = await guard(route.path);
+  if(!hasAccess) return
+
   commentStore.comment(id, comment.value);
   cancelComment();
 };

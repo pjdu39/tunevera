@@ -235,8 +235,9 @@ const like = computed({
   get: () => store.getRecipeState.liked,
   set: (value) => store.updateLikeState(value),
 });
-const clickLike = () => {
-  guard(route.path);
+const clickLike = async () => {
+  const hasAccess = await guard(route.path);
+  if(!hasAccess) return
 
   if (!likeTimeout.value) {
     likeTimeout.value = true;

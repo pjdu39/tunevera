@@ -80,6 +80,7 @@ export function useAuth() {
     document.cookie = 'tokenBearer=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   };
 
+  // El retorno booleano sirve para indicar a las funciones que llaman al guard si deben continuar ejecutando código.
   const guard = async (path) => {
     // TODO: Tratar de marcar el token con fecha y hora y ejecutar setToken solo cuando se sospeche que ha expirado.
     await setToken();
@@ -95,10 +96,10 @@ export function useAuth() {
       // Redirecciona a Perfil, quien automáticamente debería detectar que no hay id de usuario y mostrar por tanto el formulario de registro
       const router = useRouter();
       router.push("/perfil");
+      return false;
     }
-    
 
-    
+    return true;
   }
 
 
