@@ -113,7 +113,7 @@
         <TabPanel header="ENCUESTAS">
           <ProfilePolls />
         </TabPanel>
-        <TabPanel header="ARTICULOS">
+        <TabPanel header="HILOS">
           <ProfileDiscussion />
         </TabPanel>
       </TabView>
@@ -139,7 +139,6 @@ const route = useRoute();
 const id = computed(() => route.query.id || null);
 
 onMounted(async () => {
-  await guard(route.path);
   fetchProfileData();
 });
 
@@ -153,9 +152,19 @@ const profile = computed(() => profileStore.getProfileInfoState.data);
 const profileLoading = computed(() => profileStore.getProfileInfoState.loading);
 const profileError = computed(() => profileStore.getProfileInfoState.error);
 const selfProfile = computed(() => {
-  if (!id) return true;
+  if (!id.value) return true;
   return profileStore.getProfileInfoState.data.selfProfile;
 });
+
+watch(profileLoading, async (newValue, oldValue) => {
+  if (newValue === 'loaded') {
+    console.log(profile.value)
+  }
+  if (newValue === 'loaded' && selfProfile.value) {
+    await guard(route.path);
+  }
+});
+
 const followButtonData = computed(() => {
   return { id: id, follow: profile.value.follow };
 });

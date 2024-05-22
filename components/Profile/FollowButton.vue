@@ -66,6 +66,8 @@ const unfollowState = computed(() => store.unfollowState);
 const setNotificationsState = computed(() => store.setNotificationsState);
 const localFollowState = computed(() => store.localFollowState);
 
+const route = useRoute();
+
 const follow = async () => {
   const hasAccess = await guard(route.path);
   if(!hasAccess) return
