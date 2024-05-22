@@ -81,11 +81,8 @@ export function useAuth() {
   };
 
   const guard = async (path) => {
+    // TODO: Tratar de marcar el token con fecha y hora y ejecutar setToken solo cuando se sospeche que ha expirado.
     await setToken();
-
-    console.log('Estoy en el guard')
-    console.log(isAuthenticated.value)
-    console.log(store.signUpCompleted)
 
     // Esta comprobación parece redundante (ya que el propio authGuard comprueba si se está logeado), pero sirve para evitar el return que finalizaría la función,
     //  al mismo tiempo que permite ejecutar el authGuard (de ser necesario) antes de comprobar el estado de registro de la store.

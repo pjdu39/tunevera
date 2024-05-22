@@ -13,7 +13,7 @@ export const useLoginStore = defineStore({
             loading: 'waiting',
             error: null
         },
-        signUpCompleted: 'waiting'
+        signUpCompleted: false
     }),
     actions: {
         // Registro en bbdd propia
