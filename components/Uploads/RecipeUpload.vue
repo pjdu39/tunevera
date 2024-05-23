@@ -10,10 +10,7 @@
   <div class="section section--top">
     <div class="img-container">
       <div class="wrapper-img">
-        <NuxtImg
-          :class="nuxtImgClass"
-          :src="nuxtImgSrc"
-        />
+        <NuxtImg :class="nuxtImgClass" :src="nuxtImgSrc" />
       </div>
       <div class="btn btn--add-img" @click="triggerFileInput">
         <font-awesome-icon
@@ -259,19 +256,42 @@
     </div>
   </div>
   <div>
-    <button
-      class="btn btn--publicar"
-      @click="uploadRecipe"
-      :disabled="!validForm"
+    <div
+      class="publish-container"
+      @mouseover="hoverInfo(true)"
+      @mouseleave="hoverInfo(false)"
     >
-      <span>Publicar</span>
-      <font-awesome-icon
-        v-if="newRecipeState.loading === 'loading' || uploadState.loading === 'loading'"
-        icon="fa fa-spinner"
-        class="fa-pulse fa-lg"
-        aria-hidden="true"
-      />
-    </button>
+      <button
+        class="btn btn--publish"
+        @click="uploadRecipe"
+        :disabled="!validForm"
+      >
+        <span>Publicar</span>
+        <font-awesome-icon
+          v-if="
+            newRecipeState.loading === 'loading' ||
+            uploadState.loading === 'loading'
+          "
+          icon="fa fa-spinner"
+          class="fa-pulse fa-lg"
+          aria-hidden="true"
+        />
+      </button>
+      <div class="info-container" :hidden="validForm">
+        <div v-if="showMessages" class="messages-container">
+          <div v-for="(msg, index) in messages" :key="index" class="msg">
+            <font-awesome-icon icon="fa fa-times" aria-hidden="true" /> {{ msg }}
+          </div>
+        </div>
+        <div class="info-container-icon" v-else>
+          <font-awesome-icon
+            icon="fa fa-circle-info"
+            class="fa fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+    </div>
   </div>
   <div v-if="newRecipeState.loading === 'error'">
     <div>Mostrar este mensaje a Pablo.</div>
@@ -354,17 +374,18 @@ const handleCropComplete = async (croppedBlob) => {
     // Tamaño de la imagen después del redimensionamiento
     // console.log(`Tamaño de la imagen redimensionada: ${finalBlob.value.size} bytes`);
   } catch (error) {
-    console.error('Error al procesar la imagen:', error);
+    console.error("Error al procesar la imagen:", error);
   }
 };
 
 const nuxtImgSrc = computed(() => {
-  if (finalBlob.value) return URL.createObjectURL(finalBlob.value)
-  else return 'https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image-cropped.png'
+  if (finalBlob.value) return URL.createObjectURL(finalBlob.value);
+  else
+    return "https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image-cropped.png";
 });
 const nuxtImgClass = computed(() => {
-  if (finalBlob.value) return 'image-fit'
-  else return 'image-fit image-empty'
+  if (finalBlob.value) return "image-fit";
+  else return "image-fit image-empty";
 });
 
 const resizeImage = async (file, maxWidth = 500, maxHeight = 500) => {
@@ -376,7 +397,7 @@ const resizeImage = async (file, maxWidth = 500, maxHeight = 500) => {
       img.src = e.target.result;
 
       img.onload = () => {
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement("canvas");
         let width = img.width;
         let height = img.height;
 
@@ -390,12 +411,16 @@ const resizeImage = async (file, maxWidth = 500, maxHeight = 500) => {
         canvas.width = width;
         canvas.height = height;
 
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
 
-        canvas.toBlob((blob) => {
-          resolve(blob);
-        }, file.type, 1);
+        canvas.toBlob(
+          (blob) => {
+            resolve(blob);
+          },
+          file.type,
+          1
+        );
       };
 
       img.onerror = (err) => {
@@ -409,7 +434,7 @@ const resizeImage = async (file, maxWidth = 500, maxHeight = 500) => {
 
     reader.readAsDataURL(file);
   });
-}
+};
 
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
@@ -719,6 +744,33 @@ const validForm = computed(() => {
 
   return false;
 });
+
+// Composición de los mensajes guía para completar el formulario.
+const showMessages = ref(false);
+
+const hoverInfo = (hover) => {
+  if (hover) {
+    showMessages.value = true;
+  } else {
+    setTimeout(() => {
+      showMessages.value = false;
+    }, 250);
+  }
+}
+
+const messages = computed(() => {
+  let msgs = [];
+
+  if (!validTitle.value) msgs.push('Título')
+  if (!validPictureUrl.value) msgs.push('Foto')
+  if (!validTime.value) msgs.push('Tiempo de preparación')
+  if (!validServings.value) msgs.push('Número de raciones')
+  if (!validRecipeIngredients.value) msgs.push('Ingredientes')
+  if (!validSteps.value) msgs.push('Pasos')
+
+  return msgs;
+});
+
 // TODO: Revisar estos "if" tan feos.
 const cleanEmptyForms = () => {
   if (!canAddIngredient.value) {
@@ -745,7 +797,7 @@ const uploadRecipe = async () => {
   await handleFileUpload(finalBlob.value, originalFileExtension);
 
   if (uploadState.value.error) {
-    console.error('Error al subir la imagen:', uploadState.value.error);
+    console.error("Error al subir la imagen:", uploadState.value.error);
     return;
   }
 
@@ -1084,11 +1136,40 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
 }
 .step-textarea {
 }
-.btn--publicar {
+.publish-container {
+  display: flex;
+  gap: 20px;
+  max-height: 29px;
+  transition: max-height 0.25s ease-out;
+  overflow: hidden;
+}
+.publish-container:hover {
+  max-height: 500px;
+  transition: max-height 0.25s ease-in;
+}
+.btn--publish {
   display: flex;
   gap: 10px;
   padding: 1px 8px 2px 8px;
+  height: 29px;
   border-radius: 6px;
+}
+.info-container {
+}
+.messages-container {
+  border: 2px solid $color-soft-grey;
+  border-radius: 6px;
+  padding: 0px 13px 0px 10px;
+  color: $color-red;
+  font-size: 90%;
+  font-weight: bold;
+}
+.msg {
+  line-height: 29px;
+}
+.info-container-icon {
+  line-height: 29px;
+  color: $color-primary;
 }
 
 @media (max-width: 850px) {
