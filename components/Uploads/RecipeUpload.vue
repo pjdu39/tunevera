@@ -279,9 +279,34 @@
       </button>
       <div class="info-container" :hidden="validForm">
         <div v-if="showMessages" class="messages-container">
+          <div class="title-msg">La receta debe tener:</div>
+          <div :class="'msg ' + validTitleClass">
+            <font-awesome-icon :icon="'fa ' + validTitleIcon" aria-hidden="true" /> Título
+          </div>
+          <div :class="'msg ' + validPictureUrlClass">
+            <font-awesome-icon :icon="'fa ' + validPictureUrlIcon" aria-hidden="true" /> Foto
+          </div>
+          <div :class="'msg ' + validTimeClass">
+            <font-awesome-icon :icon="'fa ' + validTimeIcon" aria-hidden="true" /> Tiempo
+            de preparación
+          </div>
+          <div :class="'msg ' + validServingsClass">
+            <font-awesome-icon :icon="'fa ' + validServingsIcon" aria-hidden="true" /> Número
+            de raciones
+          </div>
+          <div :class="'msg ' + validRecipeIngredientsClass">
+            <font-awesome-icon :icon="'fa ' + validRecipeIngredientsIcon" aria-hidden="true" /> Al menos
+            un ingrediente
+          </div>
+          <div :class="'msg ' + validStepsClass">
+            <font-awesome-icon :icon="'fa ' + validStepsIcon" aria-hidden="true" /> Al menos
+            un paso
+          </div>
+          <!--
           <div v-for="(msg, index) in messages" :key="index" class="msg">
             <font-awesome-icon icon="fa fa-times" aria-hidden="true" /> {{ msg }}
           </div>
+          -->
         </div>
         <div class="info-container-icon" v-else>
           <font-awesome-icon
@@ -756,8 +781,47 @@ const hoverInfo = (hover) => {
       showMessages.value = false;
     }, 250);
   }
-}
+};
+// Clases
+const validTitleClass = computed(() => {
+  return validTitle.value === true ? "msg--success" : "msg--error"
+});
+const validPictureUrlClass = computed(() => {
+  return validPictureUrl.value === true ? "msg--success" : "msg--error"
+});
+const validTimeClass = computed(() => {
+  return validTime.value === true ? "msg--success" : "msg--error"
+});
+const validServingsClass = computed(() => {
+  return validServings.value === true ? "msg--success" : "msg--error"
+});
+const validRecipeIngredientsClass = computed(() => {
+  return validRecipeIngredients.value === true ? "msg--success" : "msg--error"
+});
+const validStepsClass = computed(() => {
+  return validSteps.value === true ? "msg--success" : "msg--error"
+});
+// Iconos
+const validTitleIcon = computed(() => {
+  return validTitle.value === true ? "fa-check" : "fa-times"
+});
+const validPictureUrlIcon = computed(() => {
+  return validPictureUrl.value === true ? "fa-check" : "fa-times"
+});
+const validTimeIcon = computed(() => {
+  return validTime.value === true ? "fa-check" : "fa-times"
+});
+const validServingsIcon = computed(() => {
+  return validServings.value === true ? "fa-check" : "fa-times"
+});
+const validRecipeIngredientsIcon = computed(() => {
+  return validRecipeIngredients.value === true ? "fa-check" : "fa-times"
+});
+const validStepsIcon = computed(() => {
+  return validSteps.value === true ? "fa-check" : "fa-times"
+});
 
+/*
 const messages = computed(() => {
   let msgs = [];
 
@@ -765,11 +829,12 @@ const messages = computed(() => {
   if (!validPictureUrl.value) msgs.push('Foto')
   if (!validTime.value) msgs.push('Tiempo de preparación')
   if (!validServings.value) msgs.push('Número de raciones')
-  if (!validRecipeIngredients.value) msgs.push('Ingredientes')
-  if (!validSteps.value) msgs.push('Pasos')
+  if (!validRecipeIngredients.value) msgs.push('Al menos un ingrediente')
+  if (!validSteps.value) msgs.push('Al menos un paso')
 
   return msgs;
 });
+*/
 
 // TODO: Revisar estos "if" tan feos.
 const cleanEmptyForms = () => {
@@ -1157,16 +1222,31 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
 .info-container {
 }
 .messages-container {
+  padding: 1px 5px 5px 5px;
   border: 2px solid $color-soft-grey;
   border-radius: 6px;
+}
+.title-msg {
+  border-bottom: 1px solid $color-soft-grey;
   padding: 0px 13px 0px 10px;
-  color: $color-red;
+  margin-bottom: 3px;
   font-size: 90%;
   font-weight: bold;
+  line-height: 35px;
 }
 .msg {
+  padding: 0px 13px 0px 10px;
+  font-size: 90%;
   line-height: 29px;
 }
+.msg--success {
+  /* color: #79d366; */
+  color: #37d417;
+}
+.msg--error {
+  color: $color-red;
+}
+
 .info-container-icon {
   line-height: 29px;
   color: $color-primary;

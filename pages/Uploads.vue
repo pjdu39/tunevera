@@ -34,7 +34,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .uploads {
   margin: auto;
-  margin-bottom: 100px;
+  margin-bottom: 200px;
   padding: 5px 10px;
   width: 55rem;
   border: 3px solid $color-dark;
