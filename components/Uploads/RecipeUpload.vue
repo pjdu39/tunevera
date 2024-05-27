@@ -281,26 +281,53 @@
         <div v-if="showMessages" class="messages-container">
           <div class="title-msg">La receta debe tener:</div>
           <div :class="'msg ' + validTitleClass">
-            <font-awesome-icon :icon="'fa ' + validTitleIcon" aria-hidden="true" /> Título
+            <font-awesome-icon
+              :icon="'fa ' + validTitleIcon"
+              aria-hidden="true"
+            />
+            Título
           </div>
           <div :class="'msg ' + validPictureUrlClass">
-            <font-awesome-icon :icon="'fa ' + validPictureUrlIcon" aria-hidden="true" /> Foto
+            <font-awesome-icon
+              :icon="'fa ' + validPictureUrlIcon"
+              aria-hidden="true"
+            />
+            Foto
           </div>
           <div :class="'msg ' + validTimeClass">
-            <font-awesome-icon :icon="'fa ' + validTimeIcon" aria-hidden="true" /> Tiempo
-            de preparación
+            <font-awesome-icon
+              :icon="'fa ' + validTimeIcon"
+              aria-hidden="true"
+            />
+            Tiempo de preparación
           </div>
           <div :class="'msg ' + validServingsClass">
-            <font-awesome-icon :icon="'fa ' + validServingsIcon" aria-hidden="true" /> Número
-            de raciones
+            <font-awesome-icon
+              :icon="'fa ' + validServingsIcon"
+              aria-hidden="true"
+            />
+            Número de raciones
           </div>
           <div :class="'msg ' + validRecipeIngredientsClass">
-            <font-awesome-icon :icon="'fa ' + validRecipeIngredientsIcon" aria-hidden="true" /> Al menos
-            un ingrediente
+            <font-awesome-icon
+              :icon="'fa ' + validRecipeIngredientsIcon"
+              aria-hidden="true"
+            />
+            Al menos un ingrediente
+          </div>
+          <div :class="'msg ' + duplicateIngredientClass" :hidden="!duplicateIngredient">
+            <font-awesome-icon
+              :icon="'fa ' + duplicateIngredientIcon"
+              aria-hidden="true"
+            />
+            No puede haber ingredientes duplicados
           </div>
           <div :class="'msg ' + validStepsClass">
-            <font-awesome-icon :icon="'fa ' + validStepsIcon" aria-hidden="true" /> Al menos
-            un paso
+            <font-awesome-icon
+              :icon="'fa ' + validStepsIcon"
+              aria-hidden="true"
+            />
+            Al menos un paso
           </div>
           <!--
           <div v-for="(msg, index) in messages" :key="index" class="msg">
@@ -746,6 +773,16 @@ const validRecipeIngredients = computed(() => {
 
   return true;
 });
+const duplicateIngredient = computed(() => {
+  const elements = new Set();
+  for (const item of postRecipeData.value.recipeIngredients) {
+    if (elements.has(item.text)) {
+      return true;
+    }
+    elements.add(item.text);
+  }
+  return false;
+});
 const validSteps = computed(() => {
   if (postRecipeData.value.steps.length === 0) return false;
   if (postRecipeData.value.steps.length === 1 && !postRecipeData.value.steps[0])
@@ -762,6 +799,7 @@ const validForm = computed(() => {
     validServings.value &&
     validPictureUrl.value &&
     validRecipeIngredients.value &&
+    !duplicateIngredient.value &&
     validSteps.value
   ) {
     return true;
@@ -784,57 +822,48 @@ const hoverInfo = (hover) => {
 };
 // Clases
 const validTitleClass = computed(() => {
-  return validTitle.value === true ? "msg--success" : "msg--error"
+  return validTitle.value === true ? "msg--success" : "msg--error";
 });
 const validPictureUrlClass = computed(() => {
-  return validPictureUrl.value === true ? "msg--success" : "msg--error"
+  return validPictureUrl.value === true ? "msg--success" : "msg--error";
 });
 const validTimeClass = computed(() => {
-  return validTime.value === true ? "msg--success" : "msg--error"
+  return validTime.value === true ? "msg--success" : "msg--error";
 });
 const validServingsClass = computed(() => {
-  return validServings.value === true ? "msg--success" : "msg--error"
+  return validServings.value === true ? "msg--success" : "msg--error";
 });
 const validRecipeIngredientsClass = computed(() => {
-  return validRecipeIngredients.value === true ? "msg--success" : "msg--error"
+  return validRecipeIngredients.value === true ? "msg--success" : "msg--error";
 });
+const duplicateIngredientClass = computed(() => {
+  return !duplicateIngredient.value ? "msg--success" : "msg--error";
+})
 const validStepsClass = computed(() => {
-  return validSteps.value === true ? "msg--success" : "msg--error"
+  return validSteps.value === true ? "msg--success" : "msg--error";
 });
 // Iconos
 const validTitleIcon = computed(() => {
-  return validTitle.value === true ? "fa-check" : "fa-times"
+  return validTitle.value === true ? "fa-check" : "fa-times";
 });
 const validPictureUrlIcon = computed(() => {
-  return validPictureUrl.value === true ? "fa-check" : "fa-times"
+  return validPictureUrl.value === true ? "fa-check" : "fa-times";
 });
 const validTimeIcon = computed(() => {
-  return validTime.value === true ? "fa-check" : "fa-times"
+  return validTime.value === true ? "fa-check" : "fa-times";
 });
 const validServingsIcon = computed(() => {
-  return validServings.value === true ? "fa-check" : "fa-times"
+  return validServings.value === true ? "fa-check" : "fa-times";
 });
 const validRecipeIngredientsIcon = computed(() => {
-  return validRecipeIngredients.value === true ? "fa-check" : "fa-times"
+  return validRecipeIngredients.value === true ? "fa-check" : "fa-times";
+});
+const duplicateIngredientIcon = computed(() => {
+  return !duplicateIngredient.value ? "fa-check" : "fa-times";
 });
 const validStepsIcon = computed(() => {
-  return validSteps.value === true ? "fa-check" : "fa-times"
+  return validSteps.value === true ? "fa-check" : "fa-times";
 });
-
-/*
-const messages = computed(() => {
-  let msgs = [];
-
-  if (!validTitle.value) msgs.push('Título')
-  if (!validPictureUrl.value) msgs.push('Foto')
-  if (!validTime.value) msgs.push('Tiempo de preparación')
-  if (!validServings.value) msgs.push('Número de raciones')
-  if (!validRecipeIngredients.value) msgs.push('Al menos un ingrediente')
-  if (!validSteps.value) msgs.push('Al menos un paso')
-
-  return msgs;
-});
-*/
 
 // TODO: Revisar estos "if" tan feos.
 const cleanEmptyForms = () => {
