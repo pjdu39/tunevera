@@ -14,6 +14,7 @@ const config: NuxtConfig = {
   
   runtimeConfig: {
     // Private area
+
     public: {
       apiUrl: process.env.API_URL,
       env: envFile,
@@ -22,6 +23,8 @@ const config: NuxtConfig = {
       authProviderClientId: process.env.AUTH_PROVIDER_CLIENT_ID,
       authProviderRedirectUri: process.env.AUTH_PROVIDER_REDIRECT_URI,
       authProviderAudience: process.env.AUTH_PROVIDER_AUDIENCE,
+      blobStorageAccountName: process.env.BLOB_STORAGE_ACCOUNT_NAME,
+      blobStorageContainerName: process.env.BLOB_STORAGE_CONTAINER_NAME
     }
   },
   // TODO: Revisar si el contenido de "Server" está haciendo algo actualmente

@@ -14,9 +14,6 @@ export const useBlobStore = defineStore({
             loading: 'waiting',
             error: null
         },
-        // TODO: Moverlo a un sitio privado, probablemente variables de entorno
-        containerName: 'cookbook-images-container',
-        accountName: 'cookbookblobstoragedev',
     }),
     actions: {
         // Sas token
@@ -59,6 +56,8 @@ export const useBlobStore = defineStore({
         },
 
         async uploadFileAndGetUrl(file) {
+            const { blobStorageAccountName, blobStorageContainerName } = useRuntimeConfig().public;
+
             this.setUploadLoading('loading');
 
             await this.fetchSasToken();
@@ -70,9 +69,9 @@ export const useBlobStore = defineStore({
             }
 
             const blobServiceClient = new BlobServiceClient(
-                `https://${this.accountName}.blob.core.windows.net?${this.getSasTokenState.data.token}`
+                `https://${blobStorageAccountName}.blob.core.windows.net?${this.getSasTokenState.data.token}`
             );
-            const containerClient = blobServiceClient.getContainerClient(this.containerName);
+            const containerClient = blobServiceClient.getContainerClient(blobStorageContainerName);
             const blockBlobClient = containerClient.getBlockBlobClient(file.name);
 
             try {
@@ -82,7 +81,7 @@ export const useBlobStore = defineStore({
                 // const blobUrl = blockBlobClient.url;
 
                 // Construye la URL pública sin el SAS
-                const blobUrl = `https://${this.accountName}.blob.core.windows.net/${this.containerName}/${file.name}`;
+                const blobUrl = `https://${blobStorageAccountName}.blob.core.windows.net/${blobStorageContainerName}/${file.name}`;
 
 
                 this.setUploadData(blobUrl);
