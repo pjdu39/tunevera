@@ -131,11 +131,6 @@ import ProfileSkeleton from "~/components/Skeletons/Profile/ProfileSkeleton.vue"
 import { useLoginStore } from "~/store/login.js";
 import { useProfileStore } from "~/store/profile.js";
 import { useAuth } from "~/composables/useAuth";
-import { definePageMeta } from 'nuxt/app';
-
-definePageMeta({
-  ssr: false
-});
 
 const { guard, doLogout, logoutAndRedirectToLogin } = useAuth();
 
