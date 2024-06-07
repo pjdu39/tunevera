@@ -172,10 +172,15 @@ const picture = computed(() => {
 const save = async () => {
   if (!validForm) return;
 
-  await handleFileUpload(finalBlob.value, originalFileExtension);
+  if (finalBlob.value) {
+    await handleFileUpload(finalBlob.value, originalFileExtension);
 
-  // TODO. Hacer pruebas para ver si esto es necesario
-  await wait(() => uploadState.value.data);
+    // TODO. Hacer pruebas para ver si esto es necesario
+    await wait(() => uploadState.value.data);
+  }
+  else {
+    console.log(finalBlob.value)
+  }
 
   patchAuth0User();
 
