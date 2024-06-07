@@ -157,10 +157,7 @@ const selfProfile = computed(() => {
 });
 
 watch(profileLoading, async (newValue, oldValue) => {
-  if (newValue === 'loaded') {
-    console.log(profile.value)
-  }
-  if (newValue === 'loaded' && selfProfile.value) {
+  if (newValue === 'loaded' && selfProfile.value && profile.value.id) {
     await guard(route.path);
   }
 });
@@ -187,7 +184,7 @@ const clickShowOptions = () => (showOptions.value = !showOptions.value);
 // Manejo de propiedades que determinan si se debe mostrar el formulario de registro/edición o no.
 const isSignedUp = computed(() => {
   const value = profile.value.id ? true : false
-  if(process.client) loginStore.setSignUpCompleted(value);
+  loginStore.setSignUpCompleted(value);
   return value;
 });
 

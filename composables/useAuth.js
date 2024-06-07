@@ -84,8 +84,6 @@ export function useAuth() {
 
   // El retorno booleano sirve para indicar a las funciones que llaman al guard si deben continuar ejecutando código.
   const guard = async (path) => {
-    if (!process.client) return
-    
     // TODO: Tratar de marcar el token con fecha y hora y ejecutar setToken solo cuando se sospeche que ha expirado.
     await setToken();
 
