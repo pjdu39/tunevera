@@ -18,11 +18,15 @@ export function useAuth() {
       
       // TODO: El bug raro del callback lo corté de raíz eliminando la opción de login con facebook.
       //      En caso de volver a ponerlo, probar a meter esto en un try catch. https://github.com/auth0/nextjs-auth0/issues/413
+      /*
       auth0.value.loginWithRedirect({
         authorizationParams: {
           redirect_uri: returnToUrl
         }
       });
+      */
+      
+      auth0.value.login();
     }
   };
 
@@ -96,10 +100,7 @@ export function useAuth() {
           // TODO: IMPORTANTE: Debería comprobar si el token es válido (mediante algo que proporcione auth0 o calculando el tiempo de vida de la cookie existente)
           //                    y evitar esta llamada totalmente redundante que está fallando a veces por razones misteriosas y genera incertidumbre sobre las causas de
           //                    otros fallos relacionados con la autenticación y redirecciones indeseadas.
-          const token = await auth0.value.getAccessTokenSilently({
-            /* audience: 'https://cookbook-api.com',
-            scope: 'openid profile email update:users update:users_app_metadata update:current_user_metadata' */
-          });
+          const token = await auth0.value.getAccessTokenSilently();
 
           document.cookie = `tokenBearer=${token};path=/;`;
         } catch (error) {

@@ -17,7 +17,7 @@ const { redirectCallback } = useAuth();
 onMounted(async () => {
     try {
       await redirectCallback();
-      router.push("/perfil");
+      // router.push("/perfil");
     } catch (error) {
       console.error(error)
       // router.push("/");
