@@ -14,11 +14,13 @@ export default defineNuxtPlugin((nuxtApp) => {
               scope: 'openid profile email update:current_user_metadata'
             },
             // TODO: Revisar esto por si es lo que me está generando redirecciones indeseadas
+            /*
             onRedirectCallback: appState => {
                 nuxtApp.$router.push(
                     appState && appState.returnTo ? appState.returnTo : window.location.pathname
                 );
             }
+                */
         }));
     }
 });

@@ -19,7 +19,8 @@ onMounted(async () => {
       await redirectCallback();
       router.push("/perfil");
     } catch (error) {
-      router.push("/");
+      console.error(error)
+      // router.push("/");
     }
 });
 </script>

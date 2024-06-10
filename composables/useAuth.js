@@ -127,7 +127,8 @@ export function useAuth() {
     if (isAuthenticated.value && !store.signUpCompleted) {
       // Redirecciona a Perfil, quien automáticamente debería detectar que no hay id de usuario y mostrar por tanto el formulario de registro
       const router = useRouter();
-      if (path !== "/perfil") router.push("/perfil");
+      // if (path !== "/perfil") router.push("/perfil");
+      router.push("/perfil");
       return false;
     }
 
