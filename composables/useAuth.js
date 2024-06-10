@@ -77,6 +77,8 @@ export function useAuth() {
 
   const redirectCallback = async () => {
     if (auth0.value) {
+      await setToken();
+      /*
       try {
         await auth0.value.handleRedirectCallback();
         
@@ -84,6 +86,7 @@ export function useAuth() {
       } catch (error) {
         console.error("Error durante el proceso de redirección y establecimiento del token:", error);
       }
+        */
     }
   };
 
