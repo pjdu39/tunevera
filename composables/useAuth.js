@@ -30,6 +30,25 @@ export function useAuth() {
   const isAuthenticated = computed(() => auth0.value?.isAuthenticated);
   const isLoading = computed(() => auth0.value?.isLoading);
 
+  /*
+  const getTokenFromCookie = () => {
+    const tokenCookie = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('tokenBearer='));
+    return tokenCookie ? decodeURIComponent(tokenCookie.split('=')[1]) : null;
+  };
+
+  const isTokenValid = () => {
+    const token = getTokenFromCookie();
+    if (!token) return false;
+    const decoded = jwtDecode(token);
+    const currentTime = Date.now() / 1000; // tiempo en segundos
+    console.log('Expiración en segundos:' + decoded.exp)
+    console.log('CurrentTime:' + currentTime)
+    return decoded.exp > currentTime;
+  };
+  */
+
   const doLogout = () => {
     if (auth0.value) {
       removeToken();
@@ -58,8 +77,13 @@ export function useAuth() {
 
   const redirectCallback = async () => {
     if (auth0.value) {
-      auth0.value.handleRedirectCallback();
-      await setToken()
+      try {
+        await auth0.value.handleRedirectCallback();
+        
+        await setToken();
+      } catch (error) {
+        console.error("Error durante el proceso de redirección y establecimiento del token:", error);
+      }
     }
   };
 
@@ -76,7 +100,7 @@ export function useAuth() {
 
           document.cookie = `tokenBearer=${token};path=/;`;
         } catch (error) {
-          console.error("Error al obtener el token en la función setToken():", error);
+          // console.error("Error al obtener el token silencioso en la función setToken():", error);
         }
     }
   };
