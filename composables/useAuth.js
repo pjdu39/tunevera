@@ -90,7 +90,7 @@ export function useAuth() {
   const redirectCallback = async () => {
     if (auth0.value) {
       try {
-        // await auth0.value.handleRedirectCallback();
+        await auth0.value.handleRedirectCallback();
         
         // await setToken();
       } catch (error) {
