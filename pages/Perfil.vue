@@ -179,7 +179,7 @@ const fetchProfileData = () => {
 // Refresco del perfil al ir de uno ajeno al propio
 watch(id, (newVal, oldVal) => {
   // TODO: Cuando tenga el navbar para cambiar entre recetas, discusiones y encuestas, ponerlo en recetas cuando pase por este watch.
-  fetchProfileData();
+  // fetchProfileData();
 });
 
 // Manejo de opciones de perfil
