@@ -106,7 +106,7 @@
           <div class="i-d-description">{{ profile.description }}</div>
         </div>
       </div>
-      <TabView content-class="mt-3" class="profile-tab">
+      <TabView v-if="proceedWithLoading" content-class="mt-3" class="profile-tab">
         <TabPanel header="RECETAS">
           <ProfileRecipes :id="id" />
         </TabPanel>
@@ -134,6 +134,9 @@ import { useAuth } from "~/composables/useAuth";
 
 const { guard, doLogout, logoutAndRedirectToLogin, setToken } = useAuth();
 
+// Manejo de orden coherente de carga de datos
+const proceedWithLoading = ref(false);
+
 // Parámetros por query string
 const route = useRoute();
 const id = computed(() => route.query.id || null);
@@ -141,6 +144,7 @@ const id = computed(() => route.query.id || null);
 onMounted(async () => {
   await setToken()
   fetchProfileData();
+  proceedWithLoading.value = true
 });
 
 // Acceso a métodos que permiten setear el estado de completitud del formulario de registro
