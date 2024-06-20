@@ -132,13 +132,14 @@ import { useLoginStore } from "~/store/login.js";
 import { useProfileStore } from "~/store/profile.js";
 import { useAuth } from "~/composables/useAuth";
 
-const { guard, doLogout, logoutAndRedirectToLogin } = useAuth();
+const { guard, doLogout, logoutAndRedirectToLogin, setToken } = useAuth();
 
 // Parámetros por query string
 const route = useRoute();
 const id = computed(() => route.query.id || null);
 
 onMounted(async () => {
+  await setToken()
   fetchProfileData();
 });
 
