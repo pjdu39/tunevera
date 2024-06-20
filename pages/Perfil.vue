@@ -106,7 +106,7 @@
           <div class="i-d-description">{{ profile.description }}</div>
         </div>
       </div>
-      <TabView v-if="proceedWithLoading" content-class="mt-3" class="profile-tab">
+      <TabView content-class="mt-3" class="profile-tab">
         <TabPanel header="RECETAS">
           <ProfileRecipes :id="id" />
         </TabPanel>
@@ -134,9 +134,6 @@ import { useAuth } from "~/composables/useAuth";
 
 const { guard, doLogout, logoutAndRedirectToLogin, setToken } = useAuth();
 
-// Manejo de orden coherente de carga de datos
-const proceedWithLoading = ref(false);
-
 // Parámetros por query string
 const route = useRoute();
 const id = computed(() => route.query.id || null);
@@ -144,7 +141,6 @@ const id = computed(() => route.query.id || null);
 onMounted(async () => {
   await setToken()
   fetchProfileData();
-  proceedWithLoading.value = true
 });
 
 // Acceso a métodos que permiten setear el estado de completitud del formulario de registro
@@ -179,7 +175,7 @@ const fetchProfileData = () => {
 // Refresco del perfil al ir de uno ajeno al propio
 watch(id, (newVal, oldVal) => {
   // TODO: Cuando tenga el navbar para cambiar entre recetas, discusiones y encuestas, ponerlo en recetas cuando pase por este watch.
-  // fetchProfileData();
+  fetchProfileData();
 });
 
 // Manejo de opciones de perfil

@@ -40,7 +40,7 @@ const fetchRecipesData = () => {
 
 // Refresco del perfil al ir de uno ajeno al propio
 watch(props, (newVal, oldVal) => {
-  // fetchRecipesData();
+  fetchRecipesData();
 });
 </script>
 
