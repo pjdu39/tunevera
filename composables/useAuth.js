@@ -101,16 +101,16 @@ export function useAuth() {
 
   const setToken = async () => {
     if (auth0.value) {
-      await new Promise(resolve => {
-        const unwatch = watch(() => auth0.value?.isLoading, (newVal, oldVal) => {
-          if (newVal === false) {
-            unwatch(); // Detiene la observación cuando isLoading es false
-            resolve(); // Resuelve la promesa para continuar con el flujo de ejecución
-          }
-        }, {
-          immediate: true // Inicia la observación inmediatamente
+      if(auth0.value.isLoading){
+        await new Promise(resolve => {
+          const unwatch = watch(() => auth0.value?.isLoading, (newVal, oldVal) => {
+            if (newVal === false) {
+              unwatch(); // Detiene la observación cuando isLoading es false
+              resolve(); // Resuelve la promesa para continuar con el flujo de ejecución
+            }
+          });
         });
-      });
+      }
 
       if (!isAuthenticated.value) {
         console.log(isLoading.value)
