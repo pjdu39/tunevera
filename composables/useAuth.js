@@ -101,6 +101,9 @@ export function useAuth() {
 
   const setToken = async () => {
     if (auth0.value) {
+      console.log('isloading: ' + isLoading.value)
+      console.log('isAuthenticated: ' + isAuthenticated.value)
+
       if(auth0.value.isLoading){
         await new Promise(resolve => {
           const unwatch = watch(() => auth0.value?.isLoading, (newVal, oldVal) => {
@@ -112,10 +115,9 @@ export function useAuth() {
         });
       }
 
-      if (!isAuthenticated.value) {
-        console.log(isLoading.value)
-        console.log(isAuthenticated.value)
-      }
+      console.log('isloading: ' + isLoading.value)
+      console.log('isAuthenticated: ' + isAuthenticated.value)
+
       try {
         const token = await auth0.value.getAccessTokenSilently();
         // const { authProviderDomain, authProviderClientId, authProviderRedirectUri, authProviderAudience } = useRuntimeConfig().public;
