@@ -101,13 +101,34 @@ export function useAuth() {
 
   const setToken = async () => {
     if (auth0.value) {
-        try {
-          const token = await auth0.value.getAccessTokenSilently();
+      await new Promise(resolve => {
+        const unwatch = watch(() => auth0.value?.isLoading, (newVal, oldVal) => {
+          if (newVal === false) {
+            unwatch(); // Detiene la observación cuando isLoading es false
+            resolve(); // Resuelve la promesa para continuar con el flujo de ejecución
+          }
+        }, {
+          immediate: true // Inicia la observación inmediatamente
+        });
+      });
 
-          document.cookie = `tokenBearer=${token};path=/;`;
-        } catch (error) {
-          console.error("Error al obtener el token silencioso en la función setToken():", error);
-        }
+      if (!isAuthenticated.value) {
+        console.log(isLoading.value)
+        console.log(isAuthenticated.value)
+      }
+      try {
+        const token = await auth0.value.getAccessTokenSilently();
+        // const { authProviderDomain, authProviderClientId, authProviderRedirectUri, authProviderAudience } = useRuntimeConfig().public;
+        /*
+        const token = await auth0.value.getAccessTokenWithPopup({
+          // audience: authProviderAudience, // Opcional: si necesitas un token para una API específica
+          scope: 'openid profile email update:current_user_metadata' // Los permisos que necesitas
+        });
+        */
+        document.cookie = `tokenBearer=${token};path=/;`;
+      } catch (error) {
+        console.error("Error al obtener el token silencioso en la función setToken():", error);
+      }
     }
   };
 
