@@ -1,8 +1,17 @@
 <template>
-  <div class="profile">
+  <div v-if="!loginLoading" class="profile">
+    <!--
     <ProfileSkeleton
       v-if="profileLoading === 'waiting' || profileLoading === 'loading'"
     />
+    -->
+    <div v-if="profileLoading === 'waiting' || profileLoading === 'loading'" class="loading-container">
+      <font-awesome-icon
+        icon="fa fa-circle-notch"
+        class="fa-spin fa-lg"
+        aria-hidden="true"
+      />
+    </div>
     <div v-else-if="profileLoading === 'error'" class="top">
       <div class="state-container">
         <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
@@ -106,7 +115,7 @@
           <div class="i-d-description">{{ profile.description }}</div>
         </div>
       </div>
-      <TabView v-if="proceedWithLoading" content-class="mt-3" class="profile-tab">
+      <TabView content-class="mt-3" class="profile-tab">
         <TabPanel header="RECETAS">
           <ProfileRecipes :id="id" />
         </TabPanel>
@@ -135,16 +144,16 @@ import { useAuth } from "~/composables/useAuth";
 const { guard, doLogout, logoutAndRedirectToLogin, setToken } = useAuth();
 
 // Manejo de orden coherente de carga de datos
-const proceedWithLoading = ref(false);
+const loginLoading = ref(true);
 
 // Parámetros por query string
 const route = useRoute();
 const id = computed(() => route.query.id || null);
 
 onMounted(async () => {
-  await setToken()
+  await setToken();
+  loginLoading.value = false
   fetchProfileData();
-  proceedWithLoading.value = true
 });
 
 // Acceso a métodos que permiten setear el estado de completitud del formulario de registro
@@ -220,6 +229,16 @@ const clickOutside = () => {
   width: 46rem;
   background-color: $color-background;
   border-radius: 5px;
+}
+.loading-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  height: 200px;
+  width: 100%;
+  font-size: 200%;
+  color: $color-primary;
 }
 .top {
   display: flex;
