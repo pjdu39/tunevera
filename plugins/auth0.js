@@ -14,6 +14,12 @@ export default defineNuxtPlugin((nuxtApp) => {
               useRefreshTokens: true,
               scope: 'openid profile email update:current_user_metadata'
             },
+            onRedirectCallback: {
+                appState: {
+                    target: '/perfil'
+                }
+            }
+
             // TODO: Revisar esto por si es lo que me está generando redirecciones indeseadas
             /*
             onRedirectCallback: appState => {
