@@ -101,9 +101,6 @@ export function useAuth() {
 
   const setToken = async () => {
     if (auth0.value) {
-      console.log('isloading: ' + isLoading.value)
-      console.log('isAuthenticated: ' + isAuthenticated.value)
-
       if(auth0.value.isLoading){
         await new Promise(resolve => {
           const unwatch = watch(() => auth0.value?.isLoading, (newVal, oldVal) => {
@@ -114,19 +111,9 @@ export function useAuth() {
           });
         });
       }
-
-      console.log('isloading: ' + isLoading.value)
-      console.log('isAuthenticated: ' + isAuthenticated.value)
-
+      
       try {
         const token = await auth0.value.getAccessTokenSilently();
-        // const { authProviderDomain, authProviderClientId, authProviderRedirectUri, authProviderAudience } = useRuntimeConfig().public;
-        /*
-        const token = await auth0.value.getAccessTokenWithPopup({
-          // audience: authProviderAudience, // Opcional: si necesitas un token para una API específica
-          scope: 'openid profile email update:current_user_metadata' // Los permisos que necesitas
-        });
-        */
         document.cookie = `tokenBearer=${token};path=/;`;
       } catch (error) {
         console.error("Error al obtener el token silencioso en la función setToken():", error);

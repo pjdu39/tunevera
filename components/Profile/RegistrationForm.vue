@@ -46,7 +46,7 @@
           class="nickname-input"
           v-model="nickname"
           type="text"
-          :placeholder="user.nickname ?? ''"
+          :placeholder="''"
           :maxlength="nicknameMaxLenght"
           @input="checkName"
           autocomplete="off"
@@ -228,7 +228,7 @@ const patchAuth0User = () => {
 };
 
 // Validaciones
-// TODO: Propiedades computadas que validen la integridad de los datos: Lenght de los textos, campo obligatorios, fechas válidas, etc.
+// TODO: Propiedades computadas que validen la integridad de los datos: Lenght de los textos, campos obligatorios, fechas válidas, etc.
 const validNickname = computed(
   () =>
     nickname.value &&
@@ -257,6 +257,7 @@ const validDescription = computed(() => {
 });
 const validForm = computed(() =>
   (check.value === "valid" || check.value === "waiting") &&
+  validNickname.value &&
   validBirthDate.value &&
   validDescription.value &&
   user.value
