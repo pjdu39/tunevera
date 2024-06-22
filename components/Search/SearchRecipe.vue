@@ -187,7 +187,7 @@
             <div class="recipe-info-title">{{ recipe.title }}</div>
             <div class="recipe-info-detail">
               <div class="recipe-info-detail-item">
-                <div>23</div>
+                <div>{{ recipe.likes }}</div>
                 <div>
                   <font-awesome-icon
                       icon="far fa-heart"
