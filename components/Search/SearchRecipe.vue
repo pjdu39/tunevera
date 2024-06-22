@@ -182,8 +182,35 @@
       class="grid-results"
     >
       <div v-for="(recipe, index) in recipes" :key="index" class="p-recipe">
-        <NuxtLink class="recipe-post" :to="`/receta?id=${recipe.id}`">
+        <NuxtLink class="recipe-link" :to="`/receta?id=${recipe.id}`">
+          <div class="recipe-info">
+            <div class="recipe-info-title">{{ recipe.title }}</div>
+            <div class="recipe-info-detail">
+              <div class="recipe-info-detail-item">
+                <div>23</div>
+                <div>
+                  <font-awesome-icon
+                      icon="far fa-heart"
+                      class="item-icon"
+                      aria-hidden="true"
+                    />
+                </div>
+              </div>
+              <div class="recipe-info-detail-item">
+                <div>{{ recipe.time }}</div>
+                <div>
+                  <font-awesome-icon
+                      icon="far fa-clock"
+                      class="item-icon"
+                      aria-hidden="true"
+                    />
+                </div>
+              </div>
+            </div>
+          </div>
           <NuxtImg :src="recipe.pictureUrl" class="image" />
+          <div class="top-blur"></div>
+          <div class="bottom-blur"></div>
         </NuxtLink>
       </div>
     </div>
@@ -274,10 +301,10 @@ const checkVegetarian = () => {
 
 // Opciones avanzadas
 const showAdvanced = ref(false);
-const angleIcon = ref("fa-angle-up");
+const angleIcon = ref("fa-angle-down");
 const clickAdvanced = () => {
   showAdvanced.value = !showAdvanced.value;
-  angleIcon.value = showAdvanced.value ? "fa-angle-down" : "fa-angle-up";
+  angleIcon.value = showAdvanced.value ? "fa-angle-down" : "fa-angle-down";
 };
 
 const numFilters = computed(() => {
@@ -415,7 +442,7 @@ input:disabled {
 }
 
 .component {
-  height: 60px;
+  height: 55px;
 }
 .basic-options-container {
   display: flex;
@@ -444,13 +471,16 @@ input:disabled {
 }
 .advanced-options-dropdown {
   display: flex;
-  padding: 0 8px 1px 10px;
-  color: white;
-  background-color: $color-soft-grey;
+  padding: 0 10px 1px 0px;
+  height: 19px;
+  background-color: transparent;
   border: none;
   border-radius: 9px;
   line-height: 16px;
   font-size: 90%;
+}
+.advanced-options-dropdown:hover {
+  text-decoration: underline;
 }
 .filters-applied-count {
   padding: 0 5px;
@@ -469,7 +499,7 @@ input:disabled {
 }
 .advanced-options-container {
   display: flex;
-  min-height: 134px;
+  // min-height: 134px;
   margin-top: 20px;
   font-size: 80%;
 }
@@ -615,6 +645,45 @@ input:disabled {
   overflow: hidden;
   aspect-ratio: 1 / 1;
 }
+.recipe-link .recipe-info {
+  display: none;
+}
+.recipe-link:hover .recipe-info {
+  display: block;
+}
+.recipe-info {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: white;
+  z-index: 2;
+}
+.recipe-info-title {
+  position: absolute;
+  top: 0;
+  padding: 3px 9px;
+  font-family: $font-headers;
+  font-size: 110%;
+  letter-spacing: 1px;
+}
+.recipe-info-detail {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  padding: 0 9px;
+  
+  /*
+  top: 50%;
+  transform: translateY(-50%);
+  */
+}
+.recipe-info-detail-item {
+  display: flex;
+  padding: 0 13px 3px 0;
+}
+.item-icon {
+  margin-left: 5px;
+}
 .image {
   position: absolute;
   top: 0;
@@ -622,6 +691,34 @@ input:disabled {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.top-blur {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 25%; // Al 100% le resto el height de bottom-blur para no superponer dos difuminados.
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+}
+.bottom-blur {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 25%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+}
+.recipe-link .top-blur {
+  display: none;
+}
+.recipe-link:hover .top-blur {
+  display: block;
+}
+.recipe-link .bottom-blur {
+  display: none;
+}
+.recipe-link:hover .bottom-blur {
+  display: block;
 }
 
 // Estilos de primevue
@@ -644,4 +741,10 @@ input:disabled {
   margin: 0;
   font-family: $font-primary;
 }
+@media (max-width: 600px) {
+  .recipe-link .recipe-info {
+    display: block; /* Siempre visible en dispositivos móviles */
+  }
+}
+
 </style>

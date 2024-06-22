@@ -21,7 +21,16 @@
           </div>
         </div>
         <div class="btn btn--add-img" @click="triggerFileInput">
+          <div>
+            <font-awesome-icon
+              icon="fa-solid fa-plus"
+              class="fa-lg"
+              aria-hidden="true"
+            />
+          </div>
+          <!--
           <span class="span--add-img">+</span>
+          -->
         </div>
         <!-- Input de archivo oculto -->
         <input
@@ -694,7 +703,7 @@ select:focus {
   width: 50px;
   height: 50px;
   line-height: 50px; /* Ajusta a la altura del botón. Depende del transform del span para que el texto lo aplique. */
-  font-size: 300%;
+  font-size: 200%;
   font-weight: bold;
 }
 .label {
@@ -780,7 +789,7 @@ select:focus {
     width: 35px;
     height: 35px;
     line-height: 10px;
-    font-size: 250%;
+    font-size: 180%;
   }
   .validation-state-icon {
     font-size: 180%;
