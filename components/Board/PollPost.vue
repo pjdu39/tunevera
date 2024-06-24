@@ -307,7 +307,8 @@ const anchoActual = computed(() => anchoDiv.value);
     font-size: 140%;
   }
   .signature {
-    font-size: 90%;
+    font-size: 85%;
+    margin-bottom: 5px;
   }
   .poll-options-container {
     width: 100%;
