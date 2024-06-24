@@ -250,13 +250,17 @@ const anchoActual = computed(() => anchoDiv.value);
 }
 .option-wrapper {
   position: relative;
-  height: 26px;
+  min-height: 26px;
+  height: auto;
+  border: 1px solid rgb(228, 228, 228);
+  border-radius: 5px;
+  overflow: hidden;
 }
-
 .option-text {
   display: inline-block;
   position: relative; // Esto es solo para generar un contexto de apilamiento
   margin-left: 0.5rem;
+  margin-right: 55px;
   font-size: 85%;
   z-index: 10;
 }
@@ -265,8 +269,7 @@ const anchoActual = computed(() => anchoDiv.value);
   height: 100%;
   top: 0;
   left: 0;
-  background-color: $color-soft-grey;
-  border-radius: 5px 0 0 5px;
+  background-color: rgb(228, 228, 228);
   z-index: 5;
 }
 .option-bar--selected {
@@ -288,12 +291,14 @@ const anchoActual = computed(() => anchoDiv.value);
 }
 
 .percentage {
+  display: flex;
+  align-items: center;
+  justify-content: end;
   width: 100%;
-  padding-top: 0.1rem;
   padding-right: 0.5rem;
   background-color: transparent;
-  border-radius: 0.5rem;
   font-size: 85%;
+  font-weight: 600;
   z-index: 15;
 }
 
