@@ -430,10 +430,11 @@ const handleCropComplete = async (croppedBlob) => {
   }
 };
 
+const { blobStorageAccountName, blobStorageContainerName } = useRuntimeConfig().public;
 const nuxtImgSrc = computed(() => {
   if (finalBlob.value) return URL.createObjectURL(finalBlob.value);
   else
-    return "https://cookbookblobstoragedev.blob.core.windows.net/cookbook-images-container/no-recipe-image-cropped.png";
+    return `https://${blobStorageAccountName}.blob.core.windows.net/${blobStorageContainerName}/no-recipe-image-cropped.png`;
 });
 const nuxtImgClass = computed(() => {
   if (finalBlob.value) return "image-fit";

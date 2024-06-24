@@ -142,6 +142,8 @@ export function useAuth() {
     // Si está autenticado en auth0 pero no ha completado el registro.    
     if (isAuthenticated.value && !store.signUpCompleted) {
       // Redirecciona a Perfil, quien automáticamente debería detectar que no hay id de usuario y mostrar por tanto el formulario de registro
+      // TODO: Quitar la redirección al perfil y sustituirlo por una llamada silenciosa y simple a la api. 
+      //        Basicamente hacer lo mismo que se hace en perfil para garantizar el login pero aquí, de la forma más silenciosa posible.
       const router = useRouter();
       if (path !== "/perfil") router.push("/perfil");
       // router.push("/perfil");

@@ -14,11 +14,17 @@
         <nuxt-link to="/Buscar" class="gear-option"> Contáctanos </nuxt-link>
       </div>
     </div>
-    <NuxtImg src="/img/cookbook-logo-recorte.png" class="logo" />
+    <div class="logo-container">
+      <NuxtImg :src="logoUrl" class="logo" />
+    </div>
   </div>
 </template>
 
 <script setup>
+// Obtención del logo
+const { blobStorageAccountName, blobStorageContainerName } = useRuntimeConfig().public;
+const logoUrl = `https://${blobStorageAccountName}.blob.core.windows.net/${blobStorageContainerName}/cookbook_logo_1.png`;
+
 const opcionesGear = ref(false)
 
 // Click outside
@@ -71,9 +77,16 @@ const clickOutside = () => {
 .gear-option:hover {
   background-color: #c1c8c7;
 }
-
+.logo-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  height: 170px;
+}
 .logo {
-  margin: auto;
+  position: absolute;
+  top: 40px;
   height: $header-logo-height;
 }
 
