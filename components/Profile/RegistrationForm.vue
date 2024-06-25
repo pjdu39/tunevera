@@ -502,7 +502,7 @@ watch(loading, (newValue) => {
 
 // Relleno inicial de campos.
 onMounted(() => {
-  if(!props.isEditing) loginStore.setSignUpCompleted(false);
+  // if(!props.isEditing) loginStore.setCheckSignUpData(false);
   
   if (!props.profileInfo) return;
 
@@ -524,7 +524,7 @@ onMounted(() => {
 // Desmontaje
 onUnmounted(() => {
   if(props.profileInfo) {
-    loginStore.setSignUpCompleted(true);
+    // loginStore.setCheckSignUpData(true);
     profileStore.fetchProfileInfo(props.profileInfo.id);
   }
   

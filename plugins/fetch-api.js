@@ -32,8 +32,6 @@ export default defineNuxtPlugin((nuxtApp) => {
                     return JSON.parse(responseBody);
                 } catch (e) {
                     console.error(e);
-                    // Si hay un error al parsear, puedes decidir qué hacer aquí.
-                    // Por ejemplo, podrías lanzar un nuevo error o simplemente devolver null.
                     throw new Error(`Error al parsear el cuerpo de la respuesta a JSON: ${e}`);
                 }
             }

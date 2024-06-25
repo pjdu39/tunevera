@@ -1,3 +1,4 @@
+import path from 'path';
 import { defineStore } from 'pinia';
 
 export const useLoginStore = defineStore({
@@ -13,7 +14,11 @@ export const useLoginStore = defineStore({
             loading: 'waiting',
             error: null
         },
-        signUpCompleted: false
+        checkSignUpState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        }
     }),
     actions: {
         // Registro en bbdd propia
@@ -37,10 +42,16 @@ export const useLoginStore = defineStore({
         patchAuth0UserError(payload) {
             this.patchAuth0UserState.error = payload;
         },
-
-        // Estado global para comprobar si el usuario ha completado el formulario de registro (no solo el login de auth0)
-        setSignUpCompleted(payload) {
-            this.signUpCompleted = payload;
+        
+        // Comprueba si se ha completado el registro
+        setCheckSignUpData(payload) {
+            this.checkSignUpState.data = payload;
+        },
+        setCheckSignUpLoading(payload) {
+            this.checkSignUpState.loading = payload;
+        },
+        setCheckSignUpError(payload) {
+            this.checkSignUpState.error = payload;
         },
 
         async signUp(userData) {
@@ -79,7 +90,7 @@ export const useLoginStore = defineStore({
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify(auth0UserData)
-                }, `https://${authProviderDomain}`); // TODO: Pasar a variables de entorno
+                }, `https://${authProviderDomain}`);
 
                 this.patchAuth0UserData(data);
                 this.patchAuth0UserLoading('loaded');
@@ -91,5 +102,22 @@ export const useLoginStore = defineStore({
                 this.patchAuth0UserError(error.message);
             }
         },
+
+        async checkSignUp() {
+            const { $fetchApi } = useNuxtApp();
+            this.setCheckSignUpLoading('loading');
+            try {
+                const data = await $fetchApi('CheckSignUp');
+
+                this.setCheckSignUpData(data);
+                this.setCheckSignUpLoading('loaded');
+                this.setCheckSignUpError(null);
+            }
+            catch(error) {
+                this.setCheckSignUpData(null);
+                this.setCheckSignUpLoading('error');
+                this.setCheckSignUpError(error.message);
+            }
+        }
     }
 });

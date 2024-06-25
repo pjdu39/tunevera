@@ -129,25 +129,30 @@ export function useAuth() {
   const guard = async (path) => {
     if (!isAuthenticated.value) {
       return await login();
-    }
-
-    // await setToken();
-
-    // Esta comprobación parece redundante (ya que el propio authGuard comprueba si se está logeado), pero sirve para evitar el return que finalizaría la función,
-    //  al mismo tiempo que permite ejecutar el authGuard (de ser necesario) antes de comprobar el estado de registro de la store.
-    if (!isAuthenticated.value) {
       // return authGuard(path);
     }
 
     // Si está autenticado en auth0 pero no ha completado el registro.    
-    if (isAuthenticated.value && !store.signUpCompleted) {
+    if (isAuthenticated.value && !store.checkSignUpState.data) {
       // Redirecciona a Perfil, quien automáticamente debería detectar que no hay id de usuario y mostrar por tanto el formulario de registro
       // TODO: Quitar la redirección al perfil y sustituirlo por una llamada silenciosa y simple a la api. 
       //        Basicamente hacer lo mismo que se hace en perfil para garantizar el login pero aquí, de la forma más silenciosa posible.
+      /*
       const router = useRouter();
       if (path !== "/perfil") router.push("/perfil");
-      // router.push("/perfil");
-      return false;
+      */
+
+      await store.checkSignUp();
+      if (!store.checkSignUpState.data) {
+        // console.log('No tengo el formulario de registro completado y procedo a redirigir al perfil')
+        const router = useRouter();
+        router.push("/perfil");
+        return false
+      }
+      else {
+        // console.log('else: procedo a llamar a setToken')
+        await setToken();
+      }
     }
 
     return true;

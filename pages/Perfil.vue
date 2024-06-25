@@ -198,7 +198,7 @@ const clickShowOptions = () => (showOptions.value = !showOptions.value);
 // Manejo de propiedades que determinan si se debe mostrar el formulario de registro/edición o no.
 const isSignedUp = computed(() => {
   const value = profile.value.id ? true : false
-  loginStore.setSignUpCompleted(value);
+  loginStore.setCheckSignUpData(value);
   return value;
 });
 
