@@ -434,7 +434,7 @@ const { blobStorageAccountName, blobStorageContainerName } = useRuntimeConfig().
 const nuxtImgSrc = computed(() => {
   if (finalBlob.value) return URL.createObjectURL(finalBlob.value);
   else
-    return `https://${blobStorageAccountName}.blob.core.windows.net/${blobStorageContainerName}/no-recipe-image-cropped.png`;
+    return `https://${blobStorageAccountName}.blob.core.windows.net/${blobStorageContainerName}/no-recipe-image.png`;
 });
 const nuxtImgClass = computed(() => {
   if (finalBlob.value) return "image-fit";
