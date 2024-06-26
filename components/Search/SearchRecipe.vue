@@ -1,5 +1,5 @@
 <template>
-  <div class="component">
+  <div class="top">
     <div class="basic-options-container">
       <input
         class="main-search-input"
@@ -8,27 +8,29 @@
         placeholder="Buscar receta..."
         @input="searchRecipes"
       />
-      <button :class="'vegan-button' + checked(vegan)" @click="checkVegan()">
-        <div>Vegano</div>
-        <font-awesome-icon
-          v-if="vegan"
-          icon="fa fa-check"
-          class="check-icon"
-          aria-hidden="true"
-        />
-      </button>
-      <button
-        :class="'vegan-button' + checked(vegetarian)"
-        @click="checkVegetarian()"
-      >
-        <div>Vegetariano</div>
-        <font-awesome-icon
-          v-if="vegetarian"
-          icon="fa fa-check"
-          class="check-icon"
-          aria-hidden="true"
-        />
-      </button>
+      <div class="flex vegan-options">
+        <button :class="'vegan-button' + checked(vegan)" @click="checkVegan()">
+          <div>Vegano</div>
+          <font-awesome-icon
+            v-if="vegan"
+            icon="fa fa-check"
+            class="check-icon"
+            aria-hidden="true"
+          />
+        </button>
+        <button
+          :class="'vegan-button' + checked(vegetarian)"
+          @click="checkVegetarian()"
+        >
+          <div>Vegetariano</div>
+          <font-awesome-icon
+            v-if="vegetarian"
+            icon="fa fa-check"
+            class="check-icon"
+            aria-hidden="true"
+          />
+        </button>
+      </div>
     </div>
   </div>
   <div class="flex">
@@ -45,7 +47,11 @@
     </div>
   </div>
   <div v-if="showAdvanced" class="advanced-options-container">
-    <TabView :activeIndex="activeTab" content-class="mt-3" class="search-tool-container">
+    <TabView
+      :activeIndex="activeTab"
+      content-class="mt-3"
+      class="search-tool-container"
+    >
       <TabPanel header="INGREDIENTES">
         <input
           class="advanced-search-input"
@@ -124,34 +130,40 @@
       </TabPanel>
     </TabView>
     <div class="applied-filters-container">
-      <div class="ingredients-filter">
-        <div
-          v-for="(ingredient, index) in ingredients"
-          :key="index"
-          class="filter-element"
-          :class="{ 'animate-highlight': animatingIngredientIndex === index }"
-        >
-          <div class="filter-element-text">{{ ingredient.text }}</div>
-          <button class="btn btn--delete" @click="dropIngredient(index)">
-            <span class="span--btn-delete">
-              <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
-            </span>
-          </button>
+      <div v-if="ingredients.length > 0" class="ingredients-filters-container">
+        <div class="filter-title">Ingredientes filtrados</div>
+        <div class="ingredients-filter">
+          <div
+            v-for="(ingredient, index) in ingredients"
+            :key="index"
+            class="filter-element"
+            :class="{ 'animate-highlight': animatingIngredientIndex === index }"
+          >
+            <div class="filter-element-text">{{ ingredient.text }}</div>
+            <button class="btn btn--delete" @click="dropIngredient(index)">
+              <span class="span--btn-delete">
+                <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
-      <div class="tags-filter">
-        <div
-          v-for="(tag, index) in tags"
-          :key="index"
-          class="filter-element"
-          :class="{ 'animate-highlight': animatingTagIndex === index }"
-        >
-          <div class="filter-element-text">{{ tag.text }}</div>
-          <button class="btn btn--delete" @click="dropTag(index)">
-            <span class="span--btn-delete">
-              <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
-            </span>
-          </button>
+      <div v-if="tags.length > 0" class="tags-filters-container">
+        <div class="filter-title">Etiquetas filtradas</div>
+        <div class="tags-filter">
+          <div
+            v-for="(tag, index) in tags"
+            :key="index"
+            class="filter-element"
+            :class="{ 'animate-highlight': animatingTagIndex === index }"
+          >
+            <div class="filter-element-text">{{ tag.text }}</div>
+            <button class="btn btn--delete" @click="dropTag(index)">
+              <span class="span--btn-delete">
+                <font-awesome-icon icon="fa fa-times" aria-hidden="true" />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -190,20 +202,20 @@
                 <div>{{ recipe.likes }}</div>
                 <div>
                   <font-awesome-icon
-                      icon="far fa-heart"
-                      class="item-icon"
-                      aria-hidden="true"
-                    />
+                    icon="far fa-heart"
+                    class="item-icon"
+                    aria-hidden="true"
+                  />
                 </div>
               </div>
               <div class="recipe-info-detail-item">
                 <div>{{ recipe.time }}</div>
                 <div>
                   <font-awesome-icon
-                      icon="far fa-clock"
-                      class="item-icon"
-                      aria-hidden="true"
-                    />
+                    icon="far fa-clock"
+                    class="item-icon"
+                    aria-hidden="true"
+                  />
                 </div>
               </div>
             </div>
@@ -227,7 +239,7 @@
 import { useSearchStore } from "~/store/search.js";
 
 const props = defineProps({
-  tag: Object
+  tag: Object,
 });
 
 // Acceso a la Store
@@ -259,7 +271,7 @@ const activeTab = ref(0);
 
 onMounted(() => {
   if (props.tag && store) {
-    showAdvanced.value = true
+    showAdvanced.value = true;
     activeTab.value = 1;
 
     tags.value.push(props.tag);
@@ -267,7 +279,6 @@ onMounted(() => {
 
   fetchRecipes();
 });
-
 
 // Parámetros
 const text = ref("");
@@ -416,7 +427,6 @@ const clickCustom = (value) => {
   customFilters.value = value;
   fetchRecipes();
 };
-
 </script>
 
 <style lang="scss" scoped>
@@ -441,15 +451,17 @@ input:disabled {
   border-color: $color-soft-grey;
 }
 
-.component {
+.top {
   height: 55px;
 }
 .basic-options-container {
   display: flex;
-  margin-bottom: 90px;
 }
 .main-search-input {
   display: block;
+}
+.vegan-options {
+  display: flex;
 }
 .vegan-button {
   display: flex;
@@ -500,7 +512,7 @@ input:disabled {
 .advanced-options-container {
   display: flex;
   // min-height: 134px;
-  margin-top: 20px;
+  margin: 20px 0 0 0;
   font-size: 80%;
 }
 .search-tool-container {
@@ -529,10 +541,23 @@ input:disabled {
 .applied-filters-container {
   display: flex;
   width: 55%;
+  margin-top: 20px;
+}
+.ingredients-filters-container {
+  width: 50%;
+}
+.tags-filters-container {
+  width: 50%;
+}
+.filter-title {
+  line-height: 10px;
+  margin-bottom: 20px;
+  font-size: 130%;
+  font-family: $font-headers;
 }
 .ingredients-filter {
-  height: auto;
-  width: 50%;
+  width: auto;
+  min-height: 100px;
   height: min-content;
   border-left: 1px solid $color-dark;
   padding: 0 5px 0 5px;
@@ -594,8 +619,8 @@ input:disabled {
   background-color: transparent;
 }
 .tags-filter {
-  height: auto;
-  width: 50%;
+  width: auto;
+  min-height: 100px;
   height: min-content;
   border-left: 1px solid $color-dark;
   padding: 0 5px 0 10px;
@@ -603,12 +628,16 @@ input:disabled {
 .results-container {
   height: auto;
   width: 100%;
+  margin-top: 30px;
 }
 .sugested-filters-section {
   display: flex;
   margin-top: 45px;
   margin-bottom: 8px;
   font-size: 90%;
+
+  // Lo quito temporalmente
+  display: none;
 }
 .sugested-filter {
   margin: 0 40px 0 0;
@@ -671,7 +700,7 @@ input:disabled {
   position: absolute;
   bottom: 0;
   padding: 0 9px;
-  
+
   /*
   top: 50%;
   transform: translateY(-50%);
@@ -742,9 +771,64 @@ input:disabled {
   font-family: $font-primary;
 }
 @media (max-width: 600px) {
+  input {
+    width: 100%;
+  }
+  .top {
+    height: auto;
+  }
+  .basic-options-container {
+    flex-direction: column;
+  }
+  .main-search-input {
+    // width: 100%;
+  }
+  .advanced-search-input {
+    width: 100%;
+  }
+  .vegan-options {
+    margin: 20px 0;
+  }
+  .vegan-button {
+    margin-left: 0;
+    margin-right: 30px;
+
+    border: 1px solid;
+    border-radius: 8px;
+    width: auto;
+  }
+  .advanced-options-container {
+    flex-direction: column;
+  }
+  .search-tool-container {
+    width: 100%;
+  }
+  .applied-filters-container {
+    padding-left: 10px;
+    width: 100%;
+  }
+  .ingredients-filter {
+    min-height: max-content;
+  }
+  .tag-filter {
+    min-height: max-content;
+  }
+  .sugestions-container {
+  }
+  .grid-results {
+    grid-template-columns: repeat(2, 1fr);
+    /* grid-auto-rows: 1fr; /* Altura de fila como una fracción del contenedor */
+    gap: 3px;
+    min-height: 15rem;
+  }
   .recipe-link .recipe-info {
     display: block; /* Siempre visible en dispositivos móviles */
   }
+  .recipe-link .top-blur {
+    display: block;
+  }
+  .recipe-link .bottom-blur {
+    display: block;
+  }
 }
-
 </style>

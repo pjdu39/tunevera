@@ -38,4 +38,11 @@ const tag = tagEncoded ? JSON.parse(decodeURIComponent(tagEncoded)) : null;
   margin: 0;
   font-family: $font-primary;
 }
+
+@media (max-width: 600px) {
+  .page-container {
+    margin: auto;
+    width: 100%;
+  }
+}
 </style>
