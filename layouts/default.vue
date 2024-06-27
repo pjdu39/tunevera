@@ -13,6 +13,17 @@ import "../assets/scss/custom.scss";
 import "../assets/scss/global.scss";
 import Header from "../components/Structure/Header.vue";
 import MainMenu from "../components/Structure/MainMenu.vue";
+import { useLoginStore } from "~/store/login.js";
+
+const store = useLoginStore();
+const route = useRoute();
+
+const { setToken } = useAuth();
+
+onMounted(async() => {
+  await setToken();
+  await store.checkSignUp();
+})
 </script>
 
 <style scoped lang="scss">
