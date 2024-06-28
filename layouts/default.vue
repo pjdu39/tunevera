@@ -20,6 +20,11 @@ const route = useRoute();
 
 const { setToken } = useAuth();
 
+watch(() => route.path, (newPath) => {
+  // store.setLastRoute(newPath);
+  // console.log("La ruta actual es:", newPath);
+});
+
 onMounted(async() => {
   await setToken();
   await store.checkSignUp();

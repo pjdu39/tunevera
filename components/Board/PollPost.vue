@@ -81,7 +81,13 @@
 </template>
   
 <script setup>
+import { useAuth } from '~/composables/useAuth';
 import { usePollStore } from "~/store/poll.js";
+
+// Proteción de acciones con login
+const { guard } = useAuth();
+
+const route = useRoute();
 
 const props = defineProps({
   postData: Object,
@@ -94,7 +100,10 @@ const store = usePollStore();
 const localOptions = ref([...props.postData.options]);
 const isVoted = ref(false);
 const chosenOptionId = ref(null);
-const vote = (index, idPost, option) => {
+const vote = async (index, idPost, option) => {
+  const hasAccess = await guard(route.path);
+  if(!hasAccess) return
+
   option.votes += 1;
   isVoted.value = true;
   chosenOptionId.value = index;

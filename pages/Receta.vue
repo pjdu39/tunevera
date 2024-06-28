@@ -196,7 +196,7 @@ import { useAuth } from '~/composables/useAuth';
 import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
 
 // Proteción de acciones con login
-const { guard } = useAuth();
+const { guard, setToken } = useAuth();
 
 // Acceso al store
 const store = useRecipeStore();
@@ -214,7 +214,8 @@ const fetchComments = () => {
   store.fetchComments(id, 10);
 };
 
-onMounted(() => {
+onMounted(async () => {
+  await setToken();
   fetchRecipe();
   fetchComments();
 });
@@ -236,7 +237,7 @@ const like = computed({
   set: (value) => store.updateLikeState(value),
 });
 const clickLike = async () => {
-  const hasAccess = await guard(route.path);
+  const hasAccess = await guard(url.pathname + url.search);
   if(!hasAccess) return
 
   if (!likeTimeout.value) {
@@ -392,8 +393,10 @@ const cancelComment = () => {
   showSendComment.value = false;
   comment.value = null;
 };
-const sendComment = () => {
-  guard(route.path);
+const sendComment = async () => {
+  const hasAccess = await guard(url.pathname + url.search);
+  if(!hasAccess) return
+  
   store.comment(id, comment.value);
   cancelComment();
 };

@@ -23,11 +23,12 @@ import TabPanel from "primevue/tabpanel";
 import { useAuth } from '~/composables/useAuth';
 
 // Protección de ruta con login
-const { guard } = useAuth();
+const { guard, setToken } = useAuth();
 const route = useRoute();
 
-onMounted(() => {
-  guard(route.path);
+onMounted(async () => {
+  await setToken();
+  await guard(route.path);
 });
 </script>
 

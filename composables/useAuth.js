@@ -6,6 +6,7 @@ import { useLoginStore } from "~/store/login.js";
 export function useAuth() {
   const auth0 = ref(null);
   const store = useLoginStore();
+  const lastRoute = computed(() => store.redirectInfo.lastRoute);
 
   if (process.client) {
     auth0.value = useAuth0();
@@ -13,9 +14,6 @@ export function useAuth() {
 
   const login = async () => {
     if (auth0.value) {
-      // let returnToUrl = window.location.origin;
-      // returnToUrl += '/perfil';
-      
       // TODO: El bug raro del callback lo corté de raíz eliminando la opción de login con facebook.
       //      En caso de volver a ponerlo, probar a meter esto en un try catch. https://github.com/auth0/nextjs-auth0/issues/413
       
@@ -29,12 +27,9 @@ export function useAuth() {
 
       await auth0.value.loginWithRedirect({
         appState: {
-          target: '/perfil'
+          target: lastRoute.value
         }
       });
-      
-      
-      // await auth0.value.login();
     }
   };
 
@@ -91,9 +86,8 @@ export function useAuth() {
     if (auth0.value) {
       try {
         await auth0.value.handleRedirectCallback();
-        
-        // await setToken();
-      } catch (error) {
+      }
+      catch (error) {
         // console.error("Error durante el proceso de redirección y establecimiento del token:", error);
       }
     }
@@ -111,6 +105,8 @@ export function useAuth() {
           });
         });
       }
+
+      if (!isAuthenticated.value) return
       
       try {
         const token = await auth0.value.getAccessTokenSilently();
@@ -127,9 +123,10 @@ export function useAuth() {
 
   // El retorno booleano sirve para indicar a las funciones que llaman al guard si deben continuar ejecutando código.
   const guard = async (path) => {
+    await store.setLastRoute(path);
+    
     if (!isAuthenticated.value) {
       return await login();
-      // return authGuard(path);
     }
 
     // Si está autenticado en auth0 pero no ha completado el registro.    
@@ -142,6 +139,7 @@ export function useAuth() {
       if (path !== "/perfil") router.push("/perfil");
       */
 
+      
       await store.checkSignUp();
       if (!store.checkSignUpState.data) {
         // console.log('No tengo el formulario de registro completado y procedo a redirigir al perfil')

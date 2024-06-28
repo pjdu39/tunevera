@@ -26,12 +26,15 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { useAuth } from '~/composables/useAuth';
 import { useBoardStore } from "~/store/board.js";
 import DiscussionPost from "~/components/Board/DiscussionPost.vue";
 import PollPost from "~/components/Board/PollPost.vue";
 import RecipePost from "~/components/Board/RecipePost.vue";
 import BoardPcSkeleton from "~/components/Skeletons/BoardPcSkeleton.vue";
 import BoardPhoneSkeleton from "~/components/Skeletons/BoardPhoneSkeleton.vue";
+
+const { setToken } = useAuth();
 
 const boardStore = useBoardStore();
 const elements = ref([]);
@@ -54,6 +57,7 @@ const loadMoreElements = async () => {
 };
 
 onMounted(async () => {
+  await setToken();
   // IntersectionObserver para detectar cuando el usuario llega al final de la lista
   observer = new IntersectionObserver(
     async (entries) => {

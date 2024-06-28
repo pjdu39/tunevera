@@ -18,6 +18,10 @@ export const useLoginStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null
+        },
+        redirectInfo: {
+            lastRoute: null,
+            lastData: {}
         }
     }),
     actions: {
@@ -52,6 +56,17 @@ export const useLoginStore = defineStore({
         },
         setCheckSignUpError(payload) {
             this.checkSignUpState.error = payload;
+        },
+
+        // Guarda información para la redirección tras el login o refresco de tokens
+        async setLastRoute(payload) {
+            // console.log('this.redirectInfo.lastRoute era: ' + this.redirectInfo.lastRoute)
+            if (payload.toLowerCase() === '/callback') return
+            this.redirectInfo.lastRoute = payload
+            // console.log('this.redirectInfo.lastRoute ahora es: ' + this.redirectInfo.lastRoute)
+        },
+        setLastData(payload) {
+            this.redirectInfo.lastData = payload
         },
 
         async signUp(userData) {
