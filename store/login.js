@@ -60,10 +60,8 @@ export const useLoginStore = defineStore({
 
         // Guarda información para la redirección tras el login o refresco de tokens
         async setLastRoute(payload) {
-            // console.log('this.redirectInfo.lastRoute era: ' + this.redirectInfo.lastRoute)
             if (payload.toLowerCase() === '/callback') return
             this.redirectInfo.lastRoute = payload
-            // console.log('this.redirectInfo.lastRoute ahora es: ' + this.redirectInfo.lastRoute)
         },
         setLastData(payload) {
             this.redirectInfo.lastData = payload

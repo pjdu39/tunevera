@@ -1,5 +1,41 @@
 <template>
-  <div class="recipe">
+  <div v-if="showOptions" class="modal-overlay" @click.self="closeModal">
+    <div class="dropdown-options-container">
+      <!--
+      <button class="option" @click="">
+        <div class="option-icon-wrapper">
+          <font-awesome-icon
+            icon="fa-regular fa-star"
+            class="fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+        <div>Añadir a favoritos</div>
+      </button>
+      -->
+      <button class="option" @click="">
+        <div class="option-icon-wrapper">
+          <font-awesome-icon
+            icon="fa fa-pencil"
+            class="fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+        <div>Editar</div>
+      </button>
+      <button class="option" @click="">
+        <div class="option-icon-wrapper">
+          <font-awesome-icon
+            icon="fa-regular fa-circle-xmark"
+            class="fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+        <div>Eliminar</div>
+      </button>
+    </div>
+  </div>
+  <div class="container">
     <div
       v-if="
         getRecipeState.loading === 'loading' ||
@@ -19,7 +55,20 @@
         <div>Error hardcodeado</div>
       </div>
     </div>
-    <div v-else-if="getRecipeState.loading === 'loaded'">
+    <div v-else-if="getRecipeState.loading === 'loaded'" class="recipe">
+      <div v-if="recipeData.selfRecipe" class="options-container">
+        <button
+          class="options-btn"
+          @click="clickShowOptions"
+          v-click-outside="clickOutside"
+        >
+          <font-awesome-icon
+            icon="fa fa-ellipsis-vertical"
+            class="fa-lg"
+            aria-hidden="true"
+          />
+        </button>
+      </div>
       <div class="top-section">
         <div class="img-wrapper">
           <NuxtImg :src="recipeData.pictureUrl" class="image-fit" />
@@ -192,7 +241,7 @@
 </template>
   
 <script setup>
-import { useAuth } from '~/composables/useAuth';
+import { useAuth } from "~/composables/useAuth";
 import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
 
 // Proteción de acciones con login
@@ -238,7 +287,7 @@ const like = computed({
 });
 const clickLike = async () => {
   const hasAccess = await guard(url.pathname + url.search);
-  if(!hasAccess) return
+  if (!hasAccess) return;
 
   if (!likeTimeout.value) {
     likeTimeout.value = true;
@@ -264,13 +313,12 @@ const computedLikeClass = computed(() => {
   }
 });
 
-
 // SEO
-const url = useRequestURL()
-const currentUrl = url.href
+const url = useRequestURL();
+const currentUrl = url.href;
 
 const { $fetchApi } = useNuxtApp();
-// TODO: Actualmente se hacen dos llamadas, una para los metadatos en SSR y otra para cargar la página en sí en el 
+// TODO: Actualmente se hacen dos llamadas, una para los metadatos en SSR y otra para cargar la página en sí en el
 //      onMounted(), intentar usar solo una. En caso de no poder, se puede crear un endpoint adicional más ligero
 //      para la información de los metadatos.
 //      Nota * : insistir en la primera solución, debería existir una forma compacta de utilizar la misma llamada para nutrir
@@ -339,7 +387,6 @@ const shareContent = () => {
 };
 const canShare = computed(() => navigator.canShare(shareData.value));
 
-
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
   const singular = ingredient.text.singular;
@@ -395,10 +442,21 @@ const cancelComment = () => {
 };
 const sendComment = async () => {
   const hasAccess = await guard(url.pathname + url.search);
-  if(!hasAccess) return
-  
+  if (!hasAccess) return;
+
   store.comment(id, comment.value);
   cancelComment();
+};
+
+// Manejo de opciones de recetas propias
+const showOptions = ref(false);
+const clickShowOptions = () => (showOptions.value = !showOptions.value);
+
+// Click outside
+const clickOutside = () => {
+  if (showOptions.value) showOptions.value = false;
+
+  // Ir añadir todos los elementos que deban cerrarse al clickar fuera de ellos.
 };
 </script>
   
@@ -420,9 +478,69 @@ textarea:focus {
   -moz-box-shadow: none;
   border-bottom: 3px solid $color-dark;
 }
-.recipe {
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 130%;
+  z-index: 60;
+}
+.dropdown-options-container {
+  display: flex;
+  flex-direction: column;
+  padding: 25px 30px;
+  background-color: $color-background;
+  border-radius: 10px;
+
+  // Provisional
+  width: auto;
+  height: auto;
+}
+.option {
+  display: flex;
+  align-items: center;
+  
+  min-height: 50px;
+  min-width: 200px;
+  padding: 0 38px 0 33px;
+  margin: 10px 0;
+  white-space: nowrap;
+  width: 100%;
+  text-align: start;
+  background-color: $color-background;
+  border: 1px solid grey;
+  border-radius: 10px;
+}
+.option:hover {
+  background-color: $color-soft-grey;
+}
+.option-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  min-width: 25px;
+  margin-right: 15px;
+}
+.container {
   margin: auto;
   width: 65rem;
+}
+.recipe {
+  position: relative;
+}
+.options-container {
+  position: absolute;
+  right: -40px;
+  top: 20px;
+  font-size: 140%;
+}
+.options-btn {
+  width: 30px;
 }
 .top-section {
   display: flex;
@@ -555,7 +673,7 @@ textarea:focus {
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
-  width: 15%;
+  width: 20%;
 }
 .icon-info-container {
   margin-top: 5px;
@@ -696,10 +814,19 @@ textarea:focus {
   margin: 37px 0 0 45px;
 }
 
+
 @media (max-width: 600px) {
-  .recipe {
+  .container {
     width: 100%;
     font-size: 85%;
+  }
+  .options-container {
+    position: absolute;
+    right: auto;
+    left: 10px;
+    color: white;
+    font-size: 180%;
+    z-index: 1;
   }
   .top-section {
     position: relative;
@@ -788,6 +915,7 @@ textarea:focus {
     font-weight: 600;
   }
   .general-info-right {
+    width: 25%;
   }
   .icon-info-container {
     font-size: 120%;
