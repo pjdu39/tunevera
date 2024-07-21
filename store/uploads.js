@@ -23,6 +23,11 @@ export const useUploadsStore = defineStore({
             loading: 'waiting',
             error: null
         },
+        editRecipeState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
     }),
     actions: {
         // Mutations for Recipe
@@ -67,6 +72,17 @@ export const useUploadsStore = defineStore({
         },
         setUnitsError(payload) {
             this.getUnitsState.error = payload;
+        },
+
+        // Mutations for Edit Recipe
+        setEditRecipeData(payload) {
+            this.editRecipeState.data = payload;
+        },
+        setEditRecipeLoading(payload) {
+            this.editRecipeState.loading = payload;
+        },
+        setEditRecipeError(payload) {
+            this.editRecipeState.error = payload;
         },
 
         // Actions
@@ -156,6 +172,29 @@ export const useUploadsStore = defineStore({
                 this.setUnitsLoading('error');
                 this.setUnitsError(error.message);
             }
-        }
+        },
+        
+        async putRecipe(changes) {
+            const { $fetchApi } = useNuxtApp();
+            this.setEditRecipeLoading('loading');
+            try {
+                const data = await $fetchApi("EditRecipe", {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(changes)
+                });
+
+                this.setEditRecipeData(data);
+                this.setEditRecipeLoading('loaded');
+                this.setEditRecipeError(null);
+            }
+            catch(error) {
+                this.setRecipeData(null);
+                this.setEditRecipeLoading('error');
+                this.setEditRecipeError(error.message);
+            }
+        },
     }
 });
