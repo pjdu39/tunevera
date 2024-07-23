@@ -262,6 +262,7 @@
       @mouseleave="hoverInfo(false)"
     >
       <button
+        v-if="!isEditing"
         class="btn btn--publish"
         @click="uploadRecipe"
         :disabled="!validForm"
@@ -277,6 +278,25 @@
           aria-hidden="true"
         />
       </button>
+      <div v-else class="flex">
+        <button
+          class="btn btn--publish"
+          @click="editRecipe"
+          :disabled="!validForm"
+        >
+          <span>Listo</span>
+          <font-awesome-icon
+            v-if="
+              editRecipeState.loading === 'loading' ||
+              uploadState.loading === 'loading'
+            "
+            icon="fa fa-spinner"
+            class="fa-pulse fa-lg"
+            aria-hidden="true"
+          />
+        </button>
+        <button>Cancelar</button>
+      </div>
       <div class="info-container" :hidden="validForm">
         <div v-if="showMessages" class="messages-container">
           <div class="title-msg">La receta debe tener:</div>
@@ -357,6 +377,10 @@ import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
 import { v4 as uuidv4 } from "uuid";
 
+const props = defineProps({
+  recipe: Object,
+});
+
 // Constantes
 const titleMaxLenght = 60;
 const descriptionMaxLenght = 450;
@@ -367,8 +391,34 @@ const ingredientMaxLenght = 70; // Ampliable hasta 100.
 const maxAmount = 9999.99;
 const stepMaxLenght = 450;
 
+const postRecipeData = ref({
+    title: "",
+    description: "",
+    tags: [],
+    time: 0,
+    servings: 0,
+    pictureUrl: null,
+    recipeIngredients: [{ text: "", amount: null, idUnit: null }],
+    steps: [""],
+  });
+
 onMounted(async () => {
-  uploadsStore.fetchUnits();
+  await uploadsStore.fetchUnits();
+
+  if (props.recipe) {
+    postRecipeData.value = {
+      title: props.recipe.title,
+      description: props.recipe.description,
+      tags: props.recipe.tags,
+      time: props.recipe.time,
+      servings: props.recipe.servings,
+      pictureUrl: props.recipe.pictureUrl,
+      recipeIngredients: props.recipe.recipeIngredients,
+      steps: props.recipe.steps.map(x => x.text),
+    };
+  }
+
+  finalBlob.value = await fetchImageAsBlob(postRecipeData.value.pictureUrl)
 });
 
 // Init computed properties.
@@ -422,6 +472,8 @@ const handleCropComplete = async (croppedBlob) => {
 
     // Redimensionar la imagen si es necesario
     finalBlob.value = await resizeImage(croppedBlob);
+
+    if (isEditing.value) imageHasChanged.value = true;
 
     // Tamaño de la imagen después del redimensionamiento
     // console.log(`Tamaño de la imagen redimensionada: ${finalBlob.value.size} bytes`);
@@ -569,18 +621,6 @@ const handleFileUpload = async (blob, extension) => {
 
   await blobStore.uploadFileAndGetUrl(newFile);
 };
-
-// Data
-const postRecipeData = ref({
-  title: "",
-  description: "",
-  tags: [],
-  time: 0,
-  servings: 0,
-  pictureUrl: null,
-  recipeIngredients: [{ text: "", amount: null, idUnit: null }],
-  steps: [""],
-});
 
 // Manejo del formulario
 const canAddIngredient = computed(() => {
@@ -973,6 +1013,63 @@ watch(
 onUnmounted(() => {
   blobStore.flush();
 });
+
+// Manejo de edición de recetas
+const editRecipeState = computed(() => uploadsStore.editRecipeState);
+
+const isEditing = computed(() => props.recipe ? true : false)
+
+const putRecipeData = ref({});
+
+const composePutData = () => {
+  // Asigna a putRecipeData aquellos campos que se han modificado haciendo una comparación de props.recipe con postRecipeData.
+}
+
+const imageHasChanged = ref(false);
+
+const fetchImageAsBlob = async (imageUrl) => {
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const imageBlob = await response.blob();
+      return imageBlob;
+    } catch (error) {
+      console.error('Error fetching image:', error);
+      return null;
+    }
+  }
+
+
+const handleFileEdit = async (blob, extension) => {
+  const fileName = postRecipeData.value.pictureUrl.split('/').pop();
+
+  const updatedFile = new File([blob], fileName, {
+    type: blob.type,
+    lastModified: new Date(),
+  });
+
+  // await blobStore.uploadFileAndGetUrl(updatedFile);
+};
+
+const editRecipe = async () => {
+  cleanEmptyForms();
+
+  if (!validForm) return;
+
+  if (imageHasChanged.value) await handleFileEdit(finalBlob.value, originalFileExtension);
+
+  if (uploadState.value.error) {
+    console.error("Error al editar la imagen:", uploadState.value.error);
+    return;
+  }
+
+  composePutData();
+
+  // await uploadsStore.putRecipe(putRecipeData.value);
+}
+
 </script>
 
 <style scoped lang="scss">

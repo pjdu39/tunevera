@@ -136,7 +136,6 @@ import ProfilePolls from "~/components/Profile/ProfilePolls.vue";
 import ProfileDiscussion from "~/components/Profile/ProfileDiscussion.vue";
 import RegistrationForm from "~/components/Profile/RegistrationForm.vue";
 import FollowButton from "~/components/Profile/FollowButton.vue";
-import ProfileSkeleton from "~/components/Skeletons/Profile/ProfileSkeleton.vue";
 import { useLoginStore } from "~/store/login.js";
 import { useProfileStore } from "~/store/profile.js";
 import { useAuth } from "~/composables/useAuth";

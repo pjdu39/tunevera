@@ -1,237 +1,247 @@
 <template>
-  <div v-if="showOptions" class="modal-overlay" @click.self="closeModal">
-    <div class="dropdown-options-container">
-      <!--
-      <button class="option" @click="">
-        <div class="option-icon-wrapper">
-          <font-awesome-icon
-            icon="fa-regular fa-star"
-            class="fa-lg"
-            aria-hidden="true"
-          />
-        </div>
-        <div>Añadir a favoritos</div>
-      </button>
-      -->
-      <button class="option" @click="">
-        <div class="option-icon-wrapper">
-          <font-awesome-icon
-            icon="fa fa-pencil"
-            class="fa-lg"
-            aria-hidden="true"
-          />
-        </div>
-        <div>Editar</div>
-      </button>
-      <button class="option" @click="">
-        <div class="option-icon-wrapper">
-          <font-awesome-icon
-            icon="fa-regular fa-circle-xmark"
-            class="fa-lg"
-            aria-hidden="true"
-          />
-        </div>
-        <div>Eliminar</div>
-      </button>
+  <div v-if="isEditing">
+    <div class="form-container">
+      <RecipeUpload :recipe="recipeToEdit" />
     </div>
   </div>
-  <div class="container">
-    <div
-      v-if="
-        getRecipeState.loading === 'loading' ||
-        getRecipeState.loading === 'waiting'
-      "
-      class="spinner"
-    >
-      <font-awesome-icon
-        icon="fa-solid fa-spinner"
-        class="fa-spin-pulse fa-lg"
-        aria-hidden="true"
-      />
-    </div>
-    <div v-if="getRecipeState.loading === 'error'">
-      <div class="state-container">
-        <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
-        <div>Error hardcodeado</div>
-      </div>
-    </div>
-    <div v-else-if="getRecipeState.loading === 'loaded'" class="recipe">
-      <div v-if="recipeData.selfRecipe" class="options-container">
-        <button
-          class="options-btn"
-          @click="clickShowOptions"
-          v-click-outside="clickOutside"
-        >
-          <font-awesome-icon
-            icon="fa fa-ellipsis-vertical"
-            class="fa-lg"
-            aria-hidden="true"
-          />
+  <div v-else>
+    <div v-if="showOptions" class="modal-overlay" @click.self="closeModal">
+      <div class="dropdown-options-container">
+        <!--
+        <button class="option" @click="">
+          <div class="option-icon-wrapper">
+            <font-awesome-icon
+              icon="fa-regular fa-star"
+              class="fa-lg"
+              aria-hidden="true"
+            />
+          </div>
+          <div>Añadir a favoritos</div>
+        </button>
+        -->
+        <button class="option" @click="composeRecipeToEdit">
+          <div class="option-icon-wrapper">
+            <font-awesome-icon
+              icon="fa fa-pencil"
+              class="fa-lg"
+              aria-hidden="true"
+            />
+          </div>
+          <div>Editar</div>
+        </button>
+        <button class="option">
+          <div class="option-icon-wrapper">
+            <font-awesome-icon
+              icon="fa-regular fa-circle-xmark"
+              class="fa-lg"
+              aria-hidden="true"
+            />
+          </div>
+          <div>Eliminar</div>
         </button>
       </div>
-      <div class="top-section">
-        <div class="img-wrapper">
-          <NuxtImg :src="recipeData.pictureUrl" class="image-fit" />
-          <div class="right-blur"></div>
-          <div class="bottom-blur"></div>
-        </div>
-        <div class="general-info">
-          <div class="general-info-top-mobile-wrapper">
-            <div class="general-info-top">
-              <div class="recipe-title">{{ recipeData.title }}</div>
-              <div class="signature-container">
-                <NuxtLink
-                  class="signature"
-                  :to="`/perfil?id=${recipeData.user.id}`"
-                >
-                  <div class="signature-name">
-                    <b>@{{ recipeData.user.name }}</b>
-                  </div>
-                  <div class="sign-img-wrapper">
-                    <NuxtImg
-                      :src="recipeData.user.pictureUrl"
-                      class="image-fit"
-                    />
-                  </div>
-                </NuxtLink>
-              </div>
-            </div>
-            <div class="properties">
-              <!-- TODO: Poner condiciones, ahora es solo un ejemplo -->
-              <div class="badge--vegan" :hidden="veggie === ''">
-                {{ veggie }}
-              </div>
-            </div>
-          </div>
-          <div class="general-info-bottom">
-            <div class="general-info-left">
-              <div class="description">
-                {{ recipeData.description }}
-              </div>
-              <div class="interaction-container">
-                <div class="like">
-                  <button class="interaction-icon" @click="clickLike">
-                    <font-awesome-icon
-                      :icon="like ? 'fas fa-heart' : 'far fa-heart'"
-                      :class="computedLikeClass"
-                      aria-hidden="true"
-                    />
-                  </button>
-                  <div class="num-likes">
-                    {{ recipeData.likes + localLike }}
-                  </div>
-                </div>
-                <div class="share" :hidden="!canShare">
-                  <button class="interaction-icon" @click="shareContent">
-                    <font-awesome-icon icon="fa fa-share" aria-hidden="true" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="general-info-right">
-              <div class="icon-info-container">
-                {{ recipeData.servings }}
-                <font-awesome-icon
-                  icon="fa fa-utensils"
-                  class="icon-info"
-                  aria-hidden="true"
-                />
-              </div>
-              <div class="icon-info-container">
-                {{ recipeData.time }}'
-                <font-awesome-icon
-                  icon="fa fa-clock"
-                  class="icon-info"
-                  aria-hidden="true"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tags-section">
-        <div
-          v-for="(tag, index) in recipeData.tags"
-          :key="index"
-          class="badge--tag"
-        >
-          <!-- Convertimos el objeto etiqueta a una cadena JSON y lo codificamos para URL -->
-          <nuxt-link
-            :to="`/buscar?tag=${encodeURIComponent(JSON.stringify(tag))}`"
-            class="tag-text"
-            >#{{ tag.text }}</nuxt-link
-          >
-        </div>
-      </div>
-      <div class="description--mobile">
-        {{ recipeData.description }}
-      </div>
-      <div class="middle-section">
-        <div class="ingredients-container">
-          <div class="middle-section-title">Ingredientes:</div>
-          <div
-            class="ingredient"
-            v-for="(ingredient, index) in recipeData.ingredients"
-            :key="index"
-          >
-            -
-            {{ semanticTransformation(ingredient) }}
-          </div>
-        </div>
-        <div class="steps-container">
-          <div class="middle-section-title">Pasos:</div>
-          <div
-            class="step"
-            v-for="(step, index) in recipeData.steps"
-            :key="index"
-          >
-            <div class="">
-              <b>{{ index + 1 }}.</b> {{ step.text }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="comments-section">
-        <!-- TODO: Redireccionar (o similar) al intentar comentar sin estar logeado. -->
-        <Textarea
-          v-model="comment"
-          class="add-comment-txt-area"
-          placeholder="Añade un comentario..."
-          autoResize
-          rows="1"
-          @focus="showSendComment = true"
+    </div>
+    <div class="container">
+      <div
+        v-if="
+          getRecipeState.loading === 'loading' ||
+          getRecipeState.loading === 'waiting'
+        "
+        class="spinner"
+      >
+        <font-awesome-icon
+          icon="fa-solid fa-spinner"
+          class="fa-spin-pulse fa-lg"
+          aria-hidden="true"
         />
-        <div v-if="showSendComment" class="send-comment-container">
-          <button class="cancel-comment" @click="cancelComment">
-            Cancelar
-          </button>
+      </div>
+      <div v-if="getRecipeState.loading === 'error'">
+        <div class="state-container">
+          <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
+          <div>Error hardcodeado</div>
+        </div>
+      </div>
+      <div v-else-if="getRecipeState.loading === 'loaded'" class="recipe">
+        <div v-if="recipeData.selfRecipe" class="options-container">
           <button
-            class="send-comment"
-            :disabled="!canSend"
-            @click="sendComment"
+            class="options-btn"
+            @click="clickShowOptions"
+            v-click-outside="clickOutside"
           >
-            Enviar
+            <font-awesome-icon
+              icon="fa fa-ellipsis-vertical"
+              class="fa-lg"
+              aria-hidden="true"
+            />
           </button>
         </div>
-        <div v-else class="comment-space"></div>
-        <div class="title-comments">Comentarios</div>
-        <div
-          v-for="(cmt, index) in fetchCommentsState.data"
-          :key="index"
-          class="comments-box"
-        >
-          <div class="comment-container">
-            <NuxtLink
-              class="comment-signature"
-              :to="`/perfil?id=${cmt.user.id}`"
-            >
-              <div class="c-sign-img-wrapper">
-                <NuxtImg :src="cmt.user.pictureUrl" class="image-fit" />
+        <div class="top-section">
+          <div class="img-wrapper">
+            <NuxtImg :src="recipeData.pictureUrl" class="image-fit" />
+            <div class="right-blur"></div>
+            <div class="bottom-blur"></div>
+          </div>
+          <div class="general-info">
+            <div class="general-info-top-mobile-wrapper">
+              <div class="general-info-top">
+                <div class="recipe-title">{{ recipeData.title }}</div>
+                <div class="signature-container">
+                  <NuxtLink
+                    class="signature"
+                    :to="`/perfil?id=${recipeData.user.id}`"
+                  >
+                    <div class="signature-name">
+                      <b>@{{ recipeData.user.name }}</b>
+                    </div>
+                    <div class="sign-img-wrapper">
+                      <NuxtImg
+                        :src="recipeData.user.pictureUrl"
+                        class="image-fit"
+                      />
+                    </div>
+                  </NuxtLink>
+                </div>
               </div>
-              <div class="c-sign-name">@{{ cmt.user.name }}</div>
-            </NuxtLink>
-            <div class="comment">
-              {{ cmt.text }}
+              <div class="properties">
+                <!-- TODO: Poner condiciones, ahora es solo un ejemplo -->
+                <div class="badge--vegan" :hidden="veggie === ''">
+                  {{ veggie }}
+                </div>
+              </div>
+            </div>
+            <div class="general-info-bottom">
+              <div class="general-info-left">
+                <div class="description">
+                  {{ recipeData.description }}
+                </div>
+                <div class="interaction-container">
+                  <div class="like">
+                    <button class="interaction-icon" @click="clickLike">
+                      <font-awesome-icon
+                        :icon="like ? 'fas fa-heart' : 'far fa-heart'"
+                        :class="computedLikeClass"
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <div class="num-likes">
+                      {{ recipeData.likes + localLike }}
+                    </div>
+                  </div>
+                  <div class="share" :hidden="!canShare">
+                    <button class="interaction-icon" @click="shareContent">
+                      <font-awesome-icon
+                        icon="fa fa-share"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="general-info-right">
+                <div class="icon-info-container">
+                  {{ recipeData.servings }}
+                  <font-awesome-icon
+                    icon="fa fa-utensils"
+                    class="icon-info"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div class="icon-info-container">
+                  {{ recipeData.time }}'
+                  <font-awesome-icon
+                    icon="fa fa-clock"
+                    class="icon-info"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tags-section">
+          <div
+            v-for="(tag, index) in recipeData.tags"
+            :key="index"
+            class="badge--tag"
+          >
+            <!-- Convertimos el objeto etiqueta a una cadena JSON y lo codificamos para URL -->
+            <nuxt-link
+              :to="`/buscar?tag=${encodeURIComponent(JSON.stringify(tag))}`"
+              class="tag-text"
+              >#{{ tag.text }}</nuxt-link
+            >
+          </div>
+        </div>
+        <div class="description--mobile">
+          {{ recipeData.description }}
+        </div>
+        <div class="middle-section">
+          <div class="ingredients-container">
+            <div class="middle-section-title">Ingredientes:</div>
+            <div
+              class="ingredient"
+              v-for="(ingredient, index) in recipeData.ingredients"
+              :key="index"
+            >
+              -
+              {{ semanticTransformation(ingredient) }}
+            </div>
+          </div>
+          <div class="steps-container">
+            <div class="middle-section-title">Pasos:</div>
+            <div
+              class="step"
+              v-for="(step, index) in recipeData.steps"
+              :key="index"
+            >
+              <div class="">
+                <b>{{ index + 1 }}.</b> {{ step.text }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comments-section">
+          <!-- TODO: Redireccionar (o similar) al intentar comentar sin estar logeado. -->
+          <Textarea
+            v-model="comment"
+            class="add-comment-txt-area"
+            placeholder="Añade un comentario..."
+            autoResize
+            rows="1"
+            @focus="showSendComment = true"
+          />
+          <div v-if="showSendComment" class="send-comment-container">
+            <button class="cancel-comment" @click="cancelComment">
+              Cancelar
+            </button>
+            <button
+              class="send-comment"
+              :disabled="!canSend"
+              @click="sendComment"
+            >
+              Enviar
+            </button>
+          </div>
+          <div v-else class="comment-space"></div>
+          <div class="title-comments">Comentarios</div>
+          <div
+            v-for="(cmt, index) in fetchCommentsState.data"
+            :key="index"
+            class="comments-box"
+          >
+            <div class="comment-container">
+              <NuxtLink
+                class="comment-signature"
+                :to="`/perfil?id=${cmt.user.id}`"
+              >
+                <div class="c-sign-img-wrapper">
+                  <NuxtImg :src="cmt.user.pictureUrl" class="image-fit" />
+                </div>
+                <div class="c-sign-name">@{{ cmt.user.name }}</div>
+              </NuxtLink>
+              <div class="comment">
+                {{ cmt.text }}
+              </div>
             </div>
           </div>
         </div>
@@ -241,6 +251,7 @@
 </template>
   
 <script setup>
+import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
 import { useAuth } from "~/composables/useAuth";
 import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
 
@@ -452,6 +463,32 @@ const sendComment = async () => {
 const showOptions = ref(false);
 const clickShowOptions = () => (showOptions.value = !showOptions.value);
 
+// Variables de control para decidir si se está editando
+const isEditing = ref(false);
+const recipeToEdit = ref({});
+
+const composeRecipeToEdit = () => {
+  isEditing.value = true;
+
+  recipeToEdit.value = {
+    title: recipeData.value.title,
+    description: recipeData.value.description,
+    tags: recipeData.value.tags.map(x => x.text),
+    time: recipeData.value.time,
+    servings: recipeData.value.servings,
+    pictureUrl: recipeData.value.pictureUrl,
+    recipeIngredients: recipeData.value.ingredients.map(x => {
+      const ingredient = {
+        text: x.text.singular,
+        amount: x.amount,
+        idUnit: x.unit.id
+      }
+      return ingredient
+    }),
+    steps: recipeData.value.steps,
+  }
+}
+
 // Click outside
 const clickOutside = () => {
   if (showOptions.value) showOptions.value = false;
@@ -477,6 +514,14 @@ textarea:focus {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   border-bottom: 3px solid $color-dark;
+}
+.form-container {
+  margin: auto;
+  margin-bottom: 200px;
+  padding: 35px 30px;
+  width: 55rem;
+  border: 3px solid $color-dark;
+  border-radius: 5px;
 }
 .modal-overlay {
   position: fixed;
@@ -505,7 +550,7 @@ textarea:focus {
 .option {
   display: flex;
   align-items: center;
-  
+
   min-height: 50px;
   min-width: 200px;
   padding: 0 38px 0 33px;
@@ -814,8 +859,19 @@ textarea:focus {
   margin: 37px 0 0 45px;
 }
 
+@media (max-width: 1100px) {
+  .form-container {
+    margin: auto;
+    width: 80%;
+  }
+}
 
 @media (max-width: 600px) {
+  .form-container {
+    margin: auto;
+    width: 95%;
+    border: none;
+  }
   .container {
     width: 100%;
     font-size: 85%;
