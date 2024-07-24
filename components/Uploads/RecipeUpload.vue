@@ -1022,7 +1022,29 @@ const isEditing = computed(() => props.recipe ? true : false)
 const putRecipeData = ref({});
 
 const composePutData = () => {
-  // Asigna a putRecipeData aquellos campos que se han modificado haciendo una comparación de props.recipe con postRecipeData.
+  if (props.recipe.title !== postRecipeData.value.title) putRecipeData.value['title'] = postRecipeData.value.title
+  if (props.recipe.description !== postRecipeData.value.description) putRecipeData.value['description'] = postRecipeData.value.description
+  if (props.recipe.time !== postRecipeData.value.time) putRecipeData.value['time'] = postRecipeData.value.time
+  if (props.recipe.servings !== postRecipeData.value.servings) putRecipeData.value['servings'] = postRecipeData.value.servings
+  if (props.recipe.steps.length !== postRecipeData.value.steps.length) {
+    putRecipeData.value['replaceAllSteps'] = true
+    putRecipeData.value['steps'] = []
+    
+    putRecipeData.value['steps'] = postRecipeData.value.steps.map((step, index) => {
+      return { text: step, stepNumber: index + 1 }
+    }) 
+  } else {
+    putRecipeData.value['replaceAllSteps'] = false
+    putRecipeData.value['steps'] = []
+
+    props.recipe.steps.forEach((step, index) => {
+      if (step.text !== postRecipeData.value.steps[index]) {
+        putRecipeData.value['steps'].push({ text: postRecipeData.value.steps[index], stepNumber: step.stepNumber })
+      }
+    })
+  }
+
+  console.log(putRecipeData.value)
 }
 
 const imageHasChanged = ref(false);
@@ -1042,7 +1064,7 @@ const fetchImageAsBlob = async (imageUrl) => {
   }
 
 
-const handleFileEdit = async (blob, extension) => {
+const handleFileEdit = async (blob) => {
   const fileName = postRecipeData.value.pictureUrl.split('/').pop();
 
   const updatedFile = new File([blob], fileName, {
@@ -1050,7 +1072,7 @@ const handleFileEdit = async (blob, extension) => {
     lastModified: new Date(),
   });
 
-  // await blobStore.uploadFileAndGetUrl(updatedFile);
+  await blobStore.uploadFileAndGetUrl(updatedFile);
 };
 
 const editRecipe = async () => {
@@ -1058,7 +1080,7 @@ const editRecipe = async () => {
 
   if (!validForm) return;
 
-  if (imageHasChanged.value) await handleFileEdit(finalBlob.value, originalFileExtension);
+  if (imageHasChanged.value) await handleFileEdit(finalBlob.value);
 
   if (uploadState.value.error) {
     console.error("Error al editar la imagen:", uploadState.value.error);
