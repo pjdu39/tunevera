@@ -409,11 +409,11 @@ onMounted(async () => {
     postRecipeData.value = {
       title: props.recipe.title,
       description: props.recipe.description,
-      tags: props.recipe.tags,
+      tags: props.recipe.tags.map(x => x),
       time: props.recipe.time,
       servings: props.recipe.servings,
       pictureUrl: props.recipe.pictureUrl,
-      recipeIngredients: props.recipe.recipeIngredients,
+      recipeIngredients: props.recipe.recipeIngredients.map(x => ({ ...x })),
       steps: props.recipe.steps.map(x => x.text),
     };
   }
@@ -1043,8 +1043,27 @@ const composePutData = () => {
       }
     })
   }
+  // console.log(props.recipe.recipeIngredients)
+  // console.log(postRecipeData.value.recipeIngredients)
+  let anyIngredientChange = false;
+  
+  props.recipe.recipeIngredients.forEach((recipeIngredient, index) => {
+    if (recipeIngredient.text !== postRecipeData.value.recipeIngredients[index].text ||
+        recipeIngredient.amount !== postRecipeData.value.recipeIngredients[index].amount ||
+        recipeIngredient.idUnit !== postRecipeData.value.recipeIngredients[index].idUnit) {
+          anyIngredientChange = true
+        }
+  })
+  /*
+  console.log(anyIngredientChange)
+  console.log('props lenght is: ' + props.recipe.recipeIngredients.length)
+  console.log('postRecipeData.value.recipeIngredients lenght is: ' + postRecipeData.value.recipeIngredients.length)
+  */
+  if (props.recipe.recipeIngredients.length !== postRecipeData.value.recipeIngredients.length || anyIngredientChange) {
+    putRecipeData.value['recipeIngredients'] = [ ...postRecipeData.value.recipeIngredients ]
+  }
 
-  console.log(putRecipeData.value)
+  // console.log(putRecipeData.value)
 }
 
 const imageHasChanged = ref(false);
