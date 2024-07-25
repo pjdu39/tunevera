@@ -1,24 +1,12 @@
 <template>
   <div v-if="isEditing">
     <div class="form-container">
-      <RecipeUpload :recipe="recipeToEdit" />
+      <RecipeUpload :recipe="recipeToEdit" @reload="handleReload" @exit="handleExit" />
     </div>
   </div>
   <div v-else>
     <div v-if="showOptions" class="modal-overlay" @click.self="closeModal">
       <div class="dropdown-options-container">
-        <!--
-        <button class="option" @click="">
-          <div class="option-icon-wrapper">
-            <font-awesome-icon
-              icon="fa-regular fa-star"
-              class="fa-lg"
-              aria-hidden="true"
-            />
-          </div>
-          <div>Añadir a favoritos</div>
-        </button>
-        -->
         <button class="option" @click="composeRecipeToEdit">
           <div class="option-icon-wrapper">
             <font-awesome-icon
@@ -471,6 +459,8 @@ const composeRecipeToEdit = () => {
   isEditing.value = true;
 
   recipeToEdit.value = {
+    id: id,
+    idUser: recipeData.value.user.id,
     title: recipeData.value.title,
     description: recipeData.value.description,
     tags: recipeData.value.tags.map(x => x.text),
@@ -488,6 +478,14 @@ const composeRecipeToEdit = () => {
     steps: recipeData.value.steps,
   }
 }
+const handleExit = () => {
+  isEditing.value = false;
+};
+const handleReload = () => {
+  fetchRecipe();
+  showOptions.value = false;
+  isEditing.value = false;
+};
 
 // Click outside
 const clickOutside = () => {

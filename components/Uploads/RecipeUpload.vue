@@ -295,7 +295,7 @@
             aria-hidden="true"
           />
         </button>
-        <button>Cancelar</button>
+        <button @click="cancel">Cancelar</button>
       </div>
       <div class="info-container" :hidden="validForm">
         <div v-if="showMessages" class="messages-container">
@@ -997,7 +997,12 @@ const uploadRecipe = async () => {
   postRecipeData.value.pictureUrl = uploadState.value.data;
 
   await uploadsStore.postRecipe(postRecipeData.value);
+
+  // Si todo va bien, refresca la página.
+  if (uploadsStore.editRecipeState.data)
+    router.go(0)
 };
+
 // Redirección tras guardar
 const router = useRouter();
 watch(
@@ -1022,10 +1027,15 @@ const isEditing = computed(() => props.recipe ? true : false)
 const putRecipeData = ref({});
 
 const composePutData = () => {
+  putRecipeData.value['id'] = props.recipe.id
+  putRecipeData.value['idUser'] = props.recipe.idUser
+
   if (props.recipe.title !== postRecipeData.value.title) putRecipeData.value['title'] = postRecipeData.value.title
   if (props.recipe.description !== postRecipeData.value.description) putRecipeData.value['description'] = postRecipeData.value.description
   if (props.recipe.time !== postRecipeData.value.time) putRecipeData.value['time'] = postRecipeData.value.time
   if (props.recipe.servings !== postRecipeData.value.servings) putRecipeData.value['servings'] = postRecipeData.value.servings
+
+  // Si cambia en número total de pasos, se envían todos, si no, solo envía quellos que han cambiado.
   if (props.recipe.steps.length !== postRecipeData.value.steps.length) {
     putRecipeData.value['replaceAllSteps'] = true
     putRecipeData.value['steps'] = []
@@ -1043,24 +1053,40 @@ const composePutData = () => {
       }
     })
   }
-  // console.log(props.recipe.recipeIngredients)
-  // console.log(postRecipeData.value.recipeIngredients)
-  let anyIngredientChange = false;
   
-  props.recipe.recipeIngredients.forEach((recipeIngredient, index) => {
-    if (recipeIngredient.text !== postRecipeData.value.recipeIngredients[index].text ||
-        recipeIngredient.amount !== postRecipeData.value.recipeIngredients[index].amount ||
-        recipeIngredient.idUnit !== postRecipeData.value.recipeIngredients[index].idUnit) {
-          anyIngredientChange = true
-        }
-  })
-  /*
-  console.log(anyIngredientChange)
-  console.log('props lenght is: ' + props.recipe.recipeIngredients.length)
-  console.log('postRecipeData.value.recipeIngredients lenght is: ' + postRecipeData.value.recipeIngredients.length)
-  */
-  if (props.recipe.recipeIngredients.length !== postRecipeData.value.recipeIngredients.length || anyIngredientChange) {
+  // Si existe cualquier cambio en los ingredientes, se envían todos.
+  let anyIngredientChange = false;
+
+  if (props.recipe.recipeIngredients.length !== postRecipeData.value.recipeIngredients.length) {
+    anyIngredientChange = true
+  }
+  else {
+    props.recipe.recipeIngredients.forEach((recipeIngredient, index) => {
+      if (recipeIngredient.text !== postRecipeData.value.recipeIngredients[index].text ||
+          recipeIngredient.amount !== postRecipeData.value.recipeIngredients[index].amount ||
+          recipeIngredient.idUnit !== postRecipeData.value.recipeIngredients[index].idUnit) {
+            anyIngredientChange = true
+      }
+    })
+  }
+  
+  if (anyIngredientChange) {
     putRecipeData.value['recipeIngredients'] = [ ...postRecipeData.value.recipeIngredients ]
+  }
+  else putRecipeData.value['recipeIngredients'] = []
+
+  // Si existe cualquier cambio en los tags, se envían todos.
+  if (props.recipe.tags.length !== postRecipeData.value.tags.length) {
+    putRecipeData.value['tags'] = [ ...postRecipeData.value.tags ]
+  }
+  else {
+    putRecipeData.value['tags'] = []
+    for (let i=0; i<props.recipe.tags.length; i++) {
+      if (props.recipe.tags[i] !== postRecipeData.value.tags[i]) {
+        putRecipeData.value['tags'] = [ ...postRecipeData.value.tags ];
+        break;
+      }
+    }
   }
 
   // console.log(putRecipeData.value)
@@ -1069,19 +1095,18 @@ const composePutData = () => {
 const imageHasChanged = ref(false);
 
 const fetchImageAsBlob = async (imageUrl) => {
-    try {
-      const response = await fetch(imageUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const imageBlob = await response.blob();
-      return imageBlob;
-    } catch (error) {
-      console.error('Error fetching image:', error);
-      return null;
+  try {
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    const imageBlob = await response.blob();
+    return imageBlob;
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    return null;
   }
-
+}
 
 const handleFileEdit = async (blob) => {
   const fileName = postRecipeData.value.pictureUrl.split('/').pop();
@@ -1108,8 +1133,19 @@ const editRecipe = async () => {
 
   composePutData();
 
-  // await uploadsStore.putRecipe(putRecipeData.value);
+  await uploadsStore.putRecipe(putRecipeData.value);
+
+  if(uploadsStore.editRecipeState.data)
+    reload()
 }
+
+const emit = defineEmits(["exit", "reload"]);
+const cancel = () => {
+  emit("exit");
+};
+const reload = () => {
+  emit("reload");
+};
 
 </script>
 
