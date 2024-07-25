@@ -256,35 +256,36 @@
     </div>
   </div>
   <div>
-    <div
-      class="publish-container"
-      @mouseover="hoverInfo(true)"
-      @mouseleave="hoverInfo(false)"
-    >
-      <button
+    <div class="publish-container">
+      <div
         v-if="!isEditing"
-        class="btn btn--publish"
-        @click="uploadRecipe"
-        :disabled="!validForm"
+        @mouseover="hoverInfo(true)"
+        @mouseleave="hoverInfo(false)"
       >
-        <span>Publicar</span>
-        <font-awesome-icon
-          v-if="
-            newRecipeState.loading === 'loading' ||
-            uploadState.loading === 'loading'
-          "
-          icon="fa fa-spinner"
-          class="fa-pulse fa-lg"
-          aria-hidden="true"
-        />
-      </button>
-      <div v-else class="flex">
         <button
           class="btn btn--publish"
+          @click="uploadRecipe"
+          :disabled="!validForm"
+        >
+          <span>Publicar</span>
+          <font-awesome-icon
+            v-if="
+              newRecipeState.loading === 'loading' ||
+              uploadState.loading === 'loading'
+            "
+            icon="fa fa-spinner"
+            class="fa-pulse fa-lg"
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+      <div v-else @mouseover="hoverInfo(true)" @mouseleave="hoverInfo(false)">
+        <button
+          class="btn btn--save-changes"
           @click="editRecipe"
           :disabled="!validForm"
         >
-          <span>Listo</span>
+          <span>Guardar</span>
           <font-awesome-icon
             v-if="
               editRecipeState.loading === 'loading' ||
@@ -295,9 +296,14 @@
             aria-hidden="true"
           />
         </button>
-        <button @click="cancel">Cancelar</button>
       </div>
-      <div class="info-container" :hidden="validForm">
+
+      <div
+        class="info-container"
+        :hidden="validForm"
+        @mouseover="hoverInfo(true)"
+        @mouseleave="hoverInfo(false)"
+      >
         <div v-if="showMessages" class="messages-container">
           <div class="title-msg">La receta debe tener:</div>
           <div :class="'msg ' + validTitleClass">
@@ -335,7 +341,10 @@
             />
             Al menos un ingrediente
           </div>
-          <div :class="'msg ' + duplicateIngredientClass" :hidden="!duplicateIngredient">
+          <div
+            :class="'msg ' + duplicateIngredientClass"
+            :hidden="!duplicateIngredient"
+          >
             <font-awesome-icon
               :icon="'fa ' + duplicateIngredientIcon"
               aria-hidden="true"
@@ -356,16 +365,20 @@
           -->
         </div>
         <div class="info-container-icon" v-else>
+          <!--
           <font-awesome-icon
             icon="fa fa-circle-info"
             class="fa fa-lg"
             aria-hidden="true"
           />
+          -->
         </div>
       </div>
+      <button v-if="isEditing" class="btn btn--cancel" @click="cancel">Cancelar</button>
     </div>
   </div>
   <div v-if="newRecipeState.loading === 'error'">
+    <!-- TODO: Hacer que esto aparezca solo en desarrollo -->
     <div>Mostrar este mensaje a Pablo.</div>
     <div>Ups, parece que algo falló. {{ newRecipeState.error }}</div>
   </div>
@@ -392,15 +405,15 @@ const maxAmount = 9999.99;
 const stepMaxLenght = 450;
 
 const postRecipeData = ref({
-    title: "",
-    description: "",
-    tags: [],
-    time: 0,
-    servings: 0,
-    pictureUrl: null,
-    recipeIngredients: [{ text: "", amount: null, idUnit: null }],
-    steps: [""],
-  });
+  title: "",
+  description: "",
+  tags: [],
+  time: 0,
+  servings: 0,
+  pictureUrl: null,
+  recipeIngredients: [{ text: "", amount: null, idUnit: null }],
+  steps: [""],
+});
 
 onMounted(async () => {
   await uploadsStore.fetchUnits();
@@ -409,16 +422,16 @@ onMounted(async () => {
     postRecipeData.value = {
       title: props.recipe.title,
       description: props.recipe.description,
-      tags: props.recipe.tags.map(x => x),
+      tags: props.recipe.tags.map((x) => x),
       time: props.recipe.time,
       servings: props.recipe.servings,
       pictureUrl: props.recipe.pictureUrl,
-      recipeIngredients: props.recipe.recipeIngredients.map(x => ({ ...x })),
-      steps: props.recipe.steps.map(x => x.text),
+      recipeIngredients: props.recipe.recipeIngredients.map((x) => ({ ...x })),
+      steps: props.recipe.steps.map((x) => x.text),
     };
   }
 
-  finalBlob.value = await fetchImageAsBlob(postRecipeData.value.pictureUrl)
+  finalBlob.value = await fetchImageAsBlob(postRecipeData.value.pictureUrl);
 });
 
 // Init computed properties.
@@ -482,7 +495,8 @@ const handleCropComplete = async (croppedBlob) => {
   }
 };
 
-const { blobStorageAccountName, blobStorageContainerName } = useRuntimeConfig().public;
+const { blobStorageAccountName, blobStorageContainerName } =
+  useRuntimeConfig().public;
 const nuxtImgSrc = computed(() => {
   if (finalBlob.value) return URL.createObjectURL(finalBlob.value);
   else
@@ -560,7 +574,7 @@ const resizeImage = async (file, targetSizeKB = 700) => {
 
         const ctx = canvas.getContext("2d");
         ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
+        ctx.imageSmoothingQuality = "high";
 
         // Dibujar la imagen original en el canvas
         ctx.drawImage(img, 0, 0, img.width, img.height);
@@ -570,7 +584,10 @@ const resizeImage = async (file, targetSizeKB = 700) => {
           (initialBlob) => {
             const initialSizeKB = initialBlob.size / 1024;
             // Calcular la calidad necesaria usando una regla de tres
-            const quality = Math.max(0, Math.min(1, targetSizeKB / initialSizeKB));
+            const quality = Math.max(
+              0,
+              Math.min(1, targetSizeKB / initialSizeKB)
+            );
 
             // Convertir la imagen a Blob con la calidad calculada
             canvas.toBlob(
@@ -937,7 +954,7 @@ const validRecipeIngredientsClass = computed(() => {
 });
 const duplicateIngredientClass = computed(() => {
   return !duplicateIngredient.value ? "msg--success" : "msg--error";
-})
+});
 const validStepsClass = computed(() => {
   return validSteps.value === true ? "msg--success" : "msg--error";
 });
@@ -999,8 +1016,7 @@ const uploadRecipe = async () => {
   await uploadsStore.postRecipe(postRecipeData.value);
 
   // Si todo va bien, refresca la página.
-  if (uploadsStore.editRecipeState.data)
-    router.go(0)
+  if (uploadsStore.editRecipeState.data) router.go(0);
 };
 
 // Redirección tras guardar
@@ -1022,75 +1038,91 @@ onUnmounted(() => {
 // Manejo de edición de recetas
 const editRecipeState = computed(() => uploadsStore.editRecipeState);
 
-const isEditing = computed(() => props.recipe ? true : false)
+const isEditing = computed(() => (props.recipe ? true : false));
 
 const putRecipeData = ref({});
 
 const composePutData = () => {
-  putRecipeData.value['id'] = props.recipe.id
-  putRecipeData.value['idUser'] = props.recipe.idUser
+  putRecipeData.value["id"] = props.recipe.id;
+  putRecipeData.value["idUser"] = props.recipe.idUser;
 
-  if (props.recipe.title !== postRecipeData.value.title) putRecipeData.value['title'] = postRecipeData.value.title
-  if (props.recipe.description !== postRecipeData.value.description) putRecipeData.value['description'] = postRecipeData.value.description
-  if (props.recipe.time !== postRecipeData.value.time) putRecipeData.value['time'] = postRecipeData.value.time
-  if (props.recipe.servings !== postRecipeData.value.servings) putRecipeData.value['servings'] = postRecipeData.value.servings
+  if (props.recipe.title !== postRecipeData.value.title)
+    putRecipeData.value["title"] = postRecipeData.value.title;
+  if (props.recipe.description !== postRecipeData.value.description)
+    putRecipeData.value["description"] = postRecipeData.value.description;
+  if (props.recipe.time !== postRecipeData.value.time)
+    putRecipeData.value["time"] = postRecipeData.value.time;
+  if (props.recipe.servings !== postRecipeData.value.servings)
+    putRecipeData.value["servings"] = postRecipeData.value.servings;
 
   // Si cambia en número total de pasos, se envían todos, si no, solo envía quellos que han cambiado.
   if (props.recipe.steps.length !== postRecipeData.value.steps.length) {
-    putRecipeData.value['replaceAllSteps'] = true
-    putRecipeData.value['steps'] = []
-    
-    putRecipeData.value['steps'] = postRecipeData.value.steps.map((step, index) => {
-      return { text: step, stepNumber: index + 1 }
-    }) 
+    putRecipeData.value["replaceAllSteps"] = true;
+    putRecipeData.value["steps"] = [];
+
+    putRecipeData.value["steps"] = postRecipeData.value.steps.map(
+      (step, index) => {
+        return { text: step, stepNumber: index + 1 };
+      }
+    );
   } else {
-    putRecipeData.value['replaceAllSteps'] = false
-    putRecipeData.value['steps'] = []
+    putRecipeData.value["replaceAllSteps"] = false;
+    putRecipeData.value["steps"] = [];
 
     props.recipe.steps.forEach((step, index) => {
       if (step.text !== postRecipeData.value.steps[index]) {
-        putRecipeData.value['steps'].push({ text: postRecipeData.value.steps[index], stepNumber: step.stepNumber })
+        putRecipeData.value["steps"].push({
+          text: postRecipeData.value.steps[index],
+          stepNumber: step.stepNumber,
+        });
       }
-    })
+    });
   }
-  
+
   // Si existe cualquier cambio en los ingredientes, se envían todos.
   let anyIngredientChange = false;
 
-  if (props.recipe.recipeIngredients.length !== postRecipeData.value.recipeIngredients.length) {
-    anyIngredientChange = true
-  }
-  else {
+  if (
+    props.recipe.recipeIngredients.length !==
+    postRecipeData.value.recipeIngredients.length
+  ) {
+    anyIngredientChange = true;
+  } else {
     props.recipe.recipeIngredients.forEach((recipeIngredient, index) => {
-      if (recipeIngredient.text !== postRecipeData.value.recipeIngredients[index].text ||
-          recipeIngredient.amount !== postRecipeData.value.recipeIngredients[index].amount ||
-          recipeIngredient.idUnit !== postRecipeData.value.recipeIngredients[index].idUnit) {
-            anyIngredientChange = true
+      if (
+        recipeIngredient.text !==
+          postRecipeData.value.recipeIngredients[index].text ||
+        recipeIngredient.amount !==
+          postRecipeData.value.recipeIngredients[index].amount ||
+        recipeIngredient.idUnit !==
+          postRecipeData.value.recipeIngredients[index].idUnit
+      ) {
+        anyIngredientChange = true;
       }
-    })
+    });
   }
-  
+
   if (anyIngredientChange) {
-    putRecipeData.value['recipeIngredients'] = [ ...postRecipeData.value.recipeIngredients ]
-  }
-  else putRecipeData.value['recipeIngredients'] = []
+    putRecipeData.value["recipeIngredients"] = [
+      ...postRecipeData.value.recipeIngredients,
+    ];
+  } else putRecipeData.value["recipeIngredients"] = [];
 
   // Si existe cualquier cambio en los tags, se envían todos.
   if (props.recipe.tags.length !== postRecipeData.value.tags.length) {
-    putRecipeData.value['tags'] = [ ...postRecipeData.value.tags ]
-  }
-  else {
-    putRecipeData.value['tags'] = []
-    for (let i=0; i<props.recipe.tags.length; i++) {
+    putRecipeData.value["tags"] = [...postRecipeData.value.tags];
+  } else {
+    putRecipeData.value["tags"] = [];
+    for (let i = 0; i < props.recipe.tags.length; i++) {
       if (props.recipe.tags[i] !== postRecipeData.value.tags[i]) {
-        putRecipeData.value['tags'] = [ ...postRecipeData.value.tags ];
+        putRecipeData.value["tags"] = [...postRecipeData.value.tags];
         break;
       }
     }
   }
 
   // console.log(putRecipeData.value)
-}
+};
 
 const imageHasChanged = ref(false);
 
@@ -1103,13 +1135,13 @@ const fetchImageAsBlob = async (imageUrl) => {
     const imageBlob = await response.blob();
     return imageBlob;
   } catch (error) {
-    console.error('Error fetching image:', error);
+    console.error("Error fetching image:", error);
     return null;
   }
-}
+};
 
 const handleFileEdit = async (blob) => {
-  const fileName = postRecipeData.value.pictureUrl.split('/').pop();
+  const fileName = postRecipeData.value.pictureUrl.split("/").pop();
 
   const updatedFile = new File([blob], fileName, {
     type: blob.type,
@@ -1135,9 +1167,8 @@ const editRecipe = async () => {
 
   await uploadsStore.putRecipe(putRecipeData.value);
 
-  if(uploadsStore.editRecipeState.data)
-    reload()
-}
+  if (uploadsStore.editRecipeState.data) reload();
+};
 
 const emit = defineEmits(["exit", "reload"]);
 const cancel = () => {
@@ -1146,7 +1177,6 @@ const cancel = () => {
 const reload = () => {
   emit("reload");
 };
-
 </script>
 
 <style scoped lang="scss">
@@ -1464,6 +1494,7 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
 .step-textarea {
 }
 .publish-container {
+  position: relative;
   display: flex;
   gap: 20px;
   max-height: 29px;
@@ -1480,6 +1511,29 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
   padding: 1px 8px 2px 8px;
   height: 29px;
   border-radius: 6px;
+}
+.btn--save-changes {
+  display: flex;
+  gap: 10px;
+  padding: 2px 12px 3px 12px;
+  height: 29px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.btn--save-changes:hover {
+  text-decoration: underline;
+}
+.btn--cancel {
+  position: absolute;
+  height: 29px;
+  right: 95px;
+  padding: 2px 12px 3px 12px;
+  border-radius: 6px;
+  background-color: transparent;
+  color: $color-dark;
+}
+.btn--cancel:hover {
+  text-decoration: underline;
 }
 .info-container {
 }
@@ -1608,17 +1662,23 @@ Esto deja de ser necesario al pasar a icono en vez de un "+" de texto.
     flex-grow: 0;
     width: calc(100% - 1rem);
   }
+  .publish-container {
+    flex-direction: column;
+    gap: 5px;
+    max-height: 70px;
+  }
+  .btn--publish {
+    width: 100px;
+  }
+  .btn--save-changes {
+    width: 100px;
+  }
+  .btn--cancel {
+    right: 10px;
+  }
 }
 
 // TODO: Revisar. Esto estaba en la parte legacy pero creo que se está usando.
-.upload-state-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 180%;
-  height: 100%;
-}
 .error {
   color: $color-primary;
   font-size: 200%; // Se acumula sobre el font-size: 200%; del contenedor
