@@ -470,8 +470,8 @@ const composeRecipeToEdit = () => {
     recipeIngredients: recipeData.value.ingredients.map(x => {
       const ingredient = {
         text: x.text.singular,
-        amount: x.amount,
-        idUnit: x.unit.id
+        amount: x.amount ?? null,
+        idUnit: x.unit?.id ?? null
       }
       return ingredient
     }),
