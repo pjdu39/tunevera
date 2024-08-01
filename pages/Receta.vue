@@ -609,7 +609,7 @@ textarea:focus {
   max-width: 500px;
 }
 .danger-icon-wrapper {
-  font-size: 200%;
+  font-size: 220%;
   text-align: center;
   color: $color-primary;
   margin-bottom: 20px;
@@ -617,7 +617,7 @@ textarea:focus {
 .delete-confirmation-msg {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   font-weight: bold;
   margin-bottom: 45px;
 }
@@ -631,6 +631,7 @@ textarea:focus {
 }
 .option--delete {
   justify-content: center;
+  min-width: auto;
 }
 .container {
   margin: auto;
@@ -932,6 +933,12 @@ textarea:focus {
     margin: auto;
     width: 95%;
     border: none;
+  }
+  .delete-confirmation-container {
+    max-width: 95%;
+  }
+  .delete-confirmation-msg > :nth-child(2) {
+    font-size: 80%;
   }
   .container {
     width: 100%;
