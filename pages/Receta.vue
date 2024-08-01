@@ -5,8 +5,8 @@
     </div>
   </div>
   <div v-else>
-    <div v-if="showOptions" class="modal-overlay" @click.self="closeModal">
-      <div class="dropdown-options-container">
+    <div v-if="modalState === RecipeModalStates.OPTIONS" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-options-container">
         <button class="option" @click="composeRecipeToEdit">
           <div class="option-icon-wrapper">
             <font-awesome-icon
@@ -17,7 +17,7 @@
           </div>
           <div>Editar</div>
         </button>
-        <button class="option">
+        <button class="option option--danger" @click="showDeleteConfirmation()" @click.stop="showDeleteConfirmation">
           <div class="option-icon-wrapper">
             <font-awesome-icon
               icon="fa-regular fa-circle-xmark"
@@ -27,6 +27,29 @@
           </div>
           <div>Eliminar</div>
         </button>
+      </div>
+    </div>
+    <div v-else-if="modalState === RecipeModalStates.DELETE_CONFIRMATION" class="modal-overlay" @click.self="closeModal">
+      <div class="delete-confirmation-container">
+        <div class="danger-icon-wrapper">
+            <font-awesome-icon
+              icon="fa-solid fa-triangle-exclamation"
+              class="fa-lg"
+              aria-hidden="true"
+            />
+        </div>
+        <div class="delete-confirmation-msg">
+          <div>¿Seguro que desea borrar la receta de {{ recipeData.title }}?</div>
+          <div>(Esta acción es irreversible.)</div>
+        </div>
+        <div class="delete-confirmation-btn-area">
+          <button class="option option--danger option--delete" @click="console.log('Borro receta')">
+          <div>Sí</div>
+        </button>
+        <button class="option option--delete" @click="closeModal">
+          <div>No</div>
+        </button>
+        </div>
       </div>
     </div>
     <div class="container">
@@ -53,7 +76,7 @@
         <div v-if="recipeData.selfRecipe" class="options-container">
           <button
             class="options-btn"
-            @click="clickShowOptions"
+            @click="showOptions"
             v-click-outside="clickOutside"
           >
             <font-awesome-icon
@@ -240,7 +263,8 @@
   
 <script setup>
 import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
-import { useAuth } from "~/composables/useAuth";
+import { RecipeModalStates } from "~/enums/RecipeModalStates";
+import { useAuth } from "/composables/useAuth";
 import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
 
 // Proteción de acciones con login
@@ -447,9 +471,11 @@ const sendComment = async () => {
   cancelComment();
 };
 
-// Manejo de opciones de recetas propias
-const showOptions = ref(false);
-const clickShowOptions = () => (showOptions.value = !showOptions.value);
+// Control del modal
+const modalState = ref(RecipeModalStates.CLOSED);
+const closeModal = () => (modalState.value = RecipeModalStates.CLOSED);
+const showOptions = () => (modalState.value = RecipeModalStates.OPTIONS);
+const showDeleteConfirmation = () => (modalState.value = RecipeModalStates.DELETE_CONFIRMATION);
 
 // Variables de control para decidir si se está editando
 const isEditing = ref(false);
@@ -483,13 +509,13 @@ const handleExit = () => {
 };
 const handleReload = () => {
   fetchRecipe();
-  showOptions.value = false;
+  closeModal();
   isEditing.value = false;
 };
 
 // Click outside
 const clickOutside = () => {
-  if (showOptions.value) showOptions.value = false;
+  if (modalState.value !== RecipeModalStates.CLOSED) closeModal();
 
   // Ir añadir todos los elementos que deban cerrarse al clickar fuera de ellos.
 };
@@ -534,7 +560,7 @@ textarea:focus {
   font-size: 130%;
   z-index: 60;
 }
-.dropdown-options-container {
+.modal-options-container {
   display: flex;
   flex-direction: column;
   padding: 25px 30px;
@@ -563,11 +589,48 @@ textarea:focus {
 .option:hover {
   background-color: $color-soft-grey;
 }
+.option--danger {
+}
+.option--danger:hover {
+  color: white;
+  border-color: white;
+  background-color: $color-red;
+}
 .option-icon-wrapper {
   display: flex;
   justify-content: center;
   min-width: 25px;
   margin-right: 15px;
+}
+.delete-confirmation-container {
+  padding: 25px 30px;
+  background-color: $color-background;
+  border-radius: 10px;
+  max-width: 500px;
+}
+.danger-icon-wrapper {
+  font-size: 200%;
+  text-align: center;
+  color: $color-primary;
+  margin-bottom: 20px;
+}
+.delete-confirmation-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-weight: bold;
+  margin-bottom: 45px;
+}
+.delete-confirmation-msg > :nth-child(2) {
+  font-weight: 100;
+  font-size: 90%;
+}
+.delete-confirmation-btn-area {
+  display: flex;
+  gap: 30px;
+}
+.option--delete {
+  justify-content: center;
 }
 .container {
   margin: auto;

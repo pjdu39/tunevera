@@ -429,9 +429,9 @@ onMounted(async () => {
       recipeIngredients: props.recipe.recipeIngredients.map((x) => ({ ...x })),
       steps: props.recipe.steps.map((x) => x.text),
     };
-  }
 
-  finalBlob.value = await fetchImageAsBlob(postRecipeData.value.pictureUrl);
+    finalBlob.value = await fetchImageAsBlob(postRecipeData.value.pictureUrl);
+  }
 });
 
 // Init computed properties.
