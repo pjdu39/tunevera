@@ -517,7 +517,7 @@ const handleReload = () => {
 const clickOutside = () => {
   if (modalState.value !== RecipeModalStates.CLOSED) closeModal();
 
-  // Ir añadir todos los elementos que deban cerrarse al clickar fuera de ellos.
+  // Añadir todos los elementos que deban cerrarse al clickar fuera de ellos.
 };
 </script>
   

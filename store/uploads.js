@@ -28,6 +28,11 @@ export const useUploadsStore = defineStore({
             loading: 'waiting',
             error: null
         },
+        deleteRecipeState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
     }),
     actions: {
         // Mutations for Recipe
@@ -83,6 +88,17 @@ export const useUploadsStore = defineStore({
         },
         setEditRecipeError(payload) {
             this.editRecipeState.error = payload;
+        },
+
+        // Mutations for Delete Recipe
+        setDeleteRecipeData(payload) {
+            this.deleteRecipeState.data = payload;
+        },
+        setDeleteRecipeLoading(payload) {
+            this.deleteRecipeState.loading = payload;
+        },
+        setDeleteRecipeError(payload) {
+            this.deleteRecipeState.error = payload;
         },
 
         // Actions
@@ -191,9 +207,26 @@ export const useUploadsStore = defineStore({
                 this.setEditRecipeError(null);
             }
             catch(error) {
-                this.setRecipeData(null);
+                this.setEditRecipeData(null);
                 this.setEditRecipeLoading('error');
                 this.setEditRecipeError(error.message);
+            }
+        },
+        
+        async deleteRecipe(id, idUser) {
+            const { $fetchApi } = useNuxtApp();
+            this.setDeleteRecipeLoading('loading');
+            try {
+                const data = await $fetchApi(`DeleteRecipe?Id=${ id }&IdUser=${ idUser }`, { method: 'DELETE' });
+
+                this.setDeleteRecipeData(data);
+                this.setDeleteRecipeLoading('loaded');
+                this.setDeleteRecipeError(null);
+            }
+            catch(error) {
+                this.setDeleteRecipeData(null);
+                this.setDeleteRecipeLoading('error');
+                this.setDeleteRecipeError(error.message);
             }
         },
     }
