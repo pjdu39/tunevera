@@ -14,6 +14,11 @@ export const useBlobStore = defineStore({
             loading: 'waiting',
             error: null
         },
+        deleteState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
     }),
     actions: {
         // Sas token
@@ -36,6 +41,17 @@ export const useBlobStore = defineStore({
         },
         setUploadError(payload) {
             this.uploadState.error = payload;
+        },
+
+        // Delete img
+        setDeleteData(payload) {
+            this.deleteState.data = payload;
+        },
+        setDeleteLoading(payload) {
+            this.deleteState.loading = payload;
+        },
+        setDeleteError(payload) {
+            this.deleteState.error = payload;
         },
 
         async fetchSasToken() {
@@ -92,6 +108,38 @@ export const useBlobStore = defineStore({
                 this.setUploadData(null);
                 this.setUploadLoading('error');
                 this.setUploadError(error.message);
+            }
+        },
+
+        async deleteBlob(blobName) {
+            const { blobStorageAccountName, blobStorageContainerName } = useRuntimeConfig().public;
+            
+            this.setDeleteLoading('loading');
+        
+            await this.fetchSasToken();
+        
+            if (!this.getSasTokenState.data) {
+                this.setDeleteLoading('error');
+                this.setDeleteError(this.getSasTokenState.error);
+                return;
+            }
+        
+            const blobServiceClient = new BlobServiceClient(
+                `https://${blobStorageAccountName}.blob.core.windows.net?${this.getSasTokenState.data.token}`
+            );
+            const containerClient = blobServiceClient.getContainerClient(blobStorageContainerName);
+            const blobClient = containerClient.getBlobClient(blobName);
+        
+            try {
+                const result = await blobClient.delete();
+                console.log(result)
+                this.setDeleteData(result);
+                this.setDeleteLoading('loaded');
+                this.setDeleteError(null);
+            } catch (error) {
+                this.setDeleteData(null);
+                this.setDeleteLoading('error');
+                this.setDeleteError(error.message);
             }
         },
 

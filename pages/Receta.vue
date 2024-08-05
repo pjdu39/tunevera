@@ -286,6 +286,7 @@
 import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
 import { RecipeModalStates } from "~/enums/RecipeModalStates";
 import { useAuth } from "/composables/useAuth";
+import { useBlobStore } from "~/store/blob.js";
 import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
 import { useUploadsStore } from "~/store/uploads.js";
 
@@ -540,19 +541,30 @@ const router = useRouter();
 const uploadsStore = useUploadsStore();
 const getDeleteState = computed(() => uploadsStore.deleteRecipeState);
 
+const blobStore = useBlobStore();
+const getDeleteBlobState = computed(() => uploadsStore.deleteState);
+
 const deleteRecipe = async () => {
   const hasAccess = await guard(url.pathname + url.search);
   if (!hasAccess) return;
-
+  
   await uploadsStore.deleteRecipe(id, recipeData.value.user.id);
+  
 
-  if (getDeleteState.data === id) {
-    // Borrar la imagen en azure
+  if (getDeleteState.value.data && getDeleteState.value.loading !== 'error') {
+    const fileName = extractBlobNameFromUrl(recipeData.value.pictureUrl)
+
+    await blobStore.deleteBlob(fileName)
   }
 
   // Si todo ha ido bien...
   router.push("/Perfil");
 };
+
+const extractBlobNameFromUrl = (blobUrl) => {
+    const urlParts = blobUrl.split('/');
+    return urlParts[urlParts.length - 1];
+}
 
 const handleExit = () => {
   isEditing.value = false;
