@@ -1,11 +1,19 @@
 <template>
   <div v-if="isEditing">
     <div class="form-container">
-      <RecipeUpload :recipe="recipeToEdit" @reload="handleReload" @exit="handleExit" />
+      <RecipeUpload
+        :recipe="recipeToEdit"
+        @reload="handleReload"
+        @exit="handleExit"
+      />
     </div>
   </div>
   <div v-else>
-    <div v-if="modalState === RecipeModalStates.OPTIONS" class="modal-overlay" @click.self="closeModal">
+    <div
+      v-if="modalState === RecipeModalStates.OPTIONS"
+      class="modal-overlay"
+      @click.self="closeModal"
+    >
       <div class="modal-options-container">
         <button class="option" @click="composeRecipeToEdit">
           <div class="option-icon-wrapper">
@@ -17,7 +25,11 @@
           </div>
           <div>Editar</div>
         </button>
-        <button class="option option--danger" @click="showDeleteConfirmation()" @click.stop="showDeleteConfirmation">
+        <button
+          class="option option--danger"
+          @click="showDeleteConfirmation()"
+          @click.stop="showDeleteConfirmation"
+        >
           <div class="option-icon-wrapper">
             <font-awesome-icon
               icon="fa-regular fa-circle-xmark"
@@ -29,26 +41,35 @@
         </button>
       </div>
     </div>
-    <div v-else-if="modalState === RecipeModalStates.DELETE_CONFIRMATION" class="modal-overlay" @click.self="closeModal">
+    <div
+      v-else-if="modalState === RecipeModalStates.DELETE_CONFIRMATION"
+      class="modal-overlay"
+      @click.self="closeModal"
+    >
       <div class="delete-confirmation-container">
         <div class="danger-icon-wrapper">
-            <font-awesome-icon
-              icon="fa-solid fa-triangle-exclamation"
-              class="fa-lg"
-              aria-hidden="true"
-            />
+          <font-awesome-icon
+            icon="fa-solid fa-triangle-exclamation"
+            class="fa-lg"
+            aria-hidden="true"
+          />
         </div>
         <div class="delete-confirmation-msg">
-          <div>¿Seguro que desea borrar la receta de {{ recipeData.title }}?</div>
+          <div>
+            ¿Seguro que desea borrar la receta de {{ recipeData.title }}?
+          </div>
           <div>(Esta acción es irreversible.)</div>
         </div>
         <div class="delete-confirmation-btn-area">
-          <button class="option option--danger option--delete" @click="console.log('Borro receta')">
-          <div>Sí</div>
-        </button>
-        <button class="option option--delete" @click="closeModal">
-          <div>No</div>
-        </button>
+          <button
+            class="option option--danger option--delete"
+            @click="deleteRecipe"
+          >
+            <div>Sí</div>
+          </button>
+          <button class="option option--delete" @click="closeModal">
+            <div>No</div>
+          </button>
         </div>
       </div>
     </div>
@@ -266,6 +287,7 @@ import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
 import { RecipeModalStates } from "~/enums/RecipeModalStates";
 import { useAuth } from "/composables/useAuth";
 import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
+import { useUploadsStore } from "~/store/uploads.js";
 
 // Proteción de acciones con login
 const { guard, setToken } = useAuth();
@@ -475,13 +497,21 @@ const sendComment = async () => {
 const modalState = ref(RecipeModalStates.CLOSED);
 const closeModal = () => (modalState.value = RecipeModalStates.CLOSED);
 const showOptions = () => (modalState.value = RecipeModalStates.OPTIONS);
-const showDeleteConfirmation = () => (modalState.value = RecipeModalStates.DELETE_CONFIRMATION);
+const showDeleteConfirmation = async () => {
+  const hasAccess = await guard(url.pathname + url.search);
+  if (!hasAccess) return;
+
+  modalState.value = RecipeModalStates.DELETE_CONFIRMATION;
+};
 
 // Variables de control para decidir si se está editando
 const isEditing = ref(false);
 const recipeToEdit = ref({});
 
-const composeRecipeToEdit = () => {
+const composeRecipeToEdit = async () => {
+  const hasAccess = await guard(url.pathname + url.search);
+  if (!hasAccess) return;
+
   isEditing.value = true;
 
   recipeToEdit.value = {
@@ -489,21 +519,41 @@ const composeRecipeToEdit = () => {
     idUser: recipeData.value.user.id,
     title: recipeData.value.title,
     description: recipeData.value.description,
-    tags: recipeData.value.tags.map(x => x.text),
+    tags: recipeData.value.tags.map((x) => x.text),
     time: recipeData.value.time,
     servings: recipeData.value.servings,
     pictureUrl: recipeData.value.pictureUrl,
-    recipeIngredients: recipeData.value.ingredients.map(x => {
+    recipeIngredients: recipeData.value.ingredients.map((x) => {
       const ingredient = {
         text: x.text.singular,
         amount: x.amount ?? null,
-        idUnit: x.unit?.id ?? null
-      }
-      return ingredient
+        idUnit: x.unit?.id ?? null,
+      };
+      return ingredient;
     }),
     steps: recipeData.value.steps,
+  };
+};
+
+// Borrado
+const router = useRouter();
+const uploadsStore = useUploadsStore();
+const getDeleteState = computed(() => uploadsStore.deleteRecipeState);
+
+const deleteRecipe = async () => {
+  const hasAccess = await guard(url.pathname + url.search);
+  if (!hasAccess) return;
+
+  await uploadsStore.deleteRecipe(id, recipeData.value.user.id);
+
+  if (getDeleteState.data === id) {
+    // Borrar la imagen en azure
   }
-}
+
+  // Si todo ha ido bien...
+  router.push("/Perfil");
+};
+
 const handleExit = () => {
   isEditing.value = false;
 };
