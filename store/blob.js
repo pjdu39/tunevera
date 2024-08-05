@@ -132,7 +132,6 @@ export const useBlobStore = defineStore({
         
             try {
                 const result = await blobClient.delete();
-                console.log(result)
                 this.setDeleteData(result);
                 this.setDeleteLoading('loaded');
                 this.setDeleteError(null);
