@@ -44,9 +44,24 @@
     <div
       v-else-if="modalState === RecipeModalStates.DELETE_CONFIRMATION"
       class="modal-overlay"
-      @click.self="closeModal"
+      v-click-outside="clickOutside"
     >
-      <div class="delete-confirmation-container">
+      <div
+        v-if="
+          getDeleteState.loading === 'loading' ||
+          getDeleteBlobState.loading === 'loading'
+        "
+        class="loading-modal"
+      >
+        <div class="loading-container">
+          <font-awesome-icon
+            icon="fa fa-circle-notch"
+            class="fa-spin fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+      <div v-else class="delete-confirmation-container">
         <div class="danger-icon-wrapper">
           <font-awesome-icon
             icon="fa-solid fa-triangle-exclamation"
@@ -81,11 +96,13 @@
         "
         class="spinner"
       >
-        <font-awesome-icon
-          icon="fa-solid fa-spinner"
-          class="fa-spin-pulse fa-lg"
-          aria-hidden="true"
-        />
+        <div class="loading-container">
+          <font-awesome-icon
+            icon="fa fa-circle-notch"
+            class="fa-spin fa-lg"
+            aria-hidden="true"
+          />
+        </div>
       </div>
       <div v-if="getRecipeState.loading === 'error'">
         <div class="state-container">
@@ -95,11 +112,7 @@
       </div>
       <div v-else-if="getRecipeState.loading === 'loaded'" class="recipe">
         <div v-if="recipeData.selfRecipe" class="options-container">
-          <button
-            class="options-btn"
-            @click="showOptions"
-            v-click-outside="clickOutside"
-          >
+          <button class="options-btn" @click="showOptions">
             <font-awesome-icon
               icon="fa fa-ellipsis-vertical"
               class="fa-lg"
@@ -542,19 +555,18 @@ const uploadsStore = useUploadsStore();
 const getDeleteState = computed(() => uploadsStore.deleteRecipeState);
 
 const blobStore = useBlobStore();
-const getDeleteBlobState = computed(() => uploadsStore.deleteState);
+const getDeleteBlobState = computed(() => blobStore.deleteState);
 
 const deleteRecipe = async () => {
   const hasAccess = await guard(url.pathname + url.search);
   if (!hasAccess) return;
-  
+
   await uploadsStore.deleteRecipe(id, recipeData.value.user.id);
-  
 
-  if (getDeleteState.value.data && getDeleteState.value.loading !== 'error') {
-    const fileName = extractBlobNameFromUrl(recipeData.value.pictureUrl)
+  if (getDeleteState.value.data && getDeleteState.value.loading !== "error") {
+    const fileName = extractBlobNameFromUrl(recipeData.value.pictureUrl);
 
-    await blobStore.deleteBlob(fileName)
+    await blobStore.deleteBlob(fileName);
   }
 
   // Si todo ha ido bien...
@@ -562,9 +574,9 @@ const deleteRecipe = async () => {
 };
 
 const extractBlobNameFromUrl = (blobUrl) => {
-    const urlParts = blobUrl.split('/');
-    return urlParts[urlParts.length - 1];
-}
+  const urlParts = blobUrl.split("/");
+  return urlParts[urlParts.length - 1];
+};
 
 const handleExit = () => {
   isEditing.value = false;
@@ -577,8 +589,7 @@ const handleReload = () => {
 
 // Click outside
 const clickOutside = () => {
-  if (modalState.value !== RecipeModalStates.CLOSED) closeModal();
-
+  // if (modalState.value !== RecipeModalStates.CLOSED) closeModal();
   // Añadir todos los elementos que deban cerrarse al clickar fuera de ellos.
 };
 </script>
@@ -663,6 +674,26 @@ textarea:focus {
   justify-content: center;
   min-width: 25px;
   margin-right: 15px;
+}
+.loading-modal {
+  padding: 25px 30px;
+  background-color: $color-background;
+  border-radius: 10px;
+  width: 500px;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  height: 200px;
+  width: 100%;
+  font-size: 200%;
+  color: $color-primary;
 }
 .delete-confirmation-container {
   padding: 25px 30px;
@@ -995,6 +1026,9 @@ textarea:focus {
     margin: auto;
     width: 95%;
     border: none;
+  }
+  .loading-modal {
+    width: 95%;
   }
   .delete-confirmation-container {
     max-width: 95%;
