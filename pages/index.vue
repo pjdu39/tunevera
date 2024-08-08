@@ -9,6 +9,7 @@
       <PollPost
         v-if="element.type === 'Encuesta'"
         :post-data="element"
+        :show-signature="true"
         class="post"
       />
       <DiscussionPost

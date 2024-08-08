@@ -22,6 +22,11 @@ export const useProfileStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null
+        },
+        getCommunityState: {
+            data: null,
+            loading: 'waiting',
+            error: null
         }
     }),
     actions: {
@@ -67,6 +72,17 @@ export const useProfileStore = defineStore({
         },
         setRecipesError(payload) {
             this.getRecipesState.error = payload;
+        },
+
+        // Community
+        setCommunityData(payload) {
+            this.getCommunityState.data = payload;
+        },
+        setCommunityLoading(payload) {
+            this.getCommunityState.loading = payload;
+        },
+        setCommunityError(payload) {
+            this.getCommunityState.error = payload;
         },
 
         async fetchProfileInfo(id) {
@@ -140,6 +156,23 @@ export const useProfileStore = defineStore({
                 this.setRecipesData(null);
                 this.setRecipesLoading('error');
                 this.setRecipesError(error.message);
+            }
+        },
+
+        async fetchCommunity(idUser) {
+            const { $fetchApi } = useNuxtApp();
+            this.setCommunityLoading('loading');
+            try {
+                const data = await $fetchApi(`GetCommunityByUser?IdUser=${ idUser }`);
+
+                this.setCommunityData(data);
+                this.setCommunityLoading('loaded');
+                this.setCommunityError(null);
+            }
+            catch(error) {
+                this.setCommunityData(null);
+                this.setCommunityLoading('error');
+                this.setCommunityError(error.message);
             }
         }
     }

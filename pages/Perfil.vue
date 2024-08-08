@@ -119,11 +119,8 @@
         <TabPanel header="RECETAS">
           <ProfileRecipes :id="id" />
         </TabPanel>
-        <TabPanel header="ENCUESTAS">
-          <ProfilePolls />
-        </TabPanel>
-        <TabPanel header="HILOS">
-          <ProfileDiscussion />
+        <TabPanel header="COMUNIDAD">
+          <ProfileCommunity :id="id" />
         </TabPanel>
       </TabView>
     </div>
@@ -132,8 +129,7 @@
 
 <script setup>
 import ProfileRecipes from "~/components/Profile/ProfileRecipes.vue";
-import ProfilePolls from "~/components/Profile/ProfilePolls.vue";
-import ProfileDiscussion from "~/components/Profile/ProfileDiscussion.vue";
+import ProfileCommunity from "~/components/Profile/ProfileCommunity.vue";
 import RegistrationForm from "~/components/Profile/RegistrationForm.vue";
 import FollowButton from "~/components/Profile/FollowButton.vue";
 import { useLoginStore } from "~/store/login.js";

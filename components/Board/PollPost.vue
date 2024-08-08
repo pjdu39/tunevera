@@ -1,8 +1,9 @@
 <template>
   <div class="poll-post">
-    <NuxtLink class="signature" :to="`/perfil?id=${postData.idUser}`">
+    <NuxtLink v-if="props.showSignature" class="signature" :to="`/perfil?id=${postData.idUser}`">
       <b>@{{ postData.userName }}</b>
     </NuxtLink>
+    <div v-else class="space"></div>
     <h4 class="title">{{ postData.title }}</h4>
     <div class="post-info">
       <div
@@ -61,7 +62,8 @@
     </div>
 
     <div class="bottom-info">
-      <div class="interactions">
+      <!-- 
+        <div class="interactions">
         <div class="interaction-container">
           <div class="interaction-icon">
             <font-awesome-icon icon="fa fa-heart" aria-hidden="true" />
@@ -72,10 +74,10 @@
           <div class="interaction-icon">
             <font-awesome-icon icon="fa fa-comment" aria-hidden="true" />
           </div>
-          <!--<div class="num-interactions">{{ postData.numComments }}</div>-->
         </div>
       </div>
       <div class="time-left">Acaba en 2 días</div>
+      -->
     </div>
   </div>
 </template>
@@ -91,6 +93,7 @@ const route = useRoute();
 
 const props = defineProps({
   postData: Object,
+  showSignature: Boolean
 });
 
 // Utilizando la store
@@ -179,6 +182,9 @@ const anchoActual = computed(() => anchoDiv.value);
 .signature:hover {
   text-decoration: underline;
 }
+.space {
+  margin-bottom: 20px;
+}
 .title {
   flex-grow: 0;
   max-width: 80%;
@@ -195,7 +201,7 @@ const anchoActual = computed(() => anchoDiv.value);
   display: flex;
   justify-content: center;
   flex-direction: column;
-  width: 60%;
+  width: 90%;
 }
 // Esta es la clase que coloca las barras en columnas y crea el espacio entre barras
 .poll-options {
@@ -210,9 +216,10 @@ const anchoActual = computed(() => anchoDiv.value);
   justify-content: center; // Centrar horizontalmente
   align-items: center; // Centrar verticalmente
   position: relative;
-  width: 40%;
+  width: 10%;
 }
 .aspect-ratio-container {
+  display: none; // TODO: Provicional, se queda así mientras no tenga una imagen/contenido que usar de relleno
   position: relative;
   width: 50%;
 }
