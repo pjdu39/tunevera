@@ -309,7 +309,7 @@ const anchoActual = computed(() => anchoDiv.value);
 .percentage {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   width: 100%;
   padding-right: 0.5rem;
   background-color: transparent;

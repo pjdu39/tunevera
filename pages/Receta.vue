@@ -9,8 +9,21 @@
     </div>
   </div>
   <div v-else>
+    <PostOptionsModal
+      v-if="showOptionsModal"
+      :loading="
+        getDeleteState.loading === 'loading' ||
+        getDeleteBlobState.loading === 'loading'
+      "
+      :title="recipeData.title"
+      delete-type="R"
+      @delete="deleteRecipe"
+      @compose-post-to-edit="composeRecipeToEdit"
+      @close="closeModal"
+    />
+    <!--
     <div
-      v-if="modalState === RecipeModalStates.OPTIONS"
+      v-if="modalState === PostModalStates.OPTIONS"
       class="modal-overlay"
       @click.self="closeModal"
     >
@@ -42,7 +55,7 @@
       </div>
     </div>
     <div
-      v-else-if="modalState === RecipeModalStates.DELETE_CONFIRMATION"
+      v-else-if="modalState === PostModalStates.DELETE_CONFIRMATION"
       class="modal-overlay"
       v-click-outside="clickOutside"
     >
@@ -88,6 +101,7 @@
         </div>
       </div>
     </div>
+    -->
     <div class="container">
       <div
         v-if="
@@ -297,7 +311,7 @@
   
 <script setup>
 import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
-import { RecipeModalStates } from "~/enums/RecipeModalStates";
+import PostOptionsModal from "~/components/Modals/PostOptionsModal.vue";
 import { useAuth } from "/composables/useAuth";
 import { useBlobStore } from "~/store/blob.js";
 import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
@@ -507,17 +521,6 @@ const sendComment = async () => {
   cancelComment();
 };
 
-// Control del modal
-const modalState = ref(RecipeModalStates.CLOSED);
-const closeModal = () => (modalState.value = RecipeModalStates.CLOSED);
-const showOptions = () => (modalState.value = RecipeModalStates.OPTIONS);
-const showDeleteConfirmation = async () => {
-  const hasAccess = await guard(url.pathname + url.search);
-  if (!hasAccess) return;
-
-  modalState.value = RecipeModalStates.DELETE_CONFIRMATION;
-};
-
 // Variables de control para decidir si se está editando
 const isEditing = ref(false);
 const recipeToEdit = ref({});
@@ -580,6 +583,7 @@ const extractBlobNameFromUrl = (blobUrl) => {
 
 const handleExit = () => {
   isEditing.value = false;
+  closeModal();
 };
 const handleReload = () => {
   fetchRecipe();
@@ -587,9 +591,20 @@ const handleReload = () => {
   isEditing.value = false;
 };
 
+// Control del modal
+const showOptionsModal = computed(() => {
+  return (
+    getRecipeState.value.loading === "loaded" &&
+    openOptionsModal.value
+  );
+});
+const openOptionsModal = ref(false);
+const closeModal = () => (openOptionsModal.value = false);
+const showOptions = () => (openOptionsModal.value = true);
+
 // Click outside
 const clickOutside = () => {
-  // if (modalState.value !== RecipeModalStates.CLOSED) closeModal();
+  // if (openOptionsModal.value) closeModal();
   // Añadir todos los elementos que deban cerrarse al clickar fuera de ellos.
 };
 </script>
@@ -620,71 +635,6 @@ textarea:focus {
   border: 3px solid $color-dark;
   border-radius: 5px;
 }
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 130%;
-  z-index: 60;
-}
-.modal-options-container {
-  display: flex;
-  flex-direction: column;
-  padding: 25px 30px;
-  background-color: $color-background;
-  border-radius: 10px;
-
-  // Provisional
-  width: auto;
-  height: auto;
-}
-.option {
-  display: flex;
-  align-items: center;
-
-  min-height: 50px;
-  min-width: 200px;
-  padding: 0 38px 0 33px;
-  margin: 10px 0;
-  white-space: nowrap;
-  width: 100%;
-  text-align: start;
-  background-color: $color-background;
-  border: 1px solid grey;
-  border-radius: 10px;
-}
-.option:hover {
-  background-color: $color-soft-grey;
-}
-.option--danger {
-}
-.option--danger:hover {
-  color: white;
-  border-color: white;
-  background-color: $color-red;
-}
-.option-icon-wrapper {
-  display: flex;
-  justify-content: center;
-  min-width: 25px;
-  margin-right: 15px;
-}
-.loading-modal {
-  padding: 25px 30px;
-  background-color: $color-background;
-  border-radius: 10px;
-  width: 500px;
-  min-height: 350px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .loading-container {
   display: flex;
   flex-wrap: wrap;
@@ -694,37 +644,6 @@ textarea:focus {
   width: 100%;
   font-size: 200%;
   color: $color-primary;
-}
-.delete-confirmation-container {
-  padding: 25px 30px;
-  background-color: $color-background;
-  border-radius: 10px;
-  max-width: 500px;
-}
-.danger-icon-wrapper {
-  font-size: 220%;
-  text-align: center;
-  color: $color-primary;
-  margin-bottom: 20px;
-}
-.delete-confirmation-msg {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  font-weight: bold;
-  margin-bottom: 45px;
-}
-.delete-confirmation-msg > :nth-child(2) {
-  font-weight: 100;
-  font-size: 90%;
-}
-.delete-confirmation-btn-area {
-  display: flex;
-  gap: 30px;
-}
-.option--delete {
-  justify-content: center;
-  min-width: auto;
 }
 .container {
   margin: auto;
