@@ -559,6 +559,7 @@ const resizeImage = async (file, maxWidth = 500, maxHeight = 500) => {
   });
 };
 */
+/*
 const resizeImage = async (file, targetSizeKB = 700) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -591,8 +592,8 @@ const resizeImage = async (file, targetSizeKB = 700) => {
 
             // Convertir la imagen a Blob con la calidad calculada
             canvas.toBlob(
-              (finalBlob) => {
-                resolve(finalBlob);
+              (blob) => {
+                resolve(blob);
               },
               file.type,
               quality
@@ -601,6 +602,69 @@ const resizeImage = async (file, targetSizeKB = 700) => {
           file.type,
           1 // Máxima calidad para medir el tamaño inicial
         );
+      };
+
+      img.onerror = (err) => {
+        reject(err);
+      };
+    };
+
+    reader.onerror = (err) => {
+      reject(err);
+    };
+
+    reader.readAsDataURL(file);
+
+    console.log('he redimensionado la imagen')
+  });
+};
+*/
+const resizeImage = async (file, maxResolution = 500, targetSizeKB = 200) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.src = e.target.result;
+      img.onload = () => {
+        let width = img.width > maxResolution ? maxResolution : img.width;
+        let height = img.height > maxResolution ? maxResolution : img.height;
+        let quality = 1;
+        let adjustResolution = false;
+
+        const updateCanvas = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext("2d");
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob((blob) => {
+            const sizeKB = blob.size / 1024;
+            if (sizeKB > targetSizeKB) {
+              if (quality > 0.1) {
+                quality -= 0.1; // Reducir la calidad en un 10%
+                updateCanvas();
+              } else if (!adjustResolution && width > 500 && height > 500) {
+                // Reducir la resolución solo una vez si la calidad es demasiado baja
+                width = 500;
+                height = 500;
+                quality = 1; // Restablecer la calidad
+                adjustResolution = true;
+                updateCanvas();
+              } else {
+                resolve(blob); // No más ajustes posibles, resolver con lo que hay
+              }
+            } else {
+              resolve(blob); // Tamaño aceptable
+            }
+          }, file.type, quality);
+        };
+
+        updateCanvas();
       };
 
       img.onerror = (err) => {
