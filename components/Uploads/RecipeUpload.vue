@@ -10,7 +10,14 @@
   <div class="section section--top">
     <div class="img-container">
       <div class="wrapper-img">
-        <NuxtImg :class="nuxtImgClass" :src="nuxtImgSrc" />
+        <div v-if="cropLoading" class="loading-container">
+          <font-awesome-icon
+            icon="fa fa-circle-notch"
+            class="fa-spin fa-lg"
+            aria-hidden="true"
+          />
+        </div>
+        <NuxtImg v-else :class="nuxtImgClass" :src="nuxtImgSrc" />
       </div>
       <div class="btn btn--add-img" @click="triggerFileInput">
         <font-awesome-icon
@@ -374,7 +381,9 @@
           -->
         </div>
       </div>
-      <button v-if="isEditing" class="btn btn--cancel" @click="cancel">Cancelar</button>
+      <button v-if="isEditing" class="btn btn--cancel" @click="cancel">
+        Cancelar
+      </button>
     </div>
   </div>
   <div v-if="newRecipeState.loading === 'error'">
@@ -484,7 +493,9 @@ const handleCropComplete = async (croppedBlob) => {
     // console.log(`Tamaño de la imagen original: ${croppedBlob.size} bytes`);
 
     // Redimensionar la imagen si es necesario
+    cropLoading.value = true
     finalBlob.value = await resizeImage(croppedBlob);
+    cropLoading.value = false
 
     if (isEditing.value) imageHasChanged.value = true;
 
@@ -619,7 +630,9 @@ const resizeImage = async (file, targetSizeKB = 700) => {
   });
 };
 */
-const resizeImage = async (file, maxResolution = 500, targetSizeKB = 200) => {
+const cropLoading = ref(false);
+
+const resizeImage = async (file, maxResolution = 500, targetSizeKB = 500) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const reader = new FileReader();
@@ -630,7 +643,6 @@ const resizeImage = async (file, maxResolution = 500, targetSizeKB = 200) => {
         let width = img.width > maxResolution ? maxResolution : img.width;
         let height = img.height > maxResolution ? maxResolution : img.height;
         let quality = 1;
-        let adjustResolution = false;
 
         const updateCanvas = () => {
           const canvas = document.createElement("canvas");
@@ -642,26 +654,27 @@ const resizeImage = async (file, maxResolution = 500, targetSizeKB = 200) => {
           ctx.imageSmoothingQuality = "high";
           ctx.drawImage(img, 0, 0, width, height);
 
-          canvas.toBlob((blob) => {
-            const sizeKB = blob.size / 1024;
-            if (sizeKB > targetSizeKB) {
-              if (quality > 0.1) {
-                quality -= 0.1; // Reducir la calidad en un 10%
-                updateCanvas();
-              } else if (!adjustResolution && width > 500 && height > 500) {
-                // Reducir la resolución solo una vez si la calidad es demasiado baja
-                width = 500;
-                height = 500;
-                quality = 1; // Restablecer la calidad
-                adjustResolution = true;
-                updateCanvas();
+          canvas.toBlob(
+            (blob) => {
+              const sizeKB = blob.size / 1024;
+              if (sizeKB > targetSizeKB) {
+                quality *= 0.9; // Reducir la calidad en un 10% del valor actual
+                if (quality < 0.05) {
+                  // Si la calidad es extremadamente baja
+                  if (width > 200 && height > 200) {
+                    // Asegurarse de que la resolución no sea demasiado baja
+                    width *= 0.95; // Reducir también la resolución
+                    height *= 0.95;
+                  }
+                }
+                updateCanvas(); // Reintentar con menor calidad y/o resolución
               } else {
-                resolve(blob); // No más ajustes posibles, resolver con lo que hay
+                resolve(blob); // Tamaño aceptable
               }
-            } else {
-              resolve(blob); // Tamaño aceptable
-            }
-          }, file.type, quality);
+            },
+            file.type,
+            quality
+          );
         };
 
         updateCanvas();
@@ -1351,6 +1364,16 @@ select:focus {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.loading-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  height: 200px;
+  width: 100%;
+  font-size: 200%;
+  color: $color-primary;
 }
 .image-fit {
   /* TODO: Considerar mover esto clases globales. Lo que cambia es el wrapper (de dimensiones por ejemplo), no la clase de la imagen en sí. */

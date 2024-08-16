@@ -17,8 +17,7 @@
         </button>
         <button
           class="option option--danger"
-          @click="showDeleteConfirmation()"
-          @click.stop="showDeleteConfirmation"
+          @click="showDeleteConfirmation"
         >
           <div class="option-icon-wrapper">
             <font-awesome-icon
