@@ -5,7 +5,7 @@
       @click.self="closeModal"
     >
       <div class="modal-options-container">
-        <button class="option" @click="composePostToEdit">
+        <button class="option" @click="composePostToEdit(), closeModal()">
           <div class="option-icon-wrapper">
             <font-awesome-icon
               icon="fa fa-pencil"

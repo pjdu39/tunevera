@@ -1,4 +1,16 @@
 <template>
+  <PostOptionsModal
+    v-if="showOptionsModal"
+    :loading="
+      getDeleteState.loading === 'loading' ||
+      getDeleteBlobState.loading === 'loading'
+    "
+    :title="recipeData.title"
+    delete-type="R"
+    @delete="deleteRecipe"
+    @compose-post-to-edit="composeRecipeToEdit"
+    @close="closeModal"
+  />
   <div v-if="isEditing">
     <div class="form-container">
       <RecipeUpload
@@ -8,299 +20,201 @@
       />
     </div>
   </div>
-  <div v-else>
-    <PostOptionsModal
-      v-if="showOptionsModal"
-      :loading="
-        getDeleteState.loading === 'loading' ||
-        getDeleteBlobState.loading === 'loading'
-      "
-      :title="recipeData.title"
-      delete-type="R"
-      @delete="deleteRecipe"
-      @compose-post-to-edit="composeRecipeToEdit"
-      @close="closeModal"
-    />
-    <!--
+  <div v-else class="container">
     <div
-      v-if="modalState === PostModalStates.OPTIONS"
-      class="modal-overlay"
-      @click.self="closeModal"
+      v-if="
+        getRecipeState.loading === 'loading' ||
+        getRecipeState.loading === 'waiting'
+      "
+      class="spinner"
     >
-      <div class="modal-options-container">
-        <button class="option" @click="composeRecipeToEdit">
-          <div class="option-icon-wrapper">
-            <font-awesome-icon
-              icon="fa fa-pencil"
-              class="fa-lg"
-              aria-hidden="true"
-            />
-          </div>
-          <div>Editar</div>
-        </button>
-        <button
-          class="option option--danger"
-          @click="showDeleteConfirmation()"
-          @click.stop="showDeleteConfirmation"
-        >
-          <div class="option-icon-wrapper">
-            <font-awesome-icon
-              icon="fa-regular fa-circle-xmark"
-              class="fa-lg"
-              aria-hidden="true"
-            />
-          </div>
-          <div>Eliminar</div>
-        </button>
+      <div class="loading-container">
+        <font-awesome-icon
+          icon="fa fa-circle-notch"
+          class="fa-spin fa-lg"
+          aria-hidden="true"
+        />
       </div>
     </div>
-    <div
-      v-else-if="modalState === PostModalStates.DELETE_CONFIRMATION"
-      class="modal-overlay"
-      v-click-outside="clickOutside"
-    >
-      <div
-        v-if="
-          getDeleteState.loading === 'loading' ||
-          getDeleteBlobState.loading === 'loading'
-        "
-        class="loading-modal"
-      >
-        <div class="loading-container">
-          <font-awesome-icon
-            icon="fa fa-circle-notch"
-            class="fa-spin fa-lg"
-            aria-hidden="true"
-          />
-        </div>
+    <div v-if="getRecipeState.loading === 'error'">
+      <div class="state-container">
+        <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
+        <div>Error hardcodeado</div>
       </div>
-      <div v-else class="delete-confirmation-container">
-        <div class="danger-icon-wrapper">
+    </div>
+    <div v-else-if="getRecipeState.loading === 'loaded'" class="recipe">
+      <div v-if="recipeData.selfRecipe" class="options-container">
+        <button class="options-btn" @click="showOptions">
           <font-awesome-icon
-            icon="fa-solid fa-triangle-exclamation"
+            icon="fa fa-ellipsis-vertical"
             class="fa-lg"
             aria-hidden="true"
           />
+        </button>
+      </div>
+      <div class="top-section">
+        <div class="img-wrapper">
+          <NuxtImg :src="recipeData.pictureUrl" class="image-fit" />
+          <div class="right-blur"></div>
+          <div class="bottom-blur"></div>
         </div>
-        <div class="delete-confirmation-msg">
-          <div>
-            ¿Seguro que desea borrar la receta de {{ recipeData.title }}?
+        <div class="general-info">
+          <div class="general-info-top-mobile-wrapper">
+            <div class="general-info-top">
+              <div class="recipe-title">{{ recipeData.title }}</div>
+              <div class="signature-container">
+                <NuxtLink
+                  class="signature"
+                  :to="`/perfil?id=${recipeData.user.id}`"
+                >
+                  <div class="signature-name">
+                    <b>@{{ recipeData.user.name }}</b>
+                  </div>
+                  <div class="sign-img-wrapper">
+                    <NuxtImg
+                      :src="recipeData.user.pictureUrl"
+                      class="image-fit"
+                    />
+                  </div>
+                </NuxtLink>
+              </div>
+            </div>
+            <div class="properties">
+              <!-- TODO: Poner condiciones, ahora es solo un ejemplo -->
+              <div class="badge--vegan" :hidden="veggie === ''">
+                {{ veggie }}
+              </div>
+            </div>
           </div>
-          <div>(Esta acción es irreversible.)</div>
+          <div class="general-info-bottom">
+            <div class="general-info-left">
+              <div class="description">
+                {{ recipeData.description }}
+              </div>
+              <div class="interaction-container">
+                <div class="like">
+                  <button class="interaction-icon" @click="clickLike">
+                    <font-awesome-icon
+                      :icon="like ? 'fas fa-heart' : 'far fa-heart'"
+                      :class="computedLikeClass"
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div class="num-likes">
+                    {{ recipeData.likes + localLike }}
+                  </div>
+                </div>
+                <div class="share" :hidden="!canShare">
+                  <button class="interaction-icon" @click="shareContent">
+                    <font-awesome-icon icon="fa fa-share" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="general-info-right">
+              <div class="icon-info-container">
+                {{ recipeData.servings }}
+                <font-awesome-icon
+                  icon="fa fa-utensils"
+                  class="icon-info"
+                  aria-hidden="true"
+                />
+              </div>
+              <div class="icon-info-container">
+                {{ recipeData.time }}'
+                <font-awesome-icon
+                  icon="fa fa-clock"
+                  class="icon-info"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="delete-confirmation-btn-area">
+      </div>
+      <div class="tags-section">
+        <div
+          v-for="(tag, index) in recipeData.tags"
+          :key="index"
+          class="badge--tag"
+        >
+          <!-- Convertimos el objeto etiqueta a una cadena JSON y lo codificamos para URL -->
+          <nuxt-link
+            :to="`/buscar?tag=${encodeURIComponent(JSON.stringify(tag))}`"
+            class="tag-text"
+            >#{{ tag.text }}</nuxt-link
+          >
+        </div>
+      </div>
+      <div class="description--mobile">
+        {{ recipeData.description }}
+      </div>
+      <div class="middle-section">
+        <div class="ingredients-container">
+          <div class="middle-section-title">Ingredientes:</div>
+          <div
+            class="ingredient"
+            v-for="(ingredient, index) in recipeData.ingredients"
+            :key="index"
+          >
+            -
+            {{ semanticTransformation(ingredient) }}
+          </div>
+        </div>
+        <div class="steps-container">
+          <div class="middle-section-title">Pasos:</div>
+          <div
+            class="step"
+            v-for="(step, index) in recipeData.steps"
+            :key="index"
+          >
+            <div class="">
+              <b>{{ index + 1 }}.</b> {{ step.text }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="comments-section">
+        <!-- TODO: Redireccionar (o similar) al intentar comentar sin estar logeado. -->
+        <Textarea
+          v-model="comment"
+          class="add-comment-txt-area"
+          placeholder="Añade un comentario..."
+          autoResize
+          rows="1"
+          @focus="showSendComment = true"
+        />
+        <div v-if="showSendComment" class="send-comment-container">
+          <button class="cancel-comment" @click="cancelComment">
+            Cancelar
+          </button>
           <button
-            class="option option--danger option--delete"
-            @click="deleteRecipe"
+            class="send-comment"
+            :disabled="!canSend"
+            @click="sendComment"
           >
-            <div>Sí</div>
-          </button>
-          <button class="option option--delete" @click="closeModal">
-            <div>No</div>
+            Enviar
           </button>
         </div>
-      </div>
-    </div>
-    -->
-    <div class="container">
-      <div
-        v-if="
-          getRecipeState.loading === 'loading' ||
-          getRecipeState.loading === 'waiting'
-        "
-        class="spinner"
-      >
-        <div class="loading-container">
-          <font-awesome-icon
-            icon="fa fa-circle-notch"
-            class="fa-spin fa-lg"
-            aria-hidden="true"
-          />
-        </div>
-      </div>
-      <div v-if="getRecipeState.loading === 'error'">
-        <div class="state-container">
-          <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
-          <div>Error hardcodeado</div>
-        </div>
-      </div>
-      <div v-else-if="getRecipeState.loading === 'loaded'" class="recipe">
-        <div v-if="recipeData.selfRecipe" class="options-container">
-          <button class="options-btn" @click="showOptions">
-            <font-awesome-icon
-              icon="fa fa-ellipsis-vertical"
-              class="fa-lg"
-              aria-hidden="true"
-            />
-          </button>
-        </div>
-        <div class="top-section">
-          <div class="img-wrapper">
-            <NuxtImg :src="recipeData.pictureUrl" class="image-fit" />
-            <div class="right-blur"></div>
-            <div class="bottom-blur"></div>
-          </div>
-          <div class="general-info">
-            <div class="general-info-top-mobile-wrapper">
-              <div class="general-info-top">
-                <div class="recipe-title">{{ recipeData.title }}</div>
-                <div class="signature-container">
-                  <NuxtLink
-                    class="signature"
-                    :to="`/perfil?id=${recipeData.user.id}`"
-                  >
-                    <div class="signature-name">
-                      <b>@{{ recipeData.user.name }}</b>
-                    </div>
-                    <div class="sign-img-wrapper">
-                      <NuxtImg
-                        :src="recipeData.user.pictureUrl"
-                        class="image-fit"
-                      />
-                    </div>
-                  </NuxtLink>
-                </div>
-              </div>
-              <div class="properties">
-                <!-- TODO: Poner condiciones, ahora es solo un ejemplo -->
-                <div class="badge--vegan" :hidden="veggie === ''">
-                  {{ veggie }}
-                </div>
-              </div>
-            </div>
-            <div class="general-info-bottom">
-              <div class="general-info-left">
-                <div class="description">
-                  {{ recipeData.description }}
-                </div>
-                <div class="interaction-container">
-                  <div class="like">
-                    <button class="interaction-icon" @click="clickLike">
-                      <font-awesome-icon
-                        :icon="like ? 'fas fa-heart' : 'far fa-heart'"
-                        :class="computedLikeClass"
-                        aria-hidden="true"
-                      />
-                    </button>
-                    <div class="num-likes">
-                      {{ recipeData.likes + localLike }}
-                    </div>
-                  </div>
-                  <div class="share" :hidden="!canShare">
-                    <button class="interaction-icon" @click="shareContent">
-                      <font-awesome-icon
-                        icon="fa fa-share"
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="general-info-right">
-                <div class="icon-info-container">
-                  {{ recipeData.servings }}
-                  <font-awesome-icon
-                    icon="fa fa-utensils"
-                    class="icon-info"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div class="icon-info-container">
-                  {{ recipeData.time }}'
-                  <font-awesome-icon
-                    icon="fa fa-clock"
-                    class="icon-info"
-                    aria-hidden="true"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tags-section">
-          <div
-            v-for="(tag, index) in recipeData.tags"
-            :key="index"
-            class="badge--tag"
-          >
-            <!-- Convertimos el objeto etiqueta a una cadena JSON y lo codificamos para URL -->
-            <nuxt-link
-              :to="`/buscar?tag=${encodeURIComponent(JSON.stringify(tag))}`"
-              class="tag-text"
-              >#{{ tag.text }}</nuxt-link
+        <div v-else class="comment-space"></div>
+        <div class="title-comments">Comentarios</div>
+        <div
+          v-for="(cmt, index) in fetchCommentsState.data"
+          :key="index"
+          class="comments-box"
+        >
+          <div class="comment-container">
+            <NuxtLink
+              class="comment-signature"
+              :to="`/perfil?id=${cmt.user.id}`"
             >
-          </div>
-        </div>
-        <div class="description--mobile">
-          {{ recipeData.description }}
-        </div>
-        <div class="middle-section">
-          <div class="ingredients-container">
-            <div class="middle-section-title">Ingredientes:</div>
-            <div
-              class="ingredient"
-              v-for="(ingredient, index) in recipeData.ingredients"
-              :key="index"
-            >
-              -
-              {{ semanticTransformation(ingredient) }}
-            </div>
-          </div>
-          <div class="steps-container">
-            <div class="middle-section-title">Pasos:</div>
-            <div
-              class="step"
-              v-for="(step, index) in recipeData.steps"
-              :key="index"
-            >
-              <div class="">
-                <b>{{ index + 1 }}.</b> {{ step.text }}
+              <div class="c-sign-img-wrapper">
+                <NuxtImg :src="cmt.user.pictureUrl" class="image-fit" />
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="comments-section">
-          <!-- TODO: Redireccionar (o similar) al intentar comentar sin estar logeado. -->
-          <Textarea
-            v-model="comment"
-            class="add-comment-txt-area"
-            placeholder="Añade un comentario..."
-            autoResize
-            rows="1"
-            @focus="showSendComment = true"
-          />
-          <div v-if="showSendComment" class="send-comment-container">
-            <button class="cancel-comment" @click="cancelComment">
-              Cancelar
-            </button>
-            <button
-              class="send-comment"
-              :disabled="!canSend"
-              @click="sendComment"
-            >
-              Enviar
-            </button>
-          </div>
-          <div v-else class="comment-space"></div>
-          <div class="title-comments">Comentarios</div>
-          <div
-            v-for="(cmt, index) in fetchCommentsState.data"
-            :key="index"
-            class="comments-box"
-          >
-            <div class="comment-container">
-              <NuxtLink
-                class="comment-signature"
-                :to="`/perfil?id=${cmt.user.id}`"
-              >
-                <div class="c-sign-img-wrapper">
-                  <NuxtImg :src="cmt.user.pictureUrl" class="image-fit" />
-                </div>
-                <div class="c-sign-name">@{{ cmt.user.name }}</div>
-              </NuxtLink>
-              <div class="comment">
-                {{ cmt.text }}
-              </div>
+              <div class="c-sign-name">@{{ cmt.user.name }}</div>
+            </NuxtLink>
+            <div class="comment">
+              {{ cmt.text }}
             </div>
           </div>
         </div>
@@ -593,10 +507,7 @@ const handleReload = () => {
 
 // Control del modal
 const showOptionsModal = computed(() => {
-  return (
-    getRecipeState.value.loading === "loaded" &&
-    openOptionsModal.value
-  );
+  return getRecipeState.value.loading === "loaded" && openOptionsModal.value;
 });
 const openOptionsModal = ref(false);
 const closeModal = () => (openOptionsModal.value = false);

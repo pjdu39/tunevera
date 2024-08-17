@@ -304,7 +304,6 @@
           />
         </button>
       </div>
-
       <div
         class="info-container"
         :hidden="validForm"
