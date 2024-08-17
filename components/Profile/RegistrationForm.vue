@@ -116,6 +116,7 @@
 <script setup>
 import { useAuth } from "~/composables/useAuth";
 import { useBlobStore } from "~/store/blob.js";
+import { useImageManager } from '~/composables/useImageManager';
 import { useLoginStore } from "~/store/login.js";
 import { useProfileStore } from "~/store/profile.js";
 
@@ -203,7 +204,7 @@ const save = async () => {
     if (nickname.value) body.nickname = nickname.value;
     if (birthDate.value) body.birthDate = birthDate.value;
     if (description.value) body.description = description.value;
-    if (picture.value) body.pictureUrl = picture.value;
+    if (uploadState.value.data) body.pictureUrl = uploadState.value.data;
 
     profileStore.editProfile(body);
   } else {
@@ -342,71 +343,15 @@ const handleCropComplete = async (croppedBlob) => {
   isModalOpen.value = false;
 
   try {
-    // Tamaño de la imagen antes del redimensionamiento
-    // console.log(`Tamaño de la imagen original: ${croppedBlob.size} bytes`);
-
     // Redimensionar la imagen si es necesario
-    finalBlob.value = await resizeImage(croppedBlob);
-
-    // Tamaño de la imagen después del redimensionamiento
-    // console.log(`Tamaño de la imagen redimensionada: ${finalBlob.value.size} bytes`);
-  } catch (error) {
+    finalBlob.value = await resizeImage(croppedBlob, 200, 120);
+  }
+  catch (error) {
     console.error("Error al procesar la imagen:", error);
   }
-
-  /* croppedImageBlob.value = croppedBlob; // Almacena el Blob directamente
-  croppedImage.value = URL.createObjectURL(croppedBlob); // Para visualización
-  croppedImageExtension.value = originalFileExtension; */
 };
 
-const resizeImage = async (file, maxWidth = 300, maxHeight = 300) => {
-  console.log('entro en resizeImage')
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      img.src = e.target.result;
-
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        let width = img.width;
-        let height = img.height;
-
-        // Calcular la escala manteniendo la proporción
-        const scale = Math.min(maxWidth / width, maxHeight / height);
-        if (scale < 1) {
-          width = Math.round(width * scale);
-          height = Math.round(height * scale);
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
-
-        canvas.toBlob(
-          (blob) => {
-            resolve(blob);
-          },
-          file.type,
-          1
-        );
-      };
-
-      img.onerror = (err) => {
-        reject(err);
-      };
-    };
-
-    reader.onerror = (err) => {
-      reject(err);
-    };
-
-    reader.readAsDataURL(file);
-  });
-};
+const { resizeImage } = useImageManager();
 
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
