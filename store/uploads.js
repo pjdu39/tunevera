@@ -33,6 +33,16 @@ export const useUploadsStore = defineStore({
             loading: 'waiting',
             error: null
         },
+        editThreadState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
+        deleteThreadState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
     }),
     actions: {
         // Mutations for Recipe
@@ -99,6 +109,28 @@ export const useUploadsStore = defineStore({
         },
         setDeleteRecipeError(payload) {
             this.deleteRecipeState.error = payload;
+        },
+
+        // Mutations for Edit Thread
+        setEditThreadData(payload) {
+            this.editThreadState.data = payload;
+        },
+        setEditRecipeLoading(payload) {
+            this.editThreadState.loading = payload;
+        },
+        setEditRecipeError(payload) {
+            this.editThreadState.error = payload;
+        },
+
+        // Mutations for Delete Thread
+        setDeleteThreadData(payload) {
+            this.deleteThreadState.data = payload;
+        },
+        setDeleteRecipeLoading(payload) {
+            this.deleteThreadState.loading = payload;
+        },
+        setDeleteRecipeError(payload) {
+            this.deleteThreadState.error = payload;
         },
 
         // Actions
@@ -227,6 +259,46 @@ export const useUploadsStore = defineStore({
                 this.setDeleteRecipeData(null);
                 this.setDeleteRecipeLoading('error');
                 this.setDeleteRecipeError(error.message);
+            }
+        },
+        
+        async putThread(changes) {
+            const { $fetchApi } = useNuxtApp();
+            this.setEditThreadLoading('loading');
+            try {
+                const data = await $fetchApi("EditThread", {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(changes)
+                });
+
+                this.setEditThreadData(data);
+                this.setEditThreadLoading('loaded');
+                this.setEditThreadError(null);
+            }
+            catch(error) {
+                this.setEditThreadData(null);
+                this.setEditThreadLoading('error');
+                this.setEditThreadError(error.message);
+            }
+        },
+        
+        async deleteThread(id, idUser) {
+            const { $fetchApi } = useNuxtApp();
+            this.setDeleteThreadLoading('loading');
+            try {
+                const data = await $fetchApi(`DeleteThread?Id=${ id }&IdUser=${ idUser }`, { method: 'DELETE' });
+
+                this.setDeleteThreadData(data);
+                this.setDeleteThreadLoading('loaded');
+                this.setDeleteThreadError(null);
+            }
+            catch(error) {
+                this.setDeleteThreadData(null);
+                this.setDeleteThreadLoading('error');
+                this.setDeleteThreadError(error.message);
             }
         },
     }

@@ -1,9 +1,27 @@
 <template>
-  <div class="container">
+  <PostOptionsModal
+    v-if="showOptionsModal"
+    :loading="getDeleteState.loading === 'loading'"
+    :title="threadData.title"
+    delete-type="D"
+    @delete="deleteThread"
+    @compose-post-to-edit="composeThreadToEdit"
+    @close="closeModal"
+  />
+  <div v-if="isEditing">
+    <div class="form-container">
+      <DiscussionUpload
+        :thread="threadToEdit"
+        @reload="handleReload"
+        @exit="handleExit"
+      />
+    </div>
+  </div>
+  <div v-else class="container">
     <div
       v-if="
-        getSubjectState.loading === 'loading' ||
-        getSubjectState.loading === 'waiting'
+        getThreadState.loading === 'loading' ||
+        getThreadState.loading === 'waiting'
       "
       class="spinner"
     >
@@ -13,32 +31,41 @@
         aria-hidden="true"
       />
     </div>
-    <div v-if="getSubjectState.loading === 'error'">
+    <div v-if="getThreadState.loading === 'error'">
       <div class="state-container">
         <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
         <div>Error hardcodeado en cliente</div>
       </div>
     </div>
-    <div v-else-if="getSubjectState.loading === 'loaded'">
+    <div v-else-if="getThreadState.loading === 'loaded'">
       <div class="post">
+        <div v-if="threadData.selfPost" class="options-container">
+          <button class="options-btn" @click="showOptions">
+            <font-awesome-icon
+              icon="fa fa-ellipsis-vertical"
+              class="fa-lg"
+              aria-hidden="true"
+            />
+          </button>
+        </div>
         <div class="signature-container">
           <NuxtLink
-            :to="`/perfil?id=${getSubjectState.data.user.id}`"
+            :to="`/perfil?id=${getThreadState.data.user.id}`"
             class="signature"
           >
             <div class="sign-img-wrapper">
               <NuxtImg
-                :src="getSubjectState.data.user.pictureUrl"
+                :src="getThreadState.data.user.pictureUrl"
                 class="image-fit"
               />
             </div>
             <div class="signature-name">
-              <b>@{{ getSubjectState.data.user.name }}</b>
+              <b>@{{ getThreadState.data.user.name }}</b>
             </div>
           </NuxtLink>
         </div>
-        <div class="title">{{ getSubjectState.data.title }}</div>
-        <div class="content">{{ getSubjectState.data.description }}</div>
+        <div class="title">{{ getThreadState.data.title }}</div>
+        <div class="content">{{ getThreadState.data.description }}</div>
       </div>
 
       <div class="comments-section">
@@ -96,9 +123,12 @@
 </template>
 
 <script setup>
-import { useAuth } from '~/composables/useAuth';
+import DiscussionUpload from "~/components/Uploads/DiscussionUpload.vue";
+import PostOptionsModal from "~/components/Modals/PostOptionsModal.vue";
+import { useAuth } from "~/composables/useAuth";
 import { useSubjectStore } from "~/store/subject.js";
 import { useCommentStore } from "~/store/comment.js";
+import { useUploadsStore } from "~/store/uploads.js";
 
 // Proteción de acciones con login
 const { guard } = useAuth();
@@ -108,8 +138,8 @@ const subjectStore = useSubjectStore();
 const commentStore = useCommentStore();
 
 // Manejo de la publicación
-const getSubjectState = computed(() => subjectStore.getSubjectState);
-const subjectData = computed(() => getSubjectState.value.data);
+const getThreadState = computed(() => subjectStore.getSubjectState);
+const threadData = computed(() => getThreadState.value.data);
 
 // Manejo de comentarios
 const comment = ref(null);
@@ -120,9 +150,9 @@ const cancelComment = () => {
   showSendComment.value = false;
   comment.value = null;
 };
-const sendComment = async() => {
+const sendComment = async () => {
   const hasAccess = await guard(route.path);
-  if(!hasAccess) return
+  if (!hasAccess) return;
 
   commentStore.comment(id, comment.value);
   cancelComment();
@@ -132,7 +162,7 @@ const sendComment = async() => {
 const route = useRoute();
 const id = route.query.id;
 
-const fetchSubject = () => {
+const fetchThread = () => {
   subjectStore.fetchSubject(id);
 };
 const fetchComments = () => {
@@ -140,9 +170,61 @@ const fetchComments = () => {
 };
 
 onMounted(() => {
-  fetchSubject();
+  fetchThread();
   fetchComments();
 });
+
+// Variables de control para decidir si se está editando
+const isEditing = ref(false);
+const threadToEdit = ref({});
+const url = useRequestURL();
+
+const composeThreadToEdit = async () => {
+  const hasAccess = await guard(url.pathname + url.search);
+  if (!hasAccess) return;
+
+  isEditing.value = true;
+
+  threadToEdit.value = {
+    id: id,
+    idUser: threadData.value.user.id,
+    title: threadData.value.title,
+    description: threadData.value.description,
+  };
+};
+
+// Borrado
+const router = useRouter();
+const uploadsStore = useUploadsStore();
+const getDeleteState = computed(() => uploadsStore.deleteThreadState);
+
+const deleteThread = async () => {
+  const hasAccess = await guard(url.pathname + url.search);
+  if (!hasAccess) return;
+
+  await uploadsStore.deleteThread(id, threadData.value.user.id);
+
+  // Si todo ha ido bien...
+  router.push("/Perfil");
+};
+
+const handleExit = () => {
+  isEditing.value = false;
+  closeModal();
+};
+const handleReload = () => {
+  fetchThread();
+  closeModal();
+  isEditing.value = false;
+};
+
+// Control del modal
+const showOptionsModal = computed(() => {
+  return getThreadState.value.loading === "loaded" && openOptionsModal.value;
+});
+const openOptionsModal = ref(false);
+const closeModal = () => (openOptionsModal.value = false);
+const showOptions = () => (openOptionsModal.value = true);
 </script>
 
 <style lang="scss" scoped>
@@ -164,11 +246,30 @@ textarea:focus {
   border-bottom: 3px solid $color-dark;
 }
 
+.form-container {
+  margin: auto;
+  margin-bottom: 200px;
+  padding: 35px 30px;
+  width: 55rem;
+  border: 3px solid $color-dark;
+  border-radius: 5px;
+}
 .container {
   margin: auto;
   width: 51rem;
 }
+.options-container {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 140%;
+  z-index: 1;
+}
+.options-btn {
+  width: 30px;
+}
 .post {
+  position: relative;
   margin: auto;
   padding: 20px 20px 35px 20px;
   border: 2px solid $color-dark;

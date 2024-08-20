@@ -49,6 +49,10 @@
 import { ref } from "vue";
 import { useUploadsStore } from "~/store/uploads";
 
+const props = defineProps({
+  thread: Object,
+});
+
 // Constantes
 const titleMaxLenght = 60;
 const descriptionMaxLenght = 520;
