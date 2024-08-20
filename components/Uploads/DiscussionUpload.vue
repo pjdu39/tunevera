@@ -41,6 +41,24 @@
         aria-hidden="true"
       />
     </button>
+    <button
+      class="btn btn--save-changes"
+      @click="editThread"
+      :disabled="!validForm"
+    >
+      <span>Guardar</span>
+      <font-awesome-icon
+        v-if="
+          editThreadState.loading === 'loading'
+        "
+        icon="fa fa-spinner"
+        class="fa-pulse fa-lg"
+        aria-hidden="true"
+      />
+    </button>
+    <button v-if="isEditing" class="btn btn--cancel" @click="cancel">
+      Cancelar
+    </button>
   </div>
   <div v-if="newDiscussionState.loading === 'error'">Error</div>
 </template>
@@ -97,19 +115,55 @@ const validTitle = computed(() => {
   return false;
 });
 const validDescription = computed(() => {
-  if (
-    postDiscussionData.value.title.length <= descriptionMaxLenght
-  )
+  if (postDiscussionData.value.title.length <= descriptionMaxLenght)
     return true;
 
   return false;
 });
 const validDiscussion = computed(() => {
-  if (validTitle.value && validDescription)
-    return true;
+  if (validTitle.value && validDescription) return true;
 
-    return false
+  return false;
 });
+
+// Manejo de edición de hilos
+const editThreadState = computed(() => store.editThreadState);
+
+const isEditing = computed(() => (props.thread ? true : false));
+
+const putThreadData = ref({});
+
+const composePutData = () => {
+  putThreadData.value["id"] = props.recipe.id;
+  putThreadData.value["idUser"] = props.recipe.idUser;
+
+  if (props.recipe.title !== postRecipeData.value.title)
+    putThreadData.value["title"] = postRecipeData.value.title;
+  if (props.recipe.description !== postRecipeData.value.description)
+    putThreadData.value["description"] = postRecipeData.value.description;
+
+  // console.log(putThreadData.value)
+};
+
+const editThread = async () => {
+  cleanEmptyForms();
+
+  if (!validForm) return;
+
+  composePutData();
+
+  await store.putThread(putThreadData.value);
+
+  if (store.editThreadState.data) reload();
+};
+
+const emit = defineEmits(["exit", "reload"]);
+const cancel = () => {
+  emit("exit");
+};
+const reload = () => {
+  emit("reload");
+};
 </script>
 
 <style scoped lang="scss">

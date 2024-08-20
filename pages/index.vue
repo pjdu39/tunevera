@@ -19,9 +19,17 @@
       />
     </div>
     <div ref="observerElement"></div>
+    <!--
     <BoardPcSkeleton class="pc-skeleton"/>
     <BoardPhoneSkeleton class="phone-skeleton" />
-    
+    -->
+    <div class="loading-container">
+      <font-awesome-icon
+        icon="fa fa-circle-notch"
+        class="fa-spin fa-lg"
+        aria-hidden="true"
+      />
+    </div>
   </div>
 </template>
 
@@ -86,6 +94,16 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
+.loading-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  height: 200px;
+  width: 100%;
+  font-size: 200%;
+  color: $color-primary;
+}
 .board-container {
   margin: auto;
   width: 44rem;
