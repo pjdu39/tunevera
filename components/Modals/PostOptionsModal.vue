@@ -57,7 +57,7 @@
         </div>
         <div class="delete-confirmation-msg">
           <div>
-            ¿Seguro que desea borrar la receta de {{ props.title }}?
+            {{ confirmationMsg }}
           </div>
           <div>(Esta acción es irreversible.)</div>
         </div>
@@ -78,6 +78,7 @@
 
 <script setup>
 import { PostModalStates } from "~/enums/PostModalStates";
+import { PostTypes } from "~/enums/PostTypes";
 import { useAuth } from "/composables/useAuth";
 
 // Proteción de acciones con login
@@ -88,7 +89,7 @@ const url = useRequestURL();
 const props = defineProps({
   loading: Boolean,
   title: String, // Título del elemento a borrar
-  deleteType: String, // Tipo de publicación, p.ej., 'R', 'D', 'P'
+  type: String, // Tipo de publicación, p.ej., 'R', 'D', 'P'
 });
 
 // Control
@@ -99,6 +100,13 @@ const showDeleteConfirmation = async () => {
 
   modalState.value = PostModalStates.DELETE_CONFIRMATION;
 };
+
+// Elementos personalizados para cada tipo de publicación
+const confirmationMsg = computed(() => {
+  if(props.type === PostTypes.RECIPE) return `¿Seguro que desea borrar la receta de ${ props.title }?`
+  if(props.type === PostTypes.POLL) return `¿Seguro que desea borrar la encuesta?`
+  if(props.type === PostTypes.THREAD) return `¿Seguro que desea borrar este hilo?`
+})
 
 // Emits
 const emit = defineEmits(['delete', 'composePostToEdit', 'close']);

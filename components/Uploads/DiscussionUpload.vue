@@ -6,7 +6,7 @@
         <input
           class="title-input"
           placeholder="¿Sobre qué quieres hablar?"
-          v-model="postDiscussionData.title"
+          v-model="postThreadData.title"
           :maxlength="titleMaxLenght"
           trim
         />
@@ -16,22 +16,24 @@
   <div class="section">
     <div class="description-container">
       <div class="label label--title">Cuerpo</div>
-      <div class="option-input-wrapper">
-        <input
+      <div>
+        <Textarea
           class="description-input"
           placeholder="Cuerpo de texto (opcional)"
-          v-model="postDiscussionData.description"
+          v-model="postThreadData.description"
           :maxlength="descriptionMaxLenght"
-          trim
+          rows="1"
+          autoResize
         />
       </div>
     </div>
   </div>
-  <div>
+  <div class="publish-container">
     <button
-      class="btn btn--publicar"
+      v-if="!isEditing"
+      class="btn btn--publish"
       @click="uploadDiscussion"
-      :disabled="!validDiscussion"
+      :disabled="!validForm"
     >
       <span>Publicar</span>
       <font-awesome-icon
@@ -42,6 +44,7 @@
       />
     </button>
     <button
+      v-else
       class="btn btn--save-changes"
       @click="editThread"
       :disabled="!validForm"
@@ -76,9 +79,18 @@ const titleMaxLenght = 60;
 const descriptionMaxLenght = 520;
 
 // Definición de la propiedad reactiva para los datos de la discusión
-const postDiscussionData = ref({
+const postThreadData = ref({
   title: "",
   description: "",
+});
+
+onMounted(async () => {
+  if (props.thread) {
+    postThreadData.value = {
+      title: props.thread.title,
+      description: props.thread.description
+    };
+  }
 });
 
 // Usando la store
@@ -89,9 +101,9 @@ const newDiscussionState = computed(() => store.newDiscussionState);
 
 // Subir discusión
 const uploadDiscussion = () => {
-  if (!validDiscussion) return;
+  if (!validForm) return;
 
-  store.postDiscussion(postDiscussionData.value);
+  store.postDiscussion(postThreadData.value);
 };
 // Redirección tras guardar
 const router = useRouter();
@@ -107,20 +119,20 @@ watch(
 // Validaciones
 const validTitle = computed(() => {
   if (
-    postDiscussionData.value.title &&
-    postDiscussionData.value.title.length <= titleMaxLenght
+    postThreadData.value.title &&
+    postThreadData.value.title.length <= titleMaxLenght
   )
     return true;
 
   return false;
 });
 const validDescription = computed(() => {
-  if (postDiscussionData.value.title.length <= descriptionMaxLenght)
+  if (postThreadData.value.title.length <= descriptionMaxLenght)
     return true;
 
   return false;
 });
-const validDiscussion = computed(() => {
+const validForm = computed(() => {
   if (validTitle.value && validDescription) return true;
 
   return false;
@@ -134,20 +146,20 @@ const isEditing = computed(() => (props.thread ? true : false));
 const putThreadData = ref({});
 
 const composePutData = () => {
-  putThreadData.value["id"] = props.recipe.id;
-  putThreadData.value["idUser"] = props.recipe.idUser;
+  putThreadData.value["id"] = props.thread.id;
+  putThreadData.value["idUser"] = props.thread.idUser;
 
-  if (props.recipe.title !== postRecipeData.value.title)
-    putThreadData.value["title"] = postRecipeData.value.title;
-  if (props.recipe.description !== postRecipeData.value.description)
-    putThreadData.value["description"] = postRecipeData.value.description;
+  console.l
+
+  if (props.thread.title !== postThreadData.value.title)
+    putThreadData.value["title"] = postThreadData.value.title;
+  if (props.thread.description !== postThreadData.value.description)
+    putThreadData.value["description"] = postThreadData.value.description;
 
   // console.log(putThreadData.value)
 };
 
 const editThread = async () => {
-  cleanEmptyForms();
-
   if (!validForm) return;
 
   composePutData();
@@ -186,6 +198,7 @@ input:focus {
 textarea {
   width: 90%;
   margin-top: 5px;
+  padding: 2px 0 3px 0;
   border: none;
   border-bottom: 1px solid $color-dark;
   border-radius: 0;
@@ -226,6 +239,7 @@ select:focus {
   font-family: $font-headers;
 }
 .label--title {
+  margin-bottom: 5px;
   font-size: 150%;
 }
 .option-input-wrapper {
@@ -250,11 +264,48 @@ select:focus {
 .btn:disabled {
   background-color: $color-soft-grey;
 }
-.btn--publicar {
+
+.publish-container {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  max-height: 29px;
+  transition: max-height 0.25s ease-out;
+  overflow: hidden;
+}
+.publish-container:hover {
+  max-height: 500px;
+  transition: max-height 0.25s ease-in;
+}
+.btn--publish {
   display: flex;
   gap: 10px;
   padding: 1px 8px 2px 8px;
+  height: 29px;
   border-radius: 6px;
+}
+.btn--save-changes {
+  display: flex;
+  gap: 10px;
+  padding: 2px 12px 3px 12px;
+  height: 29px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.btn--save-changes:hover {
+  text-decoration: underline;
+}
+.btn--cancel {
+  position: absolute;
+  height: 29px;
+  right: 95px;
+  padding: 2px 12px 3px 12px;
+  border-radius: 6px;
+  background-color: transparent;
+  color: $color-dark;
+}
+.btn--cancel:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 600px) {

@@ -115,10 +115,10 @@ export const useUploadsStore = defineStore({
         setEditThreadData(payload) {
             this.editThreadState.data = payload;
         },
-        setEditRecipeLoading(payload) {
+        setEditThreadLoading(payload) {
             this.editThreadState.loading = payload;
         },
-        setEditRecipeError(payload) {
+        setEditThreadError(payload) {
             this.editThreadState.error = payload;
         },
 
@@ -126,10 +126,10 @@ export const useUploadsStore = defineStore({
         setDeleteThreadData(payload) {
             this.deleteThreadState.data = payload;
         },
-        setDeleteRecipeLoading(payload) {
+        setDeleteThreadLoading(payload) {
             this.deleteThreadState.loading = payload;
         },
-        setDeleteRecipeError(payload) {
+        setDeleteThreadError(payload) {
             this.deleteThreadState.error = payload;
         },
 

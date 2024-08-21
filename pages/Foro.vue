@@ -3,7 +3,7 @@
     v-if="showOptionsModal"
     :loading="getDeleteState.loading === 'loading'"
     :title="threadData.title"
-    delete-type="D"
+    type="D"
     @delete="deleteThread"
     @compose-post-to-edit="composeThreadToEdit"
     @close="closeModal"

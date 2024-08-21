@@ -6,7 +6,7 @@
       getDeleteBlobState.loading === 'loading'
     "
     :title="recipeData.title"
-    delete-type="R"
+    type="R"
     @delete="deleteRecipe"
     @compose-post-to-edit="composeRecipeToEdit"
     @close="closeModal"
