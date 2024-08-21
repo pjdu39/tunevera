@@ -422,6 +422,11 @@ textarea:focus {
 }
 
 @media (max-width: 600px) {
+  .form-container {
+    margin: auto;
+    width: 95%;
+    border: none;
+  }
   .container {
     width: 98%;
     font-size: 82%;

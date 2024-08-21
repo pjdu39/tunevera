@@ -313,6 +313,11 @@ select:focus {
     width: 100%;
     font-size: 80%;
   }
+  textarea {
+    width: 100%;
+    font-size: 80%;
+  }
+
   .title-container {
     width: 95%;
   }
