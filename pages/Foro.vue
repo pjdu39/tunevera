@@ -1,13 +1,4 @@
 <template>
-  <PostOptionsModal
-    v-if="showOptionsModal"
-    :loading="getDeleteState.loading === 'loading'"
-    :title="threadData.title"
-    type="D"
-    @delete="deleteThread"
-    @compose-post-to-edit="composeThreadToEdit"
-    @close="closeModal"
-  />
   <div v-if="isEditing">
     <div class="form-container">
       <DiscussionUpload
@@ -124,10 +115,11 @@
 
 <script setup>
 import DiscussionUpload from "~/components/Uploads/DiscussionUpload.vue";
-import PostOptionsModal from "~/components/Modals/PostOptionsModal.vue";
+import { PostTypes } from "~/enums/PostTypes";
 import { useAuth } from "~/composables/useAuth";
 import { useSubjectStore } from "~/store/subject.js";
 import { useCommentStore } from "~/store/comment.js";
+import { useModalStore } from "~/store/modal.js";
 import { useUploadsStore } from "~/store/uploads.js";
 
 // Proteción de acciones con login
@@ -193,6 +185,16 @@ const composeThreadToEdit = async () => {
   };
 };
 
+const handleExit = () => {
+  isEditing.value = false;
+  closeModal();
+};
+const handleReload = () => {
+  fetchThread();
+  closeModal();
+  isEditing.value = false;
+};
+
 // Borrado
 const router = useRouter();
 const uploadsStore = useUploadsStore();
@@ -208,23 +210,25 @@ const deleteThread = async () => {
   router.push("/Perfil");
 };
 
-const handleExit = () => {
-  isEditing.value = false;
-  closeModal();
-};
-const handleReload = () => {
-  fetchThread();
-  closeModal();
-  isEditing.value = false;
-};
-
 // Control del modal
-const showOptionsModal = computed(() => {
-  return getThreadState.value.loading === "loaded" && openOptionsModal.value;
-});
-const openOptionsModal = ref(false);
-const closeModal = () => (openOptionsModal.value = false);
-const showOptions = () => (openOptionsModal.value = true);
+const modalStore = useModalStore();
+const closeModal = () => {
+  modalStore.closeModal();
+}
+const showOptions = () => {
+  modalStore.openModal({ type: PostTypes.THREAD })
+  modalStore.setDeteleFunc(deleteThread)
+  modalStore.setComposePostFunc(composeThreadToEdit)
+
+  console.log(modalStore.postOptionsModalState)
+}
+
+watchEffect(() => {
+  if (getThreadState.value.loading === 'loading')
+    modalStore.setLoading(true);
+  else
+    modalStore.setLoading(false);
+})
 </script>
 
 <style lang="scss" scoped>

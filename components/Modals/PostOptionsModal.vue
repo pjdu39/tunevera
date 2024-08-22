@@ -36,7 +36,7 @@
       @click.self="closeModal"
     >
       <div
-        v-if="props.loading"
+        v-if="loading"
         class="loading-modal"
       >
         <div class="loading-container">
@@ -80,17 +80,18 @@
 import { PostModalStates } from "~/enums/PostModalStates";
 import { PostTypes } from "~/enums/PostTypes";
 import { useAuth } from "/composables/useAuth";
+import { useModalStore } from "~/store/modal.js";
 
 // Proteción de acciones con login
 const { guard } = useAuth();
 
 const url = useRequestURL();
 
-const props = defineProps({
-  loading: Boolean,
-  title: String, // Título del elemento a borrar
-  type: String, // Tipo de publicación, p.ej., 'R', 'D', 'P'
-});
+const modalStore = useModalStore();
+const storeModalState = computed(() => modalStore.postOptionsModalState)
+const loading = computed(() => storeModalState.value.loading)
+const title = computed(() => storeModalState.value.title)
+const type = computed(() => storeModalState.value.type)
 
 // Control
 const modalState = ref(PostModalStates.OPTIONS);
@@ -103,22 +104,22 @@ const showDeleteConfirmation = async () => {
 
 // Elementos personalizados para cada tipo de publicación
 const confirmationMsg = computed(() => {
-  if(props.type === PostTypes.RECIPE) return `¿Seguro que desea borrar la receta de ${ props.title }?`
-  if(props.type === PostTypes.POLL) return `¿Seguro que desea borrar la encuesta?`
-  if(props.type === PostTypes.THREAD) return `¿Seguro que desea borrar este hilo?`
+  if(type.value === PostTypes.RECIPE) return `¿Seguro que desea borrar la receta de ${ title.value }?`
+  if(type.value === PostTypes.POLL) return `¿Seguro que desea borrar la encuesta?`
+  if(type.value === PostTypes.THREAD) return `¿Seguro que desea borrar este hilo?`
 })
 
-// Emits
-const emit = defineEmits(['delete', 'composePostToEdit', 'close']);
-const deletePost = () => {
-  emit('delete');
+// Ejecuto las funciones previamente inyectadas
+const deletePost = async () => {
+  await modalStore.deletePost()
+  closeModal()
 };
-const composePostToEdit = () => {
-  emit('composePostToEdit');
+const composePostToEdit = async () => {
+  await modalStore.composePost()
 };
 const closeModal = () => {
-  emit('close');
-};
+  modalStore.closeModal();
+}
 </script>
 
 <style scoped lang="scss">

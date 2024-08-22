@@ -6,6 +6,9 @@
       <slot />
     </div>
   </div>
+  <PostOptionsModal
+    v-if="postOptionsModalLoading"
+  />
 </template>
 
 <script setup>
@@ -13,7 +16,9 @@ import "../assets/scss/custom.scss";
 import "../assets/scss/global.scss";
 import Header from "../components/Structure/Header.vue";
 import MainMenu from "../components/Structure/MainMenu.vue";
+import PostOptionsModal from "~/components/Modals/PostOptionsModal.vue";
 import { useLoginStore } from "~/store/login.js";
+import { useModalStore } from "~/store/modal.js";
 
 const store = useLoginStore();
 const route = useRoute();
@@ -28,6 +33,15 @@ watch(() => route.path, (newPath) => {
 onMounted(async() => {
   await setToken();
   await store.checkSignUp();
+})
+
+// Modales
+const modalStore = useModalStore();
+const postOptionsModalLoading = computed(() => {
+  if(modalStore) return modalStore.postOptionsModalState.isOpen
+
+  // Si aún no ha cargado la store
+  return false
 })
 </script>
 
