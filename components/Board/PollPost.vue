@@ -1,6 +1,10 @@
 <template>
   <div class="poll-post">
-    <NuxtLink v-if="props.showSignature" class="signature" :to="`/perfil?id=${postData.idUser}`">
+    <NuxtLink
+      v-if="props.showSignature"
+      class="signature"
+      :to="`/perfil?id=${postData.idUser}`"
+    >
       <b>@{{ postData.userName }}</b>
     </NuxtLink>
     <div v-else class="space"></div>
@@ -53,16 +57,26 @@
       </div>
 
       <div class="aspect-ratio-wrapper">
+        <div v-if="postData.selfPost" class="options-container">
+          <button class="options-btn" @click="showOptions">
+            <font-awesome-icon
+              icon="fa fa-ellipsis-vertical"
+              class="fa-lg"
+              aria-hidden="true"
+            />
+          </button>
+        </div>
+        <!--
         <div class="aspect-ratio-container">
           <div class="img-wrapper">
             <NuxtImg src="/img/tarta-manzana.png" class="image" />
           </div>
         </div>
+        -->
       </div>
     </div>
-
+    <!-- 
     <div class="bottom-info">
-      <!-- 
         <div class="interactions">
         <div class="interaction-container">
           <div class="interaction-icon">
@@ -77,14 +91,17 @@
         </div>
       </div>
       <div class="time-left">Acaba en 2 días</div>
-      -->
     </div>
+    -->
   </div>
 </template>
   
 <script setup>
-import { useAuth } from '~/composables/useAuth';
+import { PostTypes } from "~/enums/PostTypes";
+import { useAuth } from "~/composables/useAuth";
+import { useModalStore } from "~/store/modal.js";
 import { usePollStore } from "~/store/poll.js";
+import { useUploadsStore } from "~/store/uploads.js";
 
 // Proteción de acciones con login
 const { guard } = useAuth();
@@ -93,7 +110,7 @@ const route = useRoute();
 
 const props = defineProps({
   postData: Object,
-  showSignature: Boolean
+  showSignature: Boolean,
 });
 
 // Utilizando la store
@@ -105,7 +122,7 @@ const isVoted = ref(false);
 const chosenOptionId = ref(null);
 const vote = async (index, idPost, option) => {
   const hasAccess = await guard(route.path);
-  if(!hasAccess) return
+  if (!hasAccess) return;
 
   option.votes += 1;
   isVoted.value = true;
@@ -160,9 +177,48 @@ onUnmounted(() => {
 });
 // Propiedad computada que siempre reflejará el ancho actual del div
 const anchoActual = computed(() => anchoDiv.value);
+
+// Borrado
+const router = useRouter();
+const uploadsStore = useUploadsStore();
+const getDeleteState = computed(() => uploadsStore.deletePollState);
+
+const url = useRequestURL();
+
+const deletePoll = async () => {
+  const hasAccess = await guard(url.pathname + url.search);
+  if (!hasAccess) return;
+
+  await uploadsStore.deletePoll(props.postData.id, props.postData.idUser);
+
+  // Si todo ha ido bien...
+  router.push("/Perfil");
+};
+
+// Control del modal
+const modalStore = useModalStore();
+
+const showOptions = () => {
+  modalStore.openModal({ type: PostTypes.POLL })
+  modalStore.setDeteleFunc(deletePoll)
+}
+
+watchEffect(() => {
+  if (getDeleteState.value.loading === 'loading')
+    modalStore.setLoading(true);
+  else
+    modalStore.setLoading(false);
+})
 </script>
   
 <style scoped lang="scss">
+button {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+}
+
 .poll-post {
   display: flex;
   flex-direction: column;
@@ -213,8 +269,8 @@ const anchoActual = computed(() => anchoDiv.value);
 }
 .aspect-ratio-wrapper {
   display: flex;
-  justify-content: center; // Centrar horizontalmente
-  align-items: center; // Centrar verticalmente
+  justify-content: flex-end;
+  align-items: center;
   position: relative;
   width: 10%;
 }
@@ -305,7 +361,6 @@ const anchoActual = computed(() => anchoDiv.value);
   padding: 0 5px;
   font-size: 85%;
 }
-
 .percentage {
   display: flex;
   align-items: center;
@@ -316,6 +371,13 @@ const anchoActual = computed(() => anchoDiv.value);
   font-size: 85%;
   font-weight: 600;
   z-index: 15;
+}
+.options-container {
+  display: flex;
+  font-size: 140%;
+}
+.options-btn {
+  width: 30px;
 }
 
 @media (max-width: 800px) {
@@ -333,5 +395,4 @@ const anchoActual = computed(() => anchoDiv.value);
     display: none;
   }
 }
-
 </style>

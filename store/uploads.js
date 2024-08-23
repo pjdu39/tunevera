@@ -43,6 +43,11 @@ export const useUploadsStore = defineStore({
             loading: 'waiting',
             error: null
         },
+        deletePollState: {
+            data: null,
+            loading: 'waiting',
+            error: null
+        },
     }),
     actions: {
         // Mutations for Recipe
@@ -131,6 +136,17 @@ export const useUploadsStore = defineStore({
         },
         setDeleteThreadError(payload) {
             this.deleteThreadState.error = payload;
+        },
+
+        // Mutations for Delete Poll
+        setDeletePollData(payload) {
+            this.deletePollState.data = payload;
+        },
+        setDeletePollLoading(payload) {
+            this.deletePollState.loading = payload;
+        },
+        setDeletePollError(payload) {
+            this.deletePollState.error = payload;
         },
 
         // Actions
@@ -299,6 +315,23 @@ export const useUploadsStore = defineStore({
                 this.setDeleteThreadData(null);
                 this.setDeleteThreadLoading('error');
                 this.setDeleteThreadError(error.message);
+            }
+        },
+        
+        async deletePoll(id, idUser) {
+            const { $fetchApi } = useNuxtApp();
+            this.setDeletePollLoading('loading');
+            try {
+                const data = await $fetchApi(`DeletePoll?Id=${ id }&IdUser=${ idUser }`, { method: 'DELETE' });
+
+                this.setDeletePollData(data);
+                this.setDeletePollLoading('loaded');
+                this.setDeletePollError(null);
+            }
+            catch(error) {
+                this.setDeletePollData(null);
+                this.setDeletePollLoading('error');
+                this.setDeletePollError(error.message);
             }
         },
     }

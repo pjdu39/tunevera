@@ -1,16 +1,4 @@
 <template>
-  <PostOptionsModal
-    v-if="showOptionsModal"
-    :loading="
-      getDeleteState.loading === 'loading' ||
-      getDeleteBlobState.loading === 'loading'
-    "
-    :title="recipeData.title"
-    type="R"
-    @delete="deleteRecipe"
-    @compose-post-to-edit="composeRecipeToEdit"
-    @close="closeModal"
-  />
   <div v-if="isEditing">
     <div class="form-container">
       <RecipeUpload
@@ -225,9 +213,10 @@
   
 <script setup>
 import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
-import PostOptionsModal from "~/components/Modals/PostOptionsModal.vue";
+import { PostTypes } from "~/enums/PostTypes";
 import { useAuth } from "/composables/useAuth";
 import { useBlobStore } from "~/store/blob.js";
+import { useModalStore } from "~/store/modal.js";
 import { useRecipeStore } from "~/store/recipe.js"; // TODO: Ahora los comentarios y likes están aquí, pero hay que moverlo a stores independientes.
 import { useUploadsStore } from "~/store/uploads.js";
 
@@ -466,6 +455,16 @@ const composeRecipeToEdit = async () => {
   };
 };
 
+const handleExit = () => {
+  isEditing.value = false;
+  closeModal();
+};
+const handleReload = () => {
+  fetchRecipe();
+  closeModal();
+  isEditing.value = false;
+};
+
 // Borrado
 const router = useRouter();
 const uploadsStore = useUploadsStore();
@@ -495,29 +494,23 @@ const extractBlobNameFromUrl = (blobUrl) => {
   return urlParts[urlParts.length - 1];
 };
 
-const handleExit = () => {
-  isEditing.value = false;
-  closeModal();
-};
-const handleReload = () => {
-  fetchRecipe();
-  closeModal();
-  isEditing.value = false;
-};
-
 // Control del modal
-const showOptionsModal = computed(() => {
-  return getRecipeState.value.loading === "loaded" && openOptionsModal.value;
-});
-const openOptionsModal = ref(false);
-const closeModal = () => (openOptionsModal.value = false);
-const showOptions = () => (openOptionsModal.value = true);
+const modalStore = useModalStore();
+const closeModal = () => {
+  modalStore.closeModal();
+}
+const showOptions = () => {
+  modalStore.openModal({ title: recipeData.value.title, type: PostTypes.RECIPE })
+  modalStore.setDeteleFunc(deleteRecipe)
+  modalStore.setComposePostFunc(composeRecipeToEdit)
+}
 
-// Click outside
-const clickOutside = () => {
-  // if (openOptionsModal.value) closeModal();
-  // Añadir todos los elementos que deban cerrarse al clickar fuera de ellos.
-};
+watchEffect(() => {
+  if (getDeleteState.value.loading === 'loading')
+    modalStore.setLoading(true);
+  else
+    modalStore.setLoading(false);
+})
 </script>
   
 <style scoped lang="scss">

@@ -219,12 +219,10 @@ const showOptions = () => {
   modalStore.openModal({ type: PostTypes.THREAD })
   modalStore.setDeteleFunc(deleteThread)
   modalStore.setComposePostFunc(composeThreadToEdit)
-
-  console.log(modalStore.postOptionsModalState)
 }
 
 watchEffect(() => {
-  if (getThreadState.value.loading === 'loading')
+  if (getDeleteState.value.loading === 'loading')
     modalStore.setLoading(true);
   else
     modalStore.setLoading(false);

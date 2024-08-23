@@ -5,7 +5,7 @@
       @click.self="closeModal"
     >
       <div class="modal-options-container">
-        <button class="option" @click="composePostToEdit(), closeModal()">
+        <button v-if="options.includes(PostModalOptions.EDIT)" class="option" @click="composePostToEdit(), closeModal()">
           <div class="option-icon-wrapper">
             <font-awesome-icon
               icon="fa fa-pencil"
@@ -16,6 +16,7 @@
           <div>Editar</div>
         </button>
         <button
+          v-if="options.includes(PostModalOptions.DELETE)"
           class="option option--danger"
           @click="showDeleteConfirmation"
         >
@@ -77,6 +78,7 @@
 </template>
 
 <script setup>
+import { PostModalOptions } from "~/enums/PostModalOptions";
 import { PostModalStates } from "~/enums/PostModalStates";
 import { PostTypes } from "~/enums/PostTypes";
 import { useAuth } from "/composables/useAuth";
@@ -107,6 +109,16 @@ const confirmationMsg = computed(() => {
   if(type.value === PostTypes.RECIPE) return `¿Seguro que desea borrar la receta de ${ title.value }?`
   if(type.value === PostTypes.POLL) return `¿Seguro que desea borrar la encuesta?`
   if(type.value === PostTypes.THREAD) return `¿Seguro que desea borrar este hilo?`
+
+  return ''
+})
+
+const options = computed(() => {
+  if(type.value === PostTypes.RECIPE) return [ PostModalOptions.EDIT, PostModalOptions.DELETE ]
+  if(type.value === PostTypes.POLL) return [ PostModalOptions.DELETE ]
+  if(type.value === PostTypes.THREAD) return [ PostModalOptions.EDIT, PostModalOptions.DELETE ]
+
+  return []
 })
 
 // Ejecuto las funciones previamente inyectadas
