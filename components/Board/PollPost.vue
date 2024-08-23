@@ -1,5 +1,5 @@
 <template>
-  <div class="poll-post">
+  <div v-if="visible" class="poll-post">
     <NuxtLink
       v-if="props.showSignature"
       class="signature"
@@ -108,6 +108,8 @@ const { guard } = useAuth();
 
 const route = useRoute();
 
+const visible = ref(true)
+
 const props = defineProps({
   postData: Object,
   showSignature: Boolean,
@@ -192,7 +194,10 @@ const deletePoll = async () => {
   await uploadsStore.deletePoll(props.postData.id, props.postData.idUser);
 
   // Si todo ha ido bien...
-  router.push("/Perfil");
+  //router.push("/Perfil");
+
+  // Dejo de mostrar la publicación.
+  visible.value = false;
 };
 
 // Control del modal
