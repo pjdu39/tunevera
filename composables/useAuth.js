@@ -14,9 +14,6 @@ export function useAuth() {
 
   const login = async () => {
     if (auth0.value) {
-      // TODO: El bug raro del callback lo corté de raíz eliminando la opción de login con facebook.
-      //      En caso de volver a ponerlo, probar a meter esto en un try catch. https://github.com/auth0/nextjs-auth0/issues/413
-      
       /*
       await auth0.value.loginWithRedirect({
         authorizationParams: {
