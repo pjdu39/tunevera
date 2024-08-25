@@ -87,6 +87,9 @@ const clickOutside = () => {
   font-size: 85%;
   line-height: 95%;
 }
+.option-text:hover {
+  font-weight: bold;
+}
 .gear-options-container {
   position: absolute;
   width: 9rem;

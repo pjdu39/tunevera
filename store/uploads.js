@@ -265,7 +265,7 @@ export const useUploadsStore = defineStore({
             const { $fetchApi } = useNuxtApp();
             this.setDeleteRecipeLoading('loading');
             try {
-                const data = await $fetchApi(`DeleteRecipe?Id=${ id }&IdUser=${ idUser }`, { method: 'DELETE' });
+                const data = await $fetchApi(`DeleteRecipe?Id=${ [ id ] }&IdUser=${ idUser }`, { method: 'DELETE' });
 
                 this.setDeleteRecipeData(data);
                 this.setDeleteRecipeLoading('loaded');
@@ -305,7 +305,7 @@ export const useUploadsStore = defineStore({
             const { $fetchApi } = useNuxtApp();
             this.setDeleteThreadLoading('loading');
             try {
-                const data = await $fetchApi(`DeleteThread?Id=${ id }&IdUser=${ idUser }`, { method: 'DELETE' });
+                const data = await $fetchApi(`DeleteThread?Id=${ [ id ] }&IdUser=${ idUser }`, { method: 'DELETE' });
 
                 this.setDeleteThreadData(data);
                 this.setDeleteThreadLoading('loaded');
@@ -322,7 +322,7 @@ export const useUploadsStore = defineStore({
             const { $fetchApi } = useNuxtApp();
             this.setDeletePollLoading('loading');
             try {
-                const data = await $fetchApi(`DeletePoll?Id=${ id }&IdUser=${ idUser }`, { method: 'DELETE' });
+                const data = await $fetchApi(`DeletePoll?Id=${ [ id ] }&IdUser=${ idUser }`, { method: 'DELETE' });
 
                 this.setDeletePollData(data);
                 this.setDeletePollLoading('loaded');
