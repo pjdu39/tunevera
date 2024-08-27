@@ -27,6 +27,11 @@ export const useProfileStore = defineStore({
             data: null,
             loading: 'waiting',
             error: null
+        },
+        getDeleteAccountState: {
+            data: null,
+            loading: 'waiting',
+            error: null
         }
     }),
     actions: {
@@ -83,6 +88,17 @@ export const useProfileStore = defineStore({
         },
         setCommunityError(payload) {
             this.getCommunityState.error = payload;
+        },
+
+        // Delete Account
+        setDeleteAccountData(payload) {
+            this.getDeleteAccountState.data = payload;
+        },
+        setDeleteAccountLoading(payload) {
+            this.getDeleteAccountState.loading = payload;
+        },
+        setDeleteAccountError(payload) {
+            this.getDeleteAccountState.error = payload;
         },
 
         async fetchProfileInfo(id) {
@@ -174,6 +190,23 @@ export const useProfileStore = defineStore({
                 this.setCommunityLoading('error');
                 this.setCommunityError(error.message);
             }
-        }
+        },
+        
+        async deleteAccount() {
+            const { $fetchApi } = useNuxtApp();
+            this.setDeleteAccountLoading('loading');
+            try {
+                const data = await $fetchApi(`DeleteAccount`, { method: 'DELETE' });
+
+                this.setDeleteAccountData(data);
+                this.setDeleteAccountLoading('loaded');
+                this.setDeleteAccountError(null);
+            }
+            catch(error) {
+                this.setDeleteAccountData(null);
+                this.setDeleteAccountLoading('error');
+                this.setDeleteAccountError(error.message);
+            }
+        },
     }
 });

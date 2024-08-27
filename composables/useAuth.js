@@ -79,6 +79,21 @@ export function useAuth() {
     }
   };
 
+  const logoutAndRedirectTo = (page) => {
+    if (auth0.value) {
+      removeToken();
+
+      let returnToUrl = window.location.origin;
+      returnToUrl += page;
+
+      auth0.value.logout({
+        logoutParams: { 
+          returnTo: returnToUrl 
+        }
+      });
+    }
+  };
+
   const redirectCallback = async () => {
     if (auth0.value) {
       try {
@@ -161,6 +176,7 @@ export function useAuth() {
     isLoading,
     doLogout,
     logoutAndRedirectToLogin,
+    logoutAndRedirectTo,
     redirectCallback,
     setToken,
     guard
