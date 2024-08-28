@@ -154,10 +154,6 @@ const closeModal = () => {
   padding: 25px 30px;
   background-color: $color-background;
   border-radius: 10px;
-
-  // Provisional
-  width: auto;
-  height: auto;
 }
 .option {
   display: flex;

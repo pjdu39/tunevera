@@ -100,6 +100,11 @@ export const useProfileStore = defineStore({
         setDeleteAccountError(payload) {
             this.getDeleteAccountState.error = payload;
         },
+        resetDeleteAccountState() {
+            this.getDeleteAccountState.data = null
+            this.getDeleteAccountState.loading = 'waiting';
+            this.getDeleteAccountState.error = null;
+        },
 
         async fetchProfileInfo(id) {
             const { $fetchApi } = useNuxtApp();
