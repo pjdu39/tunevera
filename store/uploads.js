@@ -265,7 +265,13 @@ export const useUploadsStore = defineStore({
             const { $fetchApi } = useNuxtApp();
             this.setDeleteRecipeLoading('loading');
             try {
-                const data = await $fetchApi(`DeleteRecipes?Id=${ [ id ] }&IdUser=${ idUser }`, { method: 'DELETE' });
+                const data = await $fetchApi('DeleteRecipes', {
+                    method: 'DELETE',
+                    body: JSON.stringify({ Ids: [ id ], IdUser: idUser }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
                 this.setDeleteRecipeData(data);
                 this.setDeleteRecipeLoading('loaded');
@@ -305,7 +311,13 @@ export const useUploadsStore = defineStore({
             const { $fetchApi } = useNuxtApp();
             this.setDeleteThreadLoading('loading');
             try {
-                const data = await $fetchApi(`DeleteThreads?Id=${ [ id ] }&IdUser=${ idUser }`, { method: 'DELETE' });
+                const data = await $fetchApi('DeleteThreads', {
+                    method: 'DELETE',
+                    body: JSON.stringify({ Ids: [ id ], IdUser: idUser }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
                 this.setDeleteThreadData(data);
                 this.setDeleteThreadLoading('loaded');
@@ -322,7 +334,13 @@ export const useUploadsStore = defineStore({
             const { $fetchApi } = useNuxtApp();
             this.setDeletePollLoading('loading');
             try {
-                const data = await $fetchApi(`DeletePolls?Id=${ [ id ] }&IdUser=${ idUser }`, { method: 'DELETE' });
+                const data = await $fetchApi('DeletePolls', {
+                    method: 'DELETE',
+                    body: JSON.stringify({ Ids: [ id ], IdUser: idUser }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
                 this.setDeletePollData(data);
                 this.setDeletePollLoading('loaded');

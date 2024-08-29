@@ -27,7 +27,8 @@
     <div v-if="getRecipeState.loading === 'error'">
       <div class="state-container">
         <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
-        <div>Error hardcodeado</div>
+        <!--<div>Error hardcodeado</div>-->
+        <div>Parece que hubo un error al cargar la receta. Por favor vuelva a intentarlo más tarde.</div>
       </div>
     </div>
     <div v-else-if="getRecipeState.loading === 'loaded'" class="recipe">
