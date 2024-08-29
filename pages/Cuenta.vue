@@ -115,10 +115,7 @@ const deleteAccount = async () => {
   await profileStore.deleteAccount();
 };
 
-// TODO:    Hacer experiencia reactiva
-//          Usar deleteSuccess para determinar si la operación fue bien o no. Diseñar mensaje de error.
-//          Modal de confirmación! MUY IMPORTANTE!
-//          Hacer la página responsive
+// TODO:    Hacer la página responsive
 
 // Modal
 const isModalOpen = ref(false);
@@ -299,5 +296,19 @@ const exit = () => {
   width: 100%;
   font-size: 220%;
   color: $color-red;
+}
+@media (max-width: 600px) {
+  .container {
+    width: 95%;
+  }
+  .option-title {
+    display: none;
+  }
+  .option-wrapper {
+    width: 95%;
+  }
+  .modal-container {
+    width: 95%;
+  }
 }
 </style>
