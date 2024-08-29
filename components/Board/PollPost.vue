@@ -7,8 +7,21 @@
     >
       <b>@{{ postData.userName }}</b>
     </NuxtLink>
-    <div v-else class="space"></div>
-    <h4 class="title">{{ postData.title }}</h4>
+    <div class="top-section">
+      <h4 class="title">{{ postData.title }}</h4>
+      <div
+        v-if="!props.showSignature && postData.selfPost"
+        class="options-container"
+      >
+        <button class="options-btn" @click="showOptions">
+          <font-awesome-icon
+            icon="fa fa-ellipsis-vertical"
+            class="fa-lg"
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+    </div>
     <div class="post-info">
       <div
         v-show="!isVoted"
@@ -57,15 +70,6 @@
       </div>
 
       <div class="aspect-ratio-wrapper">
-        <div v-if="postData.selfPost" class="options-container">
-          <button class="options-btn" @click="showOptions">
-            <font-awesome-icon
-              icon="fa fa-ellipsis-vertical"
-              class="fa-lg"
-              aria-hidden="true"
-            />
-          </button>
-        </div>
         <!--
         <div class="aspect-ratio-container">
           <div class="img-wrapper">
@@ -108,7 +112,7 @@ const { guard } = useAuth();
 
 const route = useRoute();
 
-const visible = ref(true)
+const visible = ref(true);
 
 const props = defineProps({
   postData: Object,
@@ -204,16 +208,14 @@ const deletePoll = async () => {
 const modalStore = useModalStore();
 
 const showOptions = () => {
-  modalStore.openModal({ type: PostTypes.POLL })
-  modalStore.setDeteleFunc(deletePoll)
-}
+  modalStore.openModal({ type: PostTypes.POLL });
+  modalStore.setDeteleFunc(deletePoll);
+};
 
 watchEffect(() => {
-  if (getDeleteState.value.loading === 'loading')
-    modalStore.setLoading(true);
-  else
-    modalStore.setLoading(false);
-})
+  if (getDeleteState.value.loading === "loading") modalStore.setLoading(true);
+  else modalStore.setLoading(false);
+});
 </script>
   
 <style scoped lang="scss">
@@ -243,14 +245,20 @@ button {
 .signature:hover {
   text-decoration: underline;
 }
+.top-section {
+  display: flex;
+  margin: 10px 0 10px 0;
+  line-height: 30px;
+}
 .space {
   margin-bottom: 20px;
 }
 .title {
   flex-grow: 0;
-  max-width: 80%;
+  max-width: 90%;
   margin-bottom: 1rem;
   font-family: $font-headers;
+  line-height: 30px;
 }
 .post-info {
   flex-grow: 20;
@@ -379,6 +387,9 @@ button {
 }
 .options-container {
   display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+  height: min-content;
   font-size: 140%;
 }
 .options-btn {
