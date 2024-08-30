@@ -387,8 +387,8 @@
   </div>
   <div v-if="newRecipeState.loading === 'error'">
     <!-- TODO: Hacer que esto aparezca solo en desarrollo -->
-    <div>Mostrar este mensaje a Pablo.</div>
-    <div>Ups, parece que algo falló. {{ newRecipeState.error }}</div>
+    <div>Mostrar este mensaje de error al administrador del sistema.</div>
+    <div>{{ newRecipeState.error }}</div>
   </div>
 </template>
 
@@ -621,6 +621,16 @@ const preventNonDecimal = (event) => {
     event.preventDefault();
   }
 };
+
+// Evita que se envíen strings vacíos
+watchEffect(() => {
+  postRecipeData.value.recipeIngredients.forEach((ingredient, index) => {
+    if (ingredient.amount === '') {
+      postRecipeData.value.recipeIngredients[index].amount = null;
+    }
+  });
+});
+
 // Time
 const convertTimeToInt = () => {
   if (!postRecipeData.value.time) postRecipeData.value.time = 0;

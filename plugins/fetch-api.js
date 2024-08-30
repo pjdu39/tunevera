@@ -23,6 +23,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                         throw new Error(`La respuesta del fetch no es OK: ${response.statusText} (Estado: ${response.status}). Cuerpo de la respuesta: ${responseBody}`);
                     }
                 } catch (error) {
+                    // console.log(error)
                     // Manejo del error al leer el cuerpo de la respuesta
                     throw new Error(`Error al leer el cuerpo de la respuesta: ${error}`);
                 }

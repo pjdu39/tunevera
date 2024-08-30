@@ -60,8 +60,9 @@
     </button>
   </div>
   <div v-if="newPollState.loading === 'error'">
-    <div>Mostrar este mensaje a Pablo.</div>
-    <div>Ups, parece que algo falló. {{ newPollState.error }}</div>
+    <!-- TODO: Hacer que esto aparezca solo en desarrollo -->
+    <div>Mostrar este mensaje de error al administrador del sistema.</div>
+    <div>{{ newPollState.error }}</div>
   </div>
 </template>
 

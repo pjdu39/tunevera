@@ -167,6 +167,8 @@ export const useUploadsStore = defineStore({
                 this.setRecipeError(null);
             }
             catch(error) {
+                console.log('entro en el catch')
+                console.log(error)
                 this.setRecipeData(null);
                 this.setRecipeLoading('error');
                 this.setRecipeError(error.message);
@@ -267,7 +269,7 @@ export const useUploadsStore = defineStore({
             try {
                 const data = await $fetchApi('DeleteRecipes', {
                     method: 'DELETE',
-                    body: JSON.stringify({ Ids: [ id ], IdUser: idUser }),
+                    body: JSON.stringify({ Ids: [ parseInt(id, 10) ], IdUser: idUser }),
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -313,7 +315,7 @@ export const useUploadsStore = defineStore({
             try {
                 const data = await $fetchApi('DeleteThreads', {
                     method: 'DELETE',
-                    body: JSON.stringify({ Ids: [ id ], IdUser: idUser }),
+                    body: JSON.stringify({ Ids: [ parseInt(id, 10) ], IdUser: idUser }),
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -336,7 +338,7 @@ export const useUploadsStore = defineStore({
             try {
                 const data = await $fetchApi('DeletePolls', {
                     method: 'DELETE',
-                    body: JSON.stringify({ Ids: [ id ], IdUser: idUser }),
+                    body: JSON.stringify({ Ids: [ parseInt(id, 10) ], IdUser: idUser }),
                     headers: {
                         'Content-Type': 'application/json'
                     }
