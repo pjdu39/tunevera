@@ -269,7 +269,7 @@ export const useUploadsStore = defineStore({
             try {
                 const data = await $fetchApi('DeleteRecipes', {
                     method: 'DELETE',
-                    body: JSON.stringify({ Ids: [ parseInt(id, 10) ], IdUser: idUser }),
+                    body: JSON.stringify({ Ids: [ id ], IdUser: idUser }),
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -315,7 +315,7 @@ export const useUploadsStore = defineStore({
             try {
                 const data = await $fetchApi('DeleteThreads', {
                     method: 'DELETE',
-                    body: JSON.stringify({ Ids: [ parseInt(id, 10) ], IdUser: idUser }),
+                    body: JSON.stringify({ Ids: [ id ], IdUser: idUser }),
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -338,7 +338,7 @@ export const useUploadsStore = defineStore({
             try {
                 const data = await $fetchApi('DeletePolls', {
                     method: 'DELETE',
-                    body: JSON.stringify({ Ids: [ parseInt(id, 10) ], IdUser: idUser }),
+                    body: JSON.stringify({ Ids: [ id ], IdUser: idUser }),
                     headers: {
                         'Content-Type': 'application/json'
                     }
