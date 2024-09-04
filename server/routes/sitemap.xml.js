@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     const apiUrl = useRuntimeConfig().public.apiUrl;
 
     const url = event.node.req.headers.host; // Acceder al host desde el request
-    const clientUrl = apiUrl.includes('localhost') && url.includes('localhost') ? `https://${url}/` : `${url}/`;
+    const clientUrl = apiUrl.includes('localhost') && url.includes('localhost') ? `${url}/` : `https://${url}/`;
 
     try {
         console.log(`${apiUrl}GetSitemapIds`)
