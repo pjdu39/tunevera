@@ -2,12 +2,10 @@ import { defineEventHandler, send } from 'h3'
 import { PostTypes } from '~/enums/PostTypes';
 
 export default defineEventHandler(async (event) => {
-    const { env } = useRuntimeConfig().public;
-
     const apiUrl = useRuntimeConfig().public.apiUrl;
 
     const url = event.node.req.headers.host; // Acceder al host desde el request
-    const clientUrl = env.includes('development') && url.includes('localhost') ? `https://${url}/` : `${url}/`;
+    const clientUrl = apiUrl.includes('localhost') && url.includes('localhost') ? `https://${url}/` : `${url}/`;
 
     try {
         console.log(`${apiUrl}GetSitemapIds`)
