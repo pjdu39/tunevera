@@ -35,7 +35,7 @@ const config: NuxtConfig = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: "tunevera",
+    title: "cookbook",
     htmlAttrs: {
       lang: "en",
     },
@@ -71,7 +71,7 @@ const config: NuxtConfig = {
   plugins: [
     "~/plugins/auth0.js",
     "~/plugins/fontawesome.js",
-    "~/plugins/fetch-api.js",
+    { src: "~/plugins/fetch-api.js", ssr: false},
     "~/plugins/v-click-outside.js"
   ],
 
