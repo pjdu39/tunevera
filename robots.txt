@@ -1,1 +1,3 @@
 Sitemap: https://www.thecookbook.app/sitemap.xml
+User-agent: *
+Disallow: /_nuxt/

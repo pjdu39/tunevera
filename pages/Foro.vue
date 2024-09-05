@@ -25,7 +25,6 @@
     <div v-if="getThreadState.loading === 'error'">
       <div class="state-container">
         <font-awesome-icon icon="fa fa-triangle-exclamation" class="error" />
-        <!--<div>Error hardcodeado en cliente</div>-->
         <div>Parece que hubo un error al cargar el hilo. Por favor inténtelo más tarde.</div>
       </div>
     </div>
