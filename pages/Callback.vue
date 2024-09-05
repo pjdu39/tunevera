@@ -15,6 +15,10 @@ import { onMounted } from "vue";
 import { useAuth } from "~/composables/useAuth";
 import { useRouter } from "vue-router";
 
+useHead({
+  meta: [{ name: "robots", content: "noindex" }],
+});
+
 const router = useRouter();
 const { redirectCallback } = useAuth();
 

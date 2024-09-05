@@ -290,80 +290,6 @@ const computedLikeClass = computed(() => {
   }
 });
 
-// SEO
-const url = useRequestURL();
-const currentUrl = url.href;
-
-const { $fetchApi } = useNuxtApp();
-// TODO: Actualmente se hacen dos llamadas, una para los metadatos en SSR y otra para cargar la página en sí en el
-//      onMounted(), intentar usar solo una. En caso de no poder, se puede crear un endpoint adicional más ligero
-//      para la información de los metadatos.
-//      Nota * : insistir en la primera solución, debería existir una forma compacta de utilizar la misma llamada para nutrir
-//      la página con los datos de la hidratación.
-const { data: recipe } = await useAsyncData("recipeData", () => {
-  return $fetchApi(`GetRecipe?IdRecipe=${id}`);
-});
-
-// Metadatos en la cabecera para enriquecer la publicación al compartirla
-const pageTitle = computed(() => (recipe.value ? recipe.value.title : ""));
-const pageDescription = computed(() =>
-  recipe.value ? recipe.value.description : ""
-);
-const pageImage = computed(() => (recipe.value ? recipe.value.pictureUrl : ""));
-
-useServerHeadSafe({
-  title: pageTitle,
-  meta: [
-    // Primary Meta Tags
-    { hid: "title", name: "title", content: pageTitle },
-    { hid: "description", name: "description", content: pageDescription },
-
-    // Open Graph / Facebook Meta Tags
-    { hid: "og:type", property: "og:type", content: "website" },
-    { hid: "og:url", property: "og:url", content: currentUrl },
-    { hid: "og:title", property: "og:title", content: pageTitle },
-    {
-      hid: "og:description",
-      property: "og:description",
-      content: pageDescription,
-    },
-    { hid: "og:image", property: "og:image", content: pageImage },
-
-    // Twitter Meta Tags
-    {
-      hid: "twitter:card",
-      property: "twitter:card",
-      content: "summary_large_image",
-    },
-    { hid: "twitter:url", property: "twitter:url", content: currentUrl },
-    { hid: "twitter:title", property: "twitter:title", content: pageTitle },
-    {
-      hid: "twitter:description",
-      property: "twitter:description",
-      content: pageDescription,
-    },
-    { hid: "twitter:image", property: "twitter:image", content: pageImage },
-  ],
-});
-
-// Compartir la receta
-const shareData = ref({
-  title: "Cookbook",
-  text: "Mira esta receta en Cookbook",
-  url: currentUrl,
-});
-const shareContent = () => {
-  if (navigator.share) {
-    navigator
-      .share(shareData.value)
-      .then()
-      .catch((error) => console.error("Error al compartir:", error));
-  } else {
-    console.error("Web Share API no está soportada en este navegador.");
-  }
-};
-const canShare = computed(() => navigator.canShare(shareData.value));
-
 // Manejo semántico de singluar/plural, etc.
 const semanticTransformation = (ingredient) => {
   const singular = ingredient.text.singular;
@@ -407,6 +333,131 @@ const semanticTransformation = (ingredient) => {
 
   return result;
 };
+
+// SEO
+const url = useRequestURL();
+const currentUrl = url.href;
+
+const { $fetchApi } = useNuxtApp();
+// TODO: Actualmente se hacen dos llamadas, una para los metadatos en SSR y otra para cargar la página en sí en el
+//      onMounted(), intentar usar solo una. En caso de no poder, se puede crear un endpoint adicional más ligero
+//      para la información de los metadatos.
+//      Nota * : insistir en la primera solución, debería existir una forma compacta de utilizar la misma llamada para nutrir
+//      la página con los datos de la hidratación.
+const { data: recipe } = await useAsyncData("recipeData", () => {
+  return $fetchApi(`GetRecipe?IdRecipe=${id}`);
+});
+
+// Metadatos en la cabecera para enriquecer la publicación al compartirla
+const pageTitle = computed(() => (recipe.value ? recipe.value.title : ""));
+const pageAuthor = computed(() => (recipe.value ? recipe.value.user.name : ""));
+const pageImage = computed(() => (recipe.value ? recipe.value.pictureUrl : ""));
+// const pageDate = computed(() => (recipe.value ? recipe.value.creationDate : ""));
+const pageDescription = computed(() =>
+  recipe.value ? recipe.value.description : ""
+);
+const pageTime = computed(() => (recipe.value ? recipe.value.time : ""));
+const pageServings = computed(() => (recipe.value ? recipe.value.servings : ""));
+const pageSemanticIngredients = computed(() => {
+  if (recipe.value) {
+    let ingredients = [];
+    recipe.value.ingredients.forEach(ingredient => {
+      ingredients.push(semanticTransformation(ingredient))
+    });
+    return ingredients;
+  }
+  
+  return []
+});
+const pageSteps = computed(() => {
+  if (recipe.value) {
+    let steps = [];
+    recipe.value.steps.forEach(step => {
+      steps.push({ "@type": "HowToStep", "text": step.text })
+    });
+    return steps;
+  }
+  
+  return []
+});
+
+const recipeSchema = {
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": pageTitle.value,
+  "author": {
+    "@type": "Person",
+    "name": `@${pageAuthor.value}`
+  },
+  "image": [pageImage.value],
+  "datePublished": "2023-01-15", // TODO: Recibir este valor de la api
+  "description": pageDescription.value,
+  "prepTime": pageTime.value,
+  "cookTime": pageTime.value,
+  "recipeYield": pageServings.value,
+  "recipeIngredient": pageSemanticIngredients.value,
+  "recipeInstructions": pageSteps.value
+}
+
+useServerHeadSafe({
+  title: pageTitle,
+  meta: [
+    // Primary Meta Tags
+    { hid: "title", name: "title", content: pageTitle },
+    { hid: "description", name: "description", content: pageDescription },
+
+    // Open Graph / Facebook Meta Tags
+    { hid: "og:type", property: "og:type", content: "website" },
+    { hid: "og:url", property: "og:url", content: currentUrl },
+    { hid: "og:title", property: "og:title", content: pageTitle },
+    {
+      hid: "og:description",
+      property: "og:description",
+      content: pageDescription,
+    },
+    { hid: "og:image", property: "og:image", content: pageImage },
+
+    // Twitter Meta Tags
+    {
+      hid: "twitter:card",
+      property: "twitter:card",
+      content: "summary_large_image",
+    },
+    { hid: "twitter:url", property: "twitter:url", content: currentUrl },
+    { hid: "twitter:title", property: "twitter:title", content: pageTitle },
+    {
+      hid: "twitter:description",
+      property: "twitter:description",
+      content: pageDescription,
+    },
+    { hid: "twitter:image", property: "twitter:image", content: pageImage },
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(recipeSchema),
+      json: true // Esto asegura que Nuxt maneje correctamente el escape de caracteres
+    }
+  ]
+});
+
+// Compartir la receta
+const shareData = ref({
+  title: "Cookbook",
+  text: "Mira esta receta en Cookbook!",
+  url: currentUrl,
+});
+const shareContent = () => {
+  if (navigator.share) {
+    navigator
+      .share(shareData.value)
+      .then()
+      .catch((error) => console.error("Error al compartir:", error));
+  } else {
+    console.error("Web Share API no está soportada en este navegador.");
+  }
+};
+const canShare = computed(() => navigator.canShare(shareData.value));
 
 // Manejo de comentarios
 const comment = ref(null);

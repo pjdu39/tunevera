@@ -5,7 +5,10 @@
       v-if="profileLoading === 'waiting' || profileLoading === 'loading'"
     />
     -->
-    <div v-if="profileLoading === 'waiting' || profileLoading === 'loading'" class="loading-container">
+    <div
+      v-if="profileLoading === 'waiting' || profileLoading === 'loading'"
+      class="loading-container"
+    >
       <font-awesome-icon
         icon="fa fa-circle-notch"
         class="fa-spin fa-lg"
@@ -81,7 +84,10 @@
                     :hidden="!showOptions"
                   >
                     <div class="dropdown-wrapper">
-                      <button class="option" @click="isEditing = true, showOptions = false">
+                      <button
+                        class="option"
+                        @click="(isEditing = true), (showOptions = false)"
+                      >
                         <div class="option-icon-wrapper">
                           <font-awesome-icon
                             icon="fa fa-pencil"
@@ -91,7 +97,10 @@
                         </div>
                         <div>Editar perfil</div>
                       </button>
-                      <button class="option" @click="doLogout(), showOptions = false">
+                      <button
+                        class="option"
+                        @click="doLogout(), (showOptions = false)"
+                      >
                         <div class="option-icon-wrapper">
                           <font-awesome-icon
                             icon="fa fa-power-off"
@@ -136,6 +145,10 @@ import { useLoginStore } from "~/store/login.js";
 import { useProfileStore } from "~/store/profile.js";
 import { useAuth } from "~/composables/useAuth";
 
+useHead({
+  meta: [{ name: "robots", content: "noindex" }],
+});
+
 const { guard, doLogout, logoutAndRedirectToLogin, setToken } = useAuth();
 
 // Manejo de orden coherente de carga de datos
@@ -147,7 +160,7 @@ const id = computed(() => route.query.id || null);
 
 onMounted(async () => {
   await setToken();
-  loginLoading.value = false
+  loginLoading.value = false;
   fetchProfileData();
 });
 
@@ -166,7 +179,7 @@ const selfProfile = computed(() => {
 });
 
 watch(profileLoading, async (newValue, oldValue) => {
-  if (newValue === 'loaded' && selfProfile.value) {
+  if (newValue === "loaded" && selfProfile.value) {
     await guard(route.path);
   }
 });
@@ -192,7 +205,7 @@ const clickShowOptions = () => (showOptions.value = !showOptions.value);
 
 // Manejo de propiedades que determinan si se debe mostrar el formulario de registro/edición o no.
 const isSignedUp = computed(() => {
-  const value = profile.value.id ? true : false
+  const value = profile.value.id ? true : false;
   loginStore.setCheckSignUpData(value);
   return value;
 });

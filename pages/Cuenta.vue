@@ -4,7 +4,9 @@
       <div class="option">
         <div class="option-title">Eliminar cuenta</div>
         <div class="option-wrapper">
-          <button class="option-btn-delete" @click="openModal">Eliminar Cuenta</button>
+          <button class="option-btn-delete" @click="openModal">
+            Eliminar Cuenta
+          </button>
           <div class="option-description">
             Elimina tu cuenta y todas las publicaciones asociadas de forma
             permanente.
@@ -45,7 +47,10 @@
             aria-hidden="true"
           />
         </div>
-        <div class="msg">Parece que ha habido un error, por favor inténtelo más tarde o póngase en contacto con el administrador del sistema.</div>
+        <div class="msg">
+          Parece que ha habido un error, por favor inténtelo más tarde o póngase
+          en contacto con el administrador del sistema.
+        </div>
         <div class="group-btn-container">
           <button class="btn btn--cancel" @click="exit">Volver</button>
         </div>
@@ -58,7 +63,9 @@
             aria-hidden="true"
           />
         </div>
-        <div class="modal-title">¿Está seguro de que desea eliminar su cuenta por completo?</div>
+        <div class="modal-title">
+          ¿Está seguro de que desea eliminar su cuenta por completo?
+        </div>
         <div v-if="!showInput" class="group-btn-container">
           <button class="btn btn--confirm" @click="continueToDelete">
             Continuar
@@ -95,6 +102,10 @@
 import { useAuth } from "~/composables/useAuth";
 import { useProfileStore } from "~/store/profile.js";
 
+useHead({
+  meta: [{ name: "robots", content: "noindex" }],
+});
+
 // Protección de ruta con login
 const { guard, setToken, logoutAndRedirectTo } = useAuth();
 const route = useRoute();
@@ -115,8 +126,6 @@ const deleteAccount = async () => {
   await profileStore.deleteAccount();
 };
 
-// TODO:    Hacer la página responsive
-
 // Modal
 const isModalOpen = ref(false);
 const openModal = () => {
@@ -125,12 +134,12 @@ const openModal = () => {
 const closeModal = () => {
   isModalOpen.value = false;
   showInput.value = false;
-  confirmationMsg.value = null
+  confirmationMsg.value = null;
 };
 
 const showInput = ref(false);
 const continueToDelete = () => {
-  showInput.value = true
+  showInput.value = true;
 };
 
 const confirmationMsg = ref(null);
@@ -143,12 +152,11 @@ const canDelete = computed(
 const exit = () => {
   if (deleteSuccess.value) {
     logoutAndRedirectTo("/");
-  }
-  else {
+  } else {
     closeModal();
     profileStore.resetDeleteAccountState();
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -173,7 +181,6 @@ const exit = () => {
   width: 65%;
 }
 .option-btn {
-
 }
 .option-btn-delete {
   padding: 0px 8px;

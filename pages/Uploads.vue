@@ -20,7 +20,11 @@ import PollUpload from "~/components/Uploads/PollUpload.vue";
 import RecipeUpload from "~/components/Uploads/RecipeUpload.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-import { useAuth } from '~/composables/useAuth';
+import { useAuth } from "~/composables/useAuth";
+
+useHead({
+  meta: [{ name: "robots", content: "noindex" }],
+});
 
 // Protección de ruta con login
 const { guard, setToken } = useAuth();
@@ -64,9 +68,11 @@ onMounted(async () => {
     width: 95%;
     border: none;
   }
-  
+
   // Ajuste manual del padding del primer elemento para alinear el menú a la izquierda.
-  :deep(ul.p-tabview-nav > li.p-tabview-header:first-child .p-tabview-nav-link) {
+  :deep(
+      ul.p-tabview-nav > li.p-tabview-header:first-child .p-tabview-nav-link
+    ) {
     padding-left: 0 !important;
   }
   /* Aumentar la especificidad para el contenido */
