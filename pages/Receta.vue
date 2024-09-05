@@ -399,6 +399,16 @@ const recipeSchema = {
   "recipeInstructions": pageSteps.value
 }
 
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(recipeSchema),
+      json: true
+    }
+  ]
+})
+
 useServerHeadSafe({
   title: pageTitle,
   meta: [
