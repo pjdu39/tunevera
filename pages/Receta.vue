@@ -389,7 +389,7 @@ const recipeSchema = {
     "@type": "Person",
     "name": `@${pageAuthor.value}`
   },
-  "image": [pageImage.value],
+  "image": pageImage.value,
   "datePublished": "2023-01-15", // TODO: Recibir este valor de la api
   "description": pageDescription.value,
   "prepTime": pageTime.value,
