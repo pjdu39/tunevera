@@ -113,6 +113,7 @@ export function useImageManager() {
     };
     */
     const resizeImage = async (file, maxResolution = 500, targetSizeKB = 500) => {
+        const pngFile = await convertImageToPNG(file)
         return new Promise((resolve, reject) => {
           const img = new Image();
           const reader = new FileReader();
@@ -152,7 +153,7 @@ export function useImageManager() {
                       resolve(blob); // Tamaño aceptable
                     }
                   },
-                  file.type,
+                  pngFile.type,
                   quality
                 );
               };
@@ -169,9 +170,32 @@ export function useImageManager() {
             reject(err);
           };
       
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(pngFile);
         });
     };
+
+    const convertImageToPNG = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/png');
+                };
+                img.onerror = reject;
+                img.src = event.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
 
     return {
         resizeImage

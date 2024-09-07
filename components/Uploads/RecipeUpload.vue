@@ -471,7 +471,7 @@ const handleImageSelect = (event) => {
   }
 
   // Extraer y almacenar la extensión del archivo original
-  originalFileExtension = getFileExtension(file.name);
+  // originalFileExtension = getFileExtension(file.name);
 
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -495,6 +495,7 @@ const handleCropComplete = async (croppedBlob) => {
     // Redimensionar la imagen si es necesario
     cropLoading.value = true
     finalBlob.value = await resizeImage(croppedBlob);
+    console.log(`Tipo de archivo después de la conversión/redimensionamiento: ${finalBlob.value.type}`);
     cropLoading.value = false
 
     if (isEditing.value) imageHasChanged.value = true;
@@ -529,12 +530,17 @@ const uploadState = computed(() => blobStore.uploadState);
 const createUUID = () => {
   return uuidv4();
 };
+const getExtensionFromMimeType = (mimeType) => {
+  // Divide el mimeType por '/' y retorna la segunda parte, que es el subtipo
+  return mimeType.split('/')[1];
+};
 const getFileExtension = (filename) => {
   return filename
     .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
     .toLowerCase();
 };
 const handleFileUpload = async (blob, extension) => {
+  console.log(`Subiendo archivo tipo: ${blob.type}`);
   const newFileName = `r-${createUUID()}.${extension}`;
 
   const newFile = new File([blob], newFileName, {
@@ -920,7 +926,8 @@ const uploadRecipe = async () => {
   if (!validForm) return;
 
   // TODO: hacer aquí la subida de imagen y esperar al respuesta OK del servidor para continuar
-  await handleFileUpload(finalBlob.value, originalFileExtension);
+  const fileExtension = getExtensionFromMimeType(finalBlob.value.type);
+  await handleFileUpload(finalBlob.value, fileExtension);
 
   if (uploadState.value.error) {
     console.error("Error al subir la imagen:", uploadState.value.error);
