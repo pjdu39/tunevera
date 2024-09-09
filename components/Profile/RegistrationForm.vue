@@ -167,7 +167,6 @@ const editProfileState = computed(() => profileStore.editProfileState);
 const nickname = ref(null);
 const description = ref(null);
 const picture = computed(() => {
-  console.log(finalBlob.value)
   if (finalBlob.value) return URL.createObjectURL(finalBlob.value);
 
   if (uploadState.value.loading === "loading") return null;
@@ -188,9 +187,6 @@ const save = async () => {
 
     // TODO. Hacer pruebas para ver si esto es necesario
     await wait(() => uploadState.value.data);
-  }
-  else {
-    console.log(finalBlob.value)
   }
 
   patchAuth0User();

@@ -137,6 +137,7 @@ export function useImageManager() {
                 ctx.imageSmoothingQuality = "high";
                 ctx.drawImage(img, 0, 0, width, height);
       
+                // TODO: Ajustar la reducción de calidad en base a una aproximación de cuánta hay que reducir finalmente para evitar demasiadas iteraciones.
                 canvas.toBlob(
                   (blob) => {
                     const sizeKB = blob.size / 1024;

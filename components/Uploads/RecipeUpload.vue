@@ -937,7 +937,7 @@ const uploadRecipe = async () => {
   await uploadsStore.postRecipe(postRecipeData.value);
 
   // Si todo va bien, refresca la página.
-  if (uploadsStore.editRecipeState.data) router.go(0);
+  if (uploadsStore.newRecipeState.data) router.push('/');
 };
 
 // Redirección tras guardar
@@ -1063,10 +1063,13 @@ const fetchImageAsBlob = async (imageUrl) => {
 
 const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
   const fileName = postRecipeData.value.pictureUrl.split("/").pop();
-  console.log(fileName)
 
-  if(extension !== blob.type) {
-    console.log('Estoy creando una imagen nueva y borrando la antigua')
+  // Si la extensión con la que se desea guardar es diferente a la original
+  if(extension !== getFileExtension(props.recipe.pictureUrl)) {
+    // console.log(extension)
+    // console.log(getFileExtension(props.recipe.pictureUrl))
+    // console.log('Estoy creando una imagen nueva y borrando la antigua')
+
     const tempFileName = 'tempFile';
     const tempFile = new File([blob], tempFileName, {
       type: blob.type,
@@ -1077,13 +1080,15 @@ const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
     const fileBaseName = fileName.split(".").slice(0, -1).join(".");
     const newFileName = `${fileBaseName}.${extension}`;
 
+    // console.log(newFileName)
+
     const newWebpFile = new File([newBlob], newFileName, {
       type: newBlob.type,
       lastModified: new Date(),
     });
 
-    console.log(newFileName)
-    console.log(newBlob.type)
+    // console.log(newFileName)
+    // console.log(newBlob.type)
 
     await blobStore.uploadFileAndGetUrl(newWebpFile);
     
