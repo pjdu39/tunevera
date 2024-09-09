@@ -359,18 +359,26 @@ const getFileExtension = (filename) => {
     .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
     .toLowerCase();
 };
-const handleFileUpload = async (blob, extension = 'webp') => {
+const handleFileUpload = async (blob, extension = ImageTypes.WEBP) => {
   if (!finalBlob.value) return;
+  
+  const tempFileName = 'tempFile';
 
-  const newFileName = `u-${user.value.sub}.${extension}`;
-  const newFile = new File([blob], newFileName, {
+  const tempFile = new File([blob], tempFileName, {
     type: blob.type,
     lastModified: new Date(),
   });
 
-  const newFileWEBP = await convertImageTo(newFile, ImageTypes.WEBP)
+  const newBlob = await convertImageTo(tempFile, extension)
 
-  await blobStore.uploadFileAndGetUrl(newFileWEBP);
+  const newFileName = `u-${user.value.sub}.${extension}`;
+
+  const newWebpFile = new File([newBlob], newFileName, {
+    type: newBlob.type,
+    lastModified: new Date(),
+  });
+
+  await blobStore.uploadFileAndGetUrl(newWebpFile);
 };
 
 const check = computed(() => {
