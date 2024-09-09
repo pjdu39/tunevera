@@ -1064,46 +1064,28 @@ const fetchImageAsBlob = async (imageUrl) => {
 const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
   const fileName = postRecipeData.value.pictureUrl.split("/").pop();
 
+  const tempFileName = 'tempFile';
+  const tempFile = new File([blob], tempFileName, {
+    type: blob.type,
+    lastModified: new Date(),
+  });
+
+  const newBlob = await convertImageTo(tempFile, extension);
+  const fileBaseName = fileName.split(".").slice(0, -1).join(".");
+  const newFileName = `${fileBaseName}.${extension}`;
+  
+
+  const newWebpFile = new File([newBlob], newFileName, {
+    type: newBlob.type,
+    lastModified: new Date(),
+  });
+
+  await blobStore.uploadFileAndGetUrl(newWebpFile);
+
   // Si la extensión con la que se desea guardar es diferente a la original
   if(extension !== getFileExtension(props.recipe.pictureUrl)) {
-    // console.log(extension)
-    // console.log(getFileExtension(props.recipe.pictureUrl))
-    // console.log('Estoy creando una imagen nueva y borrando la antigua')
-
-    const tempFileName = 'tempFile';
-    const tempFile = new File([blob], tempFileName, {
-      type: blob.type,
-      lastModified: new Date(),
-    });
-
-    const newBlob = await convertImageTo(tempFile, extension);
-    const fileBaseName = fileName.split(".").slice(0, -1).join(".");
-    const newFileName = `${fileBaseName}.${extension}`;
-
-    // console.log(newFileName)
-
-    const newWebpFile = new File([newBlob], newFileName, {
-      type: newBlob.type,
-      lastModified: new Date(),
-    });
-
-    // console.log(newFileName)
-    // console.log(newBlob.type)
-
-    await blobStore.uploadFileAndGetUrl(newWebpFile);
-    
     // Borro el blob antiguo de Azure
     await blobStore.deleteBlob(fileName);
-
-  }
-  else {
-    // console.log('Estoy actualizando la que ya había')
-    const updatedFile = new File([blob], fileName, {
-      type: blob.type,
-      lastModified: new Date(),
-    });
-    
-    await blobStore.uploadFileAndGetUrl(updatedFile);
   }
 };
 

@@ -125,7 +125,6 @@ export function useImageManager() {
             img.onload = () => {
               let width = img.width > maxResolution ? maxResolution : img.width;
               let height = img.height > maxResolution ? maxResolution : img.height;
-              let quality = 1;
       
               const updateCanvas = () => {
                 const canvas = document.createElement("canvas");
@@ -142,22 +141,16 @@ export function useImageManager() {
                   (blob) => {
                     const sizeKB = blob.size / 1024;
                     if (sizeKB > targetSizeKB) {
-                      quality *= 0.9; // Reducir la calidad en un 10% del valor actual
-                      if (quality < 0.05) {
-                        // Si la calidad es extremadamente baja
-                        if (width > 200 && height > 200) {
-                          // Asegurarse de que la resolución no sea demasiado baja
-                          width *= 0.95; // Reducir también la resolución
-                          height *= 0.95;
+                        if (width > 200 && height > 200) { // Asegurarse de que la resolución no sea demasiado baja
+                            width *= 0.95; // Reducir la resolución
+                            height *= 0.95;
                         }
-                      }
-                      updateCanvas(); // Reintentar con menor calidad y/o resolución
+                        updateCanvas(); // Reintentar con menor resolución
                     } else {
-                      resolve(blob); // Tamaño aceptable
+                        resolve(blob); // Tamaño aceptable
                     }
                   },
-                  pngFile.type,
-                  quality
+                  pngFile.type
                 );
               };
       
