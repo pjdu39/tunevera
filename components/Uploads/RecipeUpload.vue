@@ -1097,7 +1097,7 @@ const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
 
   }
   else {
-    console.log('Estoy actualizando la que ya había')
+    // console.log('Estoy actualizando la que ya había')
     const updatedFile = new File([blob], fileName, {
       type: blob.type,
       lastModified: new Date(),
@@ -1121,7 +1121,7 @@ const editRecipe = async () => {
 
   composePutData();
 
-  console.log(putRecipeData.value)
+  // console.log(putRecipeData.value)
 
   await uploadsStore.putRecipe(putRecipeData.value);
 
