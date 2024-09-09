@@ -393,6 +393,7 @@
 </template>
 
 <script setup>
+import { ImageTypes } from "~/enums/ImageTypes";
 import { ref, computed } from "vue";
 import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
@@ -451,7 +452,6 @@ const getUnitsState = computed(() => uploadsStore.getUnitsState);
 const fileInput = ref(null);
 const isModalOpen = ref(false);
 const selectedImage = ref("");
-let originalFileExtension = "";
 const finalBlob = ref("");
 
 const closeModal = () => {
@@ -470,9 +470,6 @@ const handleImageSelect = (event) => {
     return;
   }
 
-  // Extraer y almacenar la extensión del archivo original
-  // originalFileExtension = getFileExtension(file.name);
-
   const reader = new FileReader();
   reader.onload = (e) => {
     selectedImage.value = e.target.result; // Guarda la imagen seleccionada para pasarla al modal
@@ -489,19 +486,12 @@ const handleCropComplete = async (croppedBlob) => {
   // selectedImage.value = null;
 
   try {
-    // Tamaño de la imagen antes del redimensionamiento
-    // console.log(`Tamaño de la imagen original: ${croppedBlob.size} bytes`);
-
     // Redimensionar la imagen si es necesario
     cropLoading.value = true
     finalBlob.value = await resizeImage(croppedBlob);
-    console.log(`Tipo de archivo después de la conversión/redimensionamiento: ${finalBlob.value.type}`);
     cropLoading.value = false
 
     if (isEditing.value) imageHasChanged.value = true;
-
-    // Tamaño de la imagen después del redimensionamiento
-    // console.log(`Tamaño de la imagen redimensionada: ${finalBlob.value.size} bytes`);
   } catch (error) {
     console.error("Error al procesar la imagen:", error);
   }
@@ -520,7 +510,7 @@ const nuxtImgClass = computed(() => {
 });
 
 const cropLoading = ref(false);
-const { resizeImage } = useImageManager();
+const { resizeImage, convertImageTo } = useImageManager();
 
 
 // Manejo para subida de imágenes
@@ -539,16 +529,24 @@ const getFileExtension = (filename) => {
     .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
     .toLowerCase();
 };
-const handleFileUpload = async (blob, extension) => {
-  console.log(`Subiendo archivo tipo: ${blob.type}`);
-  const newFileName = `r-${createUUID()}.${extension}`;
+const handleFileUpload = async (blob, extension = ImageTypes.WEBP) => {
+  const tempFileName = 'tempFile';
 
-  const newFile = new File([blob], newFileName, {
+  const tempFile = new File([blob], tempFileName, {
     type: blob.type,
     lastModified: new Date(),
   });
 
-  await blobStore.uploadFileAndGetUrl(newFile);
+  const newBlob = await convertImageTo(tempFile, extension);
+
+  const newFileName = `r-${createUUID()}.${extension}`;
+
+  const newWebpFile = new File([newBlob], newFileName, {
+    type: newBlob.type,
+    lastModified: new Date(),
+  });
+
+  await blobStore.uploadFileAndGetUrl(newWebpFile);
 };
 
 // Manejo del formulario
@@ -927,7 +925,7 @@ const uploadRecipe = async () => {
 
   // TODO: hacer aquí la subida de imagen y esperar al respuesta OK del servidor para continuar
   const fileExtension = getExtensionFromMimeType(finalBlob.value.type);
-  await handleFileUpload(finalBlob.value, fileExtension);
+  await handleFileUpload(finalBlob.value);
 
   if (uploadState.value.error) {
     console.error("Error al subir la imagen:", uploadState.value.error);
@@ -977,6 +975,8 @@ const composePutData = () => {
     putRecipeData.value["time"] = postRecipeData.value.time;
   if (props.recipe.servings !== postRecipeData.value.servings)
     putRecipeData.value["servings"] = postRecipeData.value.servings;
+  if (props.recipe.pictureUrl !== uploadState.value.data)
+    putRecipeData.value["pictureUrl"] = uploadState.value.data;
 
   // Si cambia en número total de pasos, se envían todos, si no, solo envía quellos que han cambiado.
   if (props.recipe.steps.length !== postRecipeData.value.steps.length) {
@@ -1043,8 +1043,6 @@ const composePutData = () => {
       }
     }
   }
-
-  // console.log(putRecipeData.value)
 };
 
 const imageHasChanged = ref(false);
@@ -1063,15 +1061,45 @@ const fetchImageAsBlob = async (imageUrl) => {
   }
 };
 
-const handleFileEdit = async (blob) => {
+const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
   const fileName = postRecipeData.value.pictureUrl.split("/").pop();
+  console.log(fileName)
 
-  const updatedFile = new File([blob], fileName, {
-    type: blob.type,
-    lastModified: new Date(),
-  });
+  if(extension !== blob.type) {
+    console.log('Estoy creando una imagen nueva y borrando la antigua')
+    const tempFileName = 'tempFile';
+    const tempFile = new File([blob], tempFileName, {
+      type: blob.type,
+      lastModified: new Date(),
+    });
 
-  await blobStore.uploadFileAndGetUrl(updatedFile);
+    const newBlob = await convertImageTo(tempFile, extension);
+    const fileBaseName = fileName.split(".").slice(0, -1).join(".");
+    const newFileName = `${fileBaseName}.${extension}`;
+
+    const newWebpFile = new File([newBlob], newFileName, {
+      type: newBlob.type,
+      lastModified: new Date(),
+    });
+
+    console.log(newFileName)
+    console.log(newBlob.type)
+
+    await blobStore.uploadFileAndGetUrl(newWebpFile);
+    
+    // Borro el blob antiguo de Azure
+    await blobStore.deleteBlob(fileName);
+
+  }
+  else {
+    console.log('Estoy actualizando la que ya había')
+    const updatedFile = new File([blob], fileName, {
+      type: blob.type,
+      lastModified: new Date(),
+    });
+    
+    await blobStore.uploadFileAndGetUrl(updatedFile);
+  }
 };
 
 const editRecipe = async () => {
@@ -1087,6 +1115,8 @@ const editRecipe = async () => {
   }
 
   composePutData();
+
+  console.log(putRecipeData.value)
 
   await uploadsStore.putRecipe(putRecipeData.value);
 

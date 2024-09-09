@@ -1,3 +1,5 @@
+import { ImageTypes } from "~/enums/ImageTypes";
+
 export function useImageManager() {
     /*
     const resizeImage = async (file, maxWidth = 500, maxHeight = 500) => {
@@ -112,8 +114,8 @@ export function useImageManager() {
     });
     };
     */
-    const resizeImage = async (file, maxResolution = 500, targetSizeKB = 500) => {
-        const pngFile = await convertImageToPNG(file)
+    const resizeImage = async (file, maxResolution = 1000, targetSizeKB = 1500) => {
+        const pngFile = await convertImageTo(file, ImageTypes.PNG)
         return new Promise((resolve, reject) => {
           const img = new Image();
           const reader = new FileReader();
@@ -174,7 +176,10 @@ export function useImageManager() {
         });
     };
 
-    const convertImageToPNG = (file) => {
+    const convertImageTo = (file, extension) => {
+        if (!Object.values(ImageTypes).includes(extension))
+          return
+
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = (event) => {
@@ -187,7 +192,7 @@ export function useImageManager() {
                     ctx.drawImage(img, 0, 0);
                     canvas.toBlob((blob) => {
                         resolve(blob);
-                    }, 'image/png');
+                    }, `image/${extension}`);
                 };
                 img.onerror = reject;
                 img.src = event.target.result;
@@ -198,6 +203,7 @@ export function useImageManager() {
     }
 
     return {
-        resizeImage
+        resizeImage,
+        convertImageTo
     };
 }

@@ -8,7 +8,7 @@
       />
     </div>
   </div>
-  <div v-else class="container">
+  <div v-else class="recipe-container">
     <div
       v-if="
         getRecipeState.loading === 'loading' ||
@@ -610,9 +610,9 @@ textarea:focus {
   font-size: 200%;
   color: $color-primary;
 }
-.container {
+.recipe-container {
   margin: auto;
-  width: 65rem;
+  width: 70rem;
 }
 .recipe {
   position: relative;
@@ -628,13 +628,13 @@ textarea:focus {
 }
 .top-section {
   display: flex;
-  height: 25rem;
+  height: 500px;
   width: 100%;
 }
 .img-wrapper {
   position: relative;
   height: 100%;
-  width: 25rem;
+  width: 500px;
   overflow: hidden;
   border: 1px solid $color_dark;
   border-radius: 5px;
@@ -662,17 +662,17 @@ textarea:focus {
 .general-info-top {
   display: flex;
   height: auto;
+  justify-content: space-between;
 }
 .recipe-title {
   max-width: 380px;
-  font-size: 210%;
+  font-size: 190%;
   font-family: $font-headers;
 }
 .signature-container {
   position: relative;
   display: flex;
   align-items: center;
-  flex-grow: 1;
 }
 .signature {
   position: absolute;
@@ -903,6 +903,9 @@ textarea:focus {
     margin: auto;
     width: 80%;
   }
+  .recipe-container {
+    width: 100%;
+  }
 }
 
 @media (max-width: 600px) {
@@ -920,7 +923,7 @@ textarea:focus {
   .delete-confirmation-msg > :nth-child(2) {
     font-size: 80%;
   }
-  .container {
+  .recipe-container {
     width: 100%;
     font-size: 85%;
   }
@@ -936,6 +939,7 @@ textarea:focus {
     position: relative;
     display: block;
     aspect-ratio: 1/1;
+    height: auto;
     margin-bottom: 15px;
   }
   .img-wrapper {

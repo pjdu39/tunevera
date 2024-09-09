@@ -114,6 +114,7 @@
 </template>
 
 <script setup>
+import { ImageTypes } from "~/enums/ImageTypes";
 import { useAuth } from "~/composables/useAuth";
 import { useBlobStore } from "~/store/blob.js";
 import { useImageManager } from '~/composables/useImageManager';
@@ -183,7 +184,7 @@ const save = async () => {
   if (!validForm) return;
 
   if (finalBlob.value) {
-    await handleFileUpload(finalBlob.value, originalFileExtension);
+    await handleFileUpload(finalBlob.value);
 
     // TODO. Hacer pruebas para ver si esto es necesario
     await wait(() => uploadState.value.data);
@@ -307,7 +308,6 @@ const validInput = (value) => {
 const fileInput = ref(null);
 const isModalOpen = ref(false);
 const selectedImage = ref("");
-let originalFileExtension = "";
 const finalBlob = ref("");
 
 const closeModal = () => {
@@ -326,9 +326,6 @@ const handleImageSelect = (event) => {
     return;
   }
 
-  // Extraer y almacenar la extensión del archivo original
-  originalFileExtension = getFileExtension(file.name);
-
   const reader = new FileReader();
   reader.onload = (e) => {
     selectedImage.value = e.target.result; // Guarda la imagen seleccionada para pasarla al modal
@@ -344,14 +341,15 @@ const handleCropComplete = async (croppedBlob) => {
 
   try {
     // Redimensionar la imagen si es necesario
-    finalBlob.value = await resizeImage(croppedBlob, 200, 120);
+    finalBlob.value = await resizeImage(croppedBlob, 500, 500);
   }
   catch (error) {
     console.error("Error al procesar la imagen:", error);
   }
 };
 
-const { resizeImage } = useImageManager();
+const cropLoading = ref(false);
+const { resizeImage, convertImageTo } = useImageManager();
 
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
@@ -361,7 +359,7 @@ const getFileExtension = (filename) => {
     .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
     .toLowerCase();
 };
-const handleFileUpload = async (blob, extension) => {
+const handleFileUpload = async (blob, extension = 'webp') => {
   if (!finalBlob.value) return;
 
   const newFileName = `u-${user.value.sub}.${extension}`;
@@ -370,7 +368,9 @@ const handleFileUpload = async (blob, extension) => {
     lastModified: new Date(),
   });
 
-  await blobStore.uploadFileAndGetUrl(newFile);
+  const newFileWEBP = await convertImageTo(newFile, ImageTypes.WEBP)
+
+  await blobStore.uploadFileAndGetUrl(newFileWEBP);
 };
 
 const check = computed(() => {
@@ -429,7 +429,6 @@ const emit = defineEmits(["exit"]);
 
 const cancel = () => {
   finalBlob.value = null;
-  originalFileExtension = "";
   emit("exit");
 };
 
