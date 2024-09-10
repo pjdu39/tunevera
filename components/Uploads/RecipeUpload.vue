@@ -1060,7 +1060,7 @@ const fetchImageAsBlob = async (imageUrl) => {
     return null;
   }
 };
-
+/*
 const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
   const fileName = postRecipeData.value.pictureUrl.split("/").pop();
 
@@ -1088,12 +1088,53 @@ const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
     await blobStore.deleteBlob(fileName);
   }
 };
+*/
+
+const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
+    const fileName = postRecipeData.value.pictureUrl.split("/").pop();
+    const fileBaseName = fileName.split(".").slice(0, -1).join(".");
+    const newFileName = `${fileBaseName}.${extension}`;
+
+    const formData = new FormData();
+    formData.append('image', blob, fileName); // Asegúrate de enviar el nombre original o el que desees
+
+    try {
+        // Llamada a la API para procesar la imagen
+        const response = await fetch('/api/imageProcessor', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            const newBlob = await response.blob();
+
+            // Crear un nuevo File object para subirlo a blobStore si es necesario
+            const newWebpFile = new File([newBlob], newFileName, {
+                type: `image/${extension}`,
+                lastModified: new Date(),
+            });
+
+            await blobStore.uploadFileAndGetUrl(newWebpFile);
+
+            // Si la extensión con la que se desea guardar es diferente a la original
+            if(extension !== getFileExtension(postRecipeData.value.pictureUrl)) {
+                await blobStore.deleteBlob(fileName); // Borra el blob antiguo si necesario
+            }
+        } else {
+            throw new Error('Failed to upload and convert image');
+        }
+    } catch (error) {
+        console.error('Error handling file edit:', error);
+        throw error; // Propaga el error para manejo superior si es necesario
+    }
+};
 
 const editRecipe = async () => {
   cleanEmptyForms();
 
   if (!validForm) return;
 
+  console.log(finalBlob.value.type)
   if (imageHasChanged.value) await handleFileEdit(finalBlob.value);
 
   if (uploadState.value.error) {
