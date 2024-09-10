@@ -397,7 +397,7 @@ import { ImageTypes } from "~/enums/ImageTypes";
 import { ref, computed } from "vue";
 import { useBlobStore } from "~/store/blob.js";
 import { useUploadsStore } from "~/store/uploads.js";
-import { useImageManager } from '~/composables/useImageManager';
+import { useImageManager } from "~/composables/useImageManager";
 import { v4 as uuidv4 } from "uuid";
 
 const props = defineProps({
@@ -487,9 +487,9 @@ const handleCropComplete = async (croppedBlob) => {
 
   try {
     // Redimensionar la imagen si es necesario
-    cropLoading.value = true
+    cropLoading.value = true;
     finalBlob.value = await resizeImage(croppedBlob);
-    cropLoading.value = false
+    cropLoading.value = false;
 
     if (isEditing.value) imageHasChanged.value = true;
   } catch (error) {
@@ -510,8 +510,7 @@ const nuxtImgClass = computed(() => {
 });
 
 const cropLoading = ref(false);
-const { resizeImage, convertImageTo } = useImageManager();
-
+const { resizeImage, serverConversion } = useImageManager();
 
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
@@ -522,15 +521,24 @@ const createUUID = () => {
 };
 const getExtensionFromMimeType = (mimeType) => {
   // Divide el mimeType por '/' y retorna la segunda parte, que es el subtipo
-  return mimeType.split('/')[1];
+  return mimeType.split("/")[1];
 };
 const getFileExtension = (filename) => {
   return filename
     .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
     .toLowerCase();
 };
+
 const handleFileUpload = async (blob, extension = ImageTypes.WEBP) => {
-  const tempFileName = 'tempFile';
+  const newFileName = `r-${createUUID()}.${extension}`;
+
+  const newWebpFile = await serverConversion(newFileName, blob, extension);
+
+  await blobStore.uploadFileAndGetUrl(newWebpFile);
+};
+/*
+const handleFileUpload = async (blob, extension = ImageTypes.WEBP) => {
+  const tempFileName = "tempFile";
 
   const tempFile = new File([blob], tempFileName, {
     type: blob.type,
@@ -548,6 +556,7 @@ const handleFileUpload = async (blob, extension = ImageTypes.WEBP) => {
 
   await blobStore.uploadFileAndGetUrl(newWebpFile);
 };
+*/
 
 // Manejo del formulario
 const canAddIngredient = computed(() => {
@@ -629,7 +638,7 @@ const preventNonDecimal = (event) => {
 // Evita que se envíen strings vacíos
 watchEffect(() => {
   postRecipeData.value.recipeIngredients.forEach((ingredient, index) => {
-    if (ingredient.amount === '') {
+    if (ingredient.amount === "") {
       postRecipeData.value.recipeIngredients[index].amount = null;
     }
   });
@@ -937,7 +946,7 @@ const uploadRecipe = async () => {
   await uploadsStore.postRecipe(postRecipeData.value);
 
   // Si todo va bien, refresca la página.
-  if (uploadsStore.newRecipeState.data) router.push('/');
+  if (uploadsStore.newRecipeState.data) router.push("/");
 };
 
 // Redirección tras guardar
@@ -1091,42 +1100,17 @@ const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
 */
 
 const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
-    const fileName = postRecipeData.value.pictureUrl.split("/").pop();
-    const fileBaseName = fileName.split(".").slice(0, -1).join(".");
-    const newFileName = `${fileBaseName}.${extension}`;
+  const fileName = postRecipeData.value.pictureUrl.split("/").pop();
+  const fileBaseName = fileName.split(".").slice(0, -1).join(".");
+  const newFileName = `${fileBaseName}.${extension}`;
 
-    const formData = new FormData();
-    formData.append('image', blob, fileName); // Asegúrate de enviar el nombre original o el que desees
+  const newWebpFile = await serverConversion(newFileName, blob, extension);
 
-    try {
-        // Llamada a la API para procesar la imagen
-        const response = await fetch('/api/imageProcessor', {
-            method: 'POST',
-            body: formData
-        });
+  await blobStore.uploadFileAndGetUrl(newWebpFile);
 
-        if (response.ok) {
-            const newBlob = await response.blob();
-
-            // Crear un nuevo File object para subirlo a blobStore si es necesario
-            const newWebpFile = new File([newBlob], newFileName, {
-                type: `image/${extension}`,
-                lastModified: new Date(),
-            });
-
-            await blobStore.uploadFileAndGetUrl(newWebpFile);
-
-            // Si la extensión con la que se desea guardar es diferente a la original
-            if(extension !== getFileExtension(postRecipeData.value.pictureUrl)) {
-                await blobStore.deleteBlob(fileName); // Borra el blob antiguo si necesario
-            }
-        } else {
-            throw new Error('Failed to upload and convert image');
-        }
-    } catch (error) {
-        console.error('Error handling file edit:', error);
-        throw error; // Propaga el error para manejo superior si es necesario
-    }
+  if (extension !== getFileExtension(postRecipeData.value.pictureUrl)) {
+    await blobStore.deleteBlob(fileName); // Borra el blob antiguo si la extensión ha cambiado
+  }
 };
 
 const editRecipe = async () => {
@@ -1134,7 +1118,6 @@ const editRecipe = async () => {
 
   if (!validForm) return;
 
-  console.log(finalBlob.value.type)
   if (imageHasChanged.value) await handleFileEdit(finalBlob.value);
 
   if (uploadState.value.error) {

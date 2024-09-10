@@ -345,7 +345,7 @@ const handleCropComplete = async (croppedBlob) => {
 };
 
 const cropLoading = ref(false);
-const { resizeImage, convertImageTo } = useImageManager();
+const { resizeImage, serverConversion } = useImageManager();
 
 // Manejo para subida de imágenes
 const blobStore = useBlobStore();
@@ -355,6 +355,18 @@ const getFileExtension = (filename) => {
     .slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
     .toLowerCase();
 };
+
+const handleFileUpload = async (blob, extension = ImageTypes.WEBP) => {
+  if (!finalBlob.value) return;
+
+  const newFileName = `u-${user.value.sub}.${extension}`;
+
+  const newWebpFile = await serverConversion(newFileName, blob, extension);
+
+  await blobStore.uploadFileAndGetUrl(newWebpFile);
+};
+
+/*
 const handleFileUpload = async (blob, extension = ImageTypes.WEBP) => {
   if (!finalBlob.value) return;
   
@@ -376,6 +388,7 @@ const handleFileUpload = async (blob, extension = ImageTypes.WEBP) => {
 
   await blobStore.uploadFileAndGetUrl(newWebpFile);
 };
+*/
 
 const check = computed(() => {
   if (checkValidNameState.value.loading === "waiting") return "waiting";

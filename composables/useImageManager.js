@@ -194,10 +194,44 @@ export function useImageManager() {
             reader.onerror = reject;
             reader.readAsDataURL(file);
         });
-    }
+    };
+
+    // LLamada a servidor de node
+    const serverConversion = async (
+        newFileName,
+        blob,
+        extension = ImageTypes.WEBP
+    ) => {
+        const formData = new FormData();
+        formData.append("image", blob, newFileName);
+    
+        try {
+        // Llamada a la API para procesar la imagen
+        const response = await fetch("/api/imageProcessor", {
+            method: "POST",
+            body: formData,
+        });
+    
+        if (response.ok) {
+            const newBlob = await response.blob();
+    
+            // Devuelve un nuevo File object para subirlo a blobStore si es necesario
+            return new File([newBlob], newFileName, {
+            type: `image/${extension}`,
+            lastModified: new Date(),
+            });
+        } else {
+            throw new Error("Failed to upload and convert image");
+        }
+        } catch (error) {
+        console.error("Error handling file edit:", error);
+        throw error; // Propaga el error para manejo superior si es necesario
+        }
+    };
 
     return {
         resizeImage,
-        convertImageTo
+        convertImageTo,
+        serverConversion
     };
 }
