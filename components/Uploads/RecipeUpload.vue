@@ -1102,14 +1102,16 @@ const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
 const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
   const fileName = postRecipeData.value.pictureUrl.split("/").pop();
   const fileBaseName = fileName.split(".").slice(0, -1).join(".");
-  const newFileName = `${fileBaseName}.${extension}`;
+  const timestamp = new Date().getTime();
+  const newFileName = `${fileBaseName}_${timestamp}.${extension}`;
 
   const newWebpFile = await serverConversion(newFileName, blob, extension);
 
   await blobStore.uploadFileAndGetUrl(newWebpFile);
 
-  if (extension !== getFileExtension(postRecipeData.value.pictureUrl)) {
-    await blobStore.deleteBlob(fileName); // Borra el blob antiguo si la extensión ha cambiado
+  // Borra el blob antiguo si el nombre ha cambiado.
+  if (fileName !== newFileName) {
+    await blobStore.deleteBlob(fileName);
   }
 };
 

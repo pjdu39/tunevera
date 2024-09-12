@@ -171,8 +171,9 @@ const picture = computed(() => {
 
   if (uploadState.value.loading === "loading") return null;
   if (uploadState.value.loading === "loaded") {
-    const timestamp = new Date().getTime();
-    let url = `${uploadState.value.data}?v=${timestamp}`;
+    // const timestamp = new Date().getTime();
+    // let url = `${uploadState.value.data}?v=${timestamp}`;
+    let url = uploadState.value.data;
     return url;
   }
   if (props.isEditing && props.profileInfo) return props.profileInfo.pictureUrl;
@@ -203,6 +204,12 @@ const save = async () => {
     if (description.value) body.description = description.value;
     if (uploadState.value.data) body.pictureUrl = uploadState.value.data;
 
+    // Borrado de la imagen antigua si el nombre ha cambiado
+    if (uploadState.value.data !== props.profileInfo.pictureUrl) {
+      const originalFileName = props.profileInfo.pictureUrl.split("/").pop();
+      await blobStore.deleteBlob(originalFileName)
+    }
+
     profileStore.editProfile(body);
   } else {
     const userData = {
@@ -213,7 +220,7 @@ const save = async () => {
       pictureUrl: uploadState.value.data ?? user.value.picture,
     };
 
-    loginStore.signUp(userData);
+    await loginStore.signUp(userData);
   }
 };
 const patchAuth0UserState = computed(() => loginStore.patchAuth0UserState);
@@ -359,7 +366,9 @@ const getFileExtension = (filename) => {
 const handleFileUpload = async (blob, extension = ImageTypes.WEBP) => {
   if (!finalBlob.value) return;
 
-  const newFileName = `u-${user.value.sub}.${extension}`;
+  // Añade un timestamp al nombre del archivo para generar una versión única
+  const timestamp = new Date().getTime(); // O puedes usar otro método para generar un identificador único
+  const newFileName = `u-${user.value.sub}_${timestamp}.${extension}`;
 
   const newWebpFile = await serverConversion(newFileName, blob, extension);
 

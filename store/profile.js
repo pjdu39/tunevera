@@ -112,15 +112,6 @@ export const useProfileStore = defineStore({
             try {
                 const data = await $fetchApi(`GetProfileInfo?IdUser=${ id }`);
 
-                /*
-                if (data && data.pictureUrl) {
-                    const timestamp = Date.now();
-                    data.pictureUrl = `${data.pictureUrl}?v=${timestamp}`;
-                }
-                */
-
-                console.log(data.pictureUrl)
-
                 this.setProfileInfoData(data);
                 this.setProfileInfoLoading('loaded');
                 this.setProfileInfoError(null);
