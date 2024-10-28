@@ -1101,9 +1101,15 @@ const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
 
 const handleFileEdit = async (blob, extension = ImageTypes.WEBP) => {
   const fileName = postRecipeData.value.pictureUrl.split("/").pop();
-  const fileBaseName = fileName.split(".").slice(0, -1).join(".");
+  const fileBaseNameWithTimestamp = fileName.split(".").slice(0, -1).join(".");
+  
+  // Eliminar los timestamps anteriores del nombre base
+  const fileBaseName = fileBaseNameWithTimestamp.replace(/(_\d+)+$/, '');
+
   const timestamp = new Date().getTime();
   const newFileName = `${fileBaseName}_${timestamp}.${extension}`;
+
+  // TODO: Envolver la asincronía completa de este método para evitar mostrar de forma interrumpida la rueda de loading al guardar la receta.
 
   const newWebpFile = await serverConversion(newFileName, blob, extension);
 
