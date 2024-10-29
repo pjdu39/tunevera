@@ -1,10 +1,5 @@
 <template>
   <div v-if="!loginLoading" class="profile">
-    <!--
-    <ProfileSkeleton
-      v-if="profileLoading === 'waiting' || profileLoading === 'loading'"
-    />
-    -->
     <div
       v-if="profileLoading === 'waiting' || profileLoading === 'loading'"
       class="loading-container"
@@ -28,6 +23,20 @@
         @exit="handleExit"
       />
     </div>
+    <div v-else-if="profileLoading === 'loaded' && showFollowInfo">
+      <button class="back-btn" @click="exitFollowInfo">
+        <font-awesome-icon
+          icon="fa fa-angle-left"
+          class="fa-lg"
+          aria-hidden="true"
+        />
+        Atrás
+      </button>
+      <div class="follow-info-container">
+        <div class="follow-filter-title">{{ numFollow }} {{ followTitle }}</div>
+        <SearchUsers :followFilter="followFilter" />
+      </div>
+    </div>
     <div v-else-if="profileLoading === 'loaded' && !showForm">
       <div class="top">
         <div class="profile-info">
@@ -49,11 +58,11 @@
                 <div class="s-i-num">{{ profile.numPosts }}</div>
                 <div class="s-i-text">Publicaciones</div>
               </div>
-              <div class="summary-item">
+              <div class="summary-item clickable" @click="checkFollowers">
                 <div class="s-i-num">{{ profile.numFollowers }}</div>
                 <div class="s-i-text">Seguidores</div>
               </div>
-              <div class="summary-item">
+              <div class="summary-item clickable" @click="checkFollowing">
                 <div class="s-i-num">{{ profile.numFollowing }}</div>
                 <div class="s-i-text">Siguiendo</div>
               </div>
@@ -188,6 +197,37 @@ const followButtonData = computed(() => {
   return { id: id, follow: profile.value.follow };
 });
 
+// Ver lista de seguidores y seguidos.
+const showFollowInfo = ref(false);
+const followFilter = ref(null);
+
+const checkFollowers = () => {
+  followFilter.value = { idUser: profile.value.id, followType: "R" };
+  showFollowInfo.value = true;
+};
+
+const checkFollowing = () => {
+  followFilter.value = { idUser: profile.value.id, followType: "G" };
+  showFollowInfo.value = true;
+};
+
+const exitFollowInfo = () => {
+  showFollowInfo.value = false;
+  followFilter.value = null;
+};
+
+const numFollow = computed(() => {
+  if (followFilter.value.followType === "R") return profile.value.numFollowers
+  if (followFilter.value.followType === "G") return profile.value.numFollowing
+  return 0
+})
+
+const followTitle = computed(() => {
+  if (followFilter.value.followType === "R") return "seguidores"
+  if (followFilter.value.followType === "G") return "siguiendo"
+  return ""
+})
+
 // Métodos de llamadas
 const fetchProfileData = () => {
   profileStore.fetchProfileInfo(id.value);
@@ -248,6 +288,26 @@ const clickOutside = () => {
   font-size: 200%;
   color: $color-primary;
 }
+.back-btn {
+  margin: 10px 0 30px 0;
+  padding: 1px 15px 0 8px;
+  border: 1px solid $color-soft-grey;
+  background-color: $color-soft-grey;
+  color: white;
+  border-radius: 5px;
+}
+.back-btn:hover {
+  border: 1px solid $color-primary;
+  background-color: $color-primary;
+  color: white;
+}
+.follow-info-container {
+  padding: 0 0 0 20px;
+}
+.follow-filter-title {
+  font-size: 130%;
+  font-family: $font-headers;
+}
 .top {
   display: flex;
   flex-direction: column;
@@ -296,6 +356,12 @@ const clickOutside = () => {
   height: 100%;
   width: auto;
   text-align: center;
+}
+.clickable {
+  cursor: pointer;
+}
+.clickable:hover {
+  text-decoration: underline;
 }
 .s-i-num {
   font-size: 150%;

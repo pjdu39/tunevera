@@ -116,11 +116,17 @@ export const useSearchStore = defineStore({
         },
 
         // Users
-        async fetchUsers(filter) {
+        async fetchUsers(body) {
             const { $fetchApi } = useNuxtApp();
             this.fetchUsersLoading('loading');
-            try {
-                const data = await $fetchApi(`SearchUsers${filter ? `?filter=${encodeURIComponent(filter)}` : ''}`);
+            try {                
+                const data = await $fetchApi('SearchUsers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
 
                 this.fetchUsersData(data);
                 this.fetchUsersLoading('loaded');

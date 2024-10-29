@@ -32,6 +32,15 @@
 <script setup>
 import { useSearchStore } from "~/store/search.js";
 
+const props = defineProps({
+  followFilter: Object
+});
+
+const body = ref({
+  filter: null,
+  followFilter: props.followFilter
+})
+
 // Acceso al store
 const store = useSearchStore();
 
@@ -48,15 +57,15 @@ const searchUser = (event) => {
 
   if (validInput(newValue)) {
     oldFilter.value = newValue; // Actualizar el valor antiguo si el nuevo valor es válido
-    filter.value = newValue;
+    body.value.filter = newValue;
 
     clearTimeout(inputTimer);
     store.setFetchUsersLoading();
     inputTimer = setTimeout(() => {
-      store.fetchUsers(filter.value);
+      store.fetchUsers(body.value);
     }, 500);
   } else {
-    filter.value = oldFilter.value; // Revertir al valor antiguo si el nuevo valor no es válido
+    body.value.filter = oldFilter.value; // Revertir al valor antiguo si el nuevo valor no es válido
   }
 };
 
@@ -66,7 +75,7 @@ const validInput = (value) => {
 };
 
 onMounted(() => {
-  store.fetchUsers(filter.value);
+  store.fetchUsers(body.value);
 });
 </script>
 
