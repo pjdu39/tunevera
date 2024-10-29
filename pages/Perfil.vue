@@ -233,10 +233,15 @@ const fetchProfileData = () => {
   profileStore.fetchProfileInfo(id.value);
 };
 
-// Refresco del perfil al ir de uno ajeno al propio
+
 watch(id, (newVal, oldVal) => {
   // TODO: Cuando tenga el navbar para cambiar entre recetas, discusiones y encuestas, ponerlo en recetas cuando pase por este watch.
+
+  // Refresco del perfil al ir de uno ajeno al propio
   fetchProfileData();
+
+  // Refresco del perfil al clickar en seguidores/seguidos
+  exitFollowInfo();
 });
 
 // Manejo de opciones de perfil
