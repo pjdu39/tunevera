@@ -317,7 +317,11 @@ const semanticTransformation = (ingredient) => {
   // Unidad
   if (singularUnit === "al gusto" || singularUnit === "unidad") {
     semanticUnit = "";
-  } else {
+  }
+  else if (ingredient.amount === 1) {
+    semanticUnit = singularUnit;
+  }
+  else {
     semanticUnit = abbreviationUnit;
   }
 
