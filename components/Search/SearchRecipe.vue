@@ -286,7 +286,7 @@ onMounted(() => {
     tags.value.push(props.tag);
   }
 
-  fetchRecipes();
+  // fetchRecipes();
 
   observer = new IntersectionObserver(
     async (entries) => {
