@@ -180,17 +180,8 @@
     </button>
   </div>
   <div class="results-container">
-    <div v-if="searchRecipesState.loading === 'loading'">
-      <div class="icon-container">
-        <font-awesome-icon
-          icon="fa fa-circle-notch"
-          class="fa-spin fa-lg"
-          aria-hidden="true"
-        />
-      </div>
-    </div>
+    
     <div
-      v-else-if="searchRecipesState.loading === 'loaded'"
       class="grid-results"
     >
       <div v-for="(recipe, index) in recipes" :key="index" class="p-recipe">
@@ -226,12 +217,22 @@
         </NuxtLink>
       </div>
     </div>
+    <div ref="observerElement"></div>
+    <div v-if="loadingMoreElements" class="icon-container">
+        <font-awesome-icon
+          icon="fa fa-circle-notch"
+          class="fa-spin fa-lg"
+          aria-hidden="true"
+        />
+    </div>
+    <!--
     <div
       v-else-if="searchRecipesState.loading === 'error'"
       class="grid-results"
     >
       {{ searchRecipesState.error }}
     </div>
+    -->
   </div>
 </template>
 
@@ -245,40 +246,86 @@ const props = defineProps({
 // Acceso a la Store
 const store = useSearchStore();
 
-const searchRecipesState = computed(() => store.searchRecipesState);
-const recipes = computed(() => searchRecipesState.value.data);
+const loadingMoreElements = computed(() => {
+  return searchRecipesState.value.loading === 'loading' && hasMore.value
+})
 
-const fetchRecipes = () =>
-  store.fetchRecipes(
-    text.value,
-    veggie.value,
-    ingredients.value.map((x) => x.value),
-    tags.value.map((x) => x.value),
-    customFilters.value
+const searchRecipesState = computed(() => store.searchRecipesState);
+const recipes = ref([]);
+const page = ref(0);
+const hasMore = ref(true);
+const observerElement = ref(null);
+let observer;
+
+const fetchRecipes = async () => {
+  if (!hasMore.value) return;
+  page.value += 1;
+  await store.fetchRecipes({
+    text: text.value,
+    veggie: veggie.value,
+    ingredients: ingredients.value.map((x) => x.value),
+    tags: tags.value.map((x) => x.value),
+    customFilters: customFilters.value,
+    numElements: 12,
+    page: page.value
+    });
+    
+  if (searchRecipesState.value.loading === "loaded" && !searchRecipesState.value.error) {
+    if (searchRecipesState.value.data.length > 0) {
+      recipes.value = [...recipes.value, ...searchRecipesState.value.data];
+    } else {
+      hasMore.value = false; // No hay más recetas disponibles
+    }
+  }
+};
+
+onMounted(() => {
+  if (props.tag && store) {
+    showAdvanced.value = true;
+    activeTab.value = 1;
+    tags.value.push(props.tag);
+  }
+
+  fetchRecipes();
+
+  observer = new IntersectionObserver(
+    async (entries) => {
+      if (entries[0].isIntersecting && hasMore.value) {
+        await fetchRecipes();
+      }
+    },
+    {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0,
+    }
   );
+
+  if (observerElement.value) {
+    observer.observe(observerElement.value);
+  }
+});
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect();
+  }
+});
 
 let inputTimer = null;
 
 const searchRecipes = () => {
   clearTimeout(inputTimer);
   store.setFetchRecipesLoading();
+  recipes.value = []; // Reiniciar el array de recetas
   inputTimer = setTimeout(() => {
+    page.value = 0;
+    hasMore.value = true;
     fetchRecipes();
   }, 500);
 };
 
 const activeTab = ref(0);
-
-onMounted(() => {
-  if (props.tag && store) {
-    showAdvanced.value = true;
-    activeTab.value = 1;
-
-    tags.value.push(props.tag);
-  }
-
-  fetchRecipes();
-});
 
 // Parámetros
 const text = ref("");
@@ -301,13 +348,13 @@ const checkVegan = () => {
   vegetarian.value = false;
   vegan.value = !vegan.value;
 
-  fetchRecipes();
+  searchRecipes();
 };
 const checkVegetarian = () => {
   vegan.value = false;
   vegetarian.value = !vegetarian.value;
 
-  fetchRecipes();
+  searchRecipes();
 };
 
 // Opciones avanzadas
@@ -425,7 +472,7 @@ const triggerTagAnimation = (tag) => {
 // Filtros persnalizados
 const clickCustom = (value) => {
   customFilters.value = value;
-  fetchRecipes();
+  searchRecipes();
 };
 </script>
 
@@ -652,7 +699,7 @@ input:disabled {
   grid-template-columns: repeat(4, 1fr);
   /* grid-auto-rows: 1fr; /* Altura de fila como una fracción del contenedor */
   gap: 3px;
-  min-height: 15rem;
+  //min-height: 15rem;
 }
 .icon-container {
   display: flex;

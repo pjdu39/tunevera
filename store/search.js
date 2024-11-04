@@ -69,7 +69,7 @@ export const useSearchStore = defineStore({
         },
         
         // Recipes
-        async fetchRecipes(text, veggie, ingredients, tags, customFilters) {
+        async fetchRecipes(body) {
             const { $fetchApi } = useNuxtApp();
             this.fetchRecipesLoading('loading');
             
@@ -96,7 +96,7 @@ export const useSearchStore = defineStore({
                     return `${base}?${query}`;
                 }
 
-                const apiUrl = buildApiUrl('SearchRecipes', { text, veggie, ingredients, tags, customFilters });
+                const apiUrl = buildApiUrl('SearchRecipes', body);
 
                 const data = await $fetchApi(apiUrl);
 

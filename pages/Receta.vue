@@ -334,7 +334,11 @@ const semanticTransformation = (ingredient) => {
 
   if (singularUnit === "al gusto") result += ` ${singularUnit}`;
 
-  return result;
+  // Eliminar espacios innecesarios y capitalizar
+  result = result.trim();
+  result = result.charAt(0).toUpperCase() + result.slice(1);
+
+  return result
 };
 
 // SEO
