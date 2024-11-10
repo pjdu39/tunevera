@@ -286,8 +286,6 @@ onMounted(() => {
     tags.value.push(props.tag);
   }
 
-  // fetchRecipes();
-
   observer = new IntersectionObserver(
     async (entries) => {
       if (entries[0].isIntersecting && hasMore.value) {
