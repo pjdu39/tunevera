@@ -17,15 +17,15 @@ export default defineEventHandler(async (event) => {
     
         // Crea las urls en base a las recetas e hilos disponibles.
         let urls = [
-            { loc: `${clientUrl}`, lastmod: '2024-01-01', changefreq: 'weekly', priority: 1.0 },
+            { loc: `${clientUrl}`, lastmod: '2024-11-11', changefreq: 'weekly', priority: 1.0 },
         ];
 
         data.forEach((data) => {
             if (data.type === PostTypes.RECIPE) {
-                urls.push({ loc: `${clientUrl}receta?id=${data.id}`, lastmod: '2024-01-01', changefreq: 'yearly', priority: 1.0 })
+                urls.push({ loc: `${clientUrl}receta?id=${data.id}`, lastmod: data.modificationDate, changefreq: 'yearly', priority: 1.0 })
             }
             else if (data.type === PostTypes.THREAD) {
-                urls.push({ loc: `${clientUrl}foro?id=${data.id}`, lastmod: '2024-01-01', changefreq: 'weekly', priority: 0.7 })
+                urls.push({ loc: `${clientUrl}foro?id=${data.id}`, lastmod: data.modificationDate, changefreq: 'weekly', priority: 0.7 })
             }
         });
     
